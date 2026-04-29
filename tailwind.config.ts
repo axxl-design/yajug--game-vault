@@ -24,6 +24,15 @@ const config: Config = {
           DEFAULT: 'var(--amber)',
           700: 'var(--amber-700)',
         },
+        // Violet (v3) — reservado para momentos cinematográficos.
+        // No usar en HomeScreen, Lobby, Tutorial ni UI cotidiana.
+        violet: {
+          DEFAULT: 'var(--violet)',
+          hover: 'var(--violet-hover)',
+          active: 'var(--violet-active)',
+          dark: 'var(--violet-dark)',
+          light: 'var(--violet-light)',
+        },
         carbon: 'var(--carbon)',
         mist: 'var(--mist)',
 

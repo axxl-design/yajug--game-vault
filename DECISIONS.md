@@ -177,6 +177,45 @@ Registro vivo de decisiones técnicas significativas. Cada entrada lleva fecha, 
 
 ---
 
+## Fase 3.5 — Refinamiento de paleta (brief v3)
+
+### 2026-04-29 — v3 brief: paleta refinada, nuevo acento violet para momentos cinematográficos
+
+**Contexto:** el brief técnico se actualizó a v3 (`_handoff/BRIEF_CLAUDE_CODE_v3.md`, la v2 quedó archivada). El cambio relevante para implementación es la paleta de acentos. Ink, bone, grises y set colors no cambian.
+
+**Decisión:** actualizar `src/styles/tokens.css` con los nuevos valores HEX y agregar la familia violet completa. Como toda la app consume las CSS vars (decisión Fase 1), los componentes existentes no se tocan — el cambio se propaga solo.
+
+**Valores actualizados:**
+
+| Token | v2 | v3 | Notas |
+|---|---|---|---|
+| `--coral` | `#E54B2C` | `#FF5722` | Más cálido y vivo. |
+| `--coral-700` | `#C13D22` | `#D9421C` | Re-derivado para mantener proporción de luminancia con el nuevo base. |
+| `--coral-300` | `#F08068` | `#FF8266` | Idem, hover más peachy. |
+| `--amber` | `#D4A52A` | `#FFB627` | Más saturado, más dorado. |
+| `--amber-700` | `#A8821C` | `#D69416` | Re-derivado. |
+
+**Variantes nuevas — familia violet (v3):**
+
+| Token | Valor | Uso permitido |
+|---|---|---|
+| `--violet` | `#7A5FFF` | Base. Cinematic moments only. |
+| `--violet-hover` | `#9683FF` | Hover en CTAs cinematográficos (futuro modal de Expansión). |
+| `--violet-active` | `#5C45D9` | Pressed state. |
+| `--violet-dark` | `#4A35B8` | Bordes y sombras profundas. |
+| `--violet-light` | `#C7B8FF` | Halos, glows, fondos a baja opacidad. |
+
+**Restricción de uso del violet:** explícita en el brief y comentada en `tokens.css` y `tailwind.config.ts` — NO se usa en HomeScreen, Lobby, Tutorial ni UI cotidiana. Reservado exclusivamente para:
+- Activación de Expansión de Dominio (sec 13).
+- Halo del medidor cuando llega a 100%.
+- Banner de Tiempo Extra (sec 14).
+
+**Las variantes derivadas (coral-700, coral-300, amber-700, todas las violet*) las elegí yo a partir del HEX base que dio el brief v3.** El brief sólo especifica los 3 valores base. Si alguno de los hover/active/light se ve raro en QA, son los primeros candidatos a ajustar — los HEX base no se tocan sin cambiar el brief.
+
+**Verificado:** `pnpm typecheck` y `pnpm build` pasan limpio. `grep -rn "violet" src/` solo aparece en `tokens.css` (cero usos en componentes), tal como pide la consigna.
+
+---
+
 ## Pendiente de decidir
 
 - Howler.js para audio (Fase 6+).

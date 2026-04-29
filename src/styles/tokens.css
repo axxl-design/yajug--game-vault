@@ -6,15 +6,27 @@
 
 :root {
   /* ─── Brand palette (raw) ─────────────────────────────── */
-  --ink:        #0E0E0E;   /* Negro tinta */
-  --bone:       #F8F5EE;   /* Blanco hueso */
-  --coral:      #E54B2C;   /* Acento de marca */
-  --coral-700:  #C13D22;   /* Coral pressed/danger-strong */
-  --coral-300:  #F08068;   /* Coral hover-light */
-  --amber:      #D4A52A;   /* Acento premium */
-  --amber-700:  #A8821C;
+  /* Brief v3 (2026-04-29): coral pasa de #E54B2C → #FF5722 (más cálido/vivo),
+     ámbar pasa de #D4A52A → #FFB627 (más dorado), agregada familia violet
+     reservada exclusivamente para momentos cinematográficos
+     (Expansión de Dominio, halo de medidor 100%, banner Tiempo Extra). */
+  --ink:        #0E0E0E;   /* Negro tinta — sin cambios */
+  --bone:       #F8F5EE;   /* Blanco hueso — sin cambios */
+  --coral:      #FF5722;   /* Acento de marca — v3 */
+  --coral-700:  #D9421C;   /* Coral pressed/danger-strong */
+  --coral-300:  #FF8266;   /* Coral hover-light */
+  --amber:      #FFB627;   /* Acento premium — v3 */
+  --amber-700:  #D69416;
   --carbon:     #2A2A28;   /* Gris carbón — superficie en dark */
   --mist:       #ADA89E;   /* Gris niebla — texto secundario, divisores */
+
+  /* Violet — reservado para momentos cinematográficos (v3).
+     NO usar en HomeScreen, Lobby, Tutorial ni UI cotidiana. */
+  --violet:        #7A5FFF;   /* base */
+  --violet-hover:  #9683FF;   /* lighter, hover en CTAs cinematográficos */
+  --violet-active: #5C45D9;   /* darker pressed */
+  --violet-dark:   #4A35B8;   /* deep — bordes/sombras */
+  --violet-light:  #C7B8FF;   /* pale — halos, glows, fondos a baja opacidad */
 
   /* Set colors (cartas de propiedad — apagados, no saturados) */
   --set-coral:    #C5523B;   /* Coral Heights / Paloma Marina */

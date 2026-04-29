@@ -37,7 +37,7 @@ El servidor corre en `http://localhost:5173`.
 
 ## Estructura
 
-Ver el brief técnico (`_handoff/BRIEF_CLAUDE_CODE_v2.md` sección 3) para la convención de carpetas. Resumen:
+Ver el brief técnico (`_handoff/BRIEF_CLAUDE_CODE_v3.md` sección 3) para la convención de carpetas. Resumen:
 
 - `src/screens/` — pantallas completas (HomeScreen, LobbyScreen, GameScreen, etc.).
 - `src/components/` — componentes UI (`ui/`), de cartas (`card/`), de partida (`game/`), de lobby (`lobby/`), del tutorial (`tutorial/`).
@@ -55,7 +55,7 @@ Ver el brief técnico (`_handoff/BRIEF_CLAUDE_CODE_v2.md` sección 3) para la co
 
 ## Plan por fases
 
-Ver `_handoff/BRIEF_CLAUDE_CODE_v2.md` sección 27. 13 fases secuenciales con criterios de aceptación.
+Ver `_handoff/BRIEF_CLAUDE_CODE_v3.md` sección 27. 13 fases secuenciales con criterios de aceptación.
 
 **Estado actual:** Fase 3 completada (HomeScreen + LobbyScreen + TutorialScreen + routing). Pendiente verificación humana antes de pasar a Fase 4.
 
