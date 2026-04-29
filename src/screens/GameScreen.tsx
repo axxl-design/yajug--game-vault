@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card as UICard, useToast } from '@/components/ui';
 import { useGameStore, selectCurrentPlayer } from '@/stores/gameStore';
-import type { ExpansionInput } from '@/types/game';
+import type { ExpansionInput, PlayerAction } from '@/types/game';
+import { dispatchAction, getSession } from '@/multiplayer/sync';
 import { Hand } from '@/components/game/Hand';
 import { Bank } from '@/components/game/Bank';
 import { PropertySetView } from '@/components/game/PropertySetView';
@@ -16,6 +17,10 @@ import { TitularBanner } from '@/components/game/TitularBanner';
 import { TiempoExtraBanner } from '@/components/game/TiempoExtraBanner';
 import { LogPanel } from '@/components/game/LogPanel';
 import { ExpansionActivationModal } from '@/components/game/ExpansionActivationModal';
+import { OnboardingTour } from '@/components/game/OnboardingTour';
+import { MobileGate } from '@/components/game/MobileGate';
+import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
+import { useMobileGate } from '@/hooks/useMobileGate';
 import GameOverScreen from './GameOverScreen';
 import RoleAssignmentScreen from './RoleAssignmentScreen';
 
@@ -23,15 +28,20 @@ export default function GameScreen() {
   const gs = useGameStore((s) => s.gameState);
   const lastError = useGameStore((s) => s.lastError);
   const clearError = useGameStore((s) => s.clearError);
-  const store = useGameStore.getState;
   const cur = useGameStore(selectCurrentPlayer);
   const navigate = useNavigate();
   const toast = useToast();
+  const session = getSession();
+
+  /** Helper: dispatch routeado a host si estamos en cliente; local si no. */
+  const dispatch = (playerId: string, action: PlayerAction) =>
+    dispatchAction(playerId, action);
 
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
   const [logOpen, setLogOpen] = useState(false);
   const [expansionOpen, setExpansionOpen] = useState(false);
   const [showAssignment, setShowAssignment] = useState(true);
+  const isMobile = useMobileGate();
 
   // Mostrar errores como toasts
   useEffect(() => {
@@ -40,6 +50,8 @@ export default function GameScreen() {
       clearError();
     }
   }, [lastError, toast, clearError]);
+
+  if (isMobile) return <MobileGate />;
 
   if (!gs) {
     return (
@@ -57,10 +69,14 @@ export default function GameScreen() {
     return <RoleAssignmentScreen onContinue={() => setShowAssignment(false)} />;
   }
 
-  const me = cur; // En hot-seat, el "jugador local" es siempre el del turno actual.
+  // En multiplayer real, "yo" es el jugador con id = session.myPlayerId.
+  // En hot-seat, "yo" es siempre el jugador del turno actual.
+  const me = session
+    ? gs.players.find((p) => p.id === session.myPlayerId) ?? cur
+    : cur;
   if (!me) return null;
   const others = gs.players.filter((p) => p.id !== me.id);
-  const isMyTurn = true; // hot-seat, siempre se juega quien está al turno
+  const isMyTurn = session ? gs.players[gs.currentPlayerIndex]?.id === me.id : true;
 
   const selectedCard = me.hand.find((c) => c.id === selectedCardId) ?? null;
   const meBank = me.bank.reduce((sum, c) => sum + c.value, 0);
@@ -71,68 +87,94 @@ export default function GameScreen() {
     if (!selectedCard) return;
     setSelectedCardId(null);
     const card = selectedCard;
-    const s = store();
     switch (choice.type) {
       case 'cancel':
         return;
       case 'money':
-        s.playCardAsMoney(me.id, card.id);
+        dispatch(me.id, { type: 'PLAY_CARD_AS_MONEY', cardId: card.id });
         return;
       case 'property':
-        s.playPropertyToSet(me.id, card.id, choice.color);
+        dispatch(me.id, { type: 'PLAY_PROPERTY_TO_SET', cardId: card.id, setColor: choice.color });
         return;
       case 'wildcard':
-        s.playWildcardToSet(me.id, card.id, choice.color);
+        dispatch(me.id, { type: 'PLAY_WILDCARD_TO_SET', cardId: card.id, chosenColor: choice.color });
         return;
       case 'rent':
-        s.playRent(me.id, card.id, choice.color, choice.targetId);
+        dispatch(me.id, {
+          type: 'PLAY_RENT',
+          rentCardId: card.id,
+          targetSetColor: choice.color,
+          targetPlayerId: choice.targetId,
+        });
         return;
       case 'building':
-        s.playBuilding(me.id, card.id, choice.color);
+        dispatch(me.id, { type: 'PLAY_BUILDING', buildingCardId: card.id, targetSetColor: choice.color });
         return;
       case 'sobrecargo':
-        s.playSobrecargo(me.id);
+        dispatch(me.id, { type: 'PLAY_SOBRECARGO' });
         return;
       case 'action_simple':
         if (card.actionName === 'movida_extra') {
-          s.drawExtra(me.id, card.id);
+          dispatch(me.id, { type: 'DRAW_EXTRA', actionCardId: card.id });
         } else if (card.actionName === 'cuota') {
-          s.collectTribute(me.id, card.id);
+          dispatch(me.id, { type: 'COLLECT_TRIBUTE', actionCardId: card.id });
         }
         return;
       case 'action_target':
         if (card.actionName === 'factura') {
-          s.collectDebt(me.id, card.id, choice.targetId);
+          dispatch(me.id, { type: 'COLLECT_DEBT', actionCardId: card.id, targetPlayerId: choice.targetId });
         }
         return;
       case 'action_target_set':
         if (card.actionName === 'confiscacion') {
-          s.confiscate(me.id, card.id, choice.targetId, choice.setColor);
+          dispatch(me.id, {
+            type: 'CONFISCATE',
+            actionCardId: card.id,
+            targetPlayerId: choice.targetId,
+            setColor: choice.setColor,
+          });
         }
         return;
       case 'action_target_card':
         if (card.actionName === 'trato_sucio') {
-          s.stealProperty(me.id, card.id, choice.targetId, choice.cardId);
+          dispatch(me.id, {
+            type: 'STEAL_PROPERTY',
+            actionCardId: card.id,
+            targetPlayerId: choice.targetId,
+            cardId: choice.cardId,
+          });
         }
         return;
     }
   };
 
   const handleEndTurn = () => {
-    if (me.hand.length > 7) {
-      // Forced discard automático del lowest-first (default policy).
-      // El brief permite que la UI ofrezca selección manual; en MVP usamos default.
-    }
-    store().endTurn(me.id);
+    dispatch(me.id, { type: 'END_TURN' });
   };
 
   const canActivateExpansion =
-    me.expansionCharge >= 100 && !me.expansionUsed && gs.phase === 'playing';
+    me.expansionCharge >= 100 && !me.expansionUsed && gs.phase === 'playing' && isMyTurn;
 
   const handleActivateExpansion = (payload: ExpansionInput) => {
     setExpansionOpen(false);
-    store().activateExpansion(me.id, payload);
+    dispatch(me.id, { type: 'ACTIVATE_EXPANSION', payload });
   };
+
+  // Keyboard shortcuts: T (terminar), E (expansión), L (log), H (ayuda), Esc (cerrar).
+  useKeyboardShortcuts(
+    {
+      t: () => isMyTurn && handleEndTurn(),
+      e: () => canActivateExpansion && setExpansionOpen(true),
+      h: () => navigate('/tutorial'),
+      l: () => setLogOpen((o) => !o),
+      escape: () => {
+        if (expansionOpen) setExpansionOpen(false);
+        else if (logOpen) setLogOpen(false);
+        else if (selectedCardId) setSelectedCardId(null);
+      },
+    },
+    !showAssignment,
+  );
 
   return (
     <main className="min-h-screen bg-bg text-text">
@@ -142,8 +184,13 @@ export default function GameScreen() {
           <span className="font-mono text-11 text-text-muted">/ {gs.gameId}</span>
         </div>
         <div className="flex items-center gap-3">
-          <span className="font-sans text-12 text-text-muted">
-            Turno de <strong className="text-text">{me.nickname}</strong> ({me.role})
+          <span
+            className="font-sans text-12 text-text-muted"
+            role="status"
+            aria-live="polite"
+          >
+            Turno de <strong className="text-text">{gs.players[gs.currentPlayerIndex]?.nickname}</strong>
+            {isMyTurn && session && <span className="text-coral ml-1">(vos)</span>}
           </span>
           <span className="font-mono text-11 text-text-muted">t={gs.turnsPlayed}</span>
         </div>
@@ -186,7 +233,9 @@ export default function GameScreen() {
             cards={gs.marketCards}
             bankAvailable={meBank}
             hasBoughtThisTurn={me.hasBoughtFromMarket}
-            onBuy={(cardId) => store().buyFromMarket(me.id, cardId)}
+            onBuy={(cardId) =>
+              dispatch(me.id, { type: 'BUY_FROM_MARKET', cardId })
+            }
             className="flex-1 min-w-[280px]"
           />
         </section>
@@ -207,7 +256,9 @@ export default function GameScreen() {
                 <PropertySetView
                   key={`${s.color}-${i}`}
                   set={s}
-                  onCardClick={(cid) => store().moveWildcard(me.id, cid, s.color)}
+                  onCardClick={(cid) =>
+                    dispatch(me.id, { type: 'MOVE_WILDCARD', cardId: cid, toColor: s.color })
+                  }
                 />
               ))}
             </div>
@@ -251,13 +302,13 @@ export default function GameScreen() {
         onClose={() => setSelectedCardId(null)}
       />
 
-      {gs.phase === 'defense_pending' && (
+      {gs.phase === 'defense_pending' && gs.pendingDefense && gs.pendingDefense.defenderId === me.id && (
         <DefenseModal
           state={gs}
           onResolve={(choice) => {
             const def = gs.pendingDefense;
             if (!def) return;
-            store().resolveDefense(def.defenderId, choice);
+            dispatch(def.defenderId, { type: 'RESOLVE_DEFENSE', choice });
           }}
         />
       )}
@@ -271,6 +322,8 @@ export default function GameScreen() {
         onActivate={handleActivateExpansion}
         onClose={() => setExpansionOpen(false)}
       />
+
+      <OnboardingTour />
     </main>
   );
 }

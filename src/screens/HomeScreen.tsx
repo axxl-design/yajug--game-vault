@@ -39,9 +39,9 @@ export default function HomeScreen() {
     if (!nicknameValid) return;
     setLastNickname(trimmed);
     setCreating(true);
-    // Pequeño delay UX para que el spinner se note y el clic se sienta deliberado.
     await new Promise((r) => setTimeout(r, 500));
     const code = generateGameCode();
+    sessionStorage.setItem(`mp_role_${code}`, 'host');
     navigate(`/game/${code}`);
   };
 
@@ -49,6 +49,7 @@ export default function HomeScreen() {
     if (!nicknameValid) return;
     setLastNickname(trimmed);
     setJoinOpen(false);
+    sessionStorage.setItem(`mp_role_${code}`, 'client');
     navigate(`/game/${code}`);
   };
 

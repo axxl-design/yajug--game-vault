@@ -6,13 +6,14 @@ MVP web del juego de cartas multijugador YAJUGÁ: DOMINIO. 2-4 jugadores, modo M
 
 ## Stack
 
-- React 18 + TypeScript + Vite
+- React 18 + TypeScript + Vite 6
 - Tailwind CSS 3 (con tokens del handoff bundle de Claude Design)
-- Zustand (estado), Framer Motion (animaciones)
-- PeerJS (multiplayer P2P)
+- Zustand 5 + Immer (estado), Framer Motion 11 (animaciones)
+- PeerJS 1.5 (multiplayer P2P sobre WebRTC, cloud público por default)
 - React Router 6
 - Geist Sans + Inter + Geist Mono (auto-host)
 - lucide-react (iconos UI)
+- Vitest 4 + @vitest/coverage-v8 (tests)
 
 ## Requisitos
 
@@ -60,7 +61,29 @@ Ver el brief técnico (`_handoff/BRIEF_CLAUDE_CODE_v3.md` sección 3) para la co
 
 Ver `_handoff/BRIEF_CLAUDE_CODE_v3.md` sección 27. 13 fases secuenciales con criterios de aceptación.
 
-**Estado actual:** Fases 6-10 completadas en una pasada (UI de partida + Defensa + Mercado + Titulares + Roles/Expansiones + Tiempo Extra). 201 tests pasando. Hot-seat MVP jugable de inicio a fin.
+**Estado actual:** **MVP completo (Fases 1-13)**. 4 jugadores en dispositivos distintos pueden jugar una partida completa por un link compartido (PeerJS). 201 tests pasando, build limpio, Vercel-ready.
+
+## Cómo deployar
+
+1. **Vercel zero-config** (recomendado):
+   - `git push` a un repo conectado a Vercel.
+   - El proyecto detecta `vercel.json` (framework=vite, build=`pnpm build`).
+   - El rewrite `/(.*)` → `/` resuelve las rutas client-side.
+2. **Manual** (cualquier host estático):
+   - `pnpm build` genera `dist/`.
+   - Servir `dist/` con cualquier server estático con SPA fallback (todas las rutas no-encontradas sirven `index.html`).
+
+## Cómo se juega online
+
+1. Un jugador entra a la app, escribe nickname, click "Crear partida". Recibe un código de 6 chars (ej. `K7P2RF`) y queda como **host**.
+2. El host comparte el link `https://app.com/game/K7P2RF` (botón "Copiar link" en el lobby).
+3. Otros jugadores abren el link → entran a la sala como **clientes** (PeerJS los conecta al peer del host).
+4. El host ve los slots llenarse en tiempo real. Cuando hay 2-4 jugadores → click "Empezar partida".
+5. Todos pasan por la pantalla de asignación de roles (ruleta + reveal) y arrancan la partida.
+6. Cada jugador, en su turno, juega cartas, defiende ataques, activa Expansiones, etc.
+7. Cuando alguien cumple condición de victoria → Tiempo Extra (1 turno por jugador para romperlo) → ganador → GameOverScreen.
+
+Si PeerJS falla (firewall, NAT, server caído), el host cae automático a **modo hot-seat** (todos en la misma pestaña con "Agregar jugador").
 
 ### Tests
 
@@ -73,9 +96,17 @@ pnpm test:coverage  # con reporte de coverage
 ### Rutas
 
 - `/` — HomeScreen (logo, tagline, nickname, crear/unirme).
-- `/tutorial` — TutorialScreen (accordion con 10 secciones, copy placeholder).
-- `/game/:gameId` — LobbyScreen (código compartible, lista de jugadores, empezar/cancelar).
+- `/tutorial` — TutorialScreen (accordion con 10 secciones).
+- `/game/:gameId` — LobbyScreen + GameScreen (host vs cliente decidido por sessionStorage, fallback a hot-seat si PeerJS falla).
 - `/dev` — galería de componentes (solo en desarrollo).
+
+### Atajos de teclado en GameScreen
+
+- `T` — terminar turno.
+- `E` — abrir modal de Expansión (si medidor está al 100%).
+- `L` — toggle del log de partida.
+- `H` — abrir tutorial.
+- `Esc` — cerrar modales en orden (expansión → log → menú de carta).
 
 ### Galería de componentes
 

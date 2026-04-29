@@ -504,9 +504,105 @@ Las pantallas (`GameScreen`, `GameOverScreen`, `RoleAssignmentScreen`) viven en 
 
 ---
 
+## Fases 11-13 — Multijugador, polish, deploy (pasada final)
+
+### 2026-04-29 — PeerJS sobre el cloud público; host-authoritative
+
+**Decisión:** `src/multiplayer/{messages,peer,sync}.ts`. Tipos de mensaje fieles a la sec 6 del brief (JOIN_REQUEST/ACCEPTED/REJECTED, PLAYER_ACTION, STATE_UPDATE, LOBBY_UPDATE, PING/PONG). Host-authoritative: peers mandan PLAYER_ACTION al host; el host valida en su `gameStore`, computa nuevo estado, y broadcastea STATE_UPDATE a todos los peers via las DataConnections.
+
+PeerJS usa el cloud público `0.peerjs.com` por default — suficiente para MVP. Si NAT traversal falla, el `LobbyScreen` cae a hot-seat.
+
+### 2026-04-29 — `dispatchAction` como fachada de la red
+
+**Contexto:** GameScreen/LobbyScreen tienen que decidir si una acción se aplica local o se envía al host. Hardcodear esa decisión en cada handler es churn.
+
+**Decisión:** `dispatchAction(playerId, action)` en `sync.ts` revisa `getSession()` y rutea apropiadamente:
+- Sin sesión (hot-seat) → aplica local en `gameStore`.
+- Sesión host → aplica local; el subscribe al gameStore broadcastea STATE_UPDATE a peers.
+- Sesión client → manda PLAYER_ACTION al host vía la DataConnection.
+
+GameScreen llama `dispatch(...)` para todo.
+
+### 2026-04-29 — Roles host/client por sessionStorage
+
+**Decisión:** HomeScreen marca `sessionStorage[mp_role_${gameId}] = 'host'|'client'` antes de navegar. LobbyScreen lo lee al montar. Si role=host y la id ya está tomada (otro ya creó sala), cae automático a `startClientSession` — útil cuando el host comparte el link y el receptor llega sin pasar por "Unirme".
+
+### 2026-04-29 — Heartbeat 5s, timeout 10s
+
+**Decisión:** cada conexión host↔client emite PING cada 5s. Si no llega PONG en 10s, se marca el peer como `isConnected=false` en el lobby y se broadcast LOBBY_UPDATE. La reconexión automática queda pendiente (BUGS.md).
+
+### 2026-04-29 — Dedup de nicknames
+
+**Decisión:** al recibir JOIN_REQUEST, el host compara nickname (case-insensitive) contra los existentes en lobby. Si colisiona, le agrega `(2)` (o `(3)`, etc.) antes de aceptar. Esto evita confusión visual en el panel de oponentes.
+
+### 2026-04-29 — Rechazo de peers tardíos / sala llena
+
+**Decisión:** el host responde JOIN_REJECTED con `reason` cuando:
+- `gameStore.gameState != null` → "La partida ya empezó".
+- `lobbyStore.players.length >= 4` → "La sala está llena".
+
+El cliente recibe el mensaje, setea `lastError`, cierra la sesión.
+
+### 2026-04-29 — STATE_UPDATE como única fuente de verdad para peers
+
+**Decisión:** los peers (clientes) NO ejecutan `applyAction` localmente. Su flujo es:
+1. UI → `dispatchAction` → `session.sendAction(action)` → host.
+2. Host computa, broadcastea STATE_UPDATE.
+3. `hostConn.on('data', STATE_UPDATE)` → `gameStore.setGameState(state)` → UI re-renderea.
+
+No hay optimistic updates locales — para MVP la latencia del cloud público es OK (~100ms). Si en producción se ve lag, se puede agregar optimistic en una iteración posterior.
+
+### 2026-04-29 — Keyboard shortcuts: T / E / H / L / Esc
+
+**Decisión:** `useKeyboardShortcuts` (hook custom) registra listeners globales. Ignora cuando el foco está en input/textarea. T = terminar turno, E = abrir modal de Expansión (si carga 100), L = toggle log, H = navegar a /tutorial, Esc = cerrar modales en orden (expansión → log → menú de carta).
+
+### 2026-04-29 — `prefers-reduced-motion` global vía CSS
+
+**Decisión:** en `globals.css`, un `@media (prefers-reduced-motion: reduce)` con selector universal reduce todas las `animation-duration` y `transition-duration` a 100ms y elimina `animation-iteration-count`. Esto cubre tanto framer-motion como cualquier otra animación CSS sin tocar componentes individualmente.
+
+### 2026-04-29 — Mobile gate <768px
+
+**Decisión:** `useMobileGate` hook + `<MobileGate>` componente en GameScreen. Si el viewport es <768px, en lugar de la mesa de juego se muestra "YAJUGÁ funciona mejor en pantallas más grandes". HomeScreen / LobbyScreen NO gatean — funcionan en mobile (es razonable crear/unirse a partida desde el celular y después abrir la mesa en una tablet).
+
+### 2026-04-29 — Onboarding 4 pasos en GameScreen
+
+**Decisión:** `<OnboardingTour>` se monta automáticamente en GameScreen y se muestra si `prefsStore.hasSeenOnboarding === false`. 4 modales secuenciales: mano → sets → mercado → terminar turno. Botón "Saltear" o "Listo" en el último marca `hasSeenOnboarding = true` (persistido vía Zustand persist). Próxima partida no aparece.
+
+### 2026-04-29 — Aria-live en el indicador de turno
+
+**Decisión:** el span "Turno de X" en el header tiene `role="status"` + `aria-live="polite"`. Cuando cambia el turno, los lectores de pantalla anuncian el nuevo jugador sin interrumpir lo que el usuario está leyendo.
+
+### 2026-04-29 — Howler.js diferido al post-MVP
+
+**Decisión:** el toggle de sonido en `prefsStore` está implementado, pero ningún sonido se reproduce. Razones:
+1. Howler agrega ~30 KB al bundle (ya estamos en 500 KB → cruzamos el threshold del warning de chunk).
+2. Necesitamos assets de audio (campanita, ka-ching, alerta, fanfarria) que no tenemos generados.
+3. La mecánica del juego no depende de audio.
+
+Documentado en `BUGS.md` y aquí. Cuando entren los assets, se conecta el `prefsStore.soundEnabled` con un wrapper sobre Howler en una iteración menor.
+
+### 2026-04-29 — Vercel zero-config + SPA rewrite
+
+**Decisión:** `vercel.json` con framework=vite, buildCommand=`pnpm build`, outputDirectory=`dist`, y un rewrite `/(.*)` → `/` para que las rutas client-side de React Router resuelvan en deploy (sino `/game/ABC123` da 404 al recargar).
+
+### 2026-04-29 — Bundle size warning aceptado
+
+**Contexto:** el build emite un warning porque el JS bundle pasó los 500 KB (508 KB / 156 KB gzip). PeerJS solo agrega ~100 KB. Dynamic import de `multiplayer/sync.ts` reduciría el chunk inicial pero complica el código.
+
+**Decisión:** aceptar el warning para MVP. Cuando entremos en optimización post-MVP, el plan es:
+1. `lazy()` en `App.tsx` para todas las pantallas (split por ruta).
+2. Dynamic import de PeerJS dentro de `startHostSession` / `startClientSession`.
+
+Esos dos cambios bajarían el initial chunk a ~250-300 KB.
+
+---
+
 ## Pendiente de decidir
 
-- Howler.js para audio (Fase 12+).
-- Fallback a `socket.io` + Railway si PeerJS NAT traversal falla (Fase 11).
+- Reconexión automática de peer desconectado (timeout 30s antes de marcar AFK).
+- Banner dramático con timer 60s cuando el host se desconecta.
+- Howler.js + assets de audio (post-MVP).
+- Tooltips enriquecidos en cartas de mano (hover >800ms muestra nombre + descripción).
+- Rascacielos: aplicar renta x3 al set monumento + contar como 2 sets para victoria (post-MVP).
 - Reordenamiento Urbano: UI completa de "modo god" para mover propiedades (post-MVP).
-- Rascacielos: aplicar renta x3 al set monumento (post-MVP — actualmente solo isMonument flag y bloqueo de ataques).
+- Estafador "1 mentira sobre la mano" (necesita vista per-player en multijugador real).

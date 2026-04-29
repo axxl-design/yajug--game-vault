@@ -8,7 +8,8 @@ import {
   Plug,
   Play,
   Plus,
-  Users,
+  Wifi,
+  WifiOff,
   X,
 } from 'lucide-react';
 import {
@@ -31,6 +32,14 @@ import { isValidGameCode } from '@/utils/gameCode';
 import { GAME_CONFIG } from '@/game/constants';
 import { cn } from '@/utils/cn';
 import GameScreen from './GameScreen';
+import {
+  closeSession,
+  getSession,
+  startClientSession,
+  startHostSession,
+} from '@/multiplayer/sync';
+
+type SessionStatus = 'idle' | 'connecting' | 'host' | 'client' | 'failed';
 
 export default function LobbyScreen() {
   const { gameId = '' } = useParams<{ gameId: string }>();
@@ -50,27 +59,89 @@ export default function LobbyScreen() {
   const [copied, setCopied] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
   const [newNickname, setNewNickname] = useState('');
+  const [status, setStatus] = useState<SessionStatus>('idle');
+  const [statusMsg, setStatusMsg] = useState<string>('');
 
   const codeValid = isValidGameCode(gameId);
 
-  // Inicializar lobby si está vacío y el código es válido.
+  // Inicializar sesión multiplayer (host o client) según sessionStorage.
   useEffect(() => {
     if (!codeValid) return;
-    if (lobby.gameId === gameId && lobby.players.length > 0) return;
-    lobby.initLobby({
-      gameId,
-      localPlayerId: 'self',
-      localNickname: lastNickname || 'Anfitrión',
-      isHost: true,
-    });
-    // Solo correr una vez al montar.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gameId, codeValid]);
+    let cancelled = false;
+    const role = sessionStorage.getItem(`mp_role_${gameId}`) ?? 'host';
+    const localPlayerId = `self-${gameId}`;
+    const localNickname = lastNickname || (role === 'host' ? 'Anfitrión' : 'Invitado');
 
-  // Si la partida ya empezó (gameState existe), renderizar GameScreen.
+    setStatus('connecting');
+    setStatusMsg(role === 'host' ? 'Abriendo sala…' : 'Conectándome al host…');
+
+    if (role === 'host') {
+      // Inicializar lobby local
+      lobby.initLobby({
+        gameId,
+        localPlayerId,
+        localNickname,
+        isHost: true,
+      });
+      startHostSession({ gameId, localPlayerId, localNickname })
+        .then(() => {
+          if (cancelled) return;
+          setStatus('host');
+          setStatusMsg('Sala abierta. Compartí el link.');
+        })
+        .catch(async (err) => {
+          if (cancelled) return;
+          const code = (err as Error).message ?? 'unknown';
+          // Si la id está tomada, otro ya es host → caer a cliente automático.
+          if (code === 'unavailable-id') {
+            try {
+              await startClientSession({ gameId, localPlayerId, localNickname });
+              if (cancelled) return;
+              setStatus('client');
+              setStatusMsg('Te uniste a la sala como cliente.');
+              return;
+            } catch {
+              if (cancelled) return;
+              setStatus('failed');
+              setStatusMsg('No se pudo conectar al host. Modo hot-seat activo.');
+              return;
+            }
+          }
+          setStatus('failed');
+          setStatusMsg('Sin red — modo hot-seat (todos en la misma pestaña).');
+        });
+    } else {
+      startClientSession({ gameId, localPlayerId, localNickname })
+        .then(() => {
+          if (cancelled) return;
+          setStatus('client');
+          setStatusMsg('Conectado al host.');
+        })
+        .catch((err) => {
+          if (cancelled) return;
+          setStatus('failed');
+          const code = (err as Error).message ?? 'unknown';
+          setStatusMsg(
+            code === 'connect-timeout'
+              ? 'No se encontró la sala. Verificá el código.'
+              : 'No se pudo conectar al host.',
+          );
+        });
+    }
+
+    return () => {
+      cancelled = true;
+      closeSession();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gameId]);
+
   if (gameState) {
     return <GameScreen />;
   }
+
+  const session = getSession();
+  const isHost = !session || session.mode === 'host'; // hot-seat fallback = treat as host
 
   const handleCopy = async () => {
     try {
@@ -106,12 +177,13 @@ export default function LobbyScreen() {
       hostId: players.find((p) => p.isHost)?.id ?? players[0].id,
       playerSeeds: players.map((p) => ({ id: p.id, nickname: p.nickname })),
     });
-    // GameScreen se renderiza automáticamente al cambiar gameState.
   };
 
   const handleExit = () => {
     setConfirmExit(false);
+    closeSession();
     lobby.reset();
+    sessionStorage.removeItem(`mp_role_${gameId}`);
     navigate('/');
   };
 
@@ -135,7 +207,7 @@ export default function LobbyScreen() {
           Salir
         </button>
         <div className="font-display text-16 font-bold tracking-tight">
-          YAJUGÁ <span className="text-text-muted font-medium">/ Sala (hot-seat)</span>
+          YAJUGÁ <span className="text-text-muted font-medium">/ Sala</span>
         </div>
         <div className="flex items-center gap-2">
           <SoundToggle />
@@ -145,6 +217,8 @@ export default function LobbyScreen() {
 
       <div className="mx-auto flex max-w-3xl flex-col gap-8 px-6 py-10">
         <CodeBanner code={gameId} onCopy={handleCopy} copied={copied} />
+
+        <SessionStatusBanner status={status} message={statusMsg} />
 
         <section className="flex flex-col gap-4">
           <div className="flex items-baseline justify-between">
@@ -160,52 +234,73 @@ export default function LobbyScreen() {
                 nickname={p.nickname}
                 isHost={p.isHost}
                 connected={p.isConnected}
-                onRemove={p.isHost ? undefined : () => lobby.removePlayer(p.id)}
+                onRemove={
+                  isHost && !p.isHost && status === 'failed'
+                    ? () => lobby.removePlayer(p.id)
+                    : undefined
+                }
               />
             ))}
-            {players.length < GAME_CONFIG.MAX_PLAYERS && (
-              <button
-                type="button"
-                onClick={() => setAddOpen(true)}
-                className={cn(
-                  'flex items-center gap-3 rounded-8 border border-dashed border-border bg-bg-elev-1 p-3',
-                  'hover:bg-bg-elev-2 hover:border-border-strong transition-colors duration-fast ease-out',
-                  'text-text-muted text-left',
-                )}
-              >
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-bg-elev-2 border border-dashed border-border">
-                  <Plus size={16} />
-                </span>
-                <span className="font-sans text-14">Agregar jugador (hot-seat)</span>
-              </button>
-            )}
+            {/* Hot-seat: agregar jugadores adicionales si la sesión multiplayer falló */}
+            {status === 'failed' &&
+              isHost &&
+              players.length < GAME_CONFIG.MAX_PLAYERS && (
+                <button
+                  type="button"
+                  onClick={() => setAddOpen(true)}
+                  className={cn(
+                    'flex items-center gap-3 rounded-8 border border-dashed border-border bg-bg-elev-1 p-3',
+                    'hover:bg-bg-elev-2 hover:border-border-strong transition-colors duration-fast ease-out',
+                    'text-text-muted text-left',
+                  )}
+                >
+                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-bg-elev-2 border border-dashed border-border">
+                    <Plus size={16} />
+                  </span>
+                  <span className="font-sans text-14">Agregar jugador hot-seat</span>
+                </button>
+              )}
           </div>
 
-          <p className="font-sans text-12 text-text-subtle italic">
-            Modo hot-seat: todos los jugadores comparten esta pestaña. El multijugador real (PeerJS) llega en Fase 11.
-          </p>
+          {status === 'failed' && (
+            <p className="font-sans text-12 text-text-subtle italic">
+              Modo hot-seat: todos los jugadores comparten esta pestaña.
+            </p>
+          )}
+          {status === 'host' && (
+            <p className="font-sans text-12 text-text-subtle italic">
+              Sos el host. Compartí el link para que se sumen jugadores.
+            </p>
+          )}
+          {status === 'client' && (
+            <p className="font-sans text-12 text-text-subtle italic">
+              Conectado al host. Esperá que empiece la partida.
+            </p>
+          )}
         </section>
 
         <footer className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
           <Button variant="ghost" onClick={() => setConfirmExit(true)}>
-            Cancelar partida
+            {isHost ? 'Cancelar partida' : 'Salir'}
           </Button>
-          <Button
-            size="lg"
-            leftIcon={Play}
-            onClick={handleStart}
-            disabled={!canStart}
-            className="!h-12 tracking-wide uppercase"
-          >
-            Empezar partida ({connectedCount}/{GAME_CONFIG.MAX_PLAYERS})
-          </Button>
+          {isHost && (
+            <Button
+              size="lg"
+              leftIcon={Play}
+              onClick={handleStart}
+              disabled={!canStart}
+              className="!h-12 tracking-wide uppercase"
+            >
+              Empezar partida ({connectedCount}/{GAME_CONFIG.MAX_PLAYERS})
+            </Button>
+          )}
         </footer>
       </div>
 
       <Modal
         open={addOpen}
         onClose={() => setAddOpen(false)}
-        title="Agregar jugador"
+        title="Agregar jugador (hot-seat)"
         size="sm"
         footer={
           <>
@@ -244,10 +339,26 @@ export default function LobbyScreen() {
         }
       >
         <p className="font-sans text-15 text-text leading-relaxed">
-          Vas a cancelar la sala y volver al inicio.
+          Vas a cerrar la sala y volver al inicio.
         </p>
       </Modal>
     </main>
+  );
+}
+
+/* --------------------------- SessionStatus --------------------------- */
+
+function SessionStatusBanner({ status, message }: { status: SessionStatus; message: string }) {
+  const icon =
+    status === 'host' || status === 'client' ? <Wifi size={14} className="text-amber" /> : <WifiOff size={14} className="text-coral" />;
+  return (
+    <div className="flex items-center gap-2 rounded-8 border border-border bg-bg-elev-1 px-3 py-2">
+      {icon}
+      <span className="font-mono text-12 text-text-muted uppercase tracking-wider">
+        {status}
+      </span>
+      <span className="font-sans text-12 text-text">{message}</span>
+    </div>
   );
 }
 
@@ -369,6 +480,3 @@ function InvalidCode({ code, onBack }: { code: string; onBack: () => void }) {
     </main>
   );
 }
-
-// Suprimir warning de unused import
-void Users;

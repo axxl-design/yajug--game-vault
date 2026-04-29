@@ -58,3 +58,16 @@
     image-rendering: crisp-edges;
   }
 }
+
+/* Respetar prefers-reduced-motion: reducir todas las animaciones a fade rápido,
+   eliminar repeticiones infinitas (logos respirando, banners pulsando). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 100ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 100ms !important;
+    scroll-behavior: auto !important;
+  }
+}
