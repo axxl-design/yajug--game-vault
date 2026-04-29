@@ -34,6 +34,9 @@ El servidor corre en `http://localhost:5173`.
 - `pnpm build` — type-check + build de producción.
 - `pnpm preview` — preview del build.
 - `pnpm typecheck` — solo type-check, sin build.
+- `pnpm test` — Vitest watch mode.
+- `pnpm test:run` — Vitest single run.
+- `pnpm test:coverage` — tests + reporte de coverage.
 
 ## Estructura
 
@@ -57,7 +60,15 @@ Ver el brief técnico (`_handoff/BRIEF_CLAUDE_CODE_v3.md` sección 3) para la co
 
 Ver `_handoff/BRIEF_CLAUDE_CODE_v3.md` sección 27. 13 fases secuenciales con criterios de aceptación.
 
-**Estado actual:** Fase 3 completada (HomeScreen + LobbyScreen + TutorialScreen + routing). Pendiente verificación humana antes de pasar a Fase 4.
+**Estado actual:** Fase 4 completada (lógica de juego pura en `src/game/` + 140 tests Vitest, cobertura ≥80%). Pendiente verificación humana antes de pasar a Fase 5.
+
+### Tests
+
+```bash
+pnpm test           # watch mode
+pnpm test:run       # single run
+pnpm test:coverage  # con reporte de coverage
+```
 
 ### Rutas
 

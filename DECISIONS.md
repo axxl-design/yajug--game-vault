@@ -216,8 +216,110 @@ Registro vivo de decisiones técnicas significativas. Cada entrada lleva fecha, 
 
 ---
 
+## Fase 4 — Lógica de juego pura
+
+### 2026-04-29 — Vitest + coverage v8 + tests co-locados
+
+**Contexto:** Fase 4 pide tests unitarios con cobertura ≥80%.
+
+**Decisión:** `vitest` + `@vitest/coverage-v8` como devDeps. Tests co-locados (`foo.ts` + `foo.test.ts`) en lugar de `__tests__/`. Scripts: `test`, `test:run`, `test:coverage`. Coverage scope = `src/game/**/*.ts`. Threshold global 80% en lines/branches/functions/statements. Resultado real: 91% statements / 81% branches / 94% functions / 95% lines en 140 tests.
+
+**Bonus:** corregí `pnpm typecheck` que estaba como `tsc --noEmit` (no-op por la config de project references). Pasa a `tsc -b --noEmit` para que efectivamente type-checkee.
+
+### 2026-04-29 — RNG y IDs deterministas para tests reproducibles
+
+**Decisión:** `src/game/rng.ts` exporta `mulberry32(seed)` (algoritmo seedable, no security-grade) y `defaultRng` que envuelve `Math.random`. Toda función que necesita aleatoriedad recibe un `Rng` por parámetro — nunca llama `Math.random` directo. Mismo patrón con `createIdFactory(prefix)` en `src/game/ids.ts`: counter local por factory, así los tests pueden generar las mismas IDs corrida tras corrida. Sin esto, los snapshots tipo "totalCards no varía" serían imposibles.
+
+### 2026-04-29 — Composición del mazo: 111 cartas (brief permite ±1)
+
+**Contexto:** la sec 8 del brief lista cantidades por tipo y dice "TOTAL: 110 cartas (ajustar +/- 1 según necesidad)". Sumando los conteos del brief: 29 propiedades + 11 wildcards + 20 dinero + 13 rentas + 28 acciones + 10 buildings = 111. La sección "PROPIEDADES (28 cartas)" del brief es inconsistente con el desglose de su propia tabla (3+3+3+3+3+2+3+3+2+4 = 29).
+
+**Decisión:** mazo de 111 cartas. Mantengo PROPERTY_REQUIREMENTS como única fuente de verdad para los conteos. La diferencia de ±1 cae dentro del margen del brief, evita arbitrar qué color sacrificar.
+
+### 2026-04-29 — Distribución de pares en wildcards y rentas
+
+**Contexto:** sec 8 brief dice "2 cartas comodín bicolor de cada combinación común" + "1 universal" = 11; "10 rentas específicas por par de colores" + "3 multicolor" = 13. No especifica los pares exactos.
+
+**Decisión:**
+
+- **Wildcards (5 pares × 2 cartas + 1 universal):** elegidos para cubrir cada uno de los 10 colores no-comodín una sola vez, sin repetición:
+  - rojo/amarillo, naranja/morado, verde/turquesa, azul/marron, rosa/gris.
+- **Rentas (10 pares × 1 carta + 3 multicolor):** 10 pares distintos para máxima variedad estratégica. Los primeros 5 espejan los pares de wildcards; los otros 5 son combinaciones cruzadas:
+  - rojo/amarillo, naranja/morado, verde/turquesa, azul/marron, rosa/gris,
+  - rojo/naranja, amarillo/verde, turquesa/azul, morado/rosa, marron/gris.
+
+**Razón:** dos cartas idénticas de cada par (wildcards) aporta redundancia para movimiento de comodines; pares variados (rentas) abre más estrategias de cobro.
+
+### 2026-04-29 — Valores monetarios: convención Monopoly Deal canónica
+
+**Contexto:** el brief especifica `PROPERTY_RENT_VALUES` (cuánto cobra el set por número de propiedades) pero NO el `value` que cada carta aporta cuando se juega al banco como dinero (cualquier carta puede jugarse así, sec 9.12). Tampoco da el value de las cartas de acción ni de los wildcards.
+
+**Decisión:** uso valores canónicos de Monopoly Deal:
+
+- **Propiedades:** marron 1, turquesa 1, rosa 2, naranja 2, rojo 3, amarillo 3, verde 4, azul 4, morado 2, gris 2.
+- **Acciones:** Bloqueo 4, Confiscación 5, Trato Sucio 3, Trueque Forzado 3, Factura 3, Cuota 2, Movida Extra 1, Sobrecargo 1, Edificio 3, Torre 4.
+- **Wildcards:** 0 (canon Monopoly Deal — desincentiva jugarlas como dinero).
+- **Rentas:** bicolor 1, multicolor 3.
+
+Si el balance de partidas reales lo pide, se ajusta acá sin tocar nada de la lógica.
+
+### 2026-04-29 — Política de pago default: lowest-first sin revertir
+
+**Contexto:** cuando se cobra renta/factura, el target paga con cartas. El brief dice "el jugador paga con dinero del banco y/o propiedades sueltas; si no tiene suficiente, paga lo que pueda" (sec 9.5) y "Pago con propiedad de set completo: rompe el set" (sec 22).
+
+**Decisión:** `computeDefaultPayment` paga lowest-value-first dentro de cada bucket, en orden: banco → propiedades sueltas → propiedades de set completo (rompe sets). Sin "change": el target paga al menos lo demandado y posiblemente sobrepaga (canon Monopoly Deal). El bucket de last resort (sets completos) se usa solo si no hay otra forma de cubrir el monto.
+
+**Razón:** "lowest-first" preserva las cartas de mayor valor para crisis futuras. Sets completos solo se rompen como último recurso. La sobrepaga es inherente a la mecánica.
+
+### 2026-04-29 — Pago con propiedad va al BANCO del cobrador, no a sus sets
+
+**Contexto:** sec 22 brief: "Pago con propiedad: la propiedad va al banco del cobrador, no a sus sets". Una propiedad-como-pago se vuelve "moneda" en el banco del receiver.
+
+**Decisión:** implementado tal cual. `executePayment` mete TODAS las cartas transferidas (banco + propiedades) en `receiver.bank`. Así, una propiedad robada por pago no completa sets automáticamente — el receiver tiene que volver a sacarla del banco como propiedad en un turno futuro (vía un movimiento que en MVP no existe explícito; en la práctica las propiedades-como-pago quedan "ahogadas" en el banco hasta que el receiver las use como dinero).
+
+### 2026-04-29 — Acciones que disparan Defense se aplican directo en Fase 4 + log marker
+
+**Contexto:** Defense flow real es Fase 7. Pero las acciones que la disparan (Confiscación, Trato Sucio, Trueque, Factura, Cuota, Renta dirigida, Sobrecargo) ya viven en Fase 4. Sin Defense flow, ¿se aplican? ¿Se ignoran?
+
+**Decisión:** se aplican DIRECTO en Fase 4 (target paga, atacante recibe, set transfiere, etc.). En el log se agrega una entrada `defense_would_trigger` antes del efecto, marcando el punto donde Fase 7 va a interceptar para mostrar el modal. Cuando llegue Fase 7, ese hook se reemplaza por el `pendingDefense` real.
+
+### 2026-04-29 — Sobrecargo aplicado retroactivamente sobre la última Renta del turno
+
+**Contexto:** sec 9.8 brief dice "se juega INMEDIATAMENTE DESPUÉS de jugar una carta de Renta". Sin Defense flow, la renta se paga al instante; cuando el atacante quiere encadenar Sobrecargo, la transacción ya pasó.
+
+**Decisión:** cada `Player` tiene `lastRentInTurn: { amount, targetIds, rentCardId } | null`. `playRent` lo setea; `playSobrecargo` lo lee, aplica un segundo cobro del mismo monto al mismo target, y limpia el flag. Si no hay renta previa en el turno, Sobrecargo throws GameError.
+
+### 2026-04-29 — Coleccionista: condición de victoria pasiva en Fase 4
+
+**Contexto:** confirmado por el usuario. La regla pasiva de "2 sets completos + 1 propiedad suelta" NO requiere activación de Expansión, así que vive en Fase 4.
+
+**Decisión:** `checkVictoryCondition(player)` consulta `player.role`:
+- Si `coleccionista`: `distinctCompletedSetColors >= 2 && hasStrayProperty`. Implica que un Coleccionista con 3 sets completos pero CERO propiedades sueltas NO gana — la regla del Coleccionista REEMPLAZA la regla estándar, no la suma. Test cubre este caso explícitamente.
+- Resto: `distinctCompletedSetColors >= 3`.
+
+El Set Monumento del Rascacielos (cuenta como 2 sets) llega en Fase 9.
+
+### 2026-04-29 — Tiempo Extra diferido a Fase 10
+
+**Contexto:** brief sec 14 detalla Tiempo Extra como una pre-condición a la victoria. La Fase 4 no lo implementa.
+
+**Decisión:** `checkAndApplyVictory` setea `winner` y `phase = 'game_over'` directamente cuando se cumple la condición. Cuando llegue Fase 10, ese branch se reemplaza por `phase = 'tiempo_extra'` + `tiempoExtraState` y la victoria se confirma o cancela tras la última vuelta.
+
+### 2026-04-29 — Bug y fix: Titulares vencidos no iban al descarte
+
+**Bug detectado por el test de conservación de cartas:** cuando `turnsPlayed` cruza el segundo múltiplo de 5 (turno 10) y se voltea un nuevo Titular, el `activeTitular` previo se sobreescribe sin ir a ningún lado, perdiendo 1 carta.
+
+**Fix:** en `startTurn`, antes de asignar el nuevo `activeTitular`, mover el previo (si existía) al `discardPile`. La regla "1 ronda" del Titular implica que para cuando aparece el siguiente, el efecto del anterior ya expiró — descartarlo es correcto. Cuando Fase 8 implemente la duración real, se puede mover a un `usedTitulares` pile separado si conviene.
+
+### 2026-04-29 — Política de simulación de tests: agresiva pero simple
+
+**Contexto:** Fase 4 acepta como criterio "una partida completa puede simularse mediante código". Necesito una policy que tome decisiones legales y haga que las partidas eventualmente terminen.
+
+**Decisión:** `nextLegalAction` prioriza, en orden: confiscar set ajeno completo → robar propiedad ajena suelta → jugar propiedad propia → jugar wildcard → cobrar renta → poner edificio en set completo → robar 2 cartas (Movida Extra) → cualquier carta como dinero → terminar turno. Política determinista (sin RNG) para que con seed fijo el resultado sea reproducible. Los tests verifican que las partidas terminan en ≤1000 turnos con 4 jugadores y que el conteo total de cartas se mantiene constante.
+
+---
+
 ## Pendiente de decidir
 
 - Howler.js para audio (Fase 6+).
-- ¿Tests unitarios con Vitest o Jest? Preliminar: Vitest (encaja con Vite, Fase 4).
 - Fallback a `socket.io` + Railway si PeerJS NAT traversal falla (Fase 11).
