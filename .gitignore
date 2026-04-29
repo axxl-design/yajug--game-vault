@@ -1,0 +1,33 @@
+# Dependencias
+node_modules/
+.pnpm-store/
+
+# Build
+dist/
+dist-ssr/
+*.local
+*.tsbuildinfo
+
+# Editores
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Material de referencia (no se publica)
+_handoff/
