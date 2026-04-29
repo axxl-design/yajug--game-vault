@@ -85,9 +85,100 @@ Registro vivo de decisiones técnicas significativas. Cada entrada lleva fecha, 
 
 ---
 
+## Fase 2 — Componentes UI base
+
+### 2026-04-29 — Galería `/dev` interna en vez de Storybook
+
+**Contexto:** la sección 27 del brief deja la galería como opcional. Para un MVP con superficie chica, Storybook sería overkill (config, deps extra, ritual de stories).
+
+**Decisión:** ruta `/dev` interna que renderiza todos los componentes en sus estados, montada solo en desarrollo (`import.meta.env.DEV`). En `App.tsx` el componente se carga vía `React.lazy` condicional — en build de prod la condición queda en `false` y Rollup tree-shakea el módulo. Verificado: `grep "galería\|DevScreen" dist/assets/index-*.js` da 0 matches.
+
+### 2026-04-29 — `prefsStore` con `zustand/middleware/persist`
+
+**Contexto:** el toggle de tema y el último nickname tienen que persistir entre sesiones (sección 25 del brief). Hacerlo con `localStorage` directo y refactorizar después es churn innecesario.
+
+**Decisión:** `src/stores/prefsStore.ts` con shape mínimo (`theme: 'light'|'dark'`, `lastNickname: string`, `hasSeenOnboarding: boolean`) + setters dedicados + `toggleTheme`. Persistencia automática con `persist({ name: 'yajuga-prefs', version: 1 })`. Default `theme: 'dark'` alineado con el brief. Campos futuros (sound, density) quedan listados como comentario para descomentar cuando hagan falta.
+
+### 2026-04-29 — Aplicar tema vía `data-theme` en `<html>` desde un hook
+
+**Contexto:** los tokens semánticos están atados a `[data-theme="light"]` (decisión Fase 1). Necesito un punto de aplicación que escuche el store y mantenga el atributo sincronizado.
+
+**Decisión:** `src/hooks/useApplyTheme.ts` se llama una sola vez en `App.tsx` y escribe `document.documentElement.setAttribute('data-theme', theme)` cada vez que cambia. Sin código de bootstrap en `main.tsx` para evitar flash en doble lectura.
+
+### 2026-04-29 — Variants de Button consumen brand colors literales (no semantic)
+
+**Contexto:** la sección 16 del brief especifica las 4 variants con colores fijos: PRIMARY=coral/bone, SECONDARY=bone/ink, DANGER=coral-700/bone, GHOST=transparent. Hay tentación de "tematizar" SECONDARY para que en dark mode use surface en lugar de bone (más legible visualmente), pero eso desviaría del brief.
+
+**Decisión:** seguir el brief literalmente. SECONDARY es bone-sobre-cualquier-fondo intencionalmente — es un botón de "salir/cancelar" pensado para destacar contra dark mode con su contraste alto. Hover/active resueltos con `brightness-95`/`brightness-90` para no inventar tokens nuevos. Focus ring usa `outline-amber` (el "mustard" del brief mapea a nuestro token `amber`).
+
+### 2026-04-29 — Toast con context provider + hook (no global singleton)
+
+**Contexto:** la sección 18 del brief pide toasts disparables desde cualquier lugar. Dos caminos: (a) singleton global tipo `toast.success(...)` con instancia mutable a nivel módulo, (b) Context Provider + `useToast()` hook.
+
+**Decisión:** Context Provider en `App.tsx` con `useToast()` hook. Razón: deja los toasts atados al árbol de React (re-renders, clean-up de timers en unmount) y evita estado global mutable que rompería Strict Mode. El callsite queda casi igual: `const toast = useToast(); toast.success("…")`. Auto-dismiss 4s, click para cerrar antes, stack vertical en `bottom-6 right-6` con animación de slide+fade desde la derecha (más nuevo arriba). Cuatro tipos con icono Lucide cada uno.
+
+### 2026-04-29 — Tooltip con portal + smart positioning ligero
+
+**Contexto:** los tooltips tienen que aparecer encima de cualquier capa (cartas, modales con z bajo) y no quedar clipped por overflow. El brief pide delay 800ms, fade 150ms, smart positioning.
+
+**Decisión:** render via `createPortal` a `document.body`. Posicionamiento `fixed` calculado a partir de `getBoundingClientRect` del trigger, con `transform: translate(-50%, -100%)` (etc. según side) para anclar sin medir el tooltip. Smart positioning = "flip si el lado preferido tiene menos de 48px hasta el borde", más clamp horizontal/vertical de 8px de padding. No es full Floating UI pero cubre el 95% de casos del MVP. Cierra automático en scroll/resize para evitar quedar desalineado.
+
+### 2026-04-29 — `cn` util casero, sin clsx ni tailwind-merge
+
+**Contexto:** componer clases Tailwind condicionales necesita un join helper. Las opciones populares son `clsx` + `tailwind-merge`.
+
+**Decisión:** `src/utils/cn.ts` con `(...parts) => parts.filter(Boolean).join(' ')` — 3 líneas, cero deps. No hay merge de clases conflictivas (Tailwind última-gana funciona porque la regla de specificity en CSS lo resuelve), y para casos donde sí hace falta override explícito, paso `className` al final del cn() y listo. Si en una fase futura aparecen casos donde el merge inteligente importa, se evalúa sumar `tailwind-merge` (4kb gzip) entonces.
+
+---
+
+## Fase 3 — Pantallas básicas
+
+### 2026-04-29 — Códigos de partida de 6 chars con alfabeto sin O/0/I/1
+
+**Contexto:** la URL `/game/:gameId` necesita un identificador shareable. Los UUID v4 son largos y feos para dictar por voz o WhatsApp. Tampoco quiero generar números enteros porque colisiones son más probables y no se ve "premium".
+
+**Decisión:** `src/utils/gameCode.ts` genera códigos de 6 chars del alfabeto `ABCDEFGHJKLMNPQRSTUVWXYZ23456789` (32 chars, sin O/0/I/1 para evitar confusiones al compartir verbalmente). Son `32^6 ≈ 1B` combinaciones — colisión despreciable para un MVP. La función `normalizeGameCode` limpia input pegado (uppercase + filtra chars inválidos) y `isValidGameCode` valida formato. El generador usa `crypto.getRandomValues` (no `Math.random`) por costumbre, no porque sea security-sensitive.
+
+### 2026-04-29 — Lobby hardcodea host + 1 mock peer en Fase 3
+
+**Contexto:** Phase 3 pide jugadores hardcoded para validar el layout antes de tener PeerJS funcionando. Necesitaba decidir cuántos jugadores y en qué estados.
+
+**Decisión:** dos jugadores conectados (el local con su nickname de prefsStore, marcado como host con la corona; un mock "Invitado") + 2 slots vacíos animados (pulse). `isHost = true` hardcoded — la rama no-host del UI quedó codeada pero no es alcanzable por ahora. Esto deja "EMPEZAR PARTIDA" habilitado (canStart requiere ≥2 conectados) y muestra el banner de código real, suficiente para QA visual del flujo del host. Fase 11 reemplaza el array por `lobbyStore` real con peers conectados.
+
+### 2026-04-29 — "Empezar partida" muestra toast informativo en Fase 3
+
+**Contexto:** el botón "EMPEZAR PARTIDA" tiene comportamiento detallado en sec 15.2 (assignRolesAndExpansions, transición de phase, etc.) pero ese código vive en Fase 4-5.
+
+**Decisión:** en Fase 3 el click muestra `toast.info('Inicio de partida queda para Fase 4-5 (lógica de juego).')`. Razón: dejar el botón clickeable + dar feedback explícito de que el control funciona y la lógica de gameplay todavía no, en lugar de un click silencioso o un botón muerto. Cuando llegue Fase 4-5 se reemplaza por el handler real.
+
+### 2026-04-29 — `/game/:gameId` valida formato y muestra error explícito
+
+**Contexto:** un usuario tipea `/game/foo` o llega con un código mal pegado. Sin guarda, la sala renderiza con un código basura mostrado como banner.
+
+**Decisión:** `LobbyScreen` valida `isValidGameCode(gameId)` arriba de todo y, si falla, renderiza un `<InvalidCode>` con icono + explicación + botón "Volver al inicio". Sin redirect automático — el redirect borra contexto sin avisarle al usuario qué pasó.
+
+### 2026-04-29 — Tagline typewriter + logo respiración respetan `prefers-reduced-motion`
+
+**Contexto:** sec 17 del brief pide respetar reduced-motion. La HomeScreen tiene 2 animaciones potencialmente molestas: typewriter del tagline y "respiración" del logo (scale 1↔1.02 cada 4s, infinita).
+
+**Decisión:** uso `useReducedMotion()` de framer-motion en ambas. Si es true: typewriter muestra el texto completo de inmediato y el logo se renderiza sin la animación de scale. Las animaciones de stagger de los botones (entrada one-shot de 320ms) las dejo activas — son cortas y no repiten.
+
+### 2026-04-29 — JoinModal con input de código separado, no `<NicknameInput>`
+
+**Contexto:** podría reusar `NicknameInput` para el código de partida, pero el código tiene reglas distintas: alfabeto restringido, uppercase forzado, exactamente 6 chars, font-mono visualmente espaciada para que se lea claro.
+
+**Decisión:** `JoinModal` usa un `<input>` propio inline, con normalización al tipear (`normalizeGameCode` rechaza chars inválidos al vuelo, no espera al submit) y display en font-mono con `tracking-[0.3em]`. No vale extraer un `<TextInput>` genérico todavía — sólo lo necesitamos en este lugar.
+
+### 2026-04-29 — Tutorial accordion con uno-abierto-a-la-vez (no múltiple)
+
+**Contexto:** el accordion del tutorial tiene 10 secciones. Dos opciones UX: (a) varias abiertas simultáneamente, (b) sólo una a la vez con auto-cierre del resto.
+
+**Decisión:** uno a la vez. Razón: 10 secciones + scroll vertical + leer cada una requiere foco; tener varias abiertas alarga la lista y obliga al usuario a decidir cuál cerrar. La primera arranca abierta (`useState(0)`) para que la pantalla no se vea vacía. Animación de altura con framer-motion (`height: auto` ↔ `height: 0`, 220ms ease-out-expo).
+
+---
+
 ## Pendiente de decidir
 
 - Howler.js para audio (Fase 6+).
-- Storybook vs página `/dev` interna para galería de componentes (Fase 2). Decisión preliminar: `/dev` interna, sin Storybook.
 - ¿Tests unitarios con Vitest o Jest? Preliminar: Vitest (encaja con Vite, Fase 4).
 - Fallback a `socket.io` + Railway si PeerJS NAT traversal falla (Fase 11).

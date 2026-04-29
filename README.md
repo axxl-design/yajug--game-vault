@@ -57,4 +57,15 @@ Ver el brief técnico (`_handoff/BRIEF_CLAUDE_CODE_v2.md` sección 3) para la co
 
 Ver `_handoff/BRIEF_CLAUDE_CODE_v2.md` sección 27. 13 fases secuenciales con criterios de aceptación.
 
-**Estado actual:** Fase 1 completada. Pendiente verificación humana antes de pasar a Fase 2.
+**Estado actual:** Fase 3 completada (HomeScreen + LobbyScreen + TutorialScreen + routing). Pendiente verificación humana antes de pasar a Fase 4.
+
+### Rutas
+
+- `/` — HomeScreen (logo, tagline, nickname, crear/unirme).
+- `/tutorial` — TutorialScreen (accordion con 10 secciones, copy placeholder).
+- `/game/:gameId` — LobbyScreen (código compartible, lista de jugadores, empezar/cancelar).
+- `/dev` — galería de componentes (solo en desarrollo).
+
+### Galería de componentes
+
+En desarrollo, la ruta `/dev` (`http://localhost:5173/dev`) muestra todos los componentes UI en sus variants y estados, con toggle de tema en el header. La página queda fuera del build de producción (cargada vía `React.lazy` condicional a `import.meta.env.DEV`).
