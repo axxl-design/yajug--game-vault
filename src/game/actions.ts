@@ -18,7 +18,6 @@ import {
   wildcardAcceptsColor,
 } from './cards';
 import {
-  calculateSetRent,
   checkVictoryCondition,
   computeDefaultPayment,
   findCardInBank,
@@ -34,15 +33,10 @@ import {
 } from './rules';
 import { drawCards, discardCardsToPile } from './deck';
 import type { Rng } from './rng';
+import { GameError } from './errors';
+import { requestAttack, computeRentAmount } from './defense';
 
-/* ============================ Errors ============================== */
-
-export class GameError extends Error {
-  constructor(public reason: string) {
-    super(reason);
-    this.name = 'GameError';
-  }
-}
+export { GameError };
 
 /* ========================= Internal helpers ======================== */
 
@@ -430,32 +424,20 @@ export function playRent(
 
   const { player: p1, card: rentCard } = removeFromHand(attacker, rentCardId);
   const set = p1.sets.find((s) => s.color === targetSetColor)!;
-  const amount = calculateSetRent(set);
+  const baseRent = computeRentAmount(state, p1, set);
+  const amount = baseRent.amount;
 
   let s = applyPlayerUpdate(state, {
     ...p1,
     hasPlayedCardsThisTurn: p1.hasPlayedCardsThisTurn + 1,
     lastRentInTurn: { amount, targetIds: [targetPlayerId], rentCardId: rentCard.id },
   });
-  s = discardCardsToPile(s, [rentCard]);
-  s = appendLog(
-    s,
-    makeLog(
-      s,
-      'defense_would_trigger',
-      `Renta dirigida a ${targetPlayerId} dispararía Defense (Fase 7).`,
-      playerId,
-      { rentCardId, targetPlayerId, amount },
-    ),
-  );
-  s = processForcedPayment(s, targetPlayerId, playerId, amount);
-  s = appendLog(
-    s,
-    makeLog(s, 'rent_collected', `${playerId} cobró renta de ${amount}M a ${targetPlayerId}.`, playerId, {
-      amount,
-      from: targetPlayerId,
-    }),
-  );
+  s = requestAttack(s, playerId, rentCard, targetPlayerId, {
+    type: 'rent',
+    targetSetColor,
+    amount,
+    rentCardId: rentCard.id,
+  }, `Renta dirigida a ${targetPlayerId}: ${amount}M.`);
   return s;
 }
 
@@ -513,44 +495,23 @@ export function confiscate(
   if (setIdx < 0) {
     throw new GameError(`${targetPlayerId} no tiene set completo de ${setColor}.`);
   }
+  if (target.sets[setIdx].isMonument) {
+    throw new GameError(`No se puede confiscar un Set Monumento sin pagar 5M.`);
+  }
 
   const { player: p1, card: actionCard } = removeFromHand(attacker, actionCardId);
   if (actionCard.actionName !== 'confiscacion') {
     throw new GameError('Carta no es Confiscación.');
   }
 
-  const stolenSet = target.sets[setIdx];
-  const newTarget: Player = {
-    ...target,
-    sets: target.sets.filter((_, i) => i !== setIdx),
-  };
-  // Attacker recibe el set (potencialmente "duplicado" si ya tenía uno completo de ese color).
-  const newAttacker: Player = {
+  let s = applyPlayerUpdate(state, {
     ...p1,
-    sets: [...p1.sets, { ...stolenSet }],
     hasPlayedCardsThisTurn: p1.hasPlayedCardsThisTurn + 1,
-  };
-  let s = applyPlayerUpdate(state, newAttacker);
-  s = applyPlayerUpdate(s, newTarget);
-  s = discardCardsToPile(s, [actionCard]);
-  s = appendLog(
-    s,
-    makeLog(
-      s,
-      'defense_would_trigger',
-      `Confiscación contra ${targetPlayerId} dispararía Defense (Fase 7).`,
-      playerId,
-      { setColor, targetPlayerId },
-    ),
-  );
-  s = appendLog(
-    s,
-    makeLog(s, 'set_confiscated', `${playerId} confiscó set ${setColor} a ${targetPlayerId}.`, playerId, {
-      setColor,
-      targetPlayerId,
-    }),
-  );
-  return checkAndApplyVictory(s, newAttacker);
+  });
+  return requestAttack(s, playerId, actionCard, targetPlayerId, {
+    type: 'confiscate',
+    setColor,
+  }, `Confiscación: ${playerId} → ${targetPlayerId} set ${setColor}.`);
 }
 
 export function stealProperty(
@@ -575,53 +536,19 @@ export function stealProperty(
   const set = target.sets[loc.setIndex];
   if (set.isComplete) throw new GameError('No se puede robar de set completo.');
 
-  const stolen = set.properties[loc.cardIndex];
   const { player: p1, card: actionCard } = removeFromHand(attacker, actionCardId);
   if (actionCard.actionName !== 'trato_sucio') {
     throw new GameError('Carta no es Trato Sucio.');
   }
 
-  // Quitar propiedad del target
-  const newTargetSet = recomputeSetCompleteness({
-    ...set,
-    properties: set.properties.filter((_, i) => i !== loc.cardIndex),
-  });
-  const newTargetSets = target.sets.map((s, i) => (i === loc.setIndex ? newTargetSet : s));
-  const targetPruned = pruneEmptySets({ ...target, sets: newTargetSets }, state);
-
-  // Decidir color para colocar en attacker:
-  //  - si es property: usa su color.
-  //  - si es wildcard: usa el color del set del que la sacaste.
-  const placeColor: CardColor = isProperty(stolen) ? stolen.color! : set.color;
-  const newAttackerSets = pushPropertyIntoSets(p1.sets, stolen, placeColor);
-  const newAttacker: Player = {
+  let s = applyPlayerUpdate(state, {
     ...p1,
-    sets: newAttackerSets,
     hasPlayedCardsThisTurn: p1.hasPlayedCardsThisTurn + 1,
-  };
-
-  let s = targetPruned.state;
-  s = applyPlayerUpdate(s, targetPruned.player);
-  s = applyPlayerUpdate(s, newAttacker);
-  s = discardCardsToPile(s, [actionCard]);
-  s = appendLog(
-    s,
-    makeLog(
-      s,
-      'defense_would_trigger',
-      `Trato Sucio contra ${targetPlayerId} dispararía Defense (Fase 7).`,
-      playerId,
-      { targetPlayerId, cardId },
-    ),
-  );
-  s = appendLog(
-    s,
-    makeLog(s, 'property_stolen', `${playerId} le robó ${stolen.name} a ${targetPlayerId}.`, playerId, {
-      targetPlayerId,
-      cardId: stolen.id,
-    }),
-  );
-  return checkAndApplyVictory(s, newAttacker);
+  });
+  return requestAttack(s, playerId, actionCard, targetPlayerId, {
+    type: 'steal_property',
+    cardId,
+  }, `Trato Sucio: ${playerId} → ${targetPlayerId} (${cardId}).`);
 }
 
 export function forceTrade(
@@ -640,8 +567,6 @@ export function forceTrade(
   }
   const target = getPlayerById(state, targetPlayerId);
   if (!target) throw new GameError(`Target ${targetPlayerId} no existe.`);
-
-  // Ambas propiedades deben estar en sets INCOMPLETOS.
   const attLoc = findCardInSets(attacker, ownCardId);
   const tgtLoc = findCardInSets(target, targetCardId);
   if (!attLoc || attacker.sets[attLoc.setIndex].isComplete) {
@@ -651,62 +576,19 @@ export function forceTrade(
     throw new GameError('Propiedad del oponente no está suelta.');
   }
 
-  const ownCard = attacker.sets[attLoc.setIndex].properties[attLoc.cardIndex];
-  const tgtCard = target.sets[tgtLoc.setIndex].properties[tgtLoc.cardIndex];
-  const ownColor = attacker.sets[attLoc.setIndex].color;
-  const tgtColor = target.sets[tgtLoc.setIndex].color;
-
-  // Quitar de cada uno
-  const attRemoved = removePropertyFromAnySet(attacker, ownCardId)!;
-  const tgtRemoved = removePropertyFromAnySet(target, targetCardId)!;
-
-  // Colocar en el oponente
-  const placeForAtt: CardColor = isProperty(tgtCard) ? tgtCard.color! : ownColor;
-  const placeForTgt: CardColor = isProperty(ownCard) ? ownCard.color! : tgtColor;
-
-  const attWithIncoming: Player = {
-    ...attRemoved.newPlayer,
-    sets: pushPropertyIntoSets(attRemoved.newPlayer.sets, tgtCard, placeForAtt),
-  };
-  const tgtWithIncoming: Player = {
-    ...tgtRemoved.newPlayer,
-    sets: pushPropertyIntoSets(tgtRemoved.newPlayer.sets, ownCard, placeForTgt),
-  };
-
-  // Quitar action card de la mano del attacker
-  const { player: attFinal, card: actionCard } = removeFromHand(attWithIncoming, actionCardId);
+  const { player: p1, card: actionCard } = removeFromHand(attacker, actionCardId);
   if (actionCard.actionName !== 'trueque_forzado') {
     throw new GameError('Carta no es Trueque Forzado.');
   }
-  const attFinal2: Player = {
-    ...attFinal,
-    hasPlayedCardsThisTurn: attFinal.hasPlayedCardsThisTurn + 1,
-  };
-
-  let s = pruneEmptySets(attFinal2, state).state;
-  const attPruned = pruneEmptySets(attFinal2, state);
-  const tgtPruned = pruneEmptySets(tgtWithIncoming, attPruned.state);
-  s = tgtPruned.state;
-  s = applyPlayerUpdate(s, attPruned.player);
-  s = applyPlayerUpdate(s, tgtPruned.player);
-  s = discardCardsToPile(s, [actionCard]);
-  s = appendLog(
-    s,
-    makeLog(s, 'defense_would_trigger', `Trueque dispararía Defense (Fase 7).`, playerId, {
-      targetPlayerId,
-    }),
-  );
-  s = appendLog(
-    s,
-    makeLog(
-      s,
-      'property_traded',
-      `${playerId} cambió ${ownCard.name} por ${tgtCard.name} con ${targetPlayerId}.`,
-      playerId,
-      { ownCardId, targetCardId, targetPlayerId },
-    ),
-  );
-  return checkAndApplyVictory(s, attPruned.player);
+  let s = applyPlayerUpdate(state, {
+    ...p1,
+    hasPlayedCardsThisTurn: p1.hasPlayedCardsThisTurn + 1,
+  });
+  return requestAttack(s, playerId, actionCard, targetPlayerId, {
+    type: 'force_trade',
+    ownCardId,
+    targetCardId,
+  }, `Trueque: ${playerId} ↔ ${targetPlayerId}.`);
 }
 
 export function collectDebt(
@@ -732,22 +614,10 @@ export function collectDebt(
     ...p1,
     hasPlayedCardsThisTurn: p1.hasPlayedCardsThisTurn + 1,
   });
-  s = discardCardsToPile(s, [actionCard]);
-  s = appendLog(
-    s,
-    makeLog(s, 'defense_would_trigger', `Factura dispararía Defense (Fase 7).`, playerId, {
-      targetPlayerId,
-    }),
-  );
-  s = processForcedPayment(s, targetPlayerId, playerId, GAME_CONFIG.FACTURA_AMOUNT);
-  s = appendLog(
-    s,
-    makeLog(s, 'debt_collected', `${playerId} facturó ${GAME_CONFIG.FACTURA_AMOUNT}M a ${targetPlayerId}.`, playerId, {
-      amount: GAME_CONFIG.FACTURA_AMOUNT,
-      targetPlayerId,
-    }),
-  );
-  return s;
+  return requestAttack(s, playerId, actionCard, targetPlayerId, {
+    type: 'collect_debt',
+    amount: GAME_CONFIG.FACTURA_AMOUNT,
+  }, `Factura: ${playerId} → ${targetPlayerId} ${GAME_CONFIG.FACTURA_AMOUNT}M.`);
 }
 
 export function collectTribute(
@@ -767,27 +637,17 @@ export function collectTribute(
     ...p1,
     hasPlayedCardsThisTurn: p1.hasPlayedCardsThisTurn + 1,
   });
-  s = discardCardsToPile(s, [actionCard]);
 
-  // Cobrar 2M a cada otro jugador conectado.
-  for (const other of state.players) {
-    if (other.id === playerId) continue;
-    if (!other.isConnected) continue;
-    s = appendLog(
-      s,
-      makeLog(s, 'defense_would_trigger', `Cuota a ${other.id} dispararía Defense.`, playerId, {
-        targetPlayerId: other.id,
-      }),
-    );
-    s = processForcedPayment(s, other.id, playerId, GAME_CONFIG.CUOTA_AMOUNT);
+  const others = state.players.filter((p) => p.id !== playerId && p.isConnected);
+  if (others.length === 0) {
+    return discardCardsToPile(s, [actionCard]);
   }
-  s = appendLog(
-    s,
-    makeLog(s, 'tribute_collected', `${playerId} cobró Cuota de ${GAME_CONFIG.CUOTA_AMOUNT}M a todos.`, playerId, {
-      amount: GAME_CONFIG.CUOTA_AMOUNT,
-    }),
-  );
-  return s;
+  const [first, ...rest] = others;
+  return requestAttack(s, playerId, actionCard, first.id, {
+    type: 'collect_tribute',
+    amount: GAME_CONFIG.CUOTA_AMOUNT,
+    remainingDefenders: rest.map((p) => p.id),
+  }, `Cuota: ${playerId} cobra ${GAME_CONFIG.CUOTA_AMOUNT}M a todos.`);
 }
 
 export function drawExtra(
@@ -843,6 +703,18 @@ export function discardFromHand(
     }),
   );
   return s;
+}
+
+/** Buy from market — wrapper para que el dispatcher pueda routarlo. */
+export function buyFromMarketAction(
+  state: GameState,
+  playerId: string,
+  cardId: string,
+  rng: Rng,
+): GameState {
+  // Lazy import to avoid circular: market depende de actions (GameError) que ahora vive en errors.
+  const { buyFromMarket } = require('./market') as typeof import('./market');
+  return buyFromMarket(state, playerId, cardId, rng);
 }
 
 /* ---------- Re-exporto predicates para uso desde game.ts ----------- */

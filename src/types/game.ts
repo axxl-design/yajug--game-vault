@@ -127,14 +127,27 @@ export type ActiveEffectType =
   | 'audit_freeze'
   | 'rentas_canceladas'
   | 'rentas_dobles'
-  | 'rentas_triples'
+  | 'rentas_modifier_plus_one'
   | 'mano_publica'
+  | 'reforma_movible'
+  | 'subasta_recovery'
+  | 'truco_mano_publica'
+  | 'tribunal_no_actions'
+  | 'inmunidad_no_attacks'
+  | 'pacto_no_rents'
+  | 'auditoria_no_rents'
+  | 'trueque_no_attacks'
+  | 'camara_no_property'
+  | 'rascacielos_no_draw'
+  | 'reordenamiento_no_modify'
   | 'titular_active';
 
 export interface ActiveEffect {
   id: string;
   type: ActiveEffectType;
   sourcePlayerId: string;
+  /** Turno (`turnsPlayed`) en el que el efecto expira. -1 = permanente. */
+  expiresAtTurn: number;
   durationRounds: number;
   data?: unknown;
 }
@@ -158,6 +171,10 @@ export interface Player {
   lastRentInTurn: { amount: number; targetIds: string[]; rentCardId: string } | null;
   /** Phase 9+: deuda con Banquero (Préstamo Forzado). */
   bankerDebt: number;
+  /** Phase 8: 1 compra del mercado por turno. Reset en startTurn. */
+  hasBoughtFromMarket: boolean;
+  /** Phase 9: bonus de cartas extra (Noche de Gala / Movida Extra). */
+  bonusDraws: number;
 }
 
 export type GamePhase =
@@ -170,11 +187,20 @@ export type GamePhase =
   | 'titular_active'
   | 'game_over';
 
+/** Datos del ataque pendiente — se aplica si la defensa lo permite. */
+export type PendingAttackContext =
+  | { type: 'confiscate'; setColor: CardColor }
+  | { type: 'steal_property'; cardId: string }
+  | { type: 'force_trade'; ownCardId: string; targetCardId: string }
+  | { type: 'collect_debt'; amount: number }
+  | { type: 'collect_tribute'; amount: number; remainingDefenders: string[] }
+  | { type: 'rent'; targetSetColor: CardColor; amount: number; rentCardId: string };
+
 export interface PendingDefense {
   attackerId: string;
   defenderId: string;
   cardPlayed: Card;
-  context: unknown;
+  context: PendingAttackContext;
   timeoutAt: number;
 }
 
@@ -216,7 +242,27 @@ export type GameLogEntryType =
   | 'set_broken'
   | 'deck_reshuffled'
   | 'game_won'
-  | 'defense_would_trigger'; // Marcador de Fase 4 — Defense real va en Fase 7.
+  | 'defense_would_trigger'
+  | 'defense_pending'
+  | 'defense_blocked'
+  | 'defense_negotiated'
+  | 'defense_countered'
+  | 'defense_timeout'
+  | 'defense_resolved'
+  | 'market_bought'
+  | 'market_refilled'
+  | 'titular_flipped'
+  | 'titular_expired'
+  | 'effect_expired'
+  | 'expansion_charged'
+  | 'expansion_activated'
+  | 'expansion_resolved'
+  | 'expansion_exit_cost'
+  | 'tiempo_extra_started'
+  | 'tiempo_extra_canceled'
+  | 'tiempo_extra_ended'
+  | 'role_passive_applied'
+  | 'monument_declared';
 
 export interface GameLogEntry {
   timestamp: number;
@@ -279,4 +325,44 @@ export type PlayerAction =
   | { type: 'COLLECT_TRIBUTE'; actionCardId: string }
   | { type: 'DRAW_EXTRA'; actionCardId: string }
   | { type: 'DISCARD'; cardIds: string[] }
-  | { type: 'END_TURN' };
+  | { type: 'END_TURN' }
+  | { type: 'BUY_FROM_MARKET'; cardId: string }
+  | {
+      type: 'RESOLVE_DEFENSE';
+      choice: DefenseChoice;
+    }
+  | { type: 'ACTIVATE_EXPANSION'; payload: ExpansionInput };
+
+export type DefenseChoice =
+  | { type: 'block' }
+  | { type: 'counter' }
+  | { type: 'negotiate'; amount: number }
+  | { type: 'accept' };
+
+/** Inputs unificados para activar Expansiones — UI los junta y los pasa. */
+export type ExpansionInput =
+  | { type: 'tribunal_dominio'; acusadoId: string; acusadorId: string }
+  | { type: 'inmunidad_diplomatica'; protectedId: string }
+  | {
+      type: 'subasta_siglo';
+      propertyIds: string[];
+      bids: Record<string, Record<string, number>>; // playerId -> propId -> bid
+      assignments: Record<string, string | null>; // propId -> winnerId
+    }
+  | { type: 'pacto_comercial' }
+  | { type: 'el_truco' }
+  | { type: 'doble_identidad'; suplantadoId: string }
+  | { type: 'auditoria_forzada' }
+  | { type: 'prestamo_forzado' }
+  | {
+      type: 'trueque_imperial';
+      // Para cada otro jugador: la propiedad que el coleccionista toma + la que entrega.
+      swaps: Array<{ otherPlayerId: string; takeCardId: string; giveCardId: string }>;
+    }
+  | {
+      type: 'camara_archivo';
+      pieceCardId: string;
+      pieceOwnerId: string;
+    }
+  | { type: 'rascacielos'; setColor: CardColor }
+  | { type: 'reordenamiento_urbano' };

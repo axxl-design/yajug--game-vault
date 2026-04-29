@@ -48,6 +48,8 @@ export function buildTestState(opts: {
     effects: [],
     lastRentInTurn: null,
     bankerDebt: 0,
+    hasBoughtFromMarket: false,
+    bonusDraws: 0,
   }));
   return {
     gameId: 'test',
@@ -96,3 +98,16 @@ export function newIds(): IdFactory {
 }
 
 export const seededRng = (seed = 1) => mulberry32(seed);
+
+/**
+ * Helper para tests: si un ataque deja `pendingDefense`, auto-acepta para
+ * que el test pueda assertear el estado post-ataque.
+ */
+import { resolveDefense } from './defense';
+export function autoAcceptDefenses(s: GameState, rng = seededRng()): GameState {
+  let cur = s;
+  while (cur.pendingDefense) {
+    cur = resolveDefense(cur, { type: 'accept' }, rng);
+  }
+  return cur;
+}

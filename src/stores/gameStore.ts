@@ -1,6 +1,12 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
-import type { CardColor, GameState, PlayerAction } from '@/types/game';
+import type {
+  CardColor,
+  DefenseChoice,
+  ExpansionInput,
+  GameState,
+  PlayerAction,
+} from '@/types/game';
 import { applyAction, createInitialGameState, type PlayerSeed } from '@/game/game';
 import { GameError } from '@/game/actions';
 import { defaultRng, type Rng } from '@/game/rng';
@@ -78,6 +84,9 @@ export interface GameStoreState {
   drawExtra: (playerId: string, actionCardId: string) => void;
   discard: (playerId: string, cardIds: string[]) => void;
   endTurn: (playerId: string) => void;
+  buyFromMarket: (playerId: string, cardId: string) => void;
+  resolveDefense: (defenderId: string, choice: DefenseChoice) => void;
+  activateExpansion: (playerId: string, payload: ExpansionInput) => void;
 }
 
 interface InternalRefs {
@@ -219,6 +228,12 @@ export const useGameStore = create<GameStoreState>()(
       discard: (playerId, cardIds) =>
         tryDispatch(playerId, { type: 'DISCARD', cardIds }),
       endTurn: (playerId) => tryDispatch(playerId, { type: 'END_TURN' }),
+      buyFromMarket: (playerId, cardId) =>
+        tryDispatch(playerId, { type: 'BUY_FROM_MARKET', cardId }),
+      resolveDefense: (defenderId, choice) =>
+        tryDispatch(defenderId, { type: 'RESOLVE_DEFENSE', choice }),
+      activateExpansion: (playerId, payload) =>
+        tryDispatch(playerId, { type: 'ACTIVATE_EXPANSION', payload }),
     };
   }),
 );

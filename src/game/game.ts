@@ -98,6 +98,8 @@ function buildPlayer(seed: PlayerSeed, role: RoleId, expansion: ExpansionId): Pl
     effects: [],
     lastRentInTurn: null,
     bankerDebt: 0,
+    hasBoughtFromMarket: false,
+    bonusDraws: 0,
   };
 }
 
@@ -229,8 +231,19 @@ export function applyAction(
       return discardFromHand(state, playerId, action.cardIds);
     case 'END_TURN':
       return endTurn(state, rng);
+    case 'BUY_FROM_MARKET': {
+      const { buyFromMarket } = require('./market') as typeof import('./market');
+      return buyFromMarket(state, playerId, action.cardId, rng);
+    }
+    case 'RESOLVE_DEFENSE': {
+      const { resolveDefense } = require('./defense') as typeof import('./defense');
+      return resolveDefense(state, action.choice, rng);
+    }
+    case 'ACTIVATE_EXPANSION': {
+      const { activateExpansion } = require('./expansion-effects') as typeof import('./expansion-effects');
+      return activateExpansion(state, playerId, action.payload, rng);
+    }
     default: {
-      // Exhaustiveness check
       const _never: never = action;
       throw new GameError(`Acción desconocida: ${JSON.stringify(_never)}`);
     }

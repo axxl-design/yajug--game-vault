@@ -1,6 +1,5 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import {
   ArrowLeft,
   Check,
@@ -8,28 +7,30 @@ import {
   Crown,
   Plug,
   Play,
+  Plus,
   Users,
+  X,
 } from 'lucide-react';
 import {
   Button,
   Card,
   Modal,
+  NicknameInput,
   SoundToggle,
   ThemeToggle,
   useToast,
 } from '@/components/ui';
 import { usePrefsStore } from '@/stores/prefsStore';
+import {
+  selectCanStart,
+  selectConnectedCount,
+  useLobbyStore,
+} from '@/stores/lobbyStore';
+import { useGameStore } from '@/stores/gameStore';
 import { isValidGameCode } from '@/utils/gameCode';
+import { GAME_CONFIG } from '@/game/constants';
 import { cn } from '@/utils/cn';
-
-const MAX_PLAYERS = 4;
-
-interface LobbyPlayer {
-  id: string;
-  nickname: string;
-  isHost: boolean;
-  connected: boolean;
-}
+import GameScreen from './GameScreen';
 
 export default function LobbyScreen() {
   const { gameId = '' } = useParams<{ gameId: string }>();
@@ -37,39 +38,39 @@ export default function LobbyScreen() {
   const toast = useToast();
   const lastNickname = usePrefsStore((s) => s.lastNickname);
 
+  const lobby = useLobbyStore();
+  const players = lobby.players;
+  const canStart = selectCanStart(lobby);
+  const connectedCount = selectConnectedCount(lobby);
+
+  const gameState = useGameStore((s) => s.gameState);
+  const initGame = useGameStore((s) => s.initGame);
+
   const [confirmExit, setConfirmExit] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [addOpen, setAddOpen] = useState(false);
+  const [newNickname, setNewNickname] = useState('');
 
-  // Validar el código antes de armar la sala.
   const codeValid = isValidGameCode(gameId);
 
-  // Jugadores hardcoded para Fase 3 — Fase 4-5 los reemplaza con peerStore real.
-  // Asumimos que el usuario local es siempre el host por ahora.
-  const players = useMemo<LobbyPlayer[]>(
-    () => [
-      {
-        id: 'self',
-        nickname: lastNickname || 'Jugador 1',
-        isHost: true,
-        connected: true,
-      },
-      {
-        id: 'mock-2',
-        nickname: 'Invitado',
-        isHost: false,
-        connected: true,
-      },
-    ],
-    [lastNickname],
-  );
+  // Inicializar lobby si está vacío y el código es válido.
+  useEffect(() => {
+    if (!codeValid) return;
+    if (lobby.gameId === gameId && lobby.players.length > 0) return;
+    lobby.initLobby({
+      gameId,
+      localPlayerId: 'self',
+      localNickname: lastNickname || 'Anfitrión',
+      isHost: true,
+    });
+    // Solo correr una vez al montar.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gameId, codeValid]);
 
-  const isHost = true; // Hardcoded — Fase 11 lo deriva de quién creó la partida.
-  const canStart = players.filter((p) => p.connected).length >= 2;
-
-  const slots: Array<LobbyPlayer | null> = [
-    ...players,
-    ...Array.from({ length: MAX_PLAYERS - players.length }, () => null),
-  ];
+  // Si la partida ya empezó (gameState existe), renderizar GameScreen.
+  if (gameState) {
+    return <GameScreen />;
+  }
 
   const handleCopy = async () => {
     try {
@@ -82,13 +83,35 @@ export default function LobbyScreen() {
     }
   };
 
+  const handleAddPlayer = () => {
+    const nick = newNickname.trim();
+    if (!nick) {
+      toast.error('El nickname no puede estar vacío.');
+      return;
+    }
+    if (players.length >= GAME_CONFIG.MAX_PLAYERS) {
+      toast.error(`Máximo ${GAME_CONFIG.MAX_PLAYERS} jugadores.`);
+      return;
+    }
+    const id = `p-${players.length + 1}-${Date.now().toString(36)}`;
+    lobby.addPlayer({ id, nickname: nick, isHost: false, isConnected: true });
+    setNewNickname('');
+    setAddOpen(false);
+  };
+
   const handleStart = () => {
     if (!canStart) return;
-    toast.info('Inicio de partida queda para Fase 4-5 (lógica de juego).');
+    initGame({
+      gameId,
+      hostId: players.find((p) => p.isHost)?.id ?? players[0].id,
+      playerSeeds: players.map((p) => ({ id: p.id, nickname: p.nickname })),
+    });
+    // GameScreen se renderiza automáticamente al cambiar gameState.
   };
 
   const handleExit = () => {
     setConfirmExit(false);
+    lobby.reset();
     navigate('/');
   };
 
@@ -112,7 +135,7 @@ export default function LobbyScreen() {
           Salir
         </button>
         <div className="font-display text-16 font-bold tracking-tight">
-          YAJUGÁ <span className="text-text-muted font-medium">/ Sala</span>
+          YAJUGÁ <span className="text-text-muted font-medium">/ Sala (hot-seat)</span>
         </div>
         <div className="flex items-center gap-2">
           <SoundToggle />
@@ -120,57 +143,89 @@ export default function LobbyScreen() {
         </div>
       </header>
 
-      <div className="mx-auto flex max-w-3xl flex-col gap-10 px-6 py-12">
+      <div className="mx-auto flex max-w-3xl flex-col gap-8 px-6 py-10">
         <CodeBanner code={gameId} onCopy={handleCopy} copied={copied} />
 
         <section className="flex flex-col gap-4">
           <div className="flex items-baseline justify-between">
-            <h2 className="font-display text-20 font-semibold tracking-tight">
-              Jugadores
-            </h2>
+            <h2 className="font-display text-20 font-semibold tracking-tight">Jugadores</h2>
             <span className="font-mono text-13 text-text-muted">
-              {players.filter((p) => p.connected).length}/{MAX_PLAYERS}
+              {connectedCount}/{GAME_CONFIG.MAX_PLAYERS}
             </span>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
-            {slots.map((p, i) =>
-              p ? (
-                <PlayerSlot key={p.id} player={p} />
-              ) : (
-                <EmptySlot key={`empty-${i}`} />
-              ),
+            {players.map((p) => (
+              <PlayerSlot
+                key={p.id}
+                nickname={p.nickname}
+                isHost={p.isHost}
+                connected={p.isConnected}
+                onRemove={p.isHost ? undefined : () => lobby.removePlayer(p.id)}
+              />
+            ))}
+            {players.length < GAME_CONFIG.MAX_PLAYERS && (
+              <button
+                type="button"
+                onClick={() => setAddOpen(true)}
+                className={cn(
+                  'flex items-center gap-3 rounded-8 border border-dashed border-border bg-bg-elev-1 p-3',
+                  'hover:bg-bg-elev-2 hover:border-border-strong transition-colors duration-fast ease-out',
+                  'text-text-muted text-left',
+                )}
+              >
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-bg-elev-2 border border-dashed border-border">
+                  <Plus size={16} />
+                </span>
+                <span className="font-sans text-14">Agregar jugador (hot-seat)</span>
+              </button>
             )}
           </div>
+
+          <p className="font-sans text-12 text-text-subtle italic">
+            Modo hot-seat: todos los jugadores comparten esta pestaña. El multijugador real (PeerJS) llega en Fase 11.
+          </p>
         </section>
 
         <footer className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-          {isHost ? (
-            <>
-              <Button variant="ghost" onClick={() => setConfirmExit(true)}>
-                Cancelar partida
-              </Button>
-              <Button
-                size="lg"
-                leftIcon={Play}
-                onClick={handleStart}
-                disabled={!canStart}
-                className="!h-12 tracking-wide uppercase"
-              >
-                Empezar partida
-              </Button>
-            </>
-          ) : (
-            <>
-              <span className="self-center text-14 text-text-muted">
-                Esperando que el host empiece la partida…
-              </span>
-              <Button variant="ghost" onClick={() => setConfirmExit(true)}>
-                Salir
-              </Button>
-            </>
-          )}
+          <Button variant="ghost" onClick={() => setConfirmExit(true)}>
+            Cancelar partida
+          </Button>
+          <Button
+            size="lg"
+            leftIcon={Play}
+            onClick={handleStart}
+            disabled={!canStart}
+            className="!h-12 tracking-wide uppercase"
+          >
+            Empezar partida ({connectedCount}/{GAME_CONFIG.MAX_PLAYERS})
+          </Button>
         </footer>
       </div>
+
+      <Modal
+        open={addOpen}
+        onClose={() => setAddOpen(false)}
+        title="Agregar jugador"
+        size="sm"
+        footer={
+          <>
+            <Button variant="ghost" onClick={() => setAddOpen(false)}>
+              Cancelar
+            </Button>
+            <Button onClick={handleAddPlayer} disabled={!newNickname.trim()}>
+              Agregar
+            </Button>
+          </>
+        }
+      >
+        <NicknameInput
+          value={newNickname}
+          onChange={setNewNickname}
+          onSubmitValid={handleAddPlayer}
+          autoFocus
+          label="Nickname"
+        />
+      </Modal>
 
       <Modal
         open={confirmExit}
@@ -189,9 +244,7 @@ export default function LobbyScreen() {
         }
       >
         <p className="font-sans text-15 text-text leading-relaxed">
-          {isHost
-            ? 'Si salís, la sala se cancela y los demás jugadores conectados van a ser desconectados.'
-            : 'Vas a volver a la pantalla principal y perder el lugar en esta sala.'}
+          Vas a cancelar la sala y volver al inicio.
         </p>
       </Modal>
     </main>
@@ -220,11 +273,7 @@ function CodeBanner({
             {code}
           </span>
         </div>
-        <Button
-          variant="secondary"
-          leftIcon={copied ? Check : Copy}
-          onClick={onCopy}
-        >
+        <Button variant="secondary" leftIcon={copied ? Check : Copy} onClick={onCopy}>
           {copied ? 'Copiado' : 'Copiar link'}
         </Button>
       </div>
@@ -234,8 +283,18 @@ function CodeBanner({
 
 /* ----------------------------- PlayerSlot ----------------------------- */
 
-function PlayerSlot({ player }: { player: LobbyPlayer }) {
-  const initials = player.nickname
+function PlayerSlot({
+  nickname,
+  isHost,
+  connected,
+  onRemove,
+}: {
+  nickname: string;
+  isHost: boolean;
+  connected: boolean;
+  onRemove?: () => void;
+}) {
+  const initials = nickname
     .trim()
     .split(/\s+/)
     .map((w) => w[0])
@@ -258,50 +317,35 @@ function PlayerSlot({ player }: { player: LobbyPlayer }) {
         </div>
         <div className="flex min-w-0 flex-1 flex-col">
           <div className="flex items-center gap-2 min-w-0">
-            <span className="font-sans text-15 font-medium text-text truncate">
-              {player.nickname}
-            </span>
-            {player.isHost && (
-              <Crown
-                size={14}
-                className="shrink-0 text-amber"
-                aria-label="Host"
-              />
+            <span className="font-sans text-15 font-medium text-text truncate">{nickname}</span>
+            {isHost && (
+              <Crown size={14} className="shrink-0 text-amber" aria-label="Host" />
             )}
           </div>
           <div className="flex items-center gap-1.5 text-12">
             <span
               className={cn(
                 'h-1.5 w-1.5 rounded-full',
-                player.connected ? 'bg-amber' : 'bg-mist',
+                connected ? 'bg-amber' : 'bg-mist',
               )}
               aria-hidden="true"
             />
             <span className="text-text-muted">
-              {player.connected ? 'Conectado' : 'Desconectado'}
+              {connected ? 'Conectado' : 'Desconectado'}
             </span>
           </div>
         </div>
-      </div>
-    </Card>
-  );
-}
-
-/* ------------------------------ EmptySlot ----------------------------- */
-
-function EmptySlot() {
-  return (
-    <Card padding="md" className="border-dashed">
-      <div className="flex items-center gap-3 text-text-muted">
-        <motion.div
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-bg-elev-2 border border-dashed border-border"
-          animate={{ opacity: [0.5, 1, 0.5] }}
-          transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-          aria-hidden="true"
-        >
-          <Users size={16} />
-        </motion.div>
-        <span className="font-sans text-14">Esperando jugador…</span>
+        {onRemove && (
+          <button
+            type="button"
+            onClick={onRemove}
+            className="text-text-muted hover:text-coral p-1 rounded-2"
+            aria-label="Quitar jugador"
+            title="Quitar"
+          >
+            <X size={14} />
+          </button>
+        )}
       </div>
     </Card>
   );
@@ -318,11 +362,13 @@ function InvalidCode({ code, onBack }: { code: string; onBack: () => void }) {
           Código no válido
         </h1>
         <p className="font-sans text-14 text-text-muted">
-          El código <code className="font-mono text-text">{code || '(vacío)'}</code> no
-          tiene el formato esperado. Volvé al inicio y probá de nuevo.
+          El código <code className="font-mono text-text">{code || '(vacío)'}</code> no tiene el formato esperado. Volvé al inicio y probá de nuevo.
         </p>
         <Button onClick={onBack}>Volver al inicio</Button>
       </Card>
     </main>
   );
 }
+
+// Suprimir warning de unused import
+void Users;

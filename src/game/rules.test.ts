@@ -44,6 +44,8 @@ function blankPlayer(id: string, role: Player['role'] = 'abogado'): Player {
     effects: [],
     lastRentInTurn: null,
     bankerDebt: 0,
+    hasBoughtFromMarket: false,
+    bonusDraws: 0,
   };
 }
 

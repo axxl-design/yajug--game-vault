@@ -7,7 +7,18 @@
       "Bash(pnpm add *)",
       "Bash(pnpm test:run)",
       "Bash(pnpm test:run src/game/debug-conservation.test.ts)",
-      "Bash(pnpm test:coverage)"
+      "Bash(pnpm test:coverage)",
+      "Bash(npx vitest *)",
+      "Bash(pnpm test:run -- --reporter=verbose --testTimeout=30000 src/game/actions.test.ts)",
+      "Bash(timeout 120 pnpm test:run src/game/actions.test.ts src/game/game.test.ts)",
+      "Bash(timeout 60 pnpm test:run src/stores)",
+      "Bash(timeout 60 pnpm test:run src/stores/gameStore.test.ts)",
+      "Bash(timeout 30 pnpm test:run src/stores/lobbyStore.test.ts)",
+      "Bash(timeout 30 pnpm test:run src/stores/gameStore.test.ts -t \"init\")",
+      "Bash(timeout 30 pnpm test:run src/stores/gameStore.test.ts -t \"simulación\")",
+      "Bash(timeout 30 pnpm test:run src/stores/gameStore.test.ts -t \"convenience\")",
+      "Bash(timeout 30 pnpm test:run src/stores/gameStore.test.ts -t \"20 turnos\")",
+      "Bash(timeout 60 pnpm test:run src/game)"
     ]
   }
 }

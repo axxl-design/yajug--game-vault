@@ -2,9 +2,12 @@ import type { GameState, Player } from '@/types/game';
 import { GAME_CONFIG } from './constants';
 import { drawCards, discardCardsToPile } from './deck';
 import type { Rng } from './rng';
-import { discardFromHand, GameError } from './actions';
+import { discardFromHand } from './actions';
+import { GameError } from './errors';
 import { appendLog, applyPlayerUpdate, makeLog, ts } from './state-helpers';
 import { computeDefaultDiscard } from './discard-policy';
+import { advanceTiempoExtra } from './tiempo-extra';
+import { expireEffects } from './effects';
 
 /**
  * Inicio de turno (sec 7 brief):
@@ -100,12 +103,21 @@ export function endTurn(state: GameState, rng: Rng): GameState {
     makeLog(s, 'turn_ended', `${player.id} terminó su turno.`, player.id),
   );
 
+  // Expirar efectos antes de avanzar
+  s = expireEffects(s, s.turnsPlayed);
+
   const nextIndex = (s.currentPlayerIndex + 1) % s.players.length;
   s = {
     ...s,
     currentPlayerIndex: nextIndex,
     turnsPlayed: s.turnsPlayed + 1,
   };
+
+  // Si estamos en Tiempo Extra, avanzar el contador.
+  if (s.phase === 'tiempo_extra') {
+    s = advanceTiempoExtra(s);
+    if (s.winner) return s;
+  }
 
   // Iniciar el turno del siguiente jugador automáticamente.
   s = startTurn(s, rng);

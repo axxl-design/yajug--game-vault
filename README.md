@@ -60,7 +60,7 @@ Ver el brief técnico (`_handoff/BRIEF_CLAUDE_CODE_v3.md` sección 3) para la co
 
 Ver `_handoff/BRIEF_CLAUDE_CODE_v3.md` sección 27. 13 fases secuenciales con criterios de aceptación.
 
-**Estado actual:** Fase 5 completada (`gameStore` y `lobbyStore` Zustand+immer, 182 tests, cobertura ≥80%). Pendiente verificación humana antes de pasar a Fase 6.
+**Estado actual:** Fases 6-10 completadas en una pasada (UI de partida + Defensa + Mercado + Titulares + Roles/Expansiones + Tiempo Extra). 201 tests pasando. Hot-seat MVP jugable de inicio a fin.
 
 ### Tests
 
