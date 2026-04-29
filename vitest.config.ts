@@ -12,8 +12,12 @@ export default defineConfig({
     include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
     coverage: {
       provider: 'v8',
-      include: ['src/game/**/*.ts'],
-      exclude: ['src/game/**/*.test.ts'],
+      include: ['src/game/**/*.ts', 'src/stores/**/*.ts'],
+      exclude: [
+        'src/game/**/*.test.ts',
+        'src/game/test-helpers.ts',
+        'src/stores/**/*.test.ts',
+      ],
       reporter: ['text', 'text-summary', 'html'],
       thresholds: {
         lines: 80,

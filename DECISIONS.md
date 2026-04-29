@@ -319,6 +319,67 @@ El Set Monumento del Rascacielos (cuenta como 2 sets) llega en Fase 9.
 
 ---
 
+## Fase 5 — Stores de Zustand
+
+### 2026-04-29 — `gameStore` envuelve la lógica pura sin duplicarla
+
+**Contexto:** la Fase 4 puso toda la lógica como funciones puras en `src/game/`. El gameStore tiene que exponerla como acciones del store sin reimplementarla.
+
+**Decisión:** cada método del store (`playCardAsMoney`, `endTurn`, etc.) construye el `PlayerAction` apropiado y se lo pasa a `applyAction(state, playerId, action, rng)`. El store nunca toca propiedades del `GameState` directamente. Cualquier cambio de regla vive en `src/game/` y se propaga al store sin modificar el wrapper.
+
+### 2026-04-29 — Immer middleware + reemplazo de state completo
+
+**Contexto:** el brief pidió `immer` para escrituras de mutaciones legibles. Pero `applyAction` retorna un `GameState` nuevo inmutable, así que en `gameStore` la "mutación" típica es un reemplazo entero (`draft.gameState = next`).
+
+**Decisión:** uso `zustand/middleware/immer` igual, por consistencia con el brief y porque le da uniformidad al patrón de stores. En `gameStore` immer es casi cosmético (asignación, no nested mutation), pero en `lobbyStore` brilla — `draft.players.push(...)`, `p.isConnected = false` se leen como mutaciones aunque el resultado sea inmutable. Beneficio adicional: si en Fase 6+ aparecen escrituras dirigidas que no pasan por `applyAction` (ej. "limpiar lastError"), immer las absorbe sin friccionar.
+
+### 2026-04-29 — `rng` y `ids` viven FUERA del estado reactivo
+
+**Contexto:** `applyAction` y `createInitialGameState` necesitan un `Rng` y un `IdFactory`. Ambos cambian de estado interno entre llamadas (la rng avanza su seed, el factory incrementa su counter). Tenerlos dentro del store los volvería parte del estado reactivo y complicaría serialización para multijugador.
+
+**Decisión:** `rng` y `ids` viven en una constante `refs` a nivel módulo (`src/stores/gameStore.ts`). `initGame` los rebindea al arrancar partida; `reset` los limpia. Los métodos del store los leen del módulo, no del store. Esto significa:
+- El `GameState` dentro del store es 100% serializable (no contiene Rng).
+- Los componentes que se suscriben al store no se re-renderean por avances de la rng.
+- Para multijugador (Fase 11), el host broadcastea sólo `gameState`; los peers actualizan vía `setGameState` y mantienen sus propias `refs` locales (que no necesitan estar sincronizadas porque sólo el host computa).
+
+### 2026-04-29 — Errores como `lastError` en el store, no thrown
+
+**Contexto:** `applyAction` lanza `GameError` en jugadas inválidas. Si el store re-throwea, el caller (UI o test) tiene que envolver cada llamada en try/catch.
+
+**Decisión:** el wrapper `tryDispatch` captura `GameError`/`Error` y los persiste como `lastError: string | null` en el store. Las acciones válidas limpian el flag automáticamente. La UI (Fase 6+) puede suscribirse a `lastError` para mostrar toasts, y los tests pueden chequear `useGameStore.getState().lastError`. Hay un `clearError()` para descarte explícito.
+
+### 2026-04-29 — `dispatch` genérico + 15 métodos de conveniencia
+
+**Contexto:** el brief pide "las 15 acciones disponibles como métodos del store". Tener sólo `dispatch(playerId, action)` cumple, pero los call sites quedan verbosos (`dispatch(id, { type: 'PLAY_RENT', rentCardId, ... })`).
+
+**Decisión:** expongo ambos. `dispatch` es la API base (type-safe vía discriminated union). Los 15 métodos de conveniencia (`playRent`, `confiscate`, etc.) son sugar que construyen el `PlayerAction` y delegan en `dispatch`. La UI usa los métodos nombrados para legibilidad; el código de simulación / multijugador puede usar `dispatch` para tomar acciones del wire o de un AI policy sin un switch enorme.
+
+### 2026-04-29 — `lobbyStore` separado, sin lógica de juego
+
+**Contexto:** la sala pre-partida (lista de jugadores conectados, host, código) tiene un ciclo de vida distinto al de la partida en curso. Mezclarlos en un único store complica los selectores.
+
+**Decisión:** `src/stores/lobbyStore.ts` con shape mínimo: `gameId`, `localPlayerId`, `players: LobbyPlayer[]`. Mutations: `initLobby`, `addPlayer`, `removePlayer`, `setConnected`, `setNickname`, `reset`. Selectores derivan `host`, `isLocalHost`, `connectedCount`, `canStart` (≥ MIN_PLAYERS && ≤ MAX_PLAYERS).
+
+Cuando el host arranca la partida, llama:
+```ts
+gameStore.initGame({ playerSeeds: lobbyStore.players.map(({ id, nickname }) => ({ id, nickname })), ... });
+```
+
+El lobbyStore queda como referencia (puede mostrarse en GameOverScreen). Cuando termine la partida y vuelvan a la home, ambos stores se resetean.
+
+### 2026-04-29 — Selectores tipados como funciones puras junto al store
+
+**Contexto:** Zustand permite `useStore(s => s.x)` inline, pero los selectores compuestos (e.g. "current player", "is my turn") se repiten en múltiples componentes. Centralizarlos evita drift.
+
+**Decisión:** cada store exporta selectores como funciones puras al lado de la creación: `selectCurrentPlayer`, `selectIsMyTurn(myId)`, `selectPlayerById(id)`, `selectWinner`, `selectPhase`, `selectLobbyHost`, `selectIsLocalHost`, `selectConnectedCount`, `selectCanStart`. La UI los usa así:
+```ts
+const player = useGameStore(selectCurrentPlayer);
+```
+
+Para selectores parametrizados (ej. `selectPlayerById('p1')`), retornan una función que acepta el state — Zustand acepta el patrón.
+
+---
+
 ## Pendiente de decidir
 
 - Howler.js para audio (Fase 6+).

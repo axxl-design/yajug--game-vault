@@ -60,7 +60,7 @@ Ver el brief técnico (`_handoff/BRIEF_CLAUDE_CODE_v3.md` sección 3) para la co
 
 Ver `_handoff/BRIEF_CLAUDE_CODE_v3.md` sección 27. 13 fases secuenciales con criterios de aceptación.
 
-**Estado actual:** Fase 4 completada (lógica de juego pura en `src/game/` + 140 tests Vitest, cobertura ≥80%). Pendiente verificación humana antes de pasar a Fase 5.
+**Estado actual:** Fase 5 completada (`gameStore` y `lobbyStore` Zustand+immer, 182 tests, cobertura ≥80%). Pendiente verificación humana antes de pasar a Fase 6.
 
 ### Tests
 
