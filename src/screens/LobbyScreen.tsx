@@ -69,6 +69,33 @@ const ROLE_GLYPH: Record<RoleId, string> = {
   arquitecto:    '◰',
 };
 
+/**
+ * Devuelve un id único por dispositivo (estable entre reloads de la misma
+ * pestaña). Persistido en sessionStorage para que un refresh accidental no
+ * cree un "jugador fantasma" desde la perspectiva del host.
+ */
+function getOrCreateLocalPlayerId(gameId: string): string {
+  const key = `mp_pid_${gameId}`;
+  let id: string | null = null;
+  try {
+    id = sessionStorage.getItem(key);
+  } catch {
+    /* sessionStorage puede fallar en SSR / privacy modes */
+  }
+  if (id) return id;
+  const rand =
+    typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+      ? crypto.randomUUID().slice(0, 8)
+      : Math.random().toString(36).slice(2, 10);
+  id = `p-${rand}`;
+  try {
+    sessionStorage.setItem(key, id);
+  } catch {
+    /* swallow */
+  }
+  return id;
+}
+
 export default function LobbyScreen() {
   const { gameId = '' } = useParams<{ gameId: string }>();
   const navigate = useNavigate();
@@ -96,8 +123,10 @@ export default function LobbyScreen() {
   useEffect(() => {
     if (!codeValid) return;
     let cancelled = false;
-    const role = sessionStorage.getItem(`mp_role_${gameId}`) ?? 'host';
-    const localPlayerId = `self-${gameId}`;
+    // Default to 'client' when no explicit role is set: opening a shared link
+    // without going through "Crear/Unirme" should attempt to join, not host.
+    const role = sessionStorage.getItem(`mp_role_${gameId}`) ?? 'client';
+    const localPlayerId = getOrCreateLocalPlayerId(gameId);
     const localNickname = lastNickname || (role === 'host' ? 'Anfitrión' : 'Invitado');
 
     setStatus('connecting');
@@ -208,6 +237,7 @@ export default function LobbyScreen() {
     closeSession();
     lobby.reset();
     sessionStorage.removeItem(`mp_role_${gameId}`);
+    sessionStorage.removeItem(`mp_pid_${gameId}`);
     navigate('/');
   };
 
