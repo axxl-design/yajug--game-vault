@@ -1,19 +1,13 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowLeft, ChevronDown } from 'lucide-react';
 import { Button, SoundToggle, ThemeToggle } from '@/components/ui';
-import { cn } from '@/utils/cn';
 
 interface Section {
   title: string;
   body: string;
 }
 
-/**
- * Contenido placeholder de Fase 3 — la copy real se escribe en Fase 8/9
- * cuando ya tengamos las cartas y mecánicas implementadas.
- */
 const SECTIONS: Section[] = [
   {
     title: 'Objetivo del juego',
@@ -62,41 +56,32 @@ export default function TutorialScreen() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <main className="relative min-h-screen bg-bg text-text">
-      <header className="flex items-center justify-between gap-4 border-b border-divider px-6 py-4">
-        <Link
-          to="/"
-          className={cn(
-            'inline-flex items-center gap-2 text-13 text-text-muted',
-            'hover:text-text transition-colors duration-fast ease-out',
-            'focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber focus-visible:outline-offset-4 rounded-2',
-          )}
-        >
+    <main className="relative" style={{ minHeight: '100vh' }}>
+      <header className="flex items-center justify-between">
+        <Link to="/" className="inline-flex items-center">
           <ArrowLeft size={16} aria-hidden="true" />
           Volver al inicio
         </Link>
-        <div className="font-display text-16 font-bold tracking-tight">
-          YAJUGÁ <span className="text-text-muted font-medium">/ Cómo se juega</span>
+        <div>
+          YAJUGÁ <span>/ Cómo se juega</span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center">
           <SoundToggle />
           <ThemeToggle />
         </div>
       </header>
 
-      <div className="mx-auto flex max-w-2xl flex-col gap-8 px-6 py-12">
-        <header className="flex flex-col gap-2">
-          <h1 className="font-display text-40 font-bold tracking-tight leading-tight">
-            Cómo se juega
-          </h1>
-          <p className="font-sans text-15 text-text-muted leading-relaxed">
+      <div className="mx-auto flex flex-col">
+        <header className="flex flex-col">
+          <h1>Cómo se juega</h1>
+          <p>
             Las reglas de YAJUGÁ: DOMINIO en 10 secciones. La copy de cada
             sección es <em>placeholder</em> — se reemplaza cuando se cierre la
             mecánica final.
           </p>
         </header>
 
-        <ul className="flex flex-col gap-2">
+        <ul className="flex flex-col">
           {SECTIONS.map((section, i) => (
             <li key={section.title}>
               <AccordionItem
@@ -117,8 +102,6 @@ export default function TutorialScreen() {
   );
 }
 
-/* ---------------------------- AccordionItem --------------------------- */
-
 interface AccordionItemProps {
   index: number;
   section: Section;
@@ -131,13 +114,7 @@ function AccordionItem({ index, section, isOpen, onToggle }: AccordionItemProps)
   const panelId = `tutorial-section-${index}-panel`;
 
   return (
-    <div
-      className={cn(
-        'overflow-hidden rounded-8 border border-border bg-bg-elev-1',
-        'transition-colors duration-fast ease-out',
-        isOpen && 'border-border-strong',
-      )}
-    >
+    <div data-open={isOpen || undefined}>
       <h3>
         <button
           id={headerId}
@@ -145,46 +122,22 @@ function AccordionItem({ index, section, isOpen, onToggle }: AccordionItemProps)
           aria-expanded={isOpen}
           aria-controls={panelId}
           onClick={onToggle}
-          className={cn(
-            'flex w-full items-center justify-between gap-4 px-5 py-4',
-            'text-left font-display text-16 font-semibold tracking-tight text-text',
-            'hover:bg-bg-elev-2 transition-colors duration-fast ease-out',
-            'focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber focus-visible:outline-offset-[-2px]',
-          )}
+          className="flex w-full items-center justify-between text-left"
         >
-          <span className="flex items-center gap-3">
-            <span className="font-mono text-13 text-text-muted">
-              {String(index + 1).padStart(2, '0')}
-            </span>
+          <span className="flex items-center">
+            <span>{String(index + 1).padStart(2, '0')}</span>
             <span>{section.title}</span>
           </span>
-          <motion.span
-            animate={{ rotate: isOpen ? 180 : 0 }}
-            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="text-text-muted"
-          >
+          <span>
             <ChevronDown size={18} aria-hidden="true" />
-          </motion.span>
+          </span>
         </button>
       </h3>
-      <AnimatePresence initial={false}>
-        {isOpen && (
-          <motion.div
-            id={panelId}
-            role="region"
-            aria-labelledby={headerId}
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-            style={{ overflow: 'hidden' }}
-          >
-            <div className="border-t border-divider px-5 py-4 font-sans text-14 text-text-muted leading-relaxed">
-              {section.body}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {isOpen && (
+        <div id={panelId} role="region" aria-labelledby={headerId}>
+          {section.body}
+        </div>
+      )}
     </div>
   );
 }

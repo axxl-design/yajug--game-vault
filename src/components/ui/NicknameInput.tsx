@@ -55,7 +55,6 @@ export const NicknameInput = forwardRef<HTMLInputElement, NicknameInputProps>(
       autoFocus,
       className,
       id,
-      ...rest
     },
     ref,
   ) {
@@ -69,7 +68,6 @@ export const NicknameInput = forwardRef<HTMLInputElement, NicknameInputProps>(
     const showError = externalError ?? (touched && !valid ? internalError : null);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-      // Hard cap a maxLength — más amable que dejar al usuario tipear y mostrar error.
       const next = e.target.value.slice(0, maxLength);
       onChange(next);
     };
@@ -82,22 +80,10 @@ export const NicknameInput = forwardRef<HTMLInputElement, NicknameInputProps>(
     };
 
     return (
-      <div className={cn('flex w-full flex-col gap-1.5', className)}>
+      <div className={cn('flex flex-col', className)}>
         <div className="flex items-baseline justify-between">
-          <label
-            htmlFor={inputId}
-            className="font-sans text-13 font-medium text-text-muted"
-          >
-            {label}
-          </label>
-          <span
-            id={counterId}
-            className={cn(
-              'font-mono text-12',
-              value.length >= maxLength ? 'text-coral' : 'text-text-subtle',
-            )}
-            aria-live="polite"
-          >
+          <label htmlFor={inputId}>{label}</label>
+          <span id={counterId} aria-live="polite">
             {value.length}/{maxLength}
           </span>
         </div>
@@ -115,28 +101,10 @@ export const NicknameInput = forwardRef<HTMLInputElement, NicknameInputProps>(
           onBlur={() => setTouched(true)}
           onKeyDown={handleKeyDown}
           aria-invalid={Boolean(showError)}
-          aria-describedby={cn(
-            counterId,
-            showError ? errorId : undefined,
-          )}
-          className={cn(
-            'h-10 w-full rounded-6 px-3',
-            'bg-bg-elev-1 text-text placeholder:text-text-subtle',
-            'border transition-[border-color,background-color] duration-fast ease-out',
-            showError
-              ? 'border-coral focus:border-coral'
-              : 'border-border focus:border-border-strong',
-            'focus:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-bg',
-            'font-sans text-15',
-          )}
-          {...rest}
+          aria-describedby={cn(counterId, showError ? errorId : undefined)}
         />
         {showError && (
-          <p
-            id={errorId}
-            role="alert"
-            className="font-sans text-13 text-coral"
-          >
+          <p id={errorId} role="alert">
             {showError}
           </p>
         )}

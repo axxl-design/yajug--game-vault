@@ -33,7 +33,6 @@ export default function GameScreen() {
   const toast = useToast();
   const session = getSession();
 
-  /** Helper: dispatch routeado a host si estamos en cliente; local si no. */
   const dispatch = (playerId: string, action: PlayerAction) =>
     dispatchAction(playerId, action);
 
@@ -43,7 +42,6 @@ export default function GameScreen() {
   const [showAssignment, setShowAssignment] = useState(true);
   const isMobile = useMobileGate();
 
-  // Mostrar errores como toasts
   useEffect(() => {
     if (lastError) {
       toast.error(lastError);
@@ -55,8 +53,8 @@ export default function GameScreen() {
 
   if (!gs) {
     return (
-      <main className="min-h-screen flex items-center justify-center bg-bg text-text">
-        <p className="text-text-muted">No hay partida en curso.</p>
+      <main className="flex items-center justify-center" style={{ minHeight: '100vh' }}>
+        <p>No hay partida en curso.</p>
       </main>
     );
   }
@@ -69,8 +67,6 @@ export default function GameScreen() {
     return <RoleAssignmentScreen onContinue={() => setShowAssignment(false)} />;
   }
 
-  // En multiplayer real, "yo" es el jugador con id = session.myPlayerId.
-  // En hot-seat, "yo" es siempre el jugador del turno actual.
   const me = session
     ? gs.players.find((p) => p.id === session.myPlayerId) ?? cur
     : cur;
@@ -160,7 +156,6 @@ export default function GameScreen() {
     dispatch(me.id, { type: 'ACTIVATE_EXPANSION', payload });
   };
 
-  // Keyboard shortcuts: T (terminar), E (expansión), L (log), H (ayuda), Esc (cerrar).
   useKeyboardShortcuts(
     {
       t: () => isMyTurn && handleEndTurn(),
@@ -177,53 +172,37 @@ export default function GameScreen() {
   );
 
   return (
-    <main className="min-h-screen bg-bg text-text">
-      <header className="sticky top-0 z-10 bg-bg/85 backdrop-blur border-b border-divider px-4 py-2 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="font-display text-14 font-bold tracking-tight">YAJUGÁ</span>
-          <span className="font-mono text-11 text-text-muted">/ {gs.gameId}</span>
+    <main style={{ minHeight: '100vh' }}>
+      <header className="sticky top-0 z-10 flex items-center justify-between">
+        <div className="flex items-center">
+          <span>YAJUGÁ</span>
+          <span>/ {gs.gameId}</span>
         </div>
-        <div className="flex items-center gap-3">
-          <span
-            className="font-sans text-12 text-text-muted"
-            role="status"
-            aria-live="polite"
-          >
-            Turno de <strong className="text-text">{gs.players[gs.currentPlayerIndex]?.nickname}</strong>
-            {isMyTurn && session && <span className="text-coral ml-1">(vos)</span>}
+        <div className="flex items-center">
+          <span role="status" aria-live="polite">
+            Turno de <strong>{gs.players[gs.currentPlayerIndex]?.nickname}</strong>
+            {isMyTurn && session && <span> (vos)</span>}
           </span>
-          <span className="font-mono text-11 text-text-muted">t={gs.turnsPlayed}</span>
+          <span>t={gs.turnsPlayed}</span>
         </div>
-        <button
-          type="button"
-          onClick={() => navigate('/')}
-          className="font-mono text-11 text-text-muted hover:text-coral underline-offset-4 hover:underline"
-        >
+        <button type="button" onClick={() => navigate('/')}>
           salir
         </button>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-4">
+      <div className="mx-auto flex flex-col">
         <TitularBanner titular={gs.activeTitular} />
         <TiempoExtraBanner state={gs} />
 
-        {/* Oponentes */}
-        <section className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+        <section className="grid sm:grid-cols-2 lg:grid-cols-3">
           {others.map((o) => (
-            <OpponentPanel
-              key={o.id}
-              player={o}
-              isCurrent={false}
-            />
+            <OpponentPanel key={o.id} player={o} isCurrent={false} />
           ))}
         </section>
 
-        {/* Mazo + Descarte + Mercado */}
-        <section className="flex flex-wrap items-start gap-4">
-          <UICard padding="md" className="flex flex-col gap-2">
-            <span className="font-display text-12 uppercase tracking-wider text-text-muted">
-              Mazo / Descarte
-            </span>
+        <section className="flex flex-wrap items-start">
+          <UICard padding="md" className="flex flex-col">
+            <span>Mazo / Descarte</span>
             <DeckPanel
               deckCount={gs.deck.length}
               discardTop={gs.discardPile[gs.discardPile.length - 1] ?? null}
@@ -233,25 +212,16 @@ export default function GameScreen() {
             cards={gs.marketCards}
             bankAvailable={meBank}
             hasBoughtThisTurn={me.hasBoughtFromMarket}
-            onBuy={(cardId) =>
-              dispatch(me.id, { type: 'BUY_FROM_MARKET', cardId })
-            }
-            className="flex-1 min-w-[280px]"
+            onBuy={(cardId) => dispatch(me.id, { type: 'BUY_FROM_MARKET', cardId })}
+            className="flex-1"
           />
         </section>
 
-        {/* Mi zona: sets + banco */}
-        <section className="grid gap-3 lg:grid-cols-3">
-          <div className="lg:col-span-2 flex flex-col gap-2">
-            <h2 className="font-display text-14 uppercase tracking-wider text-text-muted">
-              Mis sets
-            </h2>
-            <div className="grid sm:grid-cols-2 gap-2">
-              {me.sets.length === 0 && (
-                <p className="font-sans text-12 text-text-subtle italic">
-                  Todavía no tenés propiedades en sets.
-                </p>
-              )}
+        <section className="grid lg:grid-cols-3">
+          <div className="lg:col-span-2 flex flex-col">
+            <h2>Mis sets</h2>
+            <div className="grid sm:grid-cols-2">
+              {me.sets.length === 0 && <p>Todavía no tenés propiedades en sets.</p>}
               {me.sets.map((s, i) => (
                 <PropertySetView
                   key={`${s.color}-${i}`}
@@ -266,15 +236,10 @@ export default function GameScreen() {
           <Bank player={me} />
         </section>
 
-        {/* Mi mano */}
-        <section className="flex flex-col gap-2">
+        <section className="flex flex-col">
           <div className="flex items-center justify-between">
-            <h2 className="font-display text-14 uppercase tracking-wider text-text-muted">
-              Mi mano · {me.hand.length}
-            </h2>
-            <span className="font-mono text-11 text-text-muted">
-              {me.hasPlayedCardsThisTurn}/3 cartas jugadas
-            </span>
+            <h2>Mi mano · {me.hand.length}</h2>
+            <span>{me.hasPlayedCardsThisTurn}/3 cartas jugadas</span>
           </div>
           <Hand
             cards={me.hand}

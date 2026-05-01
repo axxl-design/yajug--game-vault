@@ -30,7 +30,6 @@ import {
 import { useGameStore } from '@/stores/gameStore';
 import { isValidGameCode } from '@/utils/gameCode';
 import { GAME_CONFIG } from '@/game/constants';
-import { cn } from '@/utils/cn';
 import GameScreen from './GameScreen';
 import {
   closeSession,
@@ -64,7 +63,6 @@ export default function LobbyScreen() {
 
   const codeValid = isValidGameCode(gameId);
 
-  // Inicializar sesión multiplayer (host o client) según sessionStorage.
   useEffect(() => {
     if (!codeValid) return;
     let cancelled = false;
@@ -76,7 +74,6 @@ export default function LobbyScreen() {
     setStatusMsg(role === 'host' ? 'Abriendo sala…' : 'Conectándome al host…');
 
     if (role === 'host') {
-      // Inicializar lobby local
       lobby.initLobby({
         gameId,
         localPlayerId,
@@ -92,7 +89,6 @@ export default function LobbyScreen() {
         .catch(async (err) => {
           if (cancelled) return;
           const code = (err as Error).message ?? 'unknown';
-          // Si la id está tomada, otro ya es host → caer a cliente automático.
           if (code === 'unavailable-id') {
             try {
               await startClientSession({ gameId, localPlayerId, localNickname });
@@ -141,7 +137,7 @@ export default function LobbyScreen() {
   }
 
   const session = getSession();
-  const isHost = !session || session.mode === 'host'; // hot-seat fallback = treat as host
+  const isHost = !session || session.mode === 'host';
 
   const handleCopy = async () => {
     try {
@@ -192,42 +188,34 @@ export default function LobbyScreen() {
   }
 
   return (
-    <main className="relative min-h-screen bg-bg text-text">
-      <header className="flex items-center justify-between gap-4 border-b border-divider px-6 py-4">
-        <button
-          type="button"
-          onClick={() => setConfirmExit(true)}
-          className={cn(
-            'inline-flex items-center gap-2 text-13 text-text-muted',
-            'hover:text-text transition-colors duration-fast ease-out',
-            'focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber focus-visible:outline-offset-4 rounded-2',
-          )}
-        >
+    <main className="relative" style={{ minHeight: '100vh' }}>
+      <header className="flex items-center justify-between">
+        <button type="button" onClick={() => setConfirmExit(true)} className="inline-flex items-center">
           <ArrowLeft size={16} aria-hidden="true" />
           Salir
         </button>
-        <div className="font-display text-16 font-bold tracking-tight">
-          YAJUGÁ <span className="text-text-muted font-medium">/ Sala</span>
+        <div>
+          YAJUGÁ <span>/ Sala</span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center">
           <SoundToggle />
           <ThemeToggle />
         </div>
       </header>
 
-      <div className="mx-auto flex max-w-3xl flex-col gap-8 px-6 py-10">
+      <div className="mx-auto flex flex-col">
         <CodeBanner code={gameId} onCopy={handleCopy} copied={copied} />
 
         <SessionStatusBanner status={status} message={statusMsg} />
 
-        <section className="flex flex-col gap-4">
+        <section className="flex flex-col">
           <div className="flex items-baseline justify-between">
-            <h2 className="font-display text-20 font-semibold tracking-tight">Jugadores</h2>
-            <span className="font-mono text-13 text-text-muted">
+            <h2>Jugadores</h2>
+            <span>
               {connectedCount}/{GAME_CONFIG.MAX_PLAYERS}
             </span>
           </div>
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid sm:grid-cols-2">
             {players.map((p) => (
               <PlayerSlot
                 key={p.id}
@@ -241,56 +229,33 @@ export default function LobbyScreen() {
                 }
               />
             ))}
-            {/* Hot-seat: agregar jugadores adicionales si la sesión multiplayer falló */}
             {status === 'failed' &&
               isHost &&
               players.length < GAME_CONFIG.MAX_PLAYERS && (
-                <button
-                  type="button"
-                  onClick={() => setAddOpen(true)}
-                  className={cn(
-                    'flex items-center gap-3 rounded-8 border border-dashed border-border bg-bg-elev-1 p-3',
-                    'hover:bg-bg-elev-2 hover:border-border-strong transition-colors duration-fast ease-out',
-                    'text-text-muted text-left',
-                  )}
-                >
-                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-bg-elev-2 border border-dashed border-border">
+                <button type="button" onClick={() => setAddOpen(true)} className="flex items-center text-left">
+                  <span className="inline-flex items-center justify-center">
                     <Plus size={16} />
                   </span>
-                  <span className="font-sans text-14">Agregar jugador hot-seat</span>
+                  <span>Agregar jugador hot-seat</span>
                 </button>
               )}
           </div>
 
           {status === 'failed' && (
-            <p className="font-sans text-12 text-text-subtle italic">
-              Modo hot-seat: todos los jugadores comparten esta pestaña.
-            </p>
+            <p>Modo hot-seat: todos los jugadores comparten esta pestaña.</p>
           )}
           {status === 'host' && (
-            <p className="font-sans text-12 text-text-subtle italic">
-              Sos el host. Compartí el link para que se sumen jugadores.
-            </p>
+            <p>Sos el host. Compartí el link para que se sumen jugadores.</p>
           )}
-          {status === 'client' && (
-            <p className="font-sans text-12 text-text-subtle italic">
-              Conectado al host. Esperá que empiece la partida.
-            </p>
-          )}
+          {status === 'client' && <p>Conectado al host. Esperá que empiece la partida.</p>}
         </section>
 
-        <footer className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+        <footer className="flex flex-col-reverse sm:flex-row sm:justify-end">
           <Button variant="ghost" onClick={() => setConfirmExit(true)}>
             {isHost ? 'Cancelar partida' : 'Salir'}
           </Button>
           {isHost && (
-            <Button
-              size="lg"
-              leftIcon={Play}
-              onClick={handleStart}
-              disabled={!canStart}
-              className="!h-12 tracking-wide uppercase"
-            >
+            <Button size="lg" leftIcon={Play} onClick={handleStart} disabled={!canStart}>
               Empezar partida ({connectedCount}/{GAME_CONFIG.MAX_PLAYERS})
             </Button>
           )}
@@ -338,31 +303,23 @@ export default function LobbyScreen() {
           </>
         }
       >
-        <p className="font-sans text-15 text-text leading-relaxed">
-          Vas a cerrar la sala y volver al inicio.
-        </p>
+        <p>Vas a cerrar la sala y volver al inicio.</p>
       </Modal>
     </main>
   );
 }
 
-/* --------------------------- SessionStatus --------------------------- */
-
 function SessionStatusBanner({ status, message }: { status: SessionStatus; message: string }) {
   const icon =
-    status === 'host' || status === 'client' ? <Wifi size={14} className="text-amber" /> : <WifiOff size={14} className="text-coral" />;
+    status === 'host' || status === 'client' ? <Wifi size={14} /> : <WifiOff size={14} />;
   return (
-    <div className="flex items-center gap-2 rounded-8 border border-border bg-bg-elev-1 px-3 py-2">
+    <div className="flex items-center" data-status={status}>
       {icon}
-      <span className="font-mono text-12 text-text-muted uppercase tracking-wider">
-        {status}
-      </span>
-      <span className="font-sans text-12 text-text">{message}</span>
+      <span>{status}</span>
+      <span>{message}</span>
     </div>
   );
 }
-
-/* ----------------------------- CodeBanner ----------------------------- */
 
 function CodeBanner({
   code,
@@ -375,14 +332,10 @@ function CodeBanner({
 }) {
   return (
     <Card variant="elevated" padding="lg">
-      <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex flex-col gap-1">
-          <span className="font-sans text-12 uppercase tracking-widest text-text-muted">
-            Código de partida
-          </span>
-          <span className="font-mono text-48 font-semibold tracking-[0.22em] text-text leading-none">
-            {code}
-          </span>
+      <div className="flex flex-col items-start sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col">
+          <span>Código de partida</span>
+          <span>{code}</span>
         </div>
         <Button variant="secondary" leftIcon={copied ? Check : Copy} onClick={onCopy}>
           {copied ? 'Copiado' : 'Copiar link'}
@@ -391,8 +344,6 @@ function CodeBanner({
     </Card>
   );
 }
-
-/* ----------------------------- PlayerSlot ----------------------------- */
 
 function PlayerSlot({
   nickname,
@@ -415,45 +366,22 @@ function PlayerSlot({
 
   return (
     <Card padding="md">
-      <div className="flex items-center gap-3">
-        <div
-          className={cn(
-            'flex h-10 w-10 items-center justify-center rounded-full',
-            'bg-surface border border-border-strong',
-            'font-display text-14 font-semibold text-text',
-          )}
-          aria-hidden="true"
-        >
+      <div className="flex items-center">
+        <div className="inline-flex items-center justify-center" aria-hidden="true">
           {initials || '?'}
         </div>
         <div className="flex min-w-0 flex-1 flex-col">
-          <div className="flex items-center gap-2 min-w-0">
-            <span className="font-sans text-15 font-medium text-text truncate">{nickname}</span>
-            {isHost && (
-              <Crown size={14} className="shrink-0 text-amber" aria-label="Host" />
-            )}
+          <div className="flex items-center min-w-0">
+            <span>{nickname}</span>
+            {isHost && <Crown size={14} aria-label="Host" />}
           </div>
-          <div className="flex items-center gap-1.5 text-12">
-            <span
-              className={cn(
-                'h-1.5 w-1.5 rounded-full',
-                connected ? 'bg-amber' : 'bg-mist',
-              )}
-              aria-hidden="true"
-            />
-            <span className="text-text-muted">
-              {connected ? 'Conectado' : 'Desconectado'}
-            </span>
+          <div className="flex items-center">
+            <span data-connected={connected || undefined} aria-hidden="true" />
+            <span>{connected ? 'Conectado' : 'Desconectado'}</span>
           </div>
         </div>
         {onRemove && (
-          <button
-            type="button"
-            onClick={onRemove}
-            className="text-text-muted hover:text-coral p-1 rounded-2"
-            aria-label="Quitar jugador"
-            title="Quitar"
-          >
+          <button type="button" onClick={onRemove} aria-label="Quitar jugador" title="Quitar">
             <X size={14} />
           </button>
         )}
@@ -462,18 +390,14 @@ function PlayerSlot({
   );
 }
 
-/* ----------------------------- InvalidCode ---------------------------- */
-
 function InvalidCode({ code, onBack }: { code: string; onBack: () => void }) {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-bg text-text">
-      <Card variant="elevated" padding="lg" className="max-w-md text-center flex flex-col gap-4">
-        <Plug size={28} className="mx-auto text-coral" aria-hidden="true" />
-        <h1 className="font-display text-24 font-semibold tracking-tight">
-          Código no válido
-        </h1>
-        <p className="font-sans text-14 text-text-muted">
-          El código <code className="font-mono text-text">{code || '(vacío)'}</code> no tiene el formato esperado. Volvé al inicio y probá de nuevo.
+    <main className="flex items-center justify-center" style={{ minHeight: '100vh' }}>
+      <Card variant="elevated" padding="lg" className="flex flex-col">
+        <Plug size={28} aria-hidden="true" />
+        <h1>Código no válido</h1>
+        <p>
+          El código <code>{code || '(vacío)'}</code> no tiene el formato esperado. Volvé al inicio y probá de nuevo.
         </p>
         <Button onClick={onBack}>Volver al inicio</Button>
       </Card>

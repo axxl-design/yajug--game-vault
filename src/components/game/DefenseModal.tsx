@@ -3,7 +3,6 @@ import { Button, Modal } from '@/components/ui';
 import { ShieldAlert, Shield, Handshake, Swords, Clock } from 'lucide-react';
 import type { DefenseChoice, GameState } from '@/types/game';
 import { canAbogadoFreeBlock } from '@/game/role-passives';
-import { motion } from 'framer-motion';
 
 interface DefenseModalProps {
   state: GameState;
@@ -74,35 +73,24 @@ export function DefenseModal({ state, onResolve }: DefenseModalProps) {
       showClose={false}
     >
       {!negotiateOpen ? (
-        <motion.div
-          initial={{ y: 24, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.25, ease: [0.68, -0.55, 0.265, 1.55] }}
-          className="flex flex-col gap-4"
-        >
-          <div className="flex items-center gap-3">
-            <ShieldAlert className="text-coral" size={28} aria-hidden="true" />
+        <div className="flex flex-col">
+          <div className="flex items-center">
+            <ShieldAlert size={28} aria-hidden="true" />
             <div className="flex flex-col">
-              <span className="font-display text-20 font-semibold tracking-tight">
-                Defensa: {defender.nickname}
-              </span>
-              <span className="font-sans text-13 text-text-muted">{description}</span>
+              <span>Defensa: {defender.nickname}</span>
+              <span>{description}</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 text-text-muted">
+          <div className="flex items-center">
             <Clock size={14} />
-            <div className="flex-1 h-2 rounded-full bg-bg-elev-2 overflow-hidden">
-              <motion.div
-                className="h-full bg-coral"
-                animate={{ width: `${(remaining / TIMEOUT_MS) * 100}%` }}
-                transition={{ duration: 0.1, ease: 'linear' }}
-              />
+            <div className="flex-1">
+              <div style={{ width: `${(remaining / TIMEOUT_MS) * 100}%` }} />
             </div>
-            <span className="font-mono text-12">{Math.ceil(remaining / 1000)}s</span>
+            <span>{Math.ceil(remaining / 1000)}s</span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-3">
             <Button
               size="lg"
               leftIcon={Shield}
@@ -136,37 +124,27 @@ export function DefenseModal({ state, onResolve }: DefenseModalProps) {
           <Button variant="ghost" onClick={() => onResolve({ type: 'accept' })}>
             Aceptar el ataque
           </Button>
-        </motion.div>
+        </div>
       ) : (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.18 }}
-          className="flex flex-col gap-3"
-        >
-          <h3 className="font-display text-18 font-semibold">Negociar pago</h3>
-          <p className="font-sans text-13 text-text-muted">
-            Proponé un monto alternativo (entre 0 y {monetaryAmount}M).
-          </p>
+        <div className="flex flex-col">
+          <h3>Negociar pago</h3>
+          <p>Proponé un monto alternativo (entre 0 y {monetaryAmount}M).</p>
           <input
             type="number"
             min={0}
             max={monetaryAmount}
             value={negotiateAmount}
             onChange={(e) => setNegotiateAmount(Math.max(0, Math.min(monetaryAmount, Number(e.target.value))))}
-            className="h-10 rounded-6 border border-border bg-bg-elev-2 px-3 font-mono text-15"
           />
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end">
             <Button variant="ghost" onClick={() => setNegotiateOpen(false)}>
               Volver
             </Button>
-            <Button
-              onClick={() => onResolve({ type: 'negotiate', amount: negotiateAmount })}
-            >
+            <Button onClick={() => onResolve({ type: 'negotiate', amount: negotiateAmount })}>
               Pagar {negotiateAmount}M
             </Button>
           </div>
-        </motion.div>
+        </div>
       )}
     </Modal>
   );

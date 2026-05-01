@@ -8,8 +8,6 @@ import {
   type ReactNode,
 } from 'react';
 import { createPortal } from 'react-dom';
-import { AnimatePresence, motion } from 'framer-motion';
-import { cn } from '@/utils/cn';
 
 export type TooltipSide = 'top' | 'bottom' | 'left' | 'right';
 
@@ -59,13 +57,6 @@ const sideTransform: Record<TooltipSide, string> = {
   right: 'translate(0%, -50%)',
 };
 
-const sideEnter: Record<TooltipSide, { x?: number; y?: number }> = {
-  top: { y: 4 },
-  bottom: { y: -4 },
-  left: { x: 4 },
-  right: { x: -4 },
-};
-
 export function Tooltip({
   content,
   side = 'top',
@@ -93,7 +84,6 @@ export function Tooltip({
       const rect = el.getBoundingClientRect();
       const finalSide = flipIfNeeded(rect, side);
       const c = computeCoords(rect, finalSide);
-      // Clamp horizontal/vertical para no salirnos del viewport.
       c.left = Math.max(EDGE_PAD_PX, Math.min(c.left, window.innerWidth - EDGE_PAD_PX));
       c.top = Math.max(EDGE_PAD_PX, Math.min(c.top, window.innerHeight - EDGE_PAD_PX));
       setCoords(c);
@@ -108,7 +98,6 @@ export function Tooltip({
 
   useEffect(() => () => clearTimer(), []);
 
-  // Cerrar en scroll/resize para no quedar desalineados.
   useEffect(() => {
     if (!open) return;
     const onScroll = () => hide();
@@ -121,40 +110,21 @@ export function Tooltip({
   }, [open, hide]);
 
   const portal =
-    typeof document !== 'undefined'
+    typeof document !== 'undefined' && open && coords
       ? createPortal(
-          <AnimatePresence>
-            {open && coords && (
-              <motion.div
-                role="tooltip"
-                id={tooltipId}
-                className={cn(
-                  'pointer-events-none fixed z-[70]',
-                  'rounded-6 border border-border-strong bg-surface text-text',
-                  'px-2.5 py-1.5 font-sans text-13 leading-snug',
-                  'shadow-md max-w-xs',
-                )}
-                style={{
-                  top: coords.top,
-                  left: coords.left,
-                  transform: sideTransform[coords.side],
-                }}
-                initial={{ opacity: 0, ...sideEnter[coords.side] }}
-                animate={{
-                  opacity: 1,
-                  x: 0,
-                  y: 0,
-                  transition: { duration: 0.15, ease: [0.16, 1, 0.3, 1] },
-                }}
-                exit={{
-                  opacity: 0,
-                  transition: { duration: 0.1, ease: [0.7, 0, 0.84, 0] },
-                }}
-              >
-                {content}
-              </motion.div>
-            )}
-          </AnimatePresence>,
+          <div
+            role="tooltip"
+            id={tooltipId}
+            className="fixed z-50"
+            style={{
+              top: coords.top,
+              left: coords.left,
+              transform: sideTransform[coords.side],
+              pointerEvents: 'none',
+            }}
+          >
+            {content}
+          </div>,
           document.body,
         )
       : null;

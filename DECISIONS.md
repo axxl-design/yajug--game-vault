@@ -595,6 +595,20 @@ Documentado en `BUGS.md` y aquí. Cuando entren los assets, se conecta el `prefs
 
 Esos dos cambios bajarían el initial chunk a ~250-300 KB.
 
+### 2026-04-30 — Visual reset
+
+**Decisión:** Visual reset: stripped decorative Tailwind classes from components and screens for manual redesign by designer.
+
+**Alcance:** Se quitaron clases decorativas de Tailwind (colores, sombras, gradientes, paddings excesivos, animaciones de framer-motion no estructurales) en `src/components/**` y `src/screens/**`. Se mantuvieron únicamente clases estructurales (flex/grid, posicionamiento, tamaños mínimos para no romper layout) y los `data-*` attributes necesarios para que el diseñador pueda re-estilar por estado (`data-variant`, `data-selected`, `data-current`, etc.).
+
+**Lo que NO se tocó:**
+- `src/game/`, `src/stores/`, `src/multiplayer/`, `src/types/`, `src/hooks/`, `src/utils/` → intactos.
+- `src/styles/tokens.css` → intacto, queda como fuente de verdad de paleta para el rediseño manual.
+- Tests (201 pasan), `package.json`, `tsconfig`, `vite.config`, `vitest.config`, `vercel.json`.
+- `globals.css` mantiene imports de fuentes, directivas Tailwind, y resets estructurales (`box-sizing`, `margin/padding` reset, `button { font-family: inherit }`). Se removieron `body` background/color/font-feature-settings, `::selection`, `.pixel-art` utility, y la regla custom de `prefers-reduced-motion` (Tailwind ya tiene su variante).
+
+**Resultado:** la app sigue funcional end-to-end (crear partida → lobby → roles → jugar cartas → defensa → mercado → titulares → expansión → tiempo extra → game over) pero visualmente "desnuda" — lista para que el diseñador la re-vista a mano.
+
 ---
 
 ## Pendiente de decidir

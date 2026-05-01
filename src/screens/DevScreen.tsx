@@ -12,10 +12,6 @@ import {
 } from '@/components/ui';
 import { usePrefsStore } from '@/stores/prefsStore';
 
-/**
- * Galería interna de componentes UI.
- * Solo accesible en desarrollo (la ruta se monta condicional a import.meta.env.DEV).
- */
 export default function DevScreen() {
   const toast = useToast();
   const [modalOpen, setModalOpen] = useState(false);
@@ -25,37 +21,30 @@ export default function DevScreen() {
   const [nickname, setNickname] = useState(lastNickname);
 
   return (
-    <main className="min-h-screen bg-bg text-text">
-      <header className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-divider bg-bg/85 backdrop-blur px-6 py-4">
-        <div className="flex items-center gap-3">
-          <Link
-            to="/"
-            className="font-display text-20 font-bold tracking-tight hover:text-coral transition-colors"
-          >
-            YAJUGÁ <span className="text-text-muted">/dev</span>
+    <main style={{ minHeight: '100vh' }}>
+      <header className="sticky top-0 z-10 flex items-center justify-between">
+        <div className="flex items-center">
+          <Link to="/">
+            YAJUGÁ <span>/dev</span>
           </Link>
-          <span className="rounded-full border border-border-strong px-2 py-0.5 font-mono text-12 text-text-muted">
-            galería · fase 2
-          </span>
+          <span>galería · fase 2</span>
         </div>
-        <div className="flex items-center gap-3">
-          <span className="font-sans text-13 text-text-muted">Modo</span>
+        <div className="flex items-center">
+          <span>Modo</span>
           <ThemeToggle />
         </div>
       </header>
 
-      <div className="mx-auto max-w-5xl px-6 py-10 flex flex-col gap-12">
+      <div className="mx-auto flex flex-col">
         <Section
           title="Button"
           description="4 variants × 5 estados. Hover / active / focus son interactivos — pasá el mouse, mantené pulsado o tabuleá para verlos."
         >
           <Grid>
             {(['primary', 'secondary', 'danger', 'ghost'] as const).map((variant) => (
-              <Card key={variant} padding="md" className="flex flex-col gap-3">
-                <h3 className="font-display text-14 font-semibold uppercase tracking-wider text-text-muted">
-                  {variant}
-                </h3>
-                <div className="flex flex-wrap items-center gap-2">
+              <Card key={variant} padding="md" className="flex flex-col">
+                <h3>{variant}</h3>
+                <div className="flex flex-wrap items-center">
                   <Button variant={variant}>Rest</Button>
                   <Button variant={variant} disabled>
                     Disabled
@@ -64,7 +53,7 @@ export default function DevScreen() {
                     Loading
                   </Button>
                 </div>
-                <div className="flex flex-wrap items-center gap-2">
+                <div className="flex flex-wrap items-center">
                   <Button variant={variant} size="sm">
                     Small
                   </Button>
@@ -75,7 +64,7 @@ export default function DevScreen() {
                     Large
                   </Button>
                 </div>
-                <div className="flex flex-wrap items-center gap-2">
+                <div className="flex flex-wrap items-center">
                   <Button variant={variant} leftIcon={Sparkles}>
                     Con icono
                   </Button>
@@ -92,27 +81,21 @@ export default function DevScreen() {
           <Grid>
             <Card variant="default">
               <CardLabel>default</CardLabel>
-              <p className="font-sans text-14 text-text-muted">
-                Fondo elev-1 + border. Uso por defecto en paneles.
-              </p>
+              <p>Fondo elev-1 + border. Uso por defecto en paneles.</p>
             </Card>
             <Card variant="elevated">
               <CardLabel>elevated</CardLabel>
-              <p className="font-sans text-14 text-text-muted">
-                Fondo elev-2 + border-strong + shadow-md. Para destacar.
-              </p>
+              <p>Fondo elev-2 + border-strong + shadow-md. Para destacar.</p>
             </Card>
             <Card variant="surface">
               <CardLabel>surface</CardLabel>
-              <p className="font-sans text-14 text-text-muted">
-                Fondo `surface` (carbon en dark, white en light).
-              </p>
+              <p>Fondo `surface` (carbon en dark, white en light).</p>
             </Card>
           </Grid>
         </Section>
 
         <Section title="Modal" description="Abrible vía botón. Cerrable con click en overlay, tecla Esc o el botón X.">
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap">
             <Button onClick={() => setModalOpen(true)}>Abrir modal medium</Button>
             <Button variant="secondary" onClick={() => setSmallModalOpen(true)}>
               Abrir modal small
@@ -139,7 +122,7 @@ export default function DevScreen() {
               </>
             }
           >
-            <p className="font-sans text-15 text-text leading-relaxed">
+            <p>
               Este es el contenido del modal. La animación de entrada es bouncy 250ms,
               la de salida es ease-in 150ms. El overlay tiene un blur sutil y se
               cierra con click fuera del cuadro.
@@ -152,14 +135,12 @@ export default function DevScreen() {
             title="Modal small"
             size="sm"
           >
-            <p className="font-sans text-14 text-text-muted">
-              Variante compacta sin footer.
-            </p>
+            <p>Variante compacta sin footer.</p>
           </Modal>
         </Section>
 
         <Section title="Toast" description="Auto-dismiss 4s. Click para cerrar antes. Stack vertical (más nuevo arriba).">
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap">
             <Button variant="ghost" onClick={() => toast.info('Conexión establecida.')}>
               Info
             </Button>
@@ -182,7 +163,7 @@ export default function DevScreen() {
         </Section>
 
         <Section title="Tooltip" description="Aparece al hover (>800ms) o al focus por teclado. Smart positioning con flip si toca el borde.">
-          <div className="flex flex-wrap items-center gap-6">
+          <div className="flex flex-wrap items-center">
             <Tooltip content="Tooltip arriba (default).">
               <Button variant="ghost" leftIcon={Info}>
                 Hover top
@@ -207,7 +188,7 @@ export default function DevScreen() {
         </Section>
 
         <Section title="NicknameInput" description="Validación: no vacío, máximo 20 caracteres. Persiste en prefsStore al confirmar (Enter).">
-          <Card padding="lg" className="max-w-md flex flex-col gap-4">
+          <Card padding="lg" className="flex flex-col">
             <NicknameInput
               value={nickname}
               onChange={setNickname}
@@ -216,12 +197,9 @@ export default function DevScreen() {
                 toast.success(`Nickname guardado: ${v}`);
               }}
             />
-            <div className="flex items-center justify-between text-13 text-text-muted">
+            <div className="flex items-center justify-between">
               <span>
-                Último guardado:{' '}
-                <code className="font-mono text-text">
-                  {lastNickname || '(ninguno)'}
-                </code>
+                Último guardado: <code>{lastNickname || '(ninguno)'}</code>
               </span>
               <Button
                 size="sm"
@@ -238,11 +216,9 @@ export default function DevScreen() {
         </Section>
 
         <Section title="ThemeToggle" description="Sun/Moon de Lucide con cross-fade. Persistido en prefsStore via middleware persist.">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center">
             <ThemeToggle />
-            <span className="font-mono text-13 text-text-muted">
-              theme = {usePrefsStore.getState().theme}
-            </span>
+            <span>theme = {usePrefsStore.getState().theme}</span>
           </div>
         </Section>
       </div>
@@ -260,14 +236,10 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className="flex flex-col gap-4">
-      <header className="flex flex-col gap-1">
-        <h2 className="font-display text-24 font-semibold tracking-tight">{title}</h2>
-        {description && (
-          <p className="font-sans text-14 text-text-muted max-w-2xl leading-snug">
-            {description}
-          </p>
-        )}
+    <section className="flex flex-col">
+      <header className="flex flex-col">
+        <h2>{title}</h2>
+        {description && <p>{description}</p>}
       </header>
       {children}
     </section>
@@ -275,13 +247,9 @@ function Section({
 }
 
 function Grid({ children }: { children: React.ReactNode }) {
-  return <div className="grid gap-4 md:grid-cols-2">{children}</div>;
+  return <div className="grid md:grid-cols-2">{children}</div>;
 }
 
 function CardLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <h3 className="font-display text-14 font-semibold uppercase tracking-wider text-text-muted mb-2">
-      {children}
-    </h3>
-  );
+  return <h3>{children}</h3>;
 }

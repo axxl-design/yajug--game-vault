@@ -18,7 +18,12 @@
       "Bash(timeout 30 pnpm test:run src/stores/gameStore.test.ts -t \"simulación\")",
       "Bash(timeout 30 pnpm test:run src/stores/gameStore.test.ts -t \"convenience\")",
       "Bash(timeout 30 pnpm test:run src/stores/gameStore.test.ts -t \"20 turnos\")",
-      "Bash(timeout 60 pnpm test:run src/game)"
+      "Bash(timeout 60 pnpm test:run src/game)",
+      "Bash(pnpm dev *)",
+      "Bash(curl -sf http://localhost:5173/)",
+      "Bash(curl -sf http://localhost:5173/src/main.tsx -o /dev/null -w \"main.tsx HTTP %{http_code}\\\\n\")",
+      "Bash(curl -sf http://localhost:5173/src/App.tsx -o /dev/null -w \"App.tsx HTTP %{http_code}\\\\n\")",
+      "Bash(kill b2kpfx5vk *)"
     ]
   }
 }

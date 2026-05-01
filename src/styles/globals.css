@@ -6,7 +6,7 @@
 @import '@fontsource/inter/600.css';
 @import '@fontsource/inter/700.css';
 
-/* Design tokens (paleta, type scale, spacing, motion) */
+/* Design tokens (paleta, type scale, spacing, motion) — intactos para rediseño manual */
 @import './tokens.css';
 
 @tailwind base;
@@ -26,48 +26,7 @@
     padding: 0;
   }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-sans);
-    font-size: var(--fs-15);
-    line-height: var(--lh-normal);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    font-feature-settings: 'ss01', 'cv11';
-    transition:
-      background var(--dur-base) var(--ease-out),
-      color var(--dur-base) var(--ease-out);
-  }
-
   button {
     font-family: inherit;
-  }
-
-  ::selection {
-    background: var(--coral);
-    color: var(--bone);
-  }
-}
-
-@layer utilities {
-  /* Render pixel art sin interpolación borrosa. Solo aplicar en assets pixel del juego. */
-  .pixel-art {
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
-  }
-}
-
-/* Respetar prefers-reduced-motion: reducir todas las animaciones a fade rápido,
-   eliminar repeticiones infinitas (logos respirando, banners pulsando). */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 100ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 100ms !important;
-    scroll-behavior: auto !important;
   }
 }

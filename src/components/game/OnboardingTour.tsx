@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { Button } from '@/components/ui';
 import { Sparkles, X } from 'lucide-react';
 import { usePrefsStore } from '@/stores/prefsStore';
@@ -30,7 +29,6 @@ const STEPS = [
 export function OnboardingTour() {
   const hasSeen = usePrefsStore((s) => s.hasSeenOnboarding);
   const setHasSeen = usePrefsStore((s) => s.setHasSeenOnboarding);
-  const reduceMotion = useReducedMotion();
   const [step, setStep] = useState(0);
 
   if (hasSeen) return null;
@@ -50,52 +48,30 @@ export function OnboardingTour() {
   const current = STEPS[step];
 
   return (
-    <AnimatePresence>
-      <motion.div
-        key="overlay"
-        className="fixed inset-0 z-[80] bg-ink/70 backdrop-blur-sm flex items-center justify-center p-4"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: reduceMotion ? 0 : 0.25 }}
-      >
-        <motion.div
-          className="rounded-12 bg-bg-elev-1 border border-border shadow-lg max-w-md w-full p-5 flex flex-col gap-4"
-          initial={{ y: 24, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 24, opacity: 0 }}
-          transition={{ duration: reduceMotion ? 0 : 0.25, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <Sparkles size={18} className="text-coral" />
-              <h2 className="font-display text-18 font-semibold tracking-tight">
-                {current.title}
-              </h2>
-            </div>
-            <button
-              type="button"
-              onClick={close}
-              className="text-text-muted hover:text-text"
-              aria-label="Cerrar onboarding"
-            >
-              <X size={18} />
-            </button>
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="flex flex-col">
+        <div className="flex items-start justify-between">
+          <div className="flex items-center">
+            <Sparkles size={18} />
+            <h2>{current.title}</h2>
           </div>
-          <p className="font-sans text-14 text-text-muted leading-relaxed">{current.body}</p>
-          <div className="flex items-center justify-between">
-            <span className="font-mono text-11 text-text-subtle">
-              {step + 1} / {STEPS.length}
-            </span>
-            <div className="flex gap-2">
-              <Button variant="ghost" onClick={close}>
-                Saltear
-              </Button>
-              <Button onClick={next}>{step < STEPS.length - 1 ? 'Siguiente' : 'Listo'}</Button>
-            </div>
+          <button type="button" onClick={close} aria-label="Cerrar onboarding">
+            <X size={18} />
+          </button>
+        </div>
+        <p>{current.body}</p>
+        <div className="flex items-center justify-between">
+          <span>
+            {step + 1} / {STEPS.length}
+          </span>
+          <div className="flex">
+            <Button variant="ghost" onClick={close}>
+              Saltear
+            </Button>
+            <Button onClick={next}>{step < STEPS.length - 1 ? 'Siguiente' : 'Listo'}</Button>
           </div>
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
+        </div>
+      </div>
+    </div>
   );
 }

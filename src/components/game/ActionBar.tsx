@@ -22,8 +22,8 @@ export function ActionBar({
   className,
 }: ActionBarProps) {
   return (
-    <div className={cn('flex items-center justify-between gap-2 flex-wrap', className)}>
-      <div className="flex items-center gap-2 flex-wrap">
+    <div className={cn('flex items-center justify-between flex-wrap', className)}>
+      <div className="flex items-center flex-wrap">
         <Button
           variant="primary"
           leftIcon={FlagOff}
@@ -37,12 +37,11 @@ export function ActionBar({
           leftIcon={Sparkles}
           onClick={onActivateExpansion}
           disabled={!canActivateExpansion || !isMyTurn}
-          className={cn(canActivateExpansion && '!bg-violet/20 !border-violet text-violet hover:!bg-violet/30')}
         >
-          Expansión {canActivateExpansion && <Crown size={12} className="ml-1" />}
+          Expansión {canActivateExpansion && <Crown size={12} />}
         </Button>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center">
         <Button variant="ghost" leftIcon={ScrollText} onClick={onToggleLog}>
           Log
         </Button>
