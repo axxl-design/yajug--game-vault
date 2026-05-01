@@ -21,7 +21,6 @@ export interface ModalProps {
   closeOnOverlay?: boolean;
   closeOnEsc?: boolean;
   showClose?: boolean;
-  /** Override aria-label si el modal no tiene title visible. */
   ariaLabel?: string;
 }
 
@@ -41,7 +40,6 @@ export function Modal({
   const containerRef = useRef<HTMLDivElement>(null);
   const previouslyFocused = useRef<HTMLElement | null>(null);
 
-  // Esc para cerrar.
   useEffect(() => {
     if (!open || !closeOnEsc) return;
     const handler = (e: KeyboardEvent) => {
@@ -51,7 +49,6 @@ export function Modal({
     return () => window.removeEventListener('keydown', handler);
   }, [open, closeOnEsc, onClose]);
 
-  // Mover foco al modal al abrir, restaurar al cerrar.
   useEffect(() => {
     if (open) {
       previouslyFocused.current = document.activeElement as HTMLElement | null;
@@ -69,7 +66,6 @@ export function Modal({
     }
   }, [open]);
 
-  // Bloquear scroll del body mientras está abierto.
   useEffect(() => {
     if (!open) return;
     const prev = document.body.style.overflow;
@@ -83,17 +79,16 @@ export function Modal({
     if (closeOnOverlay) onClose();
   }, [closeOnOverlay, onClose]);
 
-  if (!open) {
-    if (typeof document === 'undefined') return null;
-    return null;
-  }
+  if (!open) return null;
+  if (typeof document === 'undefined') return null;
 
   const node = (
-    <div className="fixed inset-0 z-50 flex items-center justify-center" role="presentation">
+    <div className="ed-modal-overlay" role="presentation">
       <div
         className="absolute inset-0"
         onClick={handleOverlayClick}
         aria-hidden="true"
+        style={{ position: 'absolute', inset: 0 }}
       />
       <div
         ref={containerRef}
@@ -103,12 +98,14 @@ export function Modal({
         aria-label={!title ? ariaLabel : undefined}
         tabIndex={-1}
         data-size={size}
-        className={cn('relative')}
+        className={cn('ed-modal')}
       >
         {(title || showClose) && (
-          <div className="flex items-start justify-between">
+          <div className="ed-modal-head">
             {title ? (
-              <h2 id={titleId}>{title}</h2>
+              <h2 id={titleId} className="ed-modal-title">
+                {title}
+              </h2>
             ) : (
               <span aria-hidden />
             )}
@@ -117,19 +114,18 @@ export function Modal({
                 type="button"
                 onClick={onClose}
                 aria-label="Cerrar modal"
-                className="inline-flex items-center justify-center"
+                className="ed-modal-close"
               >
                 <X size={18} aria-hidden="true" />
               </button>
             )}
           </div>
         )}
-        <div>{children}</div>
-        {footer && <div className="flex items-center justify-end">{footer}</div>}
+        <div className="ed-modal-body">{children}</div>
+        {footer && <div className="ed-modal-footer">{footer}</div>}
       </div>
     </div>
   );
 
-  if (typeof document === 'undefined') return null;
   return createPortal(node, document.body);
 }

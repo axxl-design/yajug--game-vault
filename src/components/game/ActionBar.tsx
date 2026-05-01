@@ -22,8 +22,20 @@ export function ActionBar({
   className,
 }: ActionBarProps) {
   return (
-    <div className={cn('flex items-center justify-between flex-wrap', className)}>
-      <div className="flex items-center flex-wrap">
+    <div
+      className={cn(className)}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: 'var(--s-4)',
+        flexWrap: 'wrap',
+        padding: 'var(--s-4)',
+        borderTop: '4px double var(--rule)',
+        marginTop: 'var(--s-4)',
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--s-3)', flexWrap: 'wrap' }}>
         <Button
           variant="primary"
           leftIcon={FlagOff}
@@ -33,19 +45,20 @@ export function ActionBar({
           Terminar turno
         </Button>
         <Button
-          variant="ghost"
+          variant={canActivateExpansion ? 'mostaza' : 'ghost'}
           leftIcon={Sparkles}
           onClick={onActivateExpansion}
           disabled={!canActivateExpansion || !isMyTurn}
+          style={canActivateExpansion ? { borderColor: 'var(--violet)' } : undefined}
         >
-          Expansión {canActivateExpansion && <Crown size={12} />}
+          Expansión {canActivateExpansion && <Crown size={12} aria-hidden="true" />}
         </Button>
       </div>
-      <div className="flex items-center">
-        <Button variant="ghost" leftIcon={ScrollText} onClick={onToggleLog}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--s-2)' }}>
+        <Button variant="ghost" leftIcon={ScrollText} onClick={onToggleLog} size="sm">
           Log
         </Button>
-        <Button variant="ghost" leftIcon={HelpCircle} onClick={onHelp}>
+        <Button variant="ghost" leftIcon={HelpCircle} onClick={onHelp} size="sm">
           Ayuda
         </Button>
       </div>

@@ -93,7 +93,16 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     typeof document !== 'undefined'
       ? createPortal(
           <div
-            className="fixed bottom-0 right-0 z-50 flex flex-col"
+            style={{
+              position: 'fixed',
+              bottom: 20,
+              right: 20,
+              zIndex: 200,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 12,
+              maxWidth: '92vw',
+            }}
             aria-live="polite"
             aria-atomic="false"
             role="region"
@@ -106,10 +115,10 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                   type="button"
                   onClick={() => dismiss(t.id)}
                   data-type={t.type}
-                  className="flex items-start"
+                  className="ed-toast"
                 >
                   <Icon size={18} aria-hidden="true" />
-                  <span>{t.message}</span>
+                  <span className="ed-toast-body">{t.message}</span>
                 </button>
               );
             })}

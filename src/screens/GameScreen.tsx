@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card as UICard, useToast } from '@/components/ui';
+import { useToast, Logo } from '@/components/ui';
 import { useGameStore, selectCurrentPlayer } from '@/stores/gameStore';
-import type { ExpansionInput, PlayerAction } from '@/types/game';
+import type { ExpansionId, ExpansionInput, PlayerAction } from '@/types/game';
 import { dispatchAction, getSession } from '@/multiplayer/sync';
 import { Hand } from '@/components/game/Hand';
 import { Bank } from '@/components/game/Bank';
@@ -17,6 +17,7 @@ import { TitularBanner } from '@/components/game/TitularBanner';
 import { TiempoExtraBanner } from '@/components/game/TiempoExtraBanner';
 import { LogPanel } from '@/components/game/LogPanel';
 import { ExpansionActivationModal } from '@/components/game/ExpansionActivationModal';
+import { ExpansionDramaticOverlay } from '@/components/game/ExpansionDramaticOverlay';
 import { OnboardingTour } from '@/components/game/OnboardingTour';
 import { MobileGate } from '@/components/game/MobileGate';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
@@ -40,6 +41,7 @@ export default function GameScreen() {
   const [logOpen, setLogOpen] = useState(false);
   const [expansionOpen, setExpansionOpen] = useState(false);
   const [showAssignment, setShowAssignment] = useState(true);
+  const [cinematicExpansion, setCinematicExpansion] = useState<ExpansionId | null>(null);
   const isMobile = useMobileGate();
 
   useEffect(() => {
@@ -49,23 +51,30 @@ export default function GameScreen() {
     }
   }, [lastError, toast, clearError]);
 
+  // Detect "expansion_activated" log entries to fire cinematic overlay
+  useEffect(() => {
+    if (!gs?.log?.length) return;
+    const last = gs.log[gs.log.length - 1];
+    if (last?.type === 'expansion_activated' && last.data && typeof last.data === 'object') {
+      const data = last.data as { expansionId?: ExpansionId };
+      if (data.expansionId) {
+        setCinematicExpansion(data.expansionId);
+      }
+    }
+  }, [gs?.log?.length]);
+
   if (isMobile) return <MobileGate />;
 
   if (!gs) {
     return (
-      <main className="flex items-center justify-center" style={{ minHeight: '100vh' }}>
-        <p>No hay partida en curso.</p>
+      <main className="shell" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+        <p className="ed-caption">No hay partida en curso.</p>
       </main>
     );
   }
 
-  if (gs.winner && gs.phase === 'game_over') {
-    return <GameOverScreen />;
-  }
-
-  if (showAssignment) {
-    return <RoleAssignmentScreen onContinue={() => setShowAssignment(false)} />;
-  }
+  if (gs.winner && gs.phase === 'game_over') return <GameOverScreen />;
+  if (showAssignment) return <RoleAssignmentScreen onContinue={() => setShowAssignment(false)} />;
 
   const me = session
     ? gs.players.find((p) => p.id === session.myPlayerId) ?? cur
@@ -163,7 +172,8 @@ export default function GameScreen() {
       h: () => navigate('/tutorial'),
       l: () => setLogOpen((o) => !o),
       escape: () => {
-        if (expansionOpen) setExpansionOpen(false);
+        if (cinematicExpansion) setCinematicExpansion(null);
+        else if (expansionOpen) setExpansionOpen(false);
         else if (logOpen) setLogOpen(false);
         else if (selectedCardId) setSelectedCardId(null);
       },
@@ -172,42 +182,78 @@ export default function GameScreen() {
   );
 
   return (
-    <main style={{ minHeight: '100vh' }}>
-      <header className="sticky top-0 z-10 flex items-center justify-between">
-        <div className="flex items-center">
-          <span>YAJUGÁ</span>
-          <span>/ {gs.gameId}</span>
+    <main className="shell" style={{ minHeight: '100vh', paddingBottom: 'var(--s-12)' }}>
+      <header
+        className="ed-topbar"
+        style={{ position: 'sticky', top: 0, zIndex: 20 }}
+      >
+        <div className="ed-topbar-mark">
+          <Logo variant="title" height={20} ariaHidden />
+          <span style={{ color: 'var(--text-mute)', fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.18em' }}>
+            / partida {gs.gameId}
+          </span>
         </div>
-        <div className="flex items-center">
+        <div className="ed-topbar-meta" style={{ flexWrap: 'wrap' }}>
           <span role="status" aria-live="polite">
-            Turno de <strong>{gs.players[gs.currentPlayerIndex]?.nickname}</strong>
+            Turno de{' '}
+            <strong style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic', color: 'var(--tomate)', fontSize: 14, letterSpacing: 0, textTransform: 'none' }}>
+              {gs.players[gs.currentPlayerIndex]?.nickname}
+            </strong>
             {isMyTurn && session && <span> (vos)</span>}
           </span>
           <span>t={gs.turnsPlayed}</span>
+          <button
+            type="button"
+            onClick={() => navigate('/')}
+            className="ed-btn ed-btn-ghost ed-btn-sm"
+          >
+            Salir
+          </button>
         </div>
-        <button type="button" onClick={() => navigate('/')}>
-          salir
-        </button>
       </header>
 
-      <div className="mx-auto flex flex-col">
+      <div
+        style={{
+          maxWidth: 1320,
+          margin: '0 auto',
+          padding: 'var(--s-6) var(--s-6) 0',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 'var(--s-5)',
+        }}
+      >
         <TitularBanner titular={gs.activeTitular} />
         <TiempoExtraBanner state={gs} />
 
-        <section className="grid sm:grid-cols-2 lg:grid-cols-3">
+        {/* Oponentes */}
+        <section
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+            gap: 'var(--s-3)',
+          }}
+        >
           {others.map((o) => (
             <OpponentPanel key={o.id} player={o} isCurrent={false} />
           ))}
         </section>
 
-        <section className="flex flex-wrap items-start">
-          <UICard padding="md" className="flex flex-col">
-            <span>Mazo / Descarte</span>
+        {/* Mazo + Mercado */}
+        <section
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: 'var(--s-4)',
+            alignItems: 'flex-start',
+          }}
+        >
+          <div className="ed-frame" style={{ padding: 'var(--s-4)' }}>
+            <div className="ed-frame-title">Mazo · Descarte</div>
             <DeckPanel
               deckCount={gs.deck.length}
               discardTop={gs.discardPile[gs.discardPile.length - 1] ?? null}
             />
-          </UICard>
+          </div>
           <Market
             cards={gs.marketCards}
             bankAvailable={meBank}
@@ -217,29 +263,69 @@ export default function GameScreen() {
           />
         </section>
 
-        <section className="grid lg:grid-cols-3">
-          <div className="lg:col-span-2 flex flex-col">
-            <h2>Mis sets</h2>
-            <div className="grid sm:grid-cols-2">
-              {me.sets.length === 0 && <p>Todavía no tenés propiedades en sets.</p>}
-              {me.sets.map((s, i) => (
-                <PropertySetView
-                  key={`${s.color}-${i}`}
-                  set={s}
-                  onCardClick={(cid) =>
-                    dispatch(me.id, { type: 'MOVE_WILDCARD', cardId: cid, toColor: s.color })
-                  }
-                />
-              ))}
+        {/* Mis sets + Banco */}
+        <section
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'minmax(0, 2fr) minmax(0, 1fr)',
+            gap: 'var(--s-4)',
+          }}
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--s-3)' }}>
+            <div className="ed-kicker">
+              <span className="ed-kicker-num">i</span>
+              <span>Mis sets</span>
             </div>
+            {me.sets.length === 0 ? (
+              <p className="ed-caption">Todavía no tenés propiedades en sets.</p>
+            ) : (
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                  gap: 'var(--s-3)',
+                }}
+              >
+                {me.sets.map((s, i) => (
+                  <PropertySetView
+                    key={`${s.color}-${i}`}
+                    set={s}
+                    onCardClick={(cid) =>
+                      dispatch(me.id, { type: 'MOVE_WILDCARD', cardId: cid, toColor: s.color })
+                    }
+                  />
+                ))}
+              </div>
+            )}
           </div>
           <Bank player={me} />
         </section>
 
-        <section className="flex flex-col">
-          <div className="flex items-center justify-between">
-            <h2>Mi mano · {me.hand.length}</h2>
-            <span>{me.hasPlayedCardsThisTurn}/3 cartas jugadas</span>
+        {/* Mi mano */}
+        <section style={{ display: 'flex', flexDirection: 'column', gap: 'var(--s-3)' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'baseline',
+              justifyContent: 'space-between',
+              gap: 'var(--s-3)',
+              flexWrap: 'wrap',
+            }}
+          >
+            <div className="ed-kicker">
+              <span className="ed-kicker-num">ii</span>
+              <span>Mi mano · {me.hand.length}</span>
+            </div>
+            <span
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 11,
+                letterSpacing: '0.10em',
+                color: 'var(--text-mute)',
+              }}
+            >
+              {me.hasPlayedCardsThisTurn}/3 cartas jugadas
+            </span>
           </div>
           <Hand
             cards={me.hand}
@@ -286,6 +372,11 @@ export default function GameScreen() {
         player={me}
         onActivate={handleActivateExpansion}
         onClose={() => setExpansionOpen(false)}
+      />
+
+      <ExpansionDramaticOverlay
+        expansionId={cinematicExpansion}
+        onComplete={() => setCinematicExpansion(null)}
       />
 
       <OnboardingTour />

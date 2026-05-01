@@ -2,7 +2,7 @@ import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react';
 import { Loader2, type LucideIcon } from 'lucide-react';
 import { cn } from '@/utils/cn';
 
-type Variant = 'primary' | 'secondary' | 'danger' | 'ghost';
+type Variant = 'primary' | 'secondary' | 'danger' | 'ghost' | 'mostaza';
 type Size = 'sm' | 'md' | 'lg';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -16,6 +16,20 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const iconSize: Record<Size, number> = { sm: 14, md: 16, lg: 18 };
+
+const variantClass: Record<Variant, string> = {
+  primary:   'ed-btn-primary',
+  secondary: 'ed-btn-secondary',
+  danger:    'ed-btn-danger',
+  ghost:     'ed-btn-ghost',
+  mostaza:   'ed-btn-mostaza',
+};
+
+const sizeClass: Record<Size, string> = {
+  sm: 'ed-btn-sm',
+  md: '',
+  lg: 'ed-btn-lg',
+};
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   {
@@ -44,11 +58,17 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       aria-busy={loading || undefined}
       data-variant={variant}
       data-size={size}
-      className={cn('inline-flex items-center gap-2', fullWidth && 'w-full', className)}
+      className={cn(
+        'ed-btn',
+        variantClass[variant],
+        sizeClass[size],
+        fullWidth && 'ed-btn-block',
+        className,
+      )}
       {...rest}
     >
       {loading ? (
-        <Loader2 size={iconPx} aria-hidden="true" />
+        <Loader2 size={iconPx} aria-hidden="true" className="animate-spin" />
       ) : (
         <>
           {LeftIcon ? <LeftIcon size={iconPx} aria-hidden="true" /> : null}

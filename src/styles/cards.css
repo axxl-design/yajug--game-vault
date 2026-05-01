@@ -1,0 +1,494 @@
+/* ════════════════════════════════════════════════════════════════
+   YAJUGÁ : DOMINIO — Anatomía de cartas (manga / cómic edition)
+   Portado del handoff v2 (cards.css). Tres anatomías:
+     · .card-prop   propiedad
+     · .card-act    acción / renta / wildcard / building
+     · .card-money  dinero
+     · .card-back   reverso (lleva logo SVG)
+   ════════════════════════════════════════════════════════════════ */
+
+/* Tamaño base de cartas — escalable via --card-scale */
+.card-prop,
+.card-act,
+.card-back {
+  --card-scale: 1;
+  width: calc(220px * var(--card-scale));
+  height: calc(320px * var(--card-scale));
+  background: var(--surface);
+  border: 1.5px solid var(--ink);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 4px 4px 0 var(--ink);
+  position: relative;
+  transform-origin: top left;
+  flex-shrink: 0;
+}
+[data-theme="dark"] .card-prop,
+[data-theme="dark"] .card-act,
+[data-theme="dark"] .card-back {
+  box-shadow: 4px 4px 0 var(--paper);
+  border-color: var(--paper);
+}
+
+.card-sm { --card-scale: 0.62; }
+.card-md { --card-scale: 1; }
+.card-lg { --card-scale: 1.18; }
+
+/* ── Carta de PROPIEDAD ─────────────────────────────────── */
+.card-prop-band {
+  height: 28px;
+  background: var(--card-set, var(--tomate));
+  color: var(--card-ink, var(--paper));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  font-family: var(--font-display);
+  font-size: var(--fs-12);
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  border-bottom: 1.5px solid var(--ink);
+}
+.card-prop-tier {
+  font-family: var(--font-serif);
+  font-style: italic;
+  letter-spacing: 0;
+  font-size: var(--fs-14);
+}
+.card-prop-name {
+  padding: 8px 12px 4px;
+  border-bottom: 1px solid var(--border);
+  background: var(--paper);
+  color: var(--ink);
+}
+.card-prop-name-text {
+  font-family: var(--font-serif);
+  font-size: var(--fs-18);
+  line-height: 1.05;
+  letter-spacing: -0.005em;
+  display: block;
+}
+.card-prop-illust {
+  flex: 1;
+  background: var(--paper-3);
+  border-bottom: 1.5px solid var(--ink);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.card-prop-illust-glyph {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 80px;
+  line-height: 1;
+  color: var(--card-set, var(--tomate));
+  text-shadow: 2px 2px 0 var(--ink);
+  opacity: 0.9;
+}
+.card-prop-illust::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(45deg, transparent 0 6px, rgba(26,24,20,0.04) 6px 7px);
+  pointer-events: none;
+}
+.card-prop-rents {
+  background: var(--paper);
+  color: var(--ink);
+  padding: 6px 8px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  border-bottom: 1.5px solid var(--ink);
+}
+.card-prop-rent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 0;
+}
+.card-prop-rent-n {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  color: var(--text-mute);
+}
+.card-prop-rent-v {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: var(--fs-15);
+  color: var(--ink);
+  line-height: 1;
+}
+.card-prop-foot {
+  height: 32px;
+  background: var(--paper);
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+}
+.card-prop-foot-pip {
+  width: 12px;
+  height: 12px;
+  border: 1.5px solid var(--ink);
+  border-radius: 50%;
+  background: var(--card-set, var(--tomate));
+}
+.card-prop-foot-val {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: var(--fs-20);
+}
+.card-prop-foot-mark {
+  font-family: var(--font-display);
+  font-size: var(--fs-14);
+  letter-spacing: 0.04em;
+  color: var(--tomate);
+}
+
+/* ── Carta de ACCIÓN / RENTA / WILDCARD / BUILDING ─────── */
+.card-act { background: var(--paper); color: var(--ink); }
+.card-act-head {
+  background: var(--act-color, var(--ink));
+  color: var(--act-ink, var(--paper));
+  height: 30px;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1.5px solid var(--ink);
+  font-family: var(--font-display);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: var(--fs-11);
+}
+.card-act-val {
+  font-family: var(--font-serif);
+  font-style: italic;
+  letter-spacing: 0;
+  font-size: var(--fs-14);
+  text-transform: none;
+}
+.card-act-glyph {
+  height: 110px;
+  background: var(--paper);
+  border-bottom: 1.5px solid var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.card-act-glyph::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(45deg, transparent 0 8px, rgba(26,24,20,0.04) 8px 9px);
+}
+.card-act-glyph-bg {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 88px;
+  line-height: 1;
+  color: var(--act-color, var(--tomate));
+  position: relative;
+  z-index: 1;
+  text-shadow: 3px 3px 0 var(--ink);
+}
+.card-act-body {
+  flex: 1;
+  padding: 10px 12px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: var(--paper);
+}
+.card-act-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-style: italic;
+  font-size: var(--fs-18);
+  line-height: 1.1;
+  color: var(--ink);
+}
+.card-act-sub {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+}
+.card-act-rule {
+  height: 1px;
+  background: var(--border);
+  margin: 4px 0;
+}
+.card-act-text {
+  margin: 0;
+  font-family: var(--font-text);
+  font-size: 11px;
+  line-height: 1.35;
+  color: var(--ink-soft);
+}
+.card-act-foot {
+  background: var(--paper);
+  border-top: 1px solid var(--border);
+  padding: 4px 10px;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  display: flex;
+  justify-content: space-between;
+}
+
+/* ── Carta de DINERO ────────────────────────────────────── */
+.card-money {
+  --card-scale: 1;
+  width: calc(200px * var(--card-scale));
+  height: calc(120px * var(--card-scale));
+  background: var(--mn-c, var(--paper-2));
+  color: var(--mn-ink, var(--ink));
+  border: 1.5px solid var(--ink);
+  border-radius: 4px;
+  position: relative;
+  box-shadow: 3px 3px 0 var(--ink);
+  overflow: hidden;
+  font-family: var(--font-serif);
+  flex-shrink: 0;
+}
+[data-theme="dark"] .card-money { box-shadow: 3px 3px 0 var(--paper); border-color: var(--paper); }
+.card-money::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  opacity: 0.4;
+  pointer-events: none;
+}
+.card-money::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(135deg, transparent 0 3px, rgba(0,0,0,0.04) 3px 4px);
+  pointer-events: none;
+}
+.card-money-corner {
+  position: absolute;
+  font-family: var(--font-display);
+  font-size: var(--fs-12);
+  letter-spacing: 0.04em;
+  z-index: 1;
+}
+.card-money-tl { top: 10px; left: 12px; }
+.card-money-br { bottom: 10px; right: 12px; transform: rotate(180deg); }
+.card-money-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+.card-money-num {
+  font-style: italic;
+  font-size: 46px;
+  line-height: 0.85;
+}
+.card-money-unit {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+.card-money-band {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  font-family: var(--font-mono);
+  font-size: 7px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  border-top: 1px solid currentColor;
+  opacity: 0.75;
+  z-index: 1;
+}
+
+/* ── Carta REVERSO (con logo custom) ────────────────────── */
+.card-back {
+  background: var(--ink);
+  border: 1.5px solid var(--ink);
+  padding: 12px;
+}
+.card-back::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(45deg, transparent 0 6px, rgba(239,230,210,0.04) 6px 7px);
+  pointer-events: none;
+}
+.card-back-frame {
+  width: 100%;
+  height: 100%;
+  border: 1px solid var(--paper);
+  border-radius: 3px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.card-back-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  text-align: center;
+  width: 100%;
+}
+.card-back-logo {
+  width: 70%;
+  max-width: 150px;
+  filter: brightness(1) contrast(1);
+}
+.card-back-meta {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.18em;
+  color: var(--paper);
+  opacity: 0.6;
+  text-transform: uppercase;
+}
+.card-back-deco {
+  width: 36px;
+  height: 36px;
+  border: 2px solid var(--tomate);
+  transform: rotate(45deg);
+  position: relative;
+  flex-shrink: 0;
+}
+.card-back-deco::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border: 1px solid var(--paper);
+}
+
+/* ── Estados ────────────────────────────────────────────── */
+.card-prop[data-selected="true"],
+.card-act[data-selected="true"] {
+  outline: 3px solid var(--tomate);
+  outline-offset: 2px;
+}
+.card-prop[data-disabled="true"],
+.card-act[data-disabled="true"],
+.card-money[data-disabled="true"] {
+  opacity: 0.5;
+  filter: grayscale(0.4);
+}
+button.card-prop,
+button.card-act,
+button.card-money,
+button.card-back {
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+  text-align: left;
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+button.card-prop:hover,
+button.card-act:hover,
+button.card-money:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+[data-theme="dark"] button.card-prop:hover,
+[data-theme="dark"] button.card-act:hover,
+[data-theme="dark"] button.card-money:hover {
+  box-shadow: 6px 6px 0 var(--paper);
+}
+button.card-prop:focus-visible,
+button.card-act:focus-visible,
+button.card-money:focus-visible {
+  outline: 3px solid var(--tomate);
+  outline-offset: 2px;
+}
+
+/* ── Hand container ─────────────────────────────────────── */
+.hand-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  align-items: flex-start;
+}
+
+/* ── Bank stack ─────────────────────────────────────────── */
+.bank-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+/* ── Property set view ──────────────────────────────────── */
+.set-view {
+  border: 1.5px solid var(--rule);
+  border-radius: var(--r-card);
+  padding: var(--s-3);
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+.set-view[data-complete="true"] {
+  border-color: var(--mostaza);
+  box-shadow: var(--shadow-press);
+}
+.set-view[data-monument="true"] {
+  border-color: var(--tomate);
+  box-shadow: 3px 3px 0 var(--tomate);
+}
+.set-view-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-display);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: var(--fs-12);
+  color: var(--text);
+}
+.set-view-pip {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 1.5px solid var(--ink);
+  border-radius: 3px;
+  background: var(--set-color, var(--tomate));
+  margin-right: 6px;
+  vertical-align: middle;
+}
+[data-theme="dark"] .set-view-pip { border-color: var(--paper); }
+.set-view-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}

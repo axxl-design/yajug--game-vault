@@ -14,3 +14,4 @@ export {
 export { ThemeToggle, type ThemeToggleProps } from './ThemeToggle';
 export { SoundToggle, type SoundToggleProps } from './SoundToggle';
 export { NicknameInput, type NicknameInputProps } from './NicknameInput';
+export { Logo, type LogoProps, type LogoVariant } from './Logo';

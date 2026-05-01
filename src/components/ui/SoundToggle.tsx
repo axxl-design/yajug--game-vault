@@ -18,12 +18,12 @@ export function SoundToggle({ className }: SoundToggleProps) {
       aria-checked={enabled}
       aria-label={enabled ? 'Silenciar sonidos' : 'Activar sonidos'}
       title={enabled ? 'Sonido activado' : 'Sonido silenciado'}
-      className={cn('inline-flex items-center justify-center', className)}
+      className={cn('ed-icon-btn', className)}
     >
       {enabled ? (
-        <Volume2 size={18} aria-hidden="true" />
+        <Volume2 size={16} aria-hidden="true" />
       ) : (
-        <VolumeX size={18} aria-hidden="true" />
+        <VolumeX size={16} aria-hidden="true" />
       )}
     </button>
   );

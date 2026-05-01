@@ -10,18 +10,47 @@ interface DeckPanelProps {
 
 export function DeckPanel({ deckCount, discardTop, className }: DeckPanelProps) {
   return (
-    <div className={cn('flex items-center', className)}>
-      <div className="flex flex-col items-center">
-        <CardFace card={{ id: 'deck', type: 'event', name: 'Mazo', value: 0, imageKey: '' }} faceDown size="sm" />
-        <span>{deckCount} mazo</span>
+    <div
+      className={cn(className)}
+      style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--s-4)' }}
+    >
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+        <CardFace
+          card={{
+            id: 'deck',
+            type: 'event',
+            name: 'Mazo',
+            value: 0,
+            imageKey: '',
+          }}
+          faceDown
+          size="sm"
+        />
+        <span
+          className="ed-badge ed-badge-outline"
+          style={{ fontSize: 9, letterSpacing: '0.14em' }}
+        >
+          {deckCount} mazo
+        </span>
       </div>
-      <div className="flex flex-col items-center">
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
         {discardTop ? (
           <CardFace card={discardTop} size="sm" />
         ) : (
-          <div className="w-12 h-16 inline-flex items-center justify-center">vacío</div>
+          <div
+            className="ed-pixel-slot"
+            style={{ width: 137, height: 198, fontSize: 9 }}
+          >
+            <strong>Descarte</strong>
+            <span>vacío</span>
+          </div>
         )}
-        <span>descarte</span>
+        <span
+          className="ed-badge ed-badge-outline"
+          style={{ fontSize: 9, letterSpacing: '0.14em' }}
+        >
+          descarte
+        </span>
       </div>
     </div>
   );

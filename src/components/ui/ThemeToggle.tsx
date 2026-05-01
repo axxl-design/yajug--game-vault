@@ -19,9 +19,9 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
       aria-checked={isDark}
       aria-label={isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
       title={isDark ? 'Modo claro' : 'Modo oscuro'}
-      className={cn('inline-flex items-center justify-center', className)}
+      className={cn('ed-icon-btn', className)}
     >
-      {isDark ? <Moon size={18} aria-hidden="true" /> : <Sun size={18} aria-hidden="true" />}
+      {isDark ? <Moon size={16} aria-hidden="true" /> : <Sun size={16} aria-hidden="true" />}
     </button>
   );
 }

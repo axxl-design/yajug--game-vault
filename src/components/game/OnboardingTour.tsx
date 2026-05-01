@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { Button } from '@/components/ui';
-import { Sparkles, X } from 'lucide-react';
+import { Button, Modal } from '@/components/ui';
 import { usePrefsStore } from '@/stores/prefsStore';
 
 const STEPS = [
@@ -33,45 +32,56 @@ export function OnboardingTour() {
 
   if (hasSeen) return null;
 
-  const close = () => {
-    setHasSeen(true);
-  };
+  const close = () => setHasSeen(true);
 
   const next = () => {
-    if (step < STEPS.length - 1) {
-      setStep((s) => s + 1);
-    } else {
-      close();
-    }
+    if (step < STEPS.length - 1) setStep((s) => s + 1);
+    else close();
   };
 
   const current = STEPS[step];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="flex flex-col">
-        <div className="flex items-start justify-between">
-          <div className="flex items-center">
-            <Sparkles size={18} />
-            <h2>{current.title}</h2>
-          </div>
-          <button type="button" onClick={close} aria-label="Cerrar onboarding">
-            <X size={18} />
-          </button>
-        </div>
-        <p>{current.body}</p>
-        <div className="flex items-center justify-between">
-          <span>
+    <Modal
+      open
+      onClose={close}
+      title={current.title}
+      size="sm"
+      footer={
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 'var(--s-3)',
+            width: '100%',
+          }}
+        >
+          <span
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 11,
+              letterSpacing: '0.18em',
+              color: 'var(--text-mute)',
+              textTransform: 'uppercase',
+            }}
+          >
             {step + 1} / {STEPS.length}
           </span>
-          <div className="flex">
+          <div style={{ display: 'flex', gap: 'var(--s-2)' }}>
             <Button variant="ghost" onClick={close}>
               Saltear
             </Button>
-            <Button onClick={next}>{step < STEPS.length - 1 ? 'Siguiente' : 'Listo'}</Button>
+            <Button onClick={next}>
+              {step < STEPS.length - 1 ? 'Siguiente' : 'Listo'}
+            </Button>
           </div>
         </div>
-      </div>
-    </div>
+      }
+    >
+      <p style={{ margin: 0, fontFamily: 'var(--font-text)', fontSize: 'var(--fs-15)', lineHeight: 1.55 }}>
+        {current.body}
+      </p>
+    </Modal>
   );
 }

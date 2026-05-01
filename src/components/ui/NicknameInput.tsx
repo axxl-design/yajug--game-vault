@@ -15,12 +15,10 @@ export interface NicknameInputProps
   > {
   value: string;
   onChange: (value: string) => void;
-  /** Se dispara al presionar Enter si el valor es válido. */
   onSubmitValid?: (value: string) => void;
   maxLength?: number;
   label?: string;
   placeholder?: string;
-  /** Si se pasa, sobreescribe la validación interna y muestra este error. */
   externalError?: string;
 }
 
@@ -80,10 +78,18 @@ export const NicknameInput = forwardRef<HTMLInputElement, NicknameInputProps>(
     };
 
     return (
-      <div className={cn('flex flex-col', className)}>
-        <div className="flex items-baseline justify-between">
-          <label htmlFor={inputId}>{label}</label>
-          <span id={counterId} aria-live="polite">
+      <div className={cn('ed-field', className)}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'baseline',
+          }}
+        >
+          <label htmlFor={inputId} className="ed-field-label">
+            {label}
+          </label>
+          <span id={counterId} aria-live="polite" className="ed-field-counter">
             {value.length}/{maxLength}
           </span>
         </div>
@@ -102,9 +108,10 @@ export const NicknameInput = forwardRef<HTMLInputElement, NicknameInputProps>(
           onKeyDown={handleKeyDown}
           aria-invalid={Boolean(showError)}
           aria-describedby={cn(counterId, showError ? errorId : undefined)}
+          className="ed-input"
         />
         {showError && (
-          <p id={errorId} role="alert">
+          <p id={errorId} role="alert" className="ed-field-error">
             {showError}
           </p>
         )}

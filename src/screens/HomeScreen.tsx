@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ArrowRight, BookOpen } from 'lucide-react';
 import {
   Button,
+  Logo,
   Modal,
   NicknameInput,
   SoundToggle,
@@ -51,61 +53,153 @@ export default function HomeScreen() {
   };
 
   return (
-    <main className="relative" style={{ minHeight: '100vh' }}>
-      <header className="absolute right-0 top-0 z-10 flex items-center">
-        <SoundToggle />
-        <ThemeToggle />
+    <main className="shell">
+      {/* Topbar */}
+      <header className="ed-topbar">
+        <div className="ed-topbar-mark">
+          <Logo variant="title" height={26} ariaHidden />
+          <span style={{ color: 'var(--text-mute)' }}>·</span>
+          <span
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 11,
+              letterSpacing: '0.18em',
+              textTransform: 'uppercase',
+              color: 'var(--text-mute)',
+            }}
+          >
+            Vol. 1 · Edición ensayo
+          </span>
+        </div>
+        <div className="ed-topbar-meta">
+          <SoundToggle />
+          <ThemeToggle />
+        </div>
       </header>
 
-      <div className="mx-auto flex flex-col items-center justify-center" style={{ minHeight: '100vh' }}>
-        <Logo />
-
-        <p>{TAGLINE}</p>
-
-        <div className="flex w-full flex-col">
-          <NicknameInput value={nickname} onChange={setNickname} autoFocus />
-
-          <div className="flex w-full flex-col">
-            {nicknameValid ? (
-              <Button
-                variant="primary"
-                size="lg"
-                fullWidth
-                loading={creating}
-                onClick={handleCreate}
-              >
-                Crear partida
-              </Button>
-            ) : (
-              <Tooltip content="Necesitás un nickname para continuar.">
-                <Button variant="primary" size="lg" fullWidth disabled>
-                  Crear partida
-                </Button>
-              </Tooltip>
-            )}
-
-            {nicknameValid ? (
-              <Button
-                variant="secondary"
-                size="lg"
-                fullWidth
-                onClick={() => setJoinOpen(true)}
-              >
-                Unirme a partida
-              </Button>
-            ) : (
-              <Tooltip content="Necesitás un nickname para continuar.">
-                <Button variant="secondary" size="lg" fullWidth disabled>
-                  Unirme a partida
-                </Button>
-              </Tooltip>
-            )}
-          </div>
+      <div className="ed-page-narrow" style={{ paddingTop: 'var(--s-12)' }}>
+        {/* Masthead con logo grande */}
+        <div className="ed-masthead">
+          <span className="ed-masthead-volume">Vol. 1 · Núm. 47</span>
+          <span className="ed-masthead-edition">Sunhaven · Ed. lobby</span>
+          <Logo variant="full" width="min(560px, 80vw)" />
+          <p
+            className="ed-pull"
+            style={{
+              borderLeft: 0,
+              padding: 0,
+              textAlign: 'center',
+              fontSize: 'var(--fs-22)',
+              maxWidth: 38 + 'ch',
+              margin: '8px auto 0',
+              color: 'var(--text-soft)',
+            }}
+          >
+            {TAGLINE}
+          </p>
         </div>
 
-        <button type="button" onClick={() => navigate('/tutorial')}>
-          ¿Cómo se juega?
-        </button>
+        {/* Sección 01 — Nickname + acción */}
+        <section className="ed-section">
+          <div className="ed-kicker">
+            <span className="ed-kicker-num">i</span>
+            <span>Antes de la mano</span>
+          </div>
+          <h1 className="ed-section-title">
+            Tu <em>nickname</em>, primero.
+          </h1>
+          <p className="ed-section-lead">
+            Es el nombre que te identifica en la mesa. Lo cambiás cuando quieras
+            — pero asegurate de que tus oponentes te reconozcan.
+          </p>
+
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'minmax(0, 1fr)',
+              gap: 'var(--s-4)',
+              maxWidth: 480,
+            }}
+          >
+            <NicknameInput value={nickname} onChange={setNickname} autoFocus />
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--s-2)' }}>
+              {nicknameValid ? (
+                <Button
+                  variant="primary"
+                  size="lg"
+                  fullWidth
+                  loading={creating}
+                  onClick={handleCreate}
+                  rightIcon={ArrowRight}
+                >
+                  Crear partida
+                </Button>
+              ) : (
+                <Tooltip content="Necesitás un nickname para continuar.">
+                  <Button variant="primary" size="lg" fullWidth disabled>
+                    Crear partida
+                  </Button>
+                </Tooltip>
+              )}
+
+              {nicknameValid ? (
+                <Button
+                  variant="secondary"
+                  size="lg"
+                  fullWidth
+                  onClick={() => setJoinOpen(true)}
+                >
+                  Unirme a partida
+                </Button>
+              ) : (
+                <Tooltip content="Necesitás un nickname para continuar.">
+                  <Button variant="secondary" size="lg" fullWidth disabled>
+                    Unirme a partida
+                  </Button>
+                </Tooltip>
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* Sección 02 — Tutorial */}
+        <section className="ed-section">
+          <div className="ed-kicker">
+            <span className="ed-kicker-num">ii</span>
+            <span>Si es tu primera vez</span>
+          </div>
+          <h2 className="ed-section-title">
+            Las reglas en <em>diez</em> secciones.
+          </h2>
+          <p className="ed-section-lead">
+            Lee la guía: cómo funcionan los turnos, los cobros, las defensas, las
+            Expansiones de Dominio y el Tiempo Extra.
+          </p>
+          <Button
+            variant="ghost"
+            leftIcon={BookOpen}
+            rightIcon={ArrowRight}
+            onClick={() => navigate('/tutorial')}
+          >
+            ¿Cómo se juega?
+          </Button>
+        </section>
+
+        <div className="ed-rule-double" />
+
+        <p
+          style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: 10,
+            letterSpacing: '0.20em',
+            textTransform: 'uppercase',
+            color: 'var(--text-mute)',
+            textAlign: 'center',
+          }}
+        >
+          YAJUGÁ : DOMINIO — Edición de prensa, hot-seat y multijugador.
+        </p>
       </div>
 
       <JoinModal
@@ -115,15 +209,6 @@ export default function HomeScreen() {
         onInvalid={(reason) => toast.error(reason)}
       />
     </main>
-  );
-}
-
-function Logo() {
-  return (
-    <div className="flex flex-col items-center">
-      <h1>YAJUGÁ</h1>
-      <span>DOMINIO</span>
-    </div>
   );
 }
 
@@ -168,8 +253,10 @@ function JoinModal({ open, onClose, onSubmit, onInvalid }: JoinModalProps) {
         </>
       }
     >
-      <div className="flex flex-col">
-        <label htmlFor="join-code">Código de partida</label>
+      <div className="ed-field">
+        <label htmlFor="join-code" className="ed-field-label">
+          Código de partida
+        </label>
         <input
           id="join-code"
           type="text"
@@ -188,9 +275,16 @@ function JoinModal({ open, onClose, onSubmit, onInvalid }: JoinModalProps) {
           maxLength={GAME_CODE_LENGTH}
           placeholder="K7P2RF"
           aria-invalid={raw.length > 0 && !valid}
+          className="ed-input"
+          style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: 'var(--fs-22)',
+            letterSpacing: '0.20em',
+            textTransform: 'uppercase',
+          }}
         />
-        <p>
-          {GAME_CODE_LENGTH} caracteres. Sin O, 0, I ni 1 (para evitar confusiones al compartir).
+        <p className="ed-caption" style={{ marginTop: 6 }}>
+          {GAME_CODE_LENGTH} caracteres. Sin O, 0, I ni 1.
         </p>
       </div>
     </Modal>

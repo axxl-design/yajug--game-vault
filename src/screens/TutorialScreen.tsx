@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ChevronDown } from 'lucide-react';
-import { Button, SoundToggle, ThemeToggle } from '@/components/ui';
+import { Button, Logo, SoundToggle, ThemeToggle } from '@/components/ui';
 
 interface Section {
   title: string;
@@ -56,32 +56,43 @@ export default function TutorialScreen() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <main className="relative" style={{ minHeight: '100vh' }}>
-      <header className="flex items-center justify-between">
-        <Link to="/" className="inline-flex items-center">
-          <ArrowLeft size={16} aria-hidden="true" />
-          Volver al inicio
-        </Link>
-        <div>
-          YAJUGÁ <span>/ Cómo se juega</span>
+    <main className="shell">
+      <header className="ed-topbar">
+        <div className="ed-topbar-mark">
+          <Link
+            to="/"
+            className="ed-btn ed-btn-ghost ed-btn-sm"
+            style={{ textDecoration: 'none' }}
+          >
+            <ArrowLeft size={14} aria-hidden="true" />
+            Inicio
+          </Link>
+          <Logo variant="title" height={20} ariaHidden />
+          <span style={{ color: 'var(--text-mute)', fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.18em' }}>
+            / cómo se juega
+          </span>
         </div>
-        <div className="flex items-center">
+        <div className="ed-topbar-meta">
           <SoundToggle />
           <ThemeToggle />
         </div>
       </header>
 
-      <div className="mx-auto flex flex-col">
-        <header className="flex flex-col">
-          <h1>Cómo se juega</h1>
-          <p>
-            Las reglas de YAJUGÁ: DOMINIO en 10 secciones. La copy de cada
-            sección es <em>placeholder</em> — se reemplaza cuando se cierre la
-            mecánica final.
+      <div className="ed-page-narrow">
+        <div className="ed-masthead">
+          <span className="ed-masthead-volume">Manual</span>
+          <span className="ed-masthead-edition">Reglas v1</span>
+          <h1 className="ed-section-title" style={{ fontSize: 'var(--fs-72)' }}>
+            Cómo se <em>juega</em>.
+          </h1>
+          <p className="ed-section-lead" style={{ textAlign: 'center', margin: '0 auto' }}>
+            Las reglas de YAJUGÁ : DOMINIO en diez secciones. La copy es{' '}
+            <em>placeholder</em> hasta que se cierre la mecánica final — pero la
+            estructura ya es la definitiva.
           </p>
-        </header>
+        </div>
 
-        <ul className="flex flex-col">
+        <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column' }}>
           {SECTIONS.map((section, i) => (
             <li key={section.title}>
               <AccordionItem
@@ -94,8 +105,10 @@ export default function TutorialScreen() {
           ))}
         </ul>
 
-        <div className="flex justify-end">
-          <Button onClick={() => navigate('/')}>Volver al inicio</Button>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 'var(--s-8)' }}>
+          <Button onClick={() => navigate('/')} size="lg">
+            Volver al inicio
+          </Button>
         </div>
       </div>
     </main>
@@ -114,27 +127,77 @@ function AccordionItem({ index, section, isOpen, onToggle }: AccordionItemProps)
   const panelId = `tutorial-section-${index}-panel`;
 
   return (
-    <div data-open={isOpen || undefined}>
-      <h3>
+    <div
+      data-open={isOpen || undefined}
+      style={{ borderTop: '1.5px solid var(--rule)' }}
+    >
+      <h3 style={{ margin: 0 }}>
         <button
           id={headerId}
           type="button"
           aria-expanded={isOpen}
           aria-controls={panelId}
           onClick={onToggle}
-          className="flex w-full items-center justify-between text-left"
+          style={{
+            display: 'flex',
+            width: '100%',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            textAlign: 'left',
+            padding: 'var(--s-4) 0',
+            background: 'transparent',
+            border: 0,
+            cursor: 'pointer',
+            color: 'var(--text)',
+          }}
         >
-          <span className="flex items-center">
-            <span>{String(index + 1).padStart(2, '0')}</span>
-            <span>{section.title}</span>
+          <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: 'var(--s-3)' }}>
+            <span
+              style={{
+                fontFamily: 'var(--font-serif)',
+                fontStyle: 'italic',
+                color: 'var(--tomate)',
+                fontSize: 'var(--fs-28)',
+                lineHeight: 1,
+              }}
+            >
+              {String(index + 1).padStart(2, '0')}
+            </span>
+            <span
+              style={{
+                fontFamily: 'var(--font-serif)',
+                fontSize: 'var(--fs-22)',
+                lineHeight: 1.2,
+              }}
+            >
+              {section.title}
+            </span>
           </span>
-          <span>
+          <span
+            style={{
+              transition: 'transform 200ms var(--ease)',
+              transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+              color: 'var(--text-mute)',
+            }}
+          >
             <ChevronDown size={18} aria-hidden="true" />
           </span>
         </button>
       </h3>
       {isOpen && (
-        <div id={panelId} role="region" aria-labelledby={headerId}>
+        <div
+          id={panelId}
+          role="region"
+          aria-labelledby={headerId}
+          style={{
+            paddingBottom: 'var(--s-5)',
+            fontFamily: 'var(--font-text)',
+            fontSize: 'var(--fs-16)',
+            lineHeight: 1.6,
+            color: 'var(--text-soft)',
+            maxWidth: '64ch',
+          }}
+        >
           {section.body}
         </div>
       )}

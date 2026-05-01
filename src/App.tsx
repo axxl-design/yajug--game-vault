@@ -15,9 +15,26 @@ const DevScreen = import.meta.env.DEV
 
 function ScreenFallback() {
   return (
-    <main className="min-h-screen flex items-center justify-center bg-bg text-text">
+    <main
+      className="shell"
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'var(--bg)',
+        color: 'var(--text)',
+      }}
+    >
       <div
-        className="h-8 w-8 rounded-full border-2 border-coral border-t-transparent animate-spin"
+        style={{
+          height: 32,
+          width: 32,
+          borderRadius: 999,
+          border: '2px solid var(--tomate)',
+          borderTopColor: 'transparent',
+          animation: 'spin 1s linear infinite',
+        }}
         aria-label="Cargando…"
       />
     </main>

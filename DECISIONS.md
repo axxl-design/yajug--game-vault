@@ -611,6 +611,45 @@ Esos dos cambios bajarían el initial chunk a ~250-300 KB.
 
 ---
 
+### 2026-05-01 — Visual redesign: applied Claude Design handoffs with corrections (custom logo, correct roles, comic-style expansion animation)
+
+**Decisión:** se aplicó el sistema visual editorial v2 que entregó Claude Design (paper system con paleta `--paper / --ink / --tomate / --mostaza / --aqua / --oliva / --indigo / --rosa`, tipografías DM Serif Display + Anton + Newsreader + Inter Tight + JetBrains Mono, bordes finos, sombras letterpress duras, textura de papel sucio). El sistema cubre lobby, sistema de cartas (propiedad / acción / dinero / reverso), botones, frames, badges, toasts, modales, role cards y el botón épico de Expansión de Dominio.
+
+**Tres correcciones críticas frente al material entregado:**
+
+1. **Logo custom (no el de Claude Design).** Se eliminaron las composiciones tipográficas `<Logo>` que el handoff incluía y se reemplazaron por los archivos SVG provistos por el creador del juego (en `public/logo/`):
+   - `yajuga-dominio-full.svg` (HomeScreen masthead, GameOver, reverso de cartas)
+   - `yajuga-title.svg` (headers / topbars)
+   - `yajuga-with-tagline.svg` (variante con bajada)
+   - `yajuga-favicon.svg` → también copiado a `public/favicon.svg` para el browser tab
+
+   Componente `<Logo variant="full|title|tagline|mark">` centraliza el uso. `<meta theme-color>` actualizado de `#0E0E0E` a `#EFE6D2` (paper).
+
+2. **Roles correctos (no los inventados por Claude Design).** El handoff de lobby mostraba "El Abogado / La Caudilla / El Banquero / La Arquitecta / El Periodista / La Cartomante" — esos personajes no son los del juego. Se reemplazaron por los 6 roles reales definidos en `src/game/roles.ts`: **El Abogado / El Corredor / El Estafador / El Banquero / El Coleccionista / El Arquitecto**, leyendo nombre, descripción y habilidad pasiva directamente del módulo de roles. La sección "Personajes · El sorteo decide quién sos" en el lobby permite hacer click en cada rol para previsualizar la pasiva. Se mantuvo el estilo visual (proporciones de las cards, layout, tipografía) pero con el contenido correcto.
+
+3. **Animación dramática estilo cómic para Expansión de Dominio.** Se creó `<ExpansionDramaticOverlay>` (`src/components/game/ExpansionDramaticOverlay.tsx`) que se dispara automáticamente cuando aparece un `expansion_activated` en el `gs.log`:
+   - Fullscreen overlay oscuro con gradiente radial violeta (`--violet #7A5FFF`).
+   - Título de la Expansión en `font-display` 56–128px con `text-shadow` doble (violeta + tinta) tipo manga splash.
+   - Speed lines radiales SVG desde el centro + estrella central girando lento.
+   - Animación bouncy `cubic-bezier(0.34, 1.56, 0.64, 1)` con scale 0 → 1.12 → 0.96 → 1 (overshoot).
+   - Auto-dismiss a los 2500ms, skippeable con click o `Escape`.
+
+**Tokens y stylesheets agregados:** se reescribió `src/styles/tokens.css` con el papel system (manteniendo aliases `--coral`, `--bg-elev-1`, `--accent` etc. para no romper código que los referenciaba por nombre). Se agregaron `editorial.css`, `cards.css`, `lobby.css`, `roles.css` (todos importados desde `globals.css`). Tipografías cargadas via Google Fonts.
+
+**Set colors actualizados** para alinear con la paleta editorial: `--set-rojo / --set-naranja / --set-amarillo / --set-verde / --set-turquesa / --set-azul / --set-morado / --set-rosa / --set-marron / --set-gris / --set-comodin`. `<CardFace>` aplica el color del set en la banda superior, el pip del foot y el glyph de fondo del illust.
+
+**Pantallas no cubiertas por el handoff (extrapoladas):** HomeScreen (masthead con logo grande + secciones I/II), GameScreen (header sticky con turno + sets + mano + ActionBar), GameOverScreen (frame negro con tomate de fondo + stats grid editorial), TutorialScreen (accordion con numerales serif), RoleAssignmentScreen (role-cards reales con glyph + pasiva), DevScreen (galería de componentes), MobileGate, OnboardingTour. Todos usan `--bg`, `--surface`, `--text`, `--border` y respetan light/dark theme via `[data-theme]`.
+
+**Lo que NO se tocó:** `src/game/**`, `src/stores/**`, `src/multiplayer/**`, `src/types/**`, hooks, utils, tests.
+
+**Verificación:**
+- `pnpm typecheck` → 0 errores ✓
+- `pnpm test:run` → 201 pasan | 1 skipped ✓
+- `pnpm build` → ✓ en 2.87s (CSS: 57.41 KB / 10.81 KB gzip — incluye fuentes editoriales y todos los stylesheets)
+- `pnpm dev` → Vite ready, `/logo/yajuga-dominio-full.svg` y `/favicon.svg` sirven HTTP 200
+
+---
+
 ## Pendiente de decidir
 
 - Reconexión automática de peer desconectado (timeout 30s antes de marcar AFK).

@@ -31,6 +31,7 @@ export function DefenseModal({ state, onResolve }: DefenseModalProps) {
       }
     }, 100);
     return () => clearInterval(tick);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pending?.attackerId, pending?.defenderId, pending?.cardPlayed.id]);
 
   if (!pending) return null;
@@ -42,7 +43,8 @@ export function DefenseModal({ state, onResolve }: DefenseModalProps) {
   const canBlock = hasBloqueo || canAbogadoFreeBlock(defender);
 
   const ctx = pending.context;
-  const isMonetary = ctx.type === 'rent' || ctx.type === 'collect_debt' || ctx.type === 'collect_tribute';
+  const isMonetary =
+    ctx.type === 'rent' || ctx.type === 'collect_debt' || ctx.type === 'collect_tribute';
   const monetaryAmount = isMonetary ? (ctx as { amount: number }).amount : 0;
 
   const description = (() => {
@@ -73,24 +75,105 @@ export function DefenseModal({ state, onResolve }: DefenseModalProps) {
       showClose={false}
     >
       {!negotiateOpen ? (
-        <div className="flex flex-col">
-          <div className="flex items-center">
-            <ShieldAlert size={28} aria-hidden="true" />
-            <div className="flex flex-col">
-              <span>Defensa: {defender.nickname}</span>
-              <span>{description}</span>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--s-4)' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 'var(--s-3)',
+              paddingBottom: 'var(--s-3)',
+              borderBottom: '1.5px solid var(--rule)',
+            }}
+          >
+            <div
+              style={{
+                width: 48,
+                height: 48,
+                borderRadius: 999,
+                background: 'var(--tomate)',
+                color: 'var(--paper)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+              }}
+            >
+              <ShieldAlert size={24} aria-hidden="true" />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <span
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 11,
+                  letterSpacing: '0.20em',
+                  textTransform: 'uppercase',
+                  color: 'var(--tomate)',
+                }}
+              >
+                Defensa · {defender.nickname}
+              </span>
+              <span
+                style={{
+                  fontFamily: 'var(--font-serif)',
+                  fontStyle: 'italic',
+                  fontSize: 'var(--fs-22)',
+                  lineHeight: 1.2,
+                  color: 'var(--text)',
+                }}
+              >
+                {description}
+              </span>
             </div>
           </div>
 
-          <div className="flex items-center">
-            <Clock size={14} />
-            <div className="flex-1">
-              <div style={{ width: `${(remaining / TIMEOUT_MS) * 100}%` }} />
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 'var(--s-2)',
+            }}
+          >
+            <Clock size={14} aria-hidden="true" />
+            <div
+              style={{
+                flex: 1,
+                height: 8,
+                background: 'var(--border)',
+                border: '1px solid var(--rule)',
+                borderRadius: 999,
+                overflow: 'hidden',
+              }}
+            >
+              <div
+                style={{
+                  width: `${(remaining / TIMEOUT_MS) * 100}%`,
+                  height: '100%',
+                  background: 'var(--tomate)',
+                  transition: 'width 100ms linear',
+                }}
+              />
             </div>
-            <span>{Math.ceil(remaining / 1000)}s</span>
+            <span
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 12,
+                letterSpacing: '0.10em',
+                color: 'var(--text-mute)',
+                minWidth: 30,
+                textAlign: 'right',
+              }}
+            >
+              {Math.ceil(remaining / 1000)}s
+            </span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3">
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+              gap: 'var(--s-2)',
+            }}
+          >
             <Button
               size="lg"
               leftIcon={Shield}
@@ -108,6 +191,7 @@ export function DefenseModal({ state, onResolve }: DefenseModalProps) {
                 setNegotiateOpen(true);
               }}
               disabled={!isMonetary}
+              variant="mostaza"
             >
               Negociar
             </Button>
@@ -126,17 +210,33 @@ export function DefenseModal({ state, onResolve }: DefenseModalProps) {
           </Button>
         </div>
       ) : (
-        <div className="flex flex-col">
-          <h3>Negociar pago</h3>
-          <p>Proponé un monto alternativo (entre 0 y {monetaryAmount}M).</p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--s-3)' }}>
+          <h3
+            style={{
+              fontFamily: 'var(--font-serif)',
+              fontStyle: 'italic',
+              fontSize: 'var(--fs-22)',
+              margin: 0,
+            }}
+          >
+            Negociar pago
+          </h3>
+          <p style={{ fontFamily: 'var(--font-text)', color: 'var(--text-soft)' }}>
+            Proponé un monto alternativo (entre 0 y {monetaryAmount}M).
+          </p>
           <input
             type="number"
             min={0}
             max={monetaryAmount}
             value={negotiateAmount}
-            onChange={(e) => setNegotiateAmount(Math.max(0, Math.min(monetaryAmount, Number(e.target.value))))}
+            onChange={(e) =>
+              setNegotiateAmount(
+                Math.max(0, Math.min(monetaryAmount, Number(e.target.value))),
+              )
+            }
+            className="ed-input"
           />
-          <div className="flex justify-end">
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 'var(--s-2)' }}>
             <Button variant="ghost" onClick={() => setNegotiateOpen(false)}>
               Volver
             </Button>

@@ -19,14 +19,20 @@ export function Hand({
   onCardClick,
   className,
 }: HandProps) {
+  if (cards.length === 0) {
+    return (
+      <div className={cn('hand-row', className)}>
+        <span className="ed-caption">Mano vacía.</span>
+      </div>
+    );
+  }
   return (
-    <div className={cn('flex flex-wrap gap-2', className)}>
-      {cards.length === 0 && <span>Mano vacía.</span>}
+    <div className={cn('hand-row', className)}>
       {cards.map((c) => (
         <CardFace
           key={c.id}
           card={c}
-          size="md"
+          size="sm"
           selected={selectedId === c.id}
           highlighted={highlightedIds?.has(c.id)}
           disabled={disabled}

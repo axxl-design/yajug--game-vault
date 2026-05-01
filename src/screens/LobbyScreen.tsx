@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import {
   Button,
-  Card,
+  Logo,
   Modal,
   NicknameInput,
   SoundToggle,
@@ -30,6 +30,8 @@ import {
 import { useGameStore } from '@/stores/gameStore';
 import { isValidGameCode } from '@/utils/gameCode';
 import { GAME_CONFIG } from '@/game/constants';
+import { ROLE_DEFINITIONS, ALL_ROLE_IDS } from '@/game/roles';
+import type { RoleId } from '@/types/game';
 import GameScreen from './GameScreen';
 import {
   closeSession,
@@ -39,6 +41,33 @@ import {
 } from '@/multiplayer/sync';
 
 type SessionStatus = 'idle' | 'connecting' | 'host' | 'client' | 'failed';
+
+const ROLE_COLORS: Record<RoleId, string> = {
+  abogado:       'var(--indigo)',
+  corredor:      'var(--aqua)',
+  estafador:     '#6B3D78',
+  banquero:      'var(--mostaza)',
+  coleccionista: 'var(--rosa)',
+  arquitecto:    'var(--oliva)',
+};
+
+const ROLE_TAG: Record<RoleId, string> = {
+  abogado:       'Reglas y trampas',
+  corredor:      'Mercados y subastas',
+  estafador:     'Engaño y descarte',
+  banquero:      'Dinero y deuda',
+  coleccionista: 'Piezas y archivos',
+  arquitecto:    'Construye la ciudad',
+};
+
+const ROLE_GLYPH: Record<RoleId, string> = {
+  abogado:       '§',
+  corredor:      '$',
+  estafador:     '?',
+  banquero:      '€',
+  coleccionista: '◈',
+  arquitecto:    '◰',
+};
 
 export default function LobbyScreen() {
   const { gameId = '' } = useParams<{ gameId: string }>();
@@ -60,6 +89,7 @@ export default function LobbyScreen() {
   const [newNickname, setNewNickname] = useState('');
   const [status, setStatus] = useState<SessionStatus>('idle');
   const [statusMsg, setStatusMsg] = useState<string>('');
+  const [previewRole, setPreviewRole] = useState<RoleId | null>(null);
 
   const codeValid = isValidGameCode(gameId);
 
@@ -132,9 +162,7 @@ export default function LobbyScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameId]);
 
-  if (gameState) {
-    return <GameScreen />;
-  }
+  if (gameState) return <GameScreen />;
 
   const session = getSession();
   const isHost = !session || session.mode === 'host';
@@ -187,80 +215,436 @@ export default function LobbyScreen() {
     return <InvalidCode code={gameId} onBack={() => navigate('/')} />;
   }
 
+  const now = new Date();
+  const day = now.toLocaleDateString('es', { weekday: 'long' });
+  const dayCap = day.charAt(0).toUpperCase() + day.slice(1);
+  const time = now.toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' });
+
   return (
-    <main className="relative" style={{ minHeight: '100vh' }}>
-      <header className="flex items-center justify-between">
-        <button type="button" onClick={() => setConfirmExit(true)} className="inline-flex items-center">
-          <ArrowLeft size={16} aria-hidden="true" />
-          Salir
-        </button>
-        <div>
-          YAJUGÁ <span>/ Sala</span>
+    <main className="lobby">
+      {/* Topbar */}
+      <header className="lb-top" style={{ height: 64 }}>
+        <div className="lb-top-left">
+          <button
+            type="button"
+            onClick={() => setConfirmExit(true)}
+            className="ed-btn ed-btn-ghost ed-btn-sm"
+          >
+            <ArrowLeft size={14} aria-hidden="true" />
+            Salir
+          </button>
+          <span className="lb-top-mark">
+            <Logo variant="title" height={22} ariaHidden />
+            <span style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic', color: 'var(--tomate)', fontSize: 13 }}>
+              · Sala
+            </span>
+          </span>
         </div>
-        <div className="flex items-center">
+        <div className="lb-top-right">
+          <span className="lb-online">{connectedCount} en sala · {dayCap} {time}</span>
           <SoundToggle />
           <ThemeToggle />
         </div>
       </header>
 
-      <div className="mx-auto flex flex-col">
-        <CodeBanner code={gameId} onCopy={handleCopy} copied={copied} />
+      {/* Izquierda — sala / jugadores */}
+      <aside className="lb-left">
+        <div>
+          <span className="lb-bio-col">la mesa</span>
+          <h1 className="lb-bio-name">
+            Sala <em>abierta</em>
+          </h1>
+          <span className="lb-bio-tag">
+            {connectedCount}/{GAME_CONFIG.MAX_PLAYERS} jugadores · {status}
+          </span>
+        </div>
 
-        <SessionStatusBanner status={status} message={statusMsg} />
+        <div className="lb-stats">
+          <div className="lb-stat">
+            <span className="lb-stat-label">conectados</span>
+            <span className="lb-stat-val">{connectedCount}</span>
+          </div>
+          <div className="lb-stat">
+            <span className="lb-stat-label">máximo</span>
+            <span className="lb-stat-val">{GAME_CONFIG.MAX_PLAYERS}</span>
+          </div>
+          <div className="lb-stat">
+            <span className="lb-stat-label">modo</span>
+            <span
+              className="lb-stat-val"
+              style={{ fontSize: 'var(--fs-18)' }}
+            >
+              {status === 'host' ? 'host' : status === 'client' ? 'cliente' : status === 'failed' ? 'hot-seat' : '—'}
+            </span>
+          </div>
+          <div className="lb-stat">
+            <span className="lb-stat-label">red</span>
+            <span
+              className="lb-stat-val"
+              style={{ fontSize: 'var(--fs-18)' }}
+            >
+              {status === 'host' || status === 'client' ? 'online' : status === 'failed' ? 'local' : '…'}
+            </span>
+          </div>
+        </div>
 
-        <section className="flex flex-col">
-          <div className="flex items-baseline justify-between">
-            <h2>Jugadores</h2>
-            <span>
+        <div>
+          <div className="lb-section-head">
+            <span className="lb-section-h">Jugadores</span>
+            <span className="lb-online" style={{ fontSize: 9 }}>
               {connectedCount}/{GAME_CONFIG.MAX_PLAYERS}
             </span>
           </div>
-          <div className="grid sm:grid-cols-2">
-            {players.map((p) => (
-              <PlayerSlot
-                key={p.id}
-                nickname={p.nickname}
-                isHost={p.isHost}
-                connected={p.isConnected}
-                onRemove={
-                  isHost && !p.isHost && status === 'failed'
-                    ? () => lobby.removePlayer(p.id)
-                    : undefined
-                }
-              />
-            ))}
+          <div className="lb-slot-list">
+            {players.map((p) => {
+              const initials = p.nickname
+                .trim()
+                .split(/\s+/)
+                .map((w) => w[0])
+                .slice(0, 2)
+                .join('')
+                .toUpperCase();
+              const canRemove = isHost && !p.isHost && status === 'failed';
+              return (
+                <div
+                  key={p.id}
+                  className="lb-slot"
+                  data-host={p.isHost || undefined}
+                  data-disconnected={!p.isConnected || undefined}
+                >
+                  <span className="ed-avatar ed-avatar-sm" aria-hidden="true">
+                    {initials || '?'}
+                  </span>
+                  <div className="lb-slot-meta">
+                    <span className="lb-slot-name">
+                      {p.nickname}
+                      {p.isHost && <Crown size={12} aria-label="Host" />}
+                    </span>
+                    <span
+                      className="lb-slot-status"
+                      data-tone={p.isConnected ? 'online' : 'offline'}
+                    >
+                      {p.isConnected ? <Wifi size={10} /> : <WifiOff size={10} />}
+                      {p.isConnected ? 'Conectado' : 'Desconectado'}
+                    </span>
+                  </div>
+                  {canRemove && (
+                    <button
+                      type="button"
+                      onClick={() => lobby.removePlayer(p.id)}
+                      aria-label="Quitar jugador"
+                      title="Quitar"
+                      className="ed-icon-btn"
+                      style={{ width: 28, height: 28 }}
+                    >
+                      <X size={12} />
+                    </button>
+                  )}
+                </div>
+              );
+            })}
             {status === 'failed' &&
               isHost &&
               players.length < GAME_CONFIG.MAX_PLAYERS && (
-                <button type="button" onClick={() => setAddOpen(true)} className="flex items-center text-left">
-                  <span className="inline-flex items-center justify-center">
-                    <Plus size={16} />
-                  </span>
-                  <span>Agregar jugador hot-seat</span>
+                <button
+                  type="button"
+                  onClick={() => setAddOpen(true)}
+                  className="ed-btn ed-btn-secondary ed-btn-sm ed-btn-block"
+                >
+                  <Plus size={14} aria-hidden="true" />
+                  Agregar hot-seat
                 </button>
               )}
           </div>
+        </div>
 
-          {status === 'failed' && (
-            <p>Modo hot-seat: todos los jugadores comparten esta pestaña.</p>
-          )}
-          {status === 'host' && (
-            <p>Sos el host. Compartí el link para que se sumen jugadores.</p>
-          )}
-          {status === 'client' && <p>Conectado al host. Esperá que empiece la partida.</p>}
-        </section>
-
-        <footer className="flex flex-col-reverse sm:flex-row sm:justify-end">
-          <Button variant="ghost" onClick={() => setConfirmExit(true)}>
+        <div style={{ display: 'flex', gap: 'var(--s-2)' }}>
+          <Button variant="ghost" size="sm" onClick={() => setConfirmExit(true)} fullWidth>
             {isHost ? 'Cancelar partida' : 'Salir'}
           </Button>
-          {isHost && (
-            <Button size="lg" leftIcon={Play} onClick={handleStart} disabled={!canStart}>
-              Empezar partida ({connectedCount}/{GAME_CONFIG.MAX_PLAYERS})
-            </Button>
+        </div>
+      </aside>
+
+      {/* Centro — la mesa */}
+      <main className="lb-center">
+        <div className="lb-masthead">
+          <span className="lb-masthead-l">Vol. 1 · Sala №{gameId}</span>
+          <span className="lb-masthead-c">Edición lobby · {dayCap}</span>
+          <span className="lb-masthead-r">Sunhaven · {time}</span>
+        </div>
+
+        {/* Code banner */}
+        <div className="lb-code-banner">
+          <div>
+            <span className="lb-code-label">Código de partida</span>
+            <span className="lb-code-value">{gameId}</span>
+            <p
+              style={{
+                margin: '6px 0 0',
+                fontFamily: 'var(--font-text)',
+                fontStyle: 'italic',
+                fontSize: 13,
+                color: 'var(--text-soft)',
+              }}
+            >
+              {statusMsg || 'Compartí este código con tus jugadores.'}
+            </p>
+          </div>
+          <Button
+            variant={copied ? 'mostaza' : 'secondary'}
+            leftIcon={copied ? Check : Copy}
+            onClick={handleCopy}
+            size="lg"
+          >
+            {copied ? 'Copiado' : 'Copiar link'}
+          </Button>
+        </div>
+
+        {/* Hero */}
+        <section className="lb-hero">
+          <div className="lb-hero-text">
+            <span className="lb-hero-kicker">Mesa preparada</span>
+            <h2 className="lb-hero-title">
+              Volvé a la <em>mesa</em>.
+            </h2>
+            <p className="lb-hero-lede">
+              Compartí el código, esperá que se sumen tus jugadores y arrancá la
+              partida cuando todos estén listos. La banca te observa.
+            </p>
+            <div className="lb-hero-cta">
+              {isHost && (
+                <Button
+                  variant="primary"
+                  size="lg"
+                  leftIcon={Play}
+                  onClick={handleStart}
+                  disabled={!canStart}
+                >
+                  Empezar partida ({connectedCount}/{GAME_CONFIG.MAX_PLAYERS})
+                </Button>
+              )}
+              <Button variant="secondary" size="lg" onClick={handleCopy} leftIcon={copied ? Check : Copy}>
+                {copied ? 'Link copiado' : 'Compartir link'}
+              </Button>
+            </div>
+          </div>
+          <div className="lb-hero-fan" aria-hidden="true">
+            {/* Reverso de cartas con el LOGO custom */}
+            {[0, 1, 2, 3].map((i) => (
+              <div key={i} className="lb-hero-fan-card">
+                <div className="card-back card-sm">
+                  <div className="card-back-frame">
+                    <div className="card-back-center">
+                      <img
+                        src="/logo/yajuga-dominio-full.svg"
+                        alt=""
+                        aria-hidden="true"
+                        className="card-back-logo"
+                      />
+                      <div className="card-back-deco" />
+                      <span className="card-back-meta">Volumen Uno</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Personajes — usando los 6 ROLES REALES del juego */}
+        <section className="lb-roles-block">
+          <div className="lb-roles-head">
+            <h3>Personajes · El sorteo decide quién sos</h3>
+            <span className="lb-roles-head-meta">6 roles disponibles</span>
+          </div>
+          <div className="lb-roles-grid">
+            {ALL_ROLE_IDS.map((roleId) => {
+              const role = ROLE_DEFINITIONS[roleId];
+              const isSelected = previewRole === roleId;
+              return (
+                <button
+                  key={roleId}
+                  type="button"
+                  className="lb-role-thumb"
+                  data-selected={isSelected || undefined}
+                  style={{ ['--role-color' as string]: ROLE_COLORS[roleId] }}
+                  onClick={() => setPreviewRole(isSelected ? null : roleId)}
+                >
+                  <span className="lb-role-thumb-rarity" aria-hidden="true" />
+                  <div className="lb-role-thumb-portrait">
+                    <span className="lb-role-thumb-portrait-glyph" aria-hidden="true">
+                      {ROLE_GLYPH[roleId]}
+                    </span>
+                  </div>
+                  <span className="lb-role-thumb-name">El {role.name}</span>
+                  <span className="lb-role-thumb-tag">{ROLE_TAG[roleId]}</span>
+                </button>
+              );
+            })}
+          </div>
+          {previewRole && (
+            <div
+              style={{
+                padding: 'var(--s-4)',
+                borderTop: '1.5px solid var(--rule)',
+                background: 'var(--surface)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 'var(--s-2)',
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: 10,
+                  letterSpacing: '0.20em',
+                  textTransform: 'uppercase',
+                  color: ROLE_COLORS[previewRole],
+                }}
+              >
+                Habilidad pasiva — El {ROLE_DEFINITIONS[previewRole].name}
+              </span>
+              <p
+                style={{
+                  margin: 0,
+                  fontFamily: 'var(--font-serif)',
+                  fontStyle: 'italic',
+                  fontSize: 'var(--fs-18)',
+                  lineHeight: 1.3,
+                  color: 'var(--text)',
+                }}
+              >
+                {ROLE_DEFINITIONS[previewRole].description}
+              </p>
+              <p
+                style={{
+                  margin: 0,
+                  fontFamily: 'var(--font-text)',
+                  fontSize: 13,
+                  color: 'var(--text-soft)',
+                }}
+              >
+                {ROLE_DEFINITIONS[previewRole].passiveAbility}
+              </p>
+            </div>
           )}
-        </footer>
-      </div>
+        </section>
+
+        {/* Quick info */}
+        <div className="lb-quickplay">
+          <article className="lb-mode" tabIndex={-1}>
+            <span className="lb-mode-num">i</span>
+            <span className="lb-mode-kicker">2–{GAME_CONFIG.MAX_PLAYERS} jugadores</span>
+            <h3 className="lb-mode-title">Roles aleatorios</h3>
+            <p className="lb-mode-desc">
+              Cada jugador recibe un rol con habilidad pasiva y dos Expansiones de
+              Dominio cargables.
+            </p>
+          </article>
+          <article className="lb-mode" tabIndex={-1}>
+            <span className="lb-mode-num">ii</span>
+            <span className="lb-mode-kicker">objetivo</span>
+            <h3 className="lb-mode-title">Tres sets completos</h3>
+            <p className="lb-mode-desc">
+              Gana quien primero termina el turno con tres sets cerrados — o
+              dos + suelta si sos Coleccionista.
+            </p>
+          </article>
+          <article className="lb-mode" tabIndex={-1}>
+            <span className="lb-mode-num">iii</span>
+            <span className="lb-mode-kicker">defensa</span>
+            <h3 className="lb-mode-title">8 segundos para responder</h3>
+            <p className="lb-mode-desc">
+              Si te atacan, podés bloquear, negociar, contraatacar o aceptar.
+              Si dudás, el ataque corre.
+            </p>
+          </article>
+        </div>
+      </main>
+
+      {/* Derecha — feed editorial */}
+      <aside className="lb-right">
+        <div>
+          <div className="lb-section-head">
+            <span className="lb-section-h">Estado de la sesión</span>
+          </div>
+          <div
+            className="ed-banner"
+            data-tone={
+              status === 'host' || status === 'client'
+                ? 'success'
+                : status === 'failed'
+                  ? 'warning'
+                  : 'info'
+            }
+            style={{ width: '100%', justifyContent: 'flex-start' }}
+          >
+            {status === 'host' || status === 'client' ? <Wifi size={12} /> : <WifiOff size={12} />}
+            <span>{status}</span>
+          </div>
+          <p
+            style={{
+              fontFamily: 'var(--font-text)',
+              fontSize: 13,
+              color: 'var(--text-soft)',
+              marginTop: 8,
+              lineHeight: 1.45,
+            }}
+          >
+            {statusMsg}
+          </p>
+        </div>
+
+        <div className="lb-pull">
+          «La épica viene del contraste — y del que aguanta una mano más.»
+          <div className="lb-pull-attr">— Reglamento, página 12</div>
+        </div>
+
+        <div>
+          <div className="lb-section-head">
+            <span className="lb-section-h">Cómo arrancar</span>
+          </div>
+          <ol
+            style={{
+              listStyle: 'none',
+              padding: 0,
+              margin: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 'var(--s-2)',
+              fontFamily: 'var(--font-text)',
+              fontSize: 13,
+              color: 'var(--text-soft)',
+              lineHeight: 1.45,
+            }}
+          >
+            {[
+              'Compartí el código con tus jugadores.',
+              'Esperá que se conecten y aparezcan en la lista.',
+              'Cuando estén todos, presioná "Empezar partida".',
+              'Cada uno recibe rol y Expansión al azar.',
+            ].map((step, i) => (
+              <li
+                key={i}
+                style={{ display: 'grid', gridTemplateColumns: '24px 1fr', gap: 8 }}
+              >
+                <span
+                  style={{
+                    fontFamily: 'var(--font-serif)',
+                    fontStyle: 'italic',
+                    color: 'var(--tomate)',
+                    fontSize: 'var(--fs-18)',
+                    lineHeight: 1,
+                  }}
+                >
+                  {String(i + 1)}.
+                </span>
+                <span>{step}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </aside>
 
       <Modal
         open={addOpen}
@@ -309,98 +693,39 @@ export default function LobbyScreen() {
   );
 }
 
-function SessionStatusBanner({ status, message }: { status: SessionStatus; message: string }) {
-  const icon =
-    status === 'host' || status === 'client' ? <Wifi size={14} /> : <WifiOff size={14} />;
-  return (
-    <div className="flex items-center" data-status={status}>
-      {icon}
-      <span>{status}</span>
-      <span>{message}</span>
-    </div>
-  );
-}
-
-function CodeBanner({
-  code,
-  onCopy,
-  copied,
-}: {
-  code: string;
-  onCopy: () => void;
-  copied: boolean;
-}) {
-  return (
-    <Card variant="elevated" padding="lg">
-      <div className="flex flex-col items-start sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex flex-col">
-          <span>Código de partida</span>
-          <span>{code}</span>
-        </div>
-        <Button variant="secondary" leftIcon={copied ? Check : Copy} onClick={onCopy}>
-          {copied ? 'Copiado' : 'Copiar link'}
-        </Button>
-      </div>
-    </Card>
-  );
-}
-
-function PlayerSlot({
-  nickname,
-  isHost,
-  connected,
-  onRemove,
-}: {
-  nickname: string;
-  isHost: boolean;
-  connected: boolean;
-  onRemove?: () => void;
-}) {
-  const initials = nickname
-    .trim()
-    .split(/\s+/)
-    .map((w) => w[0])
-    .slice(0, 2)
-    .join('')
-    .toUpperCase();
-
-  return (
-    <Card padding="md">
-      <div className="flex items-center">
-        <div className="inline-flex items-center justify-center" aria-hidden="true">
-          {initials || '?'}
-        </div>
-        <div className="flex min-w-0 flex-1 flex-col">
-          <div className="flex items-center min-w-0">
-            <span>{nickname}</span>
-            {isHost && <Crown size={14} aria-label="Host" />}
-          </div>
-          <div className="flex items-center">
-            <span data-connected={connected || undefined} aria-hidden="true" />
-            <span>{connected ? 'Conectado' : 'Desconectado'}</span>
-          </div>
-        </div>
-        {onRemove && (
-          <button type="button" onClick={onRemove} aria-label="Quitar jugador" title="Quitar">
-            <X size={14} />
-          </button>
-        )}
-      </div>
-    </Card>
-  );
-}
-
 function InvalidCode({ code, onBack }: { code: string; onBack: () => void }) {
   return (
-    <main className="flex items-center justify-center" style={{ minHeight: '100vh' }}>
-      <Card variant="elevated" padding="lg" className="flex flex-col">
+    <main
+      className="shell"
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '100vh',
+        padding: 'var(--s-6)',
+      }}
+    >
+      <div
+        className="ed-frame"
+        style={{
+          maxWidth: 480,
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 'var(--s-4)',
+          padding: 'var(--s-6)',
+        }}
+      >
         <Plug size={28} aria-hidden="true" />
-        <h1>Código no válido</h1>
-        <p>
-          El código <code>{code || '(vacío)'}</code> no tiene el formato esperado. Volvé al inicio y probá de nuevo.
+        <h1 className="ed-section-title" style={{ fontSize: 'var(--fs-32)' }}>
+          Código no <em>válido</em>
+        </h1>
+        <p style={{ fontFamily: 'var(--font-text)', color: 'var(--text-soft)', margin: 0 }}>
+          El código <code>{code || '(vacío)'}</code> no tiene el formato esperado.
+          Volvé al inicio y probá de nuevo.
         </p>
         <Button onClick={onBack}>Volver al inicio</Button>
-      </Card>
+      </div>
     </main>
   );
 }

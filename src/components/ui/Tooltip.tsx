@@ -115,8 +115,10 @@ export function Tooltip({
           <div
             role="tooltip"
             id={tooltipId}
-            className="fixed z-50"
+            className="ed-tooltip"
             style={{
+              position: 'fixed',
+              zIndex: 60,
               top: coords.top,
               left: coords.left,
               transform: sideTransform[coords.side],
