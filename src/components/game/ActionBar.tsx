@@ -22,20 +22,8 @@ export function ActionBar({
   className,
 }: ActionBarProps) {
   return (
-    <div
-      className={cn(className)}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        gap: 'var(--s-4)',
-        flexWrap: 'wrap',
-        padding: 'var(--s-4)',
-        borderTop: '4px double var(--rule)',
-        marginTop: 'var(--s-4)',
-      }}
-    >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--s-3)', flexWrap: 'wrap' }}>
+    <div className={cn('action-bar', className)}>
+      <div className="action-bar-primary">
         <Button
           variant="primary"
           leftIcon={FlagOff}
@@ -54,7 +42,7 @@ export function ActionBar({
           Expansión {canActivateExpansion && <Crown size={12} aria-hidden="true" />}
         </Button>
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--s-2)' }}>
+      <div className="action-bar-secondary">
         <Button variant="ghost" leftIcon={ScrollText} onClick={onToggleLog} size="sm">
           Log
         </Button>

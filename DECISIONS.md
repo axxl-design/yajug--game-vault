@@ -650,6 +650,79 @@ Esos dos cambios bajarían el initial chunk a ~250-300 KB.
 
 ---
 
+## Fase 14 — Hardening multijugador y soporte mobile
+
+**Contexto:** dos bugs críticos reportados después del primer round de testeo manual de multijugador:
+
+1. En multijugador, después de la pantalla de RoleAssignment todos los jugadores caían en una pantalla monocromática vacía (la GameScreen no llegaba a montarse).
+2. El `MobileGate` bloqueaba el juego en cualquier viewport <768px ("usá una pantalla más grande"). Inaceptable para un juego que se comparte por link.
+
+### Bug 1 — Pantalla vacía después de RoleAssignment
+
+**Causas concurrentes:**
+
+- `GameScreen.tsx` resolvía el "me" del jugador local con `gs.players.find(p => p.id === session.myPlayerId) ?? cur` y, si ambos eran `undefined`, hacía `return null` — pantalla genuinamente vacía sin mensaje. El cliente caía en este path silenciosamente cuando había cualquier desfase entre `session.myPlayerId` y los IDs en el `gameState` recibido por STATE_UPDATE (corruption parcial, race con setShowAssignment, etc.).
+- El gate `if (isMobile) return <MobileGate />;` se evaluaba **antes** que `if (!gs)` y `if (showAssignment)`, así que en mobile el cliente nunca veía RoleAssignment y aterrizaba directo en un MobileGate sin estilos diferenciados (lo que el usuario describió como "monocromática vacía"). Cuando el host estaba en desktop pero el cliente en celular, el cliente quedaba bloqueado en MobileGate.
+
+**Fixes en `src/screens/GameScreen.tsx`:**
+
+- Eliminado el chequeo `isMobile` y la importación de `MobileGate`/`useMobileGate`.
+- `me` ahora tiene fallback en cascada: `meById ?? cur ?? gs.players[0] ?? null` — preferimos mostrar la perspectiva del primer jugador antes que pantalla blanca si hay desfase de IDs.
+- Agregada `LoadingShell` con spinner + mensaje contextual para tres estados de carga: `"Esperando datos de la partida…"` (gs null), `"Sincronizando jugadores…"` (players vacío), `"No encontramos tu jugador en la partida."` (me null real).
+- Defensive guard: `if (!Array.isArray(gs.players) || gs.players.length === 0)` antes de cualquier acceso al state.
+- `currentPlayerNickname = currentPlayer?.nickname ?? '—'` para que el banner de turno no crashee si el índice está fuera de rango.
+
+### Bug 2 — Soporte mobile
+
+**Decisión:** el juego debe ser accesible en cualquier ancho de pantalla (≥320px). El MobileGate era pre-MVP y ya no aplica. Se removió por completo.
+
+**Archivos eliminados:**
+- `src/components/game/MobileGate.tsx`
+- `src/hooks/useMobileGate.ts`
+
+**Layout responsive en `src/styles/game.css` (nuevo, importado desde globals.css):**
+
+- `.game-shell` reserva 88px + safe-area-inset-bottom de padding inferior en mobile para que la ActionBar fija no tape la mano.
+- `.game-stack`: stack vertical en una sola columna en mobile, con `padding: var(--s-4)` (vs `--s-6` desktop).
+- `.game-opponents`: panel colapsable controlado por `setOpponentsCollapsed`. El botón toggle solo aparece en mobile (`@media max-width: 767.98px`); en desktop el grid de oponentes se muestra siempre.
+- `.game-deck-market`: `flex-direction: column` en mobile, `row` en desktop.
+- `.game-sets-bank`: `grid-template-columns: 1fr` en mobile, `2fr 1fr` en desktop.
+- `.game-hand-scroll`: scroll horizontal con `scroll-snap-type: x proximity` en mobile, `flex-wrap: nowrap` y `width: max-content`. En desktop vuelve a wrap normal.
+- `.action-bar.game-actionbar`: `position: fixed` al fondo en mobile (z-index 30, safe-area aware), `position: static` en desktop. Touch targets mínimos 44px (`.action-bar .ed-btn { min-height: 44px }`).
+- Cartas: `touch-action: manipulation` y `-webkit-tap-highlight-color: rgba(193,59,31,.25)` para tap feedback iOS.
+
+**Modales responsive (override en `src/styles/game.css`):**
+
+- En `<768px`: `.ed-modal` ocupa 100% del ancho, max-height 90vh, esquina inferior cuadrada (slide-up sheet style). El overlay alinea a `flex-end` en lugar de center.
+- `.ed-modal-footer` flex-wrap con botones `flex: 1 1 140px; min-height: 48px` para que el primario y el cancel sean igual de tocables.
+- `.ed-modal .ed-btn { min-height: 44px }` en cualquier viewport.
+
+**ActionBar refactorizado (`src/components/game/ActionBar.tsx`):**
+
+- Estilos inline movidos a clases CSS (`.action-bar`, `.action-bar-primary`, `.action-bar-secondary`). Antes el inline `padding`/`marginTop`/`borderTop` sobreescribía el sticky-bottom CSS.
+
+**LobbyScreen overrides en mobile (`src/styles/lobby.css`):**
+
+- `<768px`: paddings reducidos a `var(--s-4)`, `lb-code-banner` colapsa a 1 columna, `lb-code-value` baja de 48px → 32px, `lb-hero-title` baja de 72px → 40px, `lb-hero-fan` (cartas decorativas) se oculta, `lb-hero-cta` apila botones verticalmente full-width, stats grid 2x2.
+
+**Decisiones de UX:**
+
+- En lugar de "panel collapsed by default", arranca expandido — el jugador necesita ver a sus oponentes inmediatamente. El toggle existe para liberar pantalla cuando hace falta espacio.
+- El scroll horizontal de la mano en mobile fue preferido sobre wrap vertical: en wrap vertical la mano de 5–7 cartas ocuparía 4 filas verticales y empujaría todo hacia abajo. Scroll horizontal mantiene la "fila de cartas" visualmente.
+- ActionBar fija al fondo: estándar de juegos mobile (Hearthstone, Marvel Snap). El usuario siempre puede llegar a "Terminar turno" sin scroll.
+
+**Verificación:**
+- `pnpm typecheck` → 0 errores ✓
+- `pnpm test:run` → 201 pasan | 1 skipped ✓
+- `pnpm build` → ✓ (CSS: 61.95 KB / 11.65 KB gzip)
+
+**Pendiente de testeo manual** (no se puede automatizar desde acá):
+- Probar en Chrome DevTools con viewport iPhone 12/13 Pro (390×844): home, lobby, partida, modals.
+- Verificar que ActionBar fija no tape el último set/banco al hacer scroll.
+- Probar multijugador real PC + celular: el celular debería ver lobby → RoleAssignment → GameScreen body en lugar de pantalla blanca.
+
+---
+
 ## Pendiente de decidir
 
 - Reconexión automática de peer desconectado (timeout 30s antes de marcar AFK).

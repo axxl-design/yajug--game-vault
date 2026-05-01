@@ -624,3 +624,70 @@
   background: var(--tomate);
   color: var(--paper);
 }
+
+/* ── Mobile overrides (< 768px) ─────────────────────────── */
+@media (max-width: 767.98px) {
+  .lobby {
+    grid-template-rows: 64px auto;
+  }
+  .lb-top {
+    padding: 0 var(--s-4);
+    gap: var(--s-3);
+  }
+  .lb-top-left,
+  .lb-top-right {
+    gap: var(--s-3);
+  }
+  .lb-online {
+    display: none;
+  }
+  .lb-left {
+    padding: var(--s-4);
+    gap: var(--s-4);
+  }
+  .lb-center {
+    padding: var(--s-4);
+  }
+  .lb-right {
+    padding: var(--s-4);
+  }
+  .lb-masthead {
+    font-size: 10px;
+  }
+  .lb-code-banner {
+    grid-template-columns: 1fr;
+    gap: var(--s-3);
+    padding: var(--s-4);
+    margin-bottom: var(--s-4);
+  }
+  .lb-code-value {
+    font-size: var(--fs-32);
+  }
+  .lb-hero {
+    grid-template-columns: 1fr;
+    gap: var(--s-4);
+    margin-bottom: var(--s-5);
+  }
+  .lb-hero-title {
+    font-size: var(--fs-40);
+    line-height: 1;
+  }
+  .lb-hero-fan {
+    display: none;
+  }
+  .lb-hero-cta {
+    flex-direction: column;
+  }
+  .lb-hero-cta .ed-btn {
+    width: 100%;
+  }
+  .lb-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+  .lb-roles-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .lb-quickplay {
+    grid-template-columns: 1fr !important;
+  }
+}

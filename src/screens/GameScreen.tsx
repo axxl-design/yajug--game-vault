@@ -19,11 +19,40 @@ import { LogPanel } from '@/components/game/LogPanel';
 import { ExpansionActivationModal } from '@/components/game/ExpansionActivationModal';
 import { ExpansionDramaticOverlay } from '@/components/game/ExpansionDramaticOverlay';
 import { OnboardingTour } from '@/components/game/OnboardingTour';
-import { MobileGate } from '@/components/game/MobileGate';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
-import { useMobileGate } from '@/hooks/useMobileGate';
 import GameOverScreen from './GameOverScreen';
 import RoleAssignmentScreen from './RoleAssignmentScreen';
+
+function LoadingShell({ message }: { message: string }) {
+  return (
+    <main
+      className="shell"
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '100vh',
+        flexDirection: 'column',
+        gap: 'var(--s-4)',
+        padding: 'var(--s-6)',
+        textAlign: 'center',
+      }}
+    >
+      <div
+        style={{
+          height: 32,
+          width: 32,
+          borderRadius: 999,
+          border: '2px solid var(--tomate)',
+          borderTopColor: 'transparent',
+          animation: 'spin 1s linear infinite',
+        }}
+        aria-label="Cargando"
+      />
+      <p className="ed-caption">{message}</p>
+    </main>
+  );
+}
 
 export default function GameScreen() {
   const gs = useGameStore((s) => s.gameState);
@@ -41,8 +70,8 @@ export default function GameScreen() {
   const [logOpen, setLogOpen] = useState(false);
   const [expansionOpen, setExpansionOpen] = useState(false);
   const [showAssignment, setShowAssignment] = useState(true);
+  const [opponentsCollapsed, setOpponentsCollapsed] = useState(false);
   const [cinematicExpansion, setCinematicExpansion] = useState<ExpansionId | null>(null);
-  const isMobile = useMobileGate();
 
   useEffect(() => {
     if (lastError) {
@@ -63,23 +92,28 @@ export default function GameScreen() {
     }
   }, [gs?.log?.length]);
 
-  if (isMobile) return <MobileGate />;
-
   if (!gs) {
-    return (
-      <main className="shell" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
-        <p className="ed-caption">No hay partida en curso.</p>
-      </main>
-    );
+    return <LoadingShell message="Esperando datos de la partida…" />;
+  }
+
+  // Defensive: gameState could arrive over the network mid-shape (corrupt JSON,
+  // partial sync, etc.). Guard before rendering anything that touches players.
+  if (!Array.isArray(gs.players) || gs.players.length === 0) {
+    return <LoadingShell message="Sincronizando jugadores…" />;
   }
 
   if (gs.winner && gs.phase === 'game_over') return <GameOverScreen />;
   if (showAssignment) return <RoleAssignmentScreen onContinue={() => setShowAssignment(false)} />;
 
-  const me = session
-    ? gs.players.find((p) => p.id === session.myPlayerId) ?? cur
-    : cur;
-  if (!me) return null;
+  // Resolve "me": online → match by session.myPlayerId; offline (hot-seat) → cur.
+  // If neither resolves (mismatched id from network), fall back to first player
+  // rather than blanking the screen.
+  const meById = session ? gs.players.find((p) => p.id === session.myPlayerId) ?? null : null;
+  const me = meById ?? cur ?? gs.players[0] ?? null;
+  if (!me) {
+    return <LoadingShell message="No encontramos tu jugador en la partida." />;
+  }
+
   const others = gs.players.filter((p) => p.id !== me.id);
   const isMyTurn = session ? gs.players[gs.currentPlayerIndex]?.id === me.id : true;
 
@@ -181,10 +215,13 @@ export default function GameScreen() {
     !showAssignment,
   );
 
+  const currentPlayer = gs.players[gs.currentPlayerIndex];
+  const currentPlayerNickname = currentPlayer?.nickname ?? '—';
+
   return (
-    <main className="shell" style={{ minHeight: '100vh', paddingBottom: 'var(--s-12)' }}>
+    <main className="shell game-shell">
       <header
-        className="ed-topbar"
+        className="ed-topbar game-topbar"
         style={{ position: 'sticky', top: 0, zIndex: 20 }}
       >
         <div className="ed-topbar-mark">
@@ -193,11 +230,11 @@ export default function GameScreen() {
             / partida {gs.gameId}
           </span>
         </div>
-        <div className="ed-topbar-meta" style={{ flexWrap: 'wrap' }}>
+        <div className="ed-topbar-meta game-topbar-meta">
           <span role="status" aria-live="polite">
             Turno de{' '}
             <strong style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic', color: 'var(--tomate)', fontSize: 14, letterSpacing: 0, textTransform: 'none' }}>
-              {gs.players[gs.currentPlayerIndex]?.nickname}
+              {currentPlayerNickname}
             </strong>
             {isMyTurn && session && <span> (vos)</span>}
           </span>
@@ -212,41 +249,36 @@ export default function GameScreen() {
         </div>
       </header>
 
-      <div
-        style={{
-          maxWidth: 1320,
-          margin: '0 auto',
-          padding: 'var(--s-6) var(--s-6) 0',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 'var(--s-5)',
-        }}
-      >
+      <div className="game-stack">
         <TitularBanner titular={gs.activeTitular} />
         <TiempoExtraBanner state={gs} />
 
-        {/* Oponentes */}
-        <section
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-            gap: 'var(--s-3)',
-          }}
-        >
-          {others.map((o) => (
-            <OpponentPanel key={o.id} player={o} isCurrent={false} />
-          ))}
+        {/* Oponentes — colapsable en mobile */}
+        <section className="game-opponents">
+          <button
+            type="button"
+            className="game-opponents-toggle"
+            onClick={() => setOpponentsCollapsed((c) => !c)}
+            aria-expanded={!opponentsCollapsed}
+          >
+            <span>Oponentes · {others.length}</span>
+            <span aria-hidden="true">{opponentsCollapsed ? '▾' : '▴'}</span>
+          </button>
+          {!opponentsCollapsed && (
+            <div className="game-opponents-grid">
+              {others.map((o) => (
+                <OpponentPanel
+                  key={o.id}
+                  player={o}
+                  isCurrent={gs.players[gs.currentPlayerIndex]?.id === o.id}
+                />
+              ))}
+            </div>
+          )}
         </section>
 
         {/* Mazo + Mercado */}
-        <section
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: 'var(--s-4)',
-            alignItems: 'flex-start',
-          }}
-        >
+        <section className="game-deck-market">
           <div className="ed-frame" style={{ padding: 'var(--s-4)' }}>
             <div className="ed-frame-title">Mazo · Descarte</div>
             <DeckPanel
@@ -259,19 +291,13 @@ export default function GameScreen() {
             bankAvailable={meBank}
             hasBoughtThisTurn={me.hasBoughtFromMarket}
             onBuy={(cardId) => dispatch(me.id, { type: 'BUY_FROM_MARKET', cardId })}
-            className="flex-1"
+            className="game-market"
           />
         </section>
 
         {/* Mis sets + Banco */}
-        <section
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'minmax(0, 2fr) minmax(0, 1fr)',
-            gap: 'var(--s-4)',
-          }}
-        >
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--s-3)' }}>
+        <section className="game-sets-bank">
+          <div className="game-sets-block">
             <div className="ed-kicker">
               <span className="ed-kicker-num">i</span>
               <span>Mis sets</span>
@@ -279,13 +305,7 @@ export default function GameScreen() {
             {me.sets.length === 0 ? (
               <p className="ed-caption">Todavía no tenés propiedades en sets.</p>
             ) : (
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-                  gap: 'var(--s-3)',
-                }}
-              >
+              <div className="game-sets-grid">
                 {me.sets.map((s, i) => (
                   <PropertySetView
                     key={`${s.color}-${i}`}
@@ -302,16 +322,8 @@ export default function GameScreen() {
         </section>
 
         {/* Mi mano */}
-        <section style={{ display: 'flex', flexDirection: 'column', gap: 'var(--s-3)' }}>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'baseline',
-              justifyContent: 'space-between',
-              gap: 'var(--s-3)',
-              flexWrap: 'wrap',
-            }}
-          >
+        <section className="game-hand">
+          <div className="game-hand-head">
             <div className="ed-kicker">
               <span className="ed-kicker-num">ii</span>
               <span>Mi mano · {me.hand.length}</span>
@@ -327,11 +339,13 @@ export default function GameScreen() {
               {me.hasPlayedCardsThisTurn}/3 cartas jugadas
             </span>
           </div>
-          <Hand
-            cards={me.hand}
-            selectedId={selectedCardId}
-            onCardClick={onHandCardClick}
-          />
+          <div className="game-hand-scroll">
+            <Hand
+              cards={me.hand}
+              selectedId={selectedCardId}
+              onCardClick={onHandCardClick}
+            />
+          </div>
         </section>
 
         <ActionBar
@@ -341,6 +355,7 @@ export default function GameScreen() {
           onActivateExpansion={() => setExpansionOpen(true)}
           onToggleLog={() => setLogOpen(true)}
           onHelp={() => navigate('/tutorial')}
+          className="game-actionbar"
         />
       </div>
 

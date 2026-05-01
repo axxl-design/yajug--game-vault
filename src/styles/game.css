@@ -1,0 +1,259 @@
+/* ════════════════════════════════════════════════════════════════
+   YAJUGÁ : DOMINIO — GameScreen layout (desktop + mobile)
+   - Stacked vertical layout that adapts: en desktop usa grid de 2
+     columnas para sets+banco, en móvil colapsa a 1 columna y la
+     ActionBar queda fija al fondo.
+   - El gate de mobile fue removido (era pre-MVP); ahora el juego es
+     accesible en cualquier ancho de pantalla.
+   ════════════════════════════════════════════════════════════════ */
+
+.game-shell {
+  min-height: 100vh;
+  /* Reserva espacio al fondo para que la ActionBar fija no tape la mano. */
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 88px);
+}
+@media (min-width: 768px) {
+  .game-shell {
+    padding-bottom: var(--s-12);
+  }
+}
+
+.game-topbar {
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+.game-topbar-meta {
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  font-size: var(--fs-11);
+}
+
+.game-stack {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: var(--s-4) var(--s-4) 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+}
+@media (min-width: 768px) {
+  .game-stack {
+    padding: var(--s-6) var(--s-6) 0;
+    gap: var(--s-5);
+  }
+}
+
+/* ── Oponentes ─────────────────────────────────────────── */
+.game-opponents {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+.game-opponents-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: var(--surface);
+  border: 1.5px solid var(--rule);
+  border-radius: var(--r-card);
+  padding: 12px 14px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-11);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+  cursor: pointer;
+  min-height: 44px;
+}
+.game-opponents-toggle:hover { background: var(--bg-2); }
+@media (min-width: 768px) {
+  .game-opponents-toggle { display: none; }
+}
+
+.game-opponents-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-3);
+}
+@media (min-width: 768px) {
+  .game-opponents-grid {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+}
+
+/* ── Mazo + Mercado ────────────────────────────────────── */
+.game-deck-market {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  align-items: stretch;
+}
+@media (min-width: 768px) {
+  .game-deck-market {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--s-4);
+    align-items: flex-start;
+  }
+}
+.game-market { flex: 1; min-width: 0; }
+
+/* ── Sets + Banco ──────────────────────────────────────── */
+.game-sets-bank {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-3);
+}
+@media (min-width: 768px) {
+  .game-sets-bank {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    gap: var(--s-4);
+  }
+}
+.game-sets-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+.game-sets-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-3);
+}
+@media (min-width: 480px) {
+  .game-sets-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+}
+
+/* ── Mi mano ───────────────────────────────────────────── */
+.game-hand {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+.game-hand-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+}
+/* Scroll horizontal en mobile para que las cartas no se apilen verticalmente. */
+.game-hand-scroll {
+  overflow-x: auto;
+  margin: 0 calc(-1 * var(--s-4));
+  padding: 0 var(--s-4) 8px;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
+}
+.game-hand-scroll .hand-row {
+  flex-wrap: nowrap;
+  width: max-content;
+}
+.game-hand-scroll .card-prop,
+.game-hand-scroll .card-act,
+.game-hand-scroll .card-money {
+  scroll-snap-align: start;
+}
+@media (min-width: 768px) {
+  .game-hand-scroll {
+    overflow-x: visible;
+    margin: 0;
+    padding: 0;
+  }
+  .game-hand-scroll .hand-row {
+    flex-wrap: wrap;
+    width: auto;
+  }
+}
+
+/* ── ActionBar ─────────────────────────────────────────── */
+/* En mobile la barra queda fija al fondo. En desktop se comporta como
+   bloque normal dentro del stack. */
+.action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+  padding: var(--s-3) var(--s-4);
+  border-top: 4px double var(--rule);
+  margin-top: var(--s-4);
+  background: var(--bg);
+}
+.action-bar-primary,
+.action-bar-secondary {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  flex-wrap: wrap;
+}
+.action-bar .ed-btn {
+  min-height: 44px; /* Touch target mínimo recomendado iOS/Android. */
+}
+
+/* Sticky-bottom para la barra principal del juego en mobile. */
+.action-bar.game-actionbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  margin: 0;
+  padding: var(--s-3) var(--s-4) calc(env(safe-area-inset-bottom, 0px) + var(--s-3));
+}
+@media (min-width: 768px) {
+  .action-bar.game-actionbar {
+    position: static;
+    padding: var(--s-4);
+    margin-top: var(--s-4);
+  }
+  .action-bar-primary,
+  .action-bar-secondary {
+    gap: var(--s-3);
+  }
+}
+
+/* ── Modales responsive ────────────────────────────────── */
+@media (max-width: 767.98px) {
+  .ed-modal-overlay {
+    padding: var(--s-2);
+    align-items: flex-end;
+  }
+  .ed-modal,
+  .ed-modal[data-size="sm"],
+  .ed-modal[data-size="md"],
+  .ed-modal[data-size="lg"] {
+    max-width: 100%;
+    width: 100%;
+    max-height: 90vh;
+    border-radius: var(--r-card) var(--r-card) 0 0;
+  }
+  .ed-modal-body {
+    padding: var(--s-4);
+  }
+  .ed-modal-footer {
+    padding: var(--s-3) var(--s-4) calc(env(safe-area-inset-bottom, 0px) + var(--s-3));
+    flex-wrap: wrap;
+  }
+  .ed-modal-footer .ed-btn {
+    min-height: 48px;
+    flex: 1 1 140px;
+  }
+}
+
+/* En todos los tamaños queremos que los botones primarios de modal sean
+   tocables — cuando tengan ed-btn-lg ya tienen 52px. Los normales 44px. */
+.ed-modal .ed-btn { min-height: 44px; }
+
+/* ── Cartas: garantizar touch target en mobile ─────────── */
+/* card-sm es 220 * 0.62 ≈ 136px de ancho — suficiente para tocar.
+   Aún así, agregamos -webkit-tap-highlight-color para evitar flash. */
+.card-prop,
+.card-act,
+.card-money {
+  -webkit-tap-highlight-color: rgba(193, 59, 31, 0.25);
+  touch-action: manipulation;
+}
