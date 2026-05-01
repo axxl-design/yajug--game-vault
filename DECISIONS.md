@@ -723,6 +723,65 @@ Esos dos cambios bajarían el initial chunk a ~250-300 KB.
 
 ---
 
+## Fase 15 — Nickname gate y diagnóstico de inicio multiplayer
+
+**Contexto:** dos bugs reportados después del round 14:
+
+1. Cuando un client abría el link compartido (`/game/K7P2RF`), entraba **directamente** al lobby con nickname "Invitado" (default). No tenía oportunidad de elegir su nombre.
+2. El host clickeaba "Empezar partida" y la partida no arrancaba — sin error visible, sin feedback. Imposible diagnosticar desde el browser.
+
+### Bug 1 — Nickname gate para clients sin pasar por HomeScreen
+
+**Decisión:** insertar una pantalla intermedia (`NicknameGate`) **solo cuando el usuario llegue al lobby sin haber pasado por HomeScreen**. La heurística es la presencia o ausencia de `mp_role_${gameId}` en `sessionStorage`:
+
+| Origen | `mp_role_*` | NicknameGate |
+| --- | --- | --- |
+| HomeScreen → "Crear partida" | `'host'` | NO (ya escribió nickname en Home) |
+| HomeScreen → "Unirme a partida" | `'client'` | NO (ya escribió nickname en Home) |
+| Link compartido (peer 2-N) | (ausente) | **SÍ** |
+
+Implementación en `src/screens/LobbyScreen.tsx`:
+
+- `useState<boolean>(() => !sessionStorage.getItem('mp_role_${gameId}'))` decide si hay que pedir nickname al primer render.
+- Mientras `needsNickname === true`, el `useEffect` de sesión PeerJS NO se dispara (early return). Esto evita que el peer abra una conexión antes de que el usuario confirme su nombre.
+- Al confirmar (`handleConfirmNickname`): `setLastNickname(trimmed)` → escribe `mp_role_${gameId}='client'` (para que un refresh de la pestaña no vuelva a pedir nickname) → `setNeedsNickname(false)` → el `useEffect` se dispara con `needsNickname` en su lista de deps y arranca `startClientSession`.
+- El componente `NicknameGate` reusa `NicknameInput` (validación 1-20 chars), muestra el código de partida y un botón "Unirme a la partida". Pre-carga `lastNickname` del `prefsStore` si existe.
+
+**Por qué no un Modal:** el lobby ya tiene varios modales (confirm exit, add hot-seat). Un sexto modal que se monta antes del lobby propiamente dicho confunde más que ayuda. Una pantalla full-screen con framing editorial es más clara.
+
+### Bug 2 — Host no puede empezar partida (diagnóstico)
+
+**Hipótesis principal:** PeerJS por default usa `serialization: 'binary'` (BinaryPack). El `GameState` que viaja en `STATE_UPDATE` es un objeto deeply-nested generado por `immer` (con `Object.freeze` recursivo, `__proto__: null` en algunos slices). BinaryPack no maneja bien ese shape — la deserialización en el cliente puede dejar campos como `undefined`, romper el `gameState.players[*]` que la UI necesita, o silenciosamente fallar el `send()` sin tirar excepción.
+
+**Fix principal:** forzar `serialization: 'json'` en `peer.connect()` (`src/multiplayer/peer.ts`). JSON añade ~10% de overhead pero es radicalmente más confiable para nuestro use case. La pérdida de bytes se compensa con la garantía de fidelidad estructural.
+
+**Hardening secundario:**
+
+- `gameStore.initGame` ahora envuelve `createInitialGameState` en try/catch. Si la validación falla (`hostId tiene que estar en playerSeeds`, `Cantidad de jugadores fuera de rango`, etc.), captura el `GameError`, lo escribe en `lastError` y registra `console.error('[gameStore] initGame FAILED', { reason, ... })`. Antes el throw subía sin filtro al click handler y rompía React.
+- `LobbyScreen.handleStart` también tiene try/catch como belt-and-suspenders, y verifica explícitamente `canStart` y la presencia de `hostId` antes de llamar a `initGame`. Loguea `[lobby] handleStart` con seeds antes del intento.
+- `LobbyScreen` ahora suscribe a `gameStore.lastError` y muestra toast cuando cambia (con `clearError()` para no mostrar dos veces).
+
+**Logs descriptivos** agregados a la pipeline crítica multiplayer (todos prefijados con `[scope]` para grep fácil en DevTools):
+
+| Componente | Eventos logueados |
+| --- | --- |
+| `peer.ts` | `[peer] open`, `[peer] error`, `[peer] connectToHost`, `[peer] connectToHost open/timeout/error` |
+| `sync.ts` host | `[sync host] JOIN_REQUEST`, `[sync host] JOIN_ACCEPTED`, `[sync host] broadcastLobby`, `[sync host] broadcastStateUpdate`, `[sync host] sendToAll: no connections` (warning), `[sync host] gameState changed → broadcasting STATE_UPDATE`, `[sync host] send failed` (error) |
+| `sync.ts` client | `[sync client] received` (cualquier mensaje), `[sync client] JOIN_ACCEPTED`, `[sync client] STATE_UPDATE applied` |
+| `gameStore.ts` | `[gameStore] initGame OK` con seeds y phase, `[gameStore] initGame FAILED` con reason completo |
+| `LobbyScreen.tsx` | `[lobby] starting session`, `[lobby] handleStart`, `[lobby] gameStore.lastError`, `[lobby] nickname confirmed → starting session`, `[lobby] handleStart blocked: canStart=false` |
+
+**Cómo diagnosticar en producción:** el usuario (o tester) abre DevTools en cualquier dispositivo, filtra por `[lobby]` o `[sync` o `[peer]` para ver el flujo. Si `STATE_UPDATE` se broadcastea en el host pero `STATE_UPDATE applied` nunca aparece en el cliente, el problema es la conexión PeerJS. Si `initGame FAILED` aparece, el reason explica exactamente qué validación falló.
+
+**Verificación:**
+- `pnpm typecheck` → 0 errores ✓
+- `pnpm test:run` → 201 pasan | 1 skipped ✓
+- `pnpm build` → ✓ (CSS: 61.95 KB / 11.65 KB gzip; LobbyScreen chunk: 214.15 KB / 60.02 KB gzip — ~5 KB más por logs y NicknameGate)
+
+**Tests no afectados:** los stores no exponen el comportamiento de PeerJS ni el flujo de UI del lobby (la red está abstraída detrás del `Session` singleton). Los 201 tests existentes cubren la lógica de juego pura, que no cambió.
+
+---
+
 ## Pendiente de decidir
 
 - Reconexión automática de peer desconectado (timeout 30s antes de marcar AFK).

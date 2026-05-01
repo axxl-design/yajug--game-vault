@@ -86,21 +86,37 @@ export async function startHostSession(opts: {
 
   function broadcastLobby() {
     const players = useLobbyStore.getState().players;
+    // eslint-disable-next-line no-console
+    console.info('[sync host] broadcastLobby', {
+      players: players.map((p) => ({ id: p.id, nick: p.nickname, host: p.isHost })),
+    });
     sendToAll({ type: 'LOBBY_UPDATE', lobby: players });
   }
 
   function broadcastStateUpdate() {
     const gs = useGameStore.getState().gameState;
     if (!gs) return;
+    // eslint-disable-next-line no-console
+    console.info('[sync host] broadcastStateUpdate', {
+      phase: gs.phase,
+      players: gs.players.map((p) => p.id),
+      currentIdx: gs.currentPlayerIndex,
+    });
     sendToAll({ type: 'STATE_UPDATE', state: gs });
   }
 
   function sendToAll(msg: MultiplayerMessage) {
-    connections.forEach((c) => {
+    if (connections.size === 0) {
+      // eslint-disable-next-line no-console
+      console.warn('[sync host] sendToAll: no connections', { msgType: msg.type });
+      return;
+    }
+    connections.forEach((c, pid) => {
       try {
         c.send(msg);
-      } catch {
-        /* swallow */
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error('[sync host] send failed', { pid, msgType: msg.type, err });
       }
     });
   }
@@ -141,6 +157,11 @@ export async function startHostSession(opts: {
         case 'JOIN_REQUEST': {
           const lobby = useLobbyStore.getState();
           const gs = useGameStore.getState().gameState;
+          // eslint-disable-next-line no-console
+          console.info('[sync host] JOIN_REQUEST', {
+            from: msg.localPlayerId,
+            nick: msg.nickname,
+          });
           if (gs) {
             conn.send({
               type: 'JOIN_REJECTED',
@@ -165,6 +186,12 @@ export async function startHostSession(opts: {
           lobby.addPlayer(player);
           connections.set(msg.localPlayerId, conn);
           assignedPlayerId = msg.localPlayerId;
+          // eslint-disable-next-line no-console
+          console.info('[sync host] JOIN_ACCEPTED', {
+            assignedPlayerId: msg.localPlayerId,
+            nick,
+            totalPlayers: useLobbyStore.getState().players.length,
+          });
           conn.send({
             type: 'JOIN_ACCEPTED',
             assignedPlayerId: msg.localPlayerId,
@@ -215,6 +242,11 @@ export async function startHostSession(opts: {
   // de partida vía LobbyScreen), broadcasteamos.
   const unsub = useGameStore.subscribe((state, prev) => {
     if (state.gameState !== prev.gameState && state.gameState) {
+      // eslint-disable-next-line no-console
+      console.info('[sync host] gameState changed → broadcasting STATE_UPDATE', {
+        phase: state.gameState.phase,
+        connections: connections.size,
+      });
       sendToAll({ type: 'STATE_UPDATE', state: state.gameState });
     }
   });
@@ -268,8 +300,16 @@ export async function startClientSession(opts: {
 
   hostConn.on('data', (raw) => {
     const msg = raw as MultiplayerMessage;
+    // eslint-disable-next-line no-console
+    console.info('[sync client] received', { type: msg.type });
     switch (msg.type) {
       case 'JOIN_ACCEPTED': {
+        // eslint-disable-next-line no-console
+        console.info('[sync client] JOIN_ACCEPTED', {
+          assignedPlayerId: msg.assignedPlayerId,
+          lobbySize: msg.lobby.length,
+          hasGameState: msg.gameState !== null,
+        });
         // Sincronizar lobby completo
         const lobby = useLobbyStore.getState();
         lobby.reset();
@@ -313,6 +353,12 @@ export async function startClientSession(opts: {
         return;
       }
       case 'STATE_UPDATE': {
+        // eslint-disable-next-line no-console
+        console.info('[sync client] STATE_UPDATE applied', {
+          phase: msg.state.phase,
+          players: msg.state.players.map((p) => p.id),
+          currentIdx: msg.state.currentPlayerIndex,
+        });
         useGameStore.getState().setGameState(msg.state);
         return;
       }

@@ -101,6 +101,7 @@ export default function LobbyScreen() {
   const navigate = useNavigate();
   const toast = useToast();
   const lastNickname = usePrefsStore((s) => s.lastNickname);
+  const setLastNickname = usePrefsStore((s) => s.setLastNickname);
 
   const lobby = useLobbyStore();
   const players = lobby.players;
@@ -109,6 +110,8 @@ export default function LobbyScreen() {
 
   const gameState = useGameStore((s) => s.gameState);
   const initGame = useGameStore((s) => s.initGame);
+  const lastError = useGameStore((s) => s.lastError);
+  const clearError = useGameStore((s) => s.clearError);
 
   const [confirmExit, setConfirmExit] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -118,16 +121,40 @@ export default function LobbyScreen() {
   const [statusMsg, setStatusMsg] = useState<string>('');
   const [previewRole, setPreviewRole] = useState<RoleId | null>(null);
 
+  // Si el usuario vino de un link compartido directo (no HomeScreen.handleCreate
+  // ni handleJoin), no hay role en sessionStorage. Le pedimos confirmar nickname
+  // antes de iniciar la sesión PeerJS — así puede personalizar su nombre y no
+  // entra como "Invitado" automáticamente.
+  const [needsNickname, setNeedsNickname] = useState<boolean>(() => {
+    if (typeof sessionStorage === 'undefined') return false;
+    return !sessionStorage.getItem(`mp_role_${gameId}`);
+  });
+  const [nicknameDraft, setNicknameDraft] = useState<string>(lastNickname);
+
   const codeValid = isValidGameCode(gameId);
+
+  // Listener global de errores del gameStore: si initGame falla (validación de
+  // seeds, hostId, etc.), mostramos el motivo como toast.
+  useEffect(() => {
+    if (lastError) {
+      // eslint-disable-next-line no-console
+      console.error('[lobby] gameStore.lastError', lastError);
+      toast.error(lastError);
+      clearError();
+    }
+  }, [lastError, toast, clearError]);
 
   useEffect(() => {
     if (!codeValid) return;
+    if (needsNickname) return; // Esperar a que confirme su nickname.
     let cancelled = false;
     // Default to 'client' when no explicit role is set: opening a shared link
     // without going through "Crear/Unirme" should attempt to join, not host.
     const role = sessionStorage.getItem(`mp_role_${gameId}`) ?? 'client';
     const localPlayerId = getOrCreateLocalPlayerId(gameId);
     const localNickname = lastNickname || (role === 'host' ? 'Anfitrión' : 'Invitado');
+    // eslint-disable-next-line no-console
+    console.info('[lobby] starting session', { role, localPlayerId, localNickname, gameId });
 
     setStatus('connecting');
     setStatusMsg(role === 'host' ? 'Abriendo sala…' : 'Conectándome al host…');
@@ -189,7 +216,7 @@ export default function LobbyScreen() {
       closeSession();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gameId]);
+  }, [gameId, needsNickname]);
 
   if (gameState) return <GameScreen />;
 
@@ -224,12 +251,51 @@ export default function LobbyScreen() {
   };
 
   const handleStart = () => {
-    if (!canStart) return;
-    initGame({
-      gameId,
-      hostId: players.find((p) => p.isHost)?.id ?? players[0].id,
-      playerSeeds: players.map((p) => ({ id: p.id, nickname: p.nickname })),
-    });
+    if (!canStart) {
+      // eslint-disable-next-line no-console
+      console.warn('[lobby] handleStart blocked: canStart=false', {
+        connectedCount,
+        playerCount: players.length,
+      });
+      toast.error(`Necesitás al menos ${GAME_CONFIG.MIN_PLAYERS} jugadores conectados.`);
+      return;
+    }
+    const hostPlayer = players.find((p) => p.isHost);
+    const hostId = hostPlayer?.id ?? players[0]?.id;
+    if (!hostId) {
+      // eslint-disable-next-line no-console
+      console.error('[lobby] handleStart: no players in lobby');
+      toast.error('No hay jugadores en la sala.');
+      return;
+    }
+    const seeds = players.map((p) => ({ id: p.id, nickname: p.nickname || 'Jugador' }));
+    // eslint-disable-next-line no-console
+    console.info('[lobby] handleStart', { hostId, seeds, connectedCount });
+    try {
+      initGame({ gameId, hostId, playerSeeds: seeds });
+    } catch (err) {
+      // gameStore.initGame ya hace su propio try/catch, pero esto es un
+      // belt-and-suspenders por si algo escapa al wrapper.
+      // eslint-disable-next-line no-console
+      console.error('[lobby] initGame threw outside store', err);
+      toast.error(`Error al iniciar partida: ${err instanceof Error ? err.message : String(err)}`);
+    }
+  };
+
+  const handleConfirmNickname = () => {
+    const trimmed = nicknameDraft.trim();
+    if (!trimmed) {
+      toast.error('Ingresá un nickname para unirte.');
+      return;
+    }
+    setLastNickname(trimmed);
+    // Marcamos rol explícito para que el próximo refresh no vuelva a pedirlo.
+    if (!sessionStorage.getItem(`mp_role_${gameId}`)) {
+      sessionStorage.setItem(`mp_role_${gameId}`, 'client');
+    }
+    // eslint-disable-next-line no-console
+    console.info('[lobby] nickname confirmed → starting session', { nickname: trimmed });
+    setNeedsNickname(false);
   };
 
   const handleExit = () => {
@@ -243,6 +309,18 @@ export default function LobbyScreen() {
 
   if (!codeValid) {
     return <InvalidCode code={gameId} onBack={() => navigate('/')} />;
+  }
+
+  if (needsNickname) {
+    return (
+      <NicknameGate
+        gameId={gameId}
+        value={nicknameDraft}
+        onChange={setNicknameDraft}
+        onSubmit={handleConfirmNickname}
+        onCancel={() => navigate('/')}
+      />
+    );
   }
 
   const now = new Date();
@@ -719,6 +797,71 @@ export default function LobbyScreen() {
       >
         <p>Vas a cerrar la sala y volver al inicio.</p>
       </Modal>
+    </main>
+  );
+}
+
+interface NicknameGateProps {
+  gameId: string;
+  value: string;
+  onChange: (next: string) => void;
+  onSubmit: () => void;
+  onCancel: () => void;
+}
+
+function NicknameGate({ gameId, value, onChange, onSubmit, onCancel }: NicknameGateProps) {
+  const trimmed = value.trim();
+  const valid = trimmed.length > 0 && trimmed.length <= 20;
+  return (
+    <main
+      className="shell"
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '100vh',
+        padding: 'var(--s-6)',
+      }}
+    >
+      <div
+        className="ed-frame"
+        style={{
+          maxWidth: 480,
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 'var(--s-4)',
+          padding: 'var(--s-6)',
+          background: 'var(--surface)',
+        }}
+      >
+        <div className="ed-kicker">
+          <span className="ed-kicker-num">i</span>
+          <span>Te invitaron a una partida</span>
+        </div>
+        <h1 className="ed-section-title" style={{ fontSize: 'var(--fs-40)' }}>
+          Antes de entrar — tu <em>nickname</em>.
+        </h1>
+        <p style={{ fontFamily: 'var(--font-text)', color: 'var(--text-soft)', margin: 0 }}>
+          Sala <strong style={{ fontFamily: 'var(--font-display)', letterSpacing: '0.10em' }}>{gameId}</strong>.
+          Elegí cómo querés que te vean en la mesa. Después no se puede cambiar
+          hasta el próximo turno.
+        </p>
+        <NicknameInput
+          value={value}
+          onChange={onChange}
+          onSubmitValid={onSubmit}
+          autoFocus
+        />
+        <div style={{ display: 'flex', gap: 'var(--s-2)', flexWrap: 'wrap' }}>
+          <Button variant="ghost" onClick={onCancel}>
+            Cancelar
+          </Button>
+          <Button onClick={onSubmit} disabled={!valid} fullWidth>
+            Unirme a la partida
+          </Button>
+        </div>
+      </div>
     </main>
   );
 }

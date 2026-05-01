@@ -133,18 +133,42 @@ export const useGameStore = create<GameStoreState>()(
       initGame: (opts) => {
         refs.rng = opts.rng ?? defaultRng;
         refs.ids = opts.ids ?? createIdFactory();
-        const initial = createInitialGameState({
-          gameId: opts.gameId,
-          hostId: opts.hostId,
-          playerSeeds: opts.playerSeeds,
-          rng: refs.rng,
-          ids: refs.ids,
-          prefs: opts.prefs,
-        });
-        set((draft) => {
-          draft.gameState = initial;
-          draft.lastError = null;
-        });
+        try {
+          const initial = createInitialGameState({
+            gameId: opts.gameId,
+            hostId: opts.hostId,
+            playerSeeds: opts.playerSeeds,
+            rng: refs.rng,
+            ids: refs.ids,
+            prefs: opts.prefs,
+          });
+          // eslint-disable-next-line no-console
+          console.info('[gameStore] initGame OK', {
+            gameId: opts.gameId,
+            hostId: opts.hostId,
+            seeds: opts.playerSeeds.map((s) => s.id),
+            playerCount: opts.playerSeeds.length,
+            phase: initial.phase,
+          });
+          set((draft) => {
+            draft.gameState = initial;
+            draft.lastError = null;
+          });
+        } catch (err) {
+          const reason =
+            err instanceof GameError ? err.reason : err instanceof Error ? err.message : String(err);
+          // eslint-disable-next-line no-console
+          console.error('[gameStore] initGame FAILED', {
+            reason,
+            gameId: opts.gameId,
+            hostId: opts.hostId,
+            seeds: opts.playerSeeds,
+            err,
+          });
+          set((draft) => {
+            draft.lastError = `No se pudo iniciar la partida: ${reason}`;
+          });
+        }
       },
 
       setGameState: (gameState) => {
