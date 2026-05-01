@@ -220,8 +220,17 @@ export default function LobbyScreen() {
 
   if (gameState) return <GameScreen />;
 
+  // Derivación robusta del rol local. Antes esto era `!session || mode === 'host'`,
+  // lo cual devolvía `true` para clientes mientras `session === null` (idle,
+  // connecting, failed) — ese era el bug por el que los clientes veían el botón
+  // "Empezar partida". Ahora preferimos `session.mode` cuando hay sesión activa,
+  // y `sessionStorage` (single source of truth de "Crear" vs "Unirme") como
+  // fallback durante pre-sesión y hot-seat.
   const session = getSession();
-  const isHost = !session || session.mode === 'host';
+  const persistedRole =
+    typeof sessionStorage !== 'undefined' ? sessionStorage.getItem(`mp_role_${gameId}`) : null;
+  const isHost = session ? session.mode === 'host' : persistedRole === 'host';
+  const localHostNick = players.find((p) => p.isHost)?.nickname ?? 'el anfitrión';
 
   const handleCopy = async () => {
     try {
@@ -251,6 +260,24 @@ export default function LobbyScreen() {
   };
 
   const handleStart = () => {
+    // Guard contra invocación desde un cliente. La UI ya esconde el botón
+    // (Bug 1 fix), pero esto es belt-and-suspenders contra cualquier código
+    // que pudiera disparar handleStart desde un client (keyboard shortcut,
+    // futuras refactorizaciones, etc.). Solo el host es source-of-truth.
+    const sessionForGuard = getSession();
+    const persistedRoleForGuard =
+      typeof sessionStorage !== 'undefined' ? sessionStorage.getItem(`mp_role_${gameId}`) : null;
+    const guardIsHost = sessionForGuard
+      ? sessionForGuard.mode === 'host'
+      : persistedRoleForGuard === 'host';
+    if (!guardIsHost) {
+      // eslint-disable-next-line no-console
+      console.warn('[lobby] handleStart ignored — non-host attempted to start', {
+        sessionMode: sessionForGuard?.mode,
+        persistedRole: persistedRoleForGuard,
+      });
+      return;
+    }
     if (!canStart) {
       // eslint-disable-next-line no-console
       console.warn('[lobby] handleStart blocked: canStart=false', {
@@ -468,7 +495,7 @@ export default function LobbyScreen() {
 
         <div style={{ display: 'flex', gap: 'var(--s-2)' }}>
           <Button variant="ghost" size="sm" onClick={() => setConfirmExit(true)} fullWidth>
-            {isHost ? 'Cancelar partida' : 'Salir'}
+            {isHost ? 'Cancelar partida' : 'Salir de la sala'}
           </Button>
         </div>
       </aside>
@@ -520,7 +547,7 @@ export default function LobbyScreen() {
               partida cuando todos estén listos. La banca te observa.
             </p>
             <div className="lb-hero-cta">
-              {isHost && (
+              {isHost ? (
                 <Button
                   variant="primary"
                   size="lg"
@@ -530,6 +557,18 @@ export default function LobbyScreen() {
                 >
                   Empezar partida ({connectedCount}/{GAME_CONFIG.MAX_PLAYERS})
                 </Button>
+              ) : (
+                <div
+                  className="ed-banner"
+                  data-tone="info"
+                  style={{ width: '100%', justifyContent: 'flex-start', padding: '14px 16px' }}
+                  role="status"
+                  aria-live="polite"
+                >
+                  <span style={{ fontFamily: 'var(--font-mono)', letterSpacing: '0.10em' }}>
+                    Esperando que <strong>{localHostNick}</strong> inicie la partida…
+                  </span>
+                </div>
               )}
               <Button variant="secondary" size="lg" onClick={handleCopy} leftIcon={copied ? Check : Copy}>
                 {copied ? 'Link copiado' : 'Compartir link'}
@@ -782,7 +821,7 @@ export default function LobbyScreen() {
       <Modal
         open={confirmExit}
         onClose={() => setConfirmExit(false)}
-        title="Salir de la partida"
+        title={isHost ? 'Cancelar partida' : 'Salir de la sala'}
         size="sm"
         footer={
           <>
@@ -790,12 +829,16 @@ export default function LobbyScreen() {
               Volver a la sala
             </Button>
             <Button variant="danger" onClick={handleExit}>
-              Salir
+              {isHost ? 'Cancelar partida' : 'Salir'}
             </Button>
           </>
         }
       >
-        <p>Vas a cerrar la sala y volver al inicio.</p>
+        <p>
+          {isHost
+            ? 'Vas a cerrar la sala para todos los jugadores y volver al inicio.'
+            : 'Vas a salir de la sala. El anfitrión y los demás jugadores siguen conectados.'}
+        </p>
       </Modal>
     </main>
   );

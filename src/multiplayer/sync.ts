@@ -240,7 +240,7 @@ export async function startHostSession(opts: {
 
   // Suscribirse al gameStore: cuando el host cambia el estado (e.g. inicio
   // de partida vía LobbyScreen), broadcasteamos.
-  const unsub = useGameStore.subscribe((state, prev) => {
+  const unsubGame = useGameStore.subscribe((state, prev) => {
     if (state.gameState !== prev.gameState && state.gameState) {
       // eslint-disable-next-line no-console
       console.info('[sync host] gameState changed → broadcasting STATE_UPDATE', {
@@ -251,10 +251,27 @@ export async function startHostSession(opts: {
     }
   });
 
-  // Guardar unsub en close
+  // Suscribirse al lobbyStore: cualquier cambio en la lista de jugadores
+  // (addPlayer, setConnected, removePlayer, setNickname) re-broadcastea el
+  // lobby completo a todos los clients. Esto es defense-in-depth: aunque
+  // las pocas mutaciones explícitas ya llaman a `broadcastLobby()`, el
+  // subscribe garantiza que cualquier futura mutación se sincronice sin
+  // tener que recordar invocar el broadcast manualmente.
+  const unsubLobby = useLobbyStore.subscribe((state, prev) => {
+    if (state.players === prev.players) return;
+    // eslint-disable-next-line no-console
+    console.info('[sync host] lobby.players changed → broadcasting LOBBY_UPDATE', {
+      count: state.players.length,
+      connections: connections.size,
+    });
+    sendToAll({ type: 'LOBBY_UPDATE', lobby: state.players });
+  });
+
+  // Guardar unsubs en close
   const origClose = session.close;
   session.close = () => {
-    unsub();
+    unsubGame();
+    unsubLobby();
     origClose();
   };
 

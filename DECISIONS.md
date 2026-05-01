@@ -782,6 +782,77 @@ Implementación en `src/screens/LobbyScreen.tsx`:
 
 ---
 
+## Fase 16 — Sincronización host/client en lobby
+
+**Contexto:** después del round 15 aparecieron tres bugs interconectados:
+
+1. **Todos veían el botón "Empezar partida"**, no solo el host.
+2. **Los jugadores no se veían entre sí** en el lobby (host no veía clients, clients no veían host ni a otros clients).
+3. **"El host se desconectó"** aparecía en los demás cuando alguien apretaba "Empezar" — síntoma downstream de un client llamando a `initGame` localmente.
+
+### Bug 1 — Solo host ve "Empezar partida"
+
+**Causa raíz:** `const isHost = !session || session.mode === 'host'` evaluaba a `true` para clientes mientras `session === null` (estados `idle`, `connecting`, `failed`). Esos breves momentos pre-sesión hacían que un client renderizara con `isHost === true`, mostrando el botón.
+
+**Fix en `LobbyScreen.tsx`:** reemplazado por una derivación robusta:
+
+```ts
+const session = getSession();
+const persistedRole = sessionStorage.getItem(`mp_role_${gameId}`);
+const isHost = session
+  ? session.mode === 'host'
+  : persistedRole === 'host';  // hot-seat o pre-session
+```
+
+Cuando hay sesión activa preferimos `session.mode` (autoridad de la sesión PeerJS). Cuando no, leemos `mp_role_${gameId}` de sessionStorage — la única source-of-truth de "Crear partida" vs "Unirme" / link compartido. El default `'client'` (asumido cuando falta el flag) es fail-safe: nunca mostramos el botón a alguien que no es host explícito.
+
+**UI cambios derivados:**
+- Hero CTA: si `!isHost`, en vez del botón se muestra un `ed-banner` `info` con `role="status" aria-live="polite"` que dice "Esperando que `<localHostNick>` inicie la partida…". `localHostNick` se deriva de `players.find(p => p.isHost)?.nickname ?? 'el anfitrión'`.
+- Botón ghost del aside: `'Cancelar partida'` (host) → `'Salir de la sala'` (client).
+- Modal de confirmar exit: título y body cambian según rol — el host lee "Vas a cerrar la sala para todos los jugadores", el client lee "El anfitrión y los demás jugadores siguen conectados".
+
+**Guard en `handleStart`** (belt-and-suspenders): si por algún motivo (keyboard shortcut, futuras refactorizaciones, bug en condicional de render) `handleStart` se invoca desde un client, hace early-return con `console.warn('[lobby] handleStart ignored — non-host attempted to start', {...})`. Solo el host es source-of-truth.
+
+### Bug 2 — Defense-in-depth para LOBBY_UPDATE
+
+**Análisis del protocolo:** la cadena `JOIN_REQUEST → addPlayer → JOIN_ACCEPTED → broadcastLobby` es correcta, y los handlers de `setConnected` (heartbeat timeout / conn close) también llaman `broadcastLobby()`. La ruta más probable de failure es: alguna mutación futura del lobbyStore (refactor, nueva feature) que olvide llamar broadcastLobby — silently desincroniza a todos los clients sin ningún error.
+
+**Fix en `sync.ts`:** se agregó una segunda subscription al lobbyStore en `startHostSession`, paralela a la del gameStore:
+
+```ts
+const unsubLobby = useLobbyStore.subscribe((state, prev) => {
+  if (state.players === prev.players) return;
+  console.info('[sync host] lobby.players changed → broadcasting LOBBY_UPDATE', {...});
+  sendToAll({ type: 'LOBBY_UPDATE', lobby: state.players });
+});
+```
+
+Cualquier cambio a `players` (addPlayer, removePlayer, setConnected, setNickname) auto-broadcastea el lobby completo. Las llamadas explícitas a `broadcastLobby()` quedan como redundancia barata — el subscribe es safety net. La igualdad por referencia (`state.players === prev.players`) evita falsos positivos en cambios a `gameId`/`localPlayerId`.
+
+`session.close()` ahora limpia ambos unsubs (`unsubGame()` + `unsubLobby()`) — antes solo limpiaba uno.
+
+### Bug 3 — Imposible que un client llame a `initGame`
+
+Al ocultarse el botón "Empezar partida" en clients (Bug 1 fix), Bug 3 desaparece causalmente. El guard explícito en `handleStart` agrega una segunda barrera: aunque alguien fuerce la invocación, no hay efecto.
+
+**Por qué no agregamos guard en `gameStore.initGame`:** un guard ahí requeriría importar `getSession()` desde `multiplayer/sync`, creando un ciclo de imports (`sync.ts` ya importa de `gameStore`). Mantenemos el store puro y la decisión de "puedo iniciar?" vive en LobbyScreen, donde naturalmente conoce el session mode. Hot-seat (sin sesión) sigue funcionando porque `persistedRole === 'host'` deja pasar el guard.
+
+**Mecánica del síntoma "El host se desconectó":** el client clickeaba "Empezar" → `initGame` local → `gameState` set en su store → LobbyScreen veía `gameState !== null` → renderizaba `<GameScreen />`. El host no recibía nada, pero la conexión PeerJS quedaba viva. Luego, cuando el client navegaba o cerraba, el `hostConn.on('close')` del client disparaba el toast "El host se desconectó" — pero por el cliente mismo, no por el host. Engañoso. Con el botón oculto este escenario es imposible.
+
+**Verificación:**
+- `pnpm typecheck` → 0 errores ✓
+- `pnpm test:run` → 201 pasan | 1 skipped ✓
+- `pnpm build` → ✓ (LobbyScreen chunk: 215.29 KB / 60.29 KB gzip — +1 KB por banner de espera)
+- Hot-seat preservado: el host crea sala, falla la conexión, queda en `status='failed'`. Como `persistedRole='host'`, sigue siendo `isHost=true`, ve el botón Empezar y puede agregar hot-seat players.
+
+**Pendiente de testeo manual:**
+- PC abre como host → comparte link → celular abre como client → host debería ver el celular en su lista de jugadores y el celular debería ver al host.
+- Conectar 2 clients al mismo host → ambos clients deberían verse entre sí.
+- En el celular (client), confirmar que ve "Esperando que [host] inicie la partida…" y NO ve botón Empezar partida.
+- En la PC (host), confirmar que el botón "Empezar" funciona y dispara la transición a RoleAssignment para todos.
+
+---
+
 ## Pendiente de decidir
 
 - Reconexión automática de peer desconectado (timeout 30s antes de marcar AFK).
