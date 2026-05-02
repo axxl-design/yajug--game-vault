@@ -102,10 +102,24 @@ export default function LobbyScreen() {
   const lastNickname = usePrefsStore((s) => s.lastNickname);
   const setLastNickname = usePrefsStore((s) => s.setLastNickname);
 
-  const lobby = useLobbyStore();
-  const players = lobby.players;
-  const canStart = selectCanStart(lobby);
-  const connectedCount = selectConnectedCount(lobby);
+  // Selectores específicos por field. Antes tomábamos el state entero con
+  // `useLobbyStore()` (sin selector), lo cual hace re-render en cualquier
+  // cambio del store — innecesario y propenso a feedback loops cuando el
+  // subscribe del propio sync.ts emite mutaciones encadenadas. Ahora cada
+  // selector devuelve sólo lo que el componente lee, con refs estables
+  // del store (los actions y el array `players` solo cambian cuando immer
+  // muta).
+  const players = useLobbyStore((s) => s.players);
+  const initLobby = useLobbyStore((s) => s.initLobby);
+  const addPlayer = useLobbyStore((s) => s.addPlayer);
+  const removePlayer = useLobbyStore((s) => s.removePlayer);
+  const lobbyReset = useLobbyStore((s) => s.reset);
+  // Estos dos derivan de `players`; los calculamos como derived locales
+  // (no son selectores reactivos — se re-evalúan en cada render junto al
+  // resto del componente, ya que dependen de la ref de `players` que sí
+  // sí es reactiva).
+  const connectedCount = selectConnectedCount({ players } as Parameters<typeof selectConnectedCount>[0]);
+  const canStart = selectCanStart({ players } as Parameters<typeof selectCanStart>[0]);
 
   const gameState = useGameStore((s) => s.gameState);
   const initGame = useGameStore((s) => s.initGame);
@@ -159,7 +173,7 @@ export default function LobbyScreen() {
     setStatusMsg(role === 'host' ? 'Abriendo sala…' : 'Conectándome al host…');
 
     if (role === 'host') {
-      lobby.initLobby({
+      initLobby({
         gameId,
         localPlayerId,
         localNickname,
@@ -266,7 +280,7 @@ export default function LobbyScreen() {
       return;
     }
     const id = `p-${players.length + 1}-${Date.now().toString(36)}`;
-    lobby.addPlayer({ id, nickname: nick, isHost: false, isConnected: true });
+    addPlayer({ id, nickname: nick, isHost: false, isConnected: true });
     setNewNickname('');
     setAddOpen(false);
   };
@@ -336,7 +350,7 @@ export default function LobbyScreen() {
   const handleExit = () => {
     setConfirmExit(false);
     closeSession();
-    lobby.reset();
+    lobbyReset();
     sessionStorage.removeItem(`mp_role_${gameId}`);
     sessionStorage.removeItem(`mp_pid_${gameId}`);
     navigate('/');
@@ -474,7 +488,7 @@ export default function LobbyScreen() {
                   {canRemove && (
                     <button
                       type="button"
-                      onClick={() => lobby.removePlayer(p.id)}
+                      onClick={() => removePlayer(p.id)}
                       aria-label="Quitar jugador"
                       title="Quitar"
                       className="ed-icon-btn"

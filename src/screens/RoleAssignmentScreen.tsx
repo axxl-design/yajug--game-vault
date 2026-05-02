@@ -7,11 +7,15 @@ import { Sparkles } from 'lucide-react';
 import type { Player, RoleId } from '@/types/game';
 import { getSession } from '@/multiplayer/sync';
 
-// Constante estable para fallback del selector. NO usar `[]` literal en el
-// selector — Zustand v5 compara con `Object.is` y `Object.is([], [])` es
-// false, lo cual dispara un re-render → selector corre de nuevo → loop
-// infinito (React error #310). Toda referencia debe ser estable entre
-// renders cuando el path opcional sea null/undefined.
+// Constante estable para fallback del selector. El selector devuelve
+// `undefined` (primitivo, estable entre llamadas) cuando no hay gameState;
+// el `?? EMPTY_PLAYERS` se aplica AFUERA del selector — eso garantiza que
+// Zustand compare `undefined === undefined` → true → no re-render.
+//
+// Si pusiéramos `?? []` o `?? EMPTY_PLAYERS` DENTRO del selector, Zustand
+// vería el array y compararía `Object.is` con la versión cacheada — en el
+// caso del array literal `[]` la comparación es `false` y dispara loop
+// infinito (React error #310).
 const EMPTY_PLAYERS: readonly Player[] = [];
 
 interface Props {
@@ -45,11 +49,11 @@ function readIsHost(gameId: string | undefined): boolean {
 }
 
 export default function RoleAssignmentScreen({ onContinue }: Props) {
-  // OJO: NO usar `?? []` dentro del selector — eso devuelve un array nuevo
-  // en cada llamada y rompe la equality check de Zustand, causando un loop
-  // de re-render (React #310). Usamos `EMPTY_PLAYERS` (constante de módulo)
-  // como fallback estable.
-  const players = useGameStore((s) => s.gameState?.players ?? EMPTY_PLAYERS);
+  // Fallback FUERA del selector. El selector devuelve `Player[] | undefined`
+  // — Zustand compara `undefined === undefined` → no re-render. El default
+  // se aplica después, sólo para que el componente tenga un array iterable.
+  const playersOrUndefined = useGameStore((s) => s.gameState?.players);
+  const players: readonly Player[] = playersOrUndefined ?? EMPTY_PLAYERS;
   const gameId = useGameStore((s) => s.gameState?.gameId);
   const hostId = useGameStore((s) => s.gameState?.hostId);
   const [revealed, setRevealed] = useState(false);
