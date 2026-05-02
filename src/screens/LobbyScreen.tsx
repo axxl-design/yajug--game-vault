@@ -35,7 +35,6 @@ import type { RoleId } from '@/types/game';
 import GameScreen from './GameScreen';
 import {
   closeSession,
-  getSession,
   startClientSession,
   startHostSession,
 } from '@/multiplayer/sync';
@@ -220,16 +219,17 @@ export default function LobbyScreen() {
 
   if (gameState) return <GameScreen />;
 
-  // Derivación robusta del rol local. Antes esto era `!session || mode === 'host'`,
-  // lo cual devolvía `true` para clientes mientras `session === null` (idle,
-  // connecting, failed) — ese era el bug por el que los clientes veían el botón
-  // "Empezar partida". Ahora preferimos `session.mode` cuando hay sesión activa,
-  // y `sessionStorage` (single source of truth de "Crear" vs "Unirme") como
-  // fallback durante pre-sesión y hot-seat.
-  const session = getSession();
+  // isHost — fuente de verdad: sessionStorage `mp_role_${gameId}`.
+  //   - HomeScreen.handleCreate setea 'host' antes de navegar.
+  //   - HomeScreen.handleJoin setea 'client'.
+  //   - NicknameGate (link compartido) setea 'client' al confirmar.
+  // Por lo tanto: si el flag dice 'host' → host. Si es 'client' o null → client.
+  // NO miramos session.mode acá: durante connecting/idle/failed la session
+  // puede estar null y queremos que isHost ya esté correcto desde el primer
+  // render — sino el client ve el botón "Empezar partida" un instante.
   const persistedRole =
     typeof sessionStorage !== 'undefined' ? sessionStorage.getItem(`mp_role_${gameId}`) : null;
-  const isHost = session ? session.mode === 'host' : persistedRole === 'host';
+  const isHost = persistedRole === 'host';
   const localHostNick = players.find((p) => p.isHost)?.nickname ?? 'el anfitrión';
 
   const handleCopy = async () => {
@@ -260,20 +260,16 @@ export default function LobbyScreen() {
   };
 
   const handleStart = () => {
-    // Guard contra invocación desde un cliente. La UI ya esconde el botón
-    // (Bug 1 fix), pero esto es belt-and-suspenders contra cualquier código
-    // que pudiera disparar handleStart desde un client (keyboard shortcut,
-    // futuras refactorizaciones, etc.). Solo el host es source-of-truth.
-    const sessionForGuard = getSession();
+    // Guard simple y directo: el rol está en sessionStorage (set por
+    // HomeScreen al "Crear partida" o por NicknameGate al unirse). Si el
+    // sessionStorage no dice 'host', el click se ignora con un warning.
+    // Esto es belt-and-suspenders — la UI ya esconde el botón en clients,
+    // pero un keyboard shortcut o un dev tool podría intentar dispararlo.
     const persistedRoleForGuard =
       typeof sessionStorage !== 'undefined' ? sessionStorage.getItem(`mp_role_${gameId}`) : null;
-    const guardIsHost = sessionForGuard
-      ? sessionForGuard.mode === 'host'
-      : persistedRoleForGuard === 'host';
-    if (!guardIsHost) {
+    if (persistedRoleForGuard !== 'host') {
       // eslint-disable-next-line no-console
-      console.warn('[lobby] handleStart ignored — non-host attempted to start', {
-        sessionMode: sessionForGuard?.mode,
+      console.warn('[lobby] handleStart ignored — persistedRole is not "host"', {
         persistedRole: persistedRoleForGuard,
       });
       return;
