@@ -853,6 +853,103 @@ Al ocultarse el botón "Empezar partida" en clients (Bug 1 fix), Bug 3 desaparec
 
 ---
 
+## Fase 17 — Migración PeerJS → Socket.IO
+
+**Migrated from PeerJS (P2P WebRTC) to socket.io (WebSocket) due to unreliable P2P connections. Server is a simple relay — host remains source of truth for game state.**
+
+### Por qué
+
+Después de tres rondas de fixes (Fases 14, 15, 16) sobre la capa PeerJS, el multiplayer seguía siendo poco confiable. PeerJS depende de WebRTC P2P, que tiene problemas conocidos:
+- NAT traversal: muchos routers domésticos bloquean conexiones entrantes directas. Sin TURN server propio, los peers detrás de NATs simétricas no se pueden conectar.
+- Firewalls corporativos / móviles: bloquean los puertos UDP que WebRTC necesita.
+- Servidor STUN/TURN público de PeerJS: gratis pero con SLA-zero, frecuentemente lento o no responde.
+- BinaryPack vs JSON: la serialización default de PeerJS rompía con `GameState` immer-frozen; forzar JSON ayudaba pero no resolvía los problemas de conexión.
+
+El cambio de arquitectura: en vez de P2P, todos los peers se conectan a un servidor centralizado que retransmite mensajes. Más simple, más robusto, y para 2-4 jugadores el bottleneck de un servidor relay es despreciable.
+
+### Topología nueva
+
+```
+┌────────┐         ┌──────────┐         ┌────────┐
+│ Host   │◀───────▶│ Servidor │◀───────▶│ Client │
+│ (PC)   │ socket  │ (Node)   │ socket  │ (móvil)│
+└────────┘         └──────────┘         └────────┘
+                        ▲
+                        │ socket
+                        ▼
+                   ┌────────┐
+                   │ Client │
+                   │ (otra) │
+                   └────────┘
+```
+
+- El servidor es un **dumb relay**. No procesa lógica de juego.
+- El host sigue siendo source of truth del `GameState`. Los clients le mandan `player-action` (vía servidor); el host las valida, aplica al `GameState`, y emite `state-update` que el servidor retransmite a todos.
+- El servidor mantiene salas (Map<gameId, { hostSocketId, peers: Map<socketId, RoomPeer> }>). Reconoce al primer joiner con `isHost=true` como host de esa sala. Emite eventos automáticos para entrada/salida de peers (`peer-joined`, `peer-disconnected`, `host-disconnected`).
+
+### Cambios estructurales
+
+**Nuevo: `/server`**
+- `package.json` con Express + Socket.IO 4 + tsx + cors. Scripts: `dev` (tsx watch), `start`, `build` (tsc → dist), `start:prod` (node dist).
+- `tsconfig.json` ES2022 / strict.
+- `rooms.ts`: `RoomRegistry` con `getOrCreate / get / delete / findRoomBySocket / snapshot / size`. `peerSnapshot()` y `getHostPlayerId()` helpers.
+- `index.ts`: setup Express + Socket.IO con tipos explícitos (`ClientToServerEvents`, `ServerToClientEvents`, `SocketData`). Handlers de `join-room` (con ack), `lobby-update`, `state-update`, `start-game`, `player-action`, `disconnect`. Endpoint `GET /health` para Railway/Vercel uptime checks.
+- `README.md` con protocolo, env vars, instrucciones de Railway.
+
+**Eliminado del frontend:**
+- `src/multiplayer/peer.ts` (wrapper PeerJS).
+- `src/multiplayer/messages.ts` (protocolo PeerJS).
+- Dep `peerjs` de `package.json`.
+
+**Nuevo en frontend:**
+- Dep `socket.io-client@4.8.1`.
+- `src/multiplayer/socket.ts`: `openSocket()` y `joinRoom()` con timeout 8s. Lee `import.meta.env.VITE_WS_URL` (default `http://localhost:3001`).
+- `src/multiplayer/sync.ts`: refactorizado. Mismo API público (`startHostSession`, `startClientSession`, `getSession`, `dispatchAction`, `closeSession`) — LobbyScreen y GameScreen no necesitan cambios. Internamente usa socket en lugar de PeerJS DataConnection. Mantiene los logs prefijados (`[sync host]`, `[sync client]`) introducidos en Fase 15.
+
+### Decisiones puntuales
+
+**Mapeo de errores `host-exists` → `'unavailable-id'`**: el frontend (LobbyScreen) ya tenía un fallback "si el host falla con `unavailable-id`, retry como client". En vez de cambiar la UI, traduzco el código del servidor a la string que LobbyScreen espera. Cero cambios en LobbyScreen.
+
+**Hot-seat sigue funcionando**: si el socket no puede conectarse (server caído, sin red, CORS), `joinRoom` resuelve `{ ok: false, code: 'unknown' }` después del timeout. `startHostSession` throwa con esa string. LobbyScreen captura, setea `status='failed'`, y el usuario juega hot-seat local sin red. Mismo comportamiento que con PeerJS.
+
+**Servidor no conoce el rich lobby**: el servidor sólo registra socketId/playerId/nickname/isHost por peer (lo mínimo para forwarding y enforcement). El **host es source of truth del lobby visual** (con dedup de nicknames, hot-seat additions, etc.). El host mantiene `useLobbyStore` y la subscription a ese store emite `lobby-update` al servidor, que retransmite a clients. Mantiene la separación clean del modelo anterior.
+
+**El primer `lobby-update` lo emite el host explícitamente** después de configurar los subscribes — para cubrir la ventana de tiempo entre que un client recibe el ack de `join-room` (y siembra su lobby con la respuesta del server) y la primera mutación que dispare el subscribe del host. Sin esto, un client podría quedarse momentáneamente con un lobby parcial.
+
+**Bundle más liviano**: PeerJS ~50 KB → socket.io-client ~40 KB. El chunk de LobbyScreen pasó de 215 KB / 60 KB gzip a 167 KB / 48 KB gzip. Carga más rápida.
+
+### Variables de entorno
+
+| Var | Scope | Default | Descripción |
+| --- | --- | --- | --- |
+| `VITE_WS_URL` | frontend | `http://localhost:3001` | URL del servidor WebSocket. En Vercel apuntar al server de Railway. |
+| `PORT` | servidor | `3001` | Puerto del servidor. Railway lo setea automático. |
+| `CORS_ORIGINS` | servidor | `http://localhost:5173,http://localhost:4173` | CSV de orígenes permitidos. En producción agregar la URL de Vercel. |
+
+### Verificación
+
+- Frontend: `pnpm typecheck` ✓, `pnpm test:run` ✓ (201 pasan, 1 skipped), `pnpm build` ✓.
+- Servidor: `pnpm build` (tsc) ✓ desde `/server`. `pnpm start` arranca y `curl http://localhost:3001/health` devuelve `{"ok":true,"rooms":[]}`.
+- Smoke test manual recomendado:
+  ```bash
+  # Terminal 1
+  cd server && pnpm dev
+
+  # Terminal 2
+  pnpm dev
+  ```
+  Abrir 2 pestañas en `http://localhost:5173`, crear partida en una, abrir el link en la otra, confirmar que se ven mutuamente y que "Empezar partida" funciona.
+
+### No tocado
+
+- `src/game/**` (motor de juego puro).
+- `src/stores/**` (excepto que ya no existen referencias a PeerJS — ninguna era directa).
+- `src/types/**`.
+- `src/screens/LobbyScreen.tsx`, `src/screens/GameScreen.tsx` — el API pública de `multiplayer/sync.ts` se mantuvo, así que estos archivos no cambiaron.
+- 201 tests del motor de juego siguen pasando.
+
+---
+
 ## Pendiente de decidir
 
 - Reconexión automática de peer desconectado (timeout 30s antes de marcar AFK).

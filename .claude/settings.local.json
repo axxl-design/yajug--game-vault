@@ -35,7 +35,8 @@
       "Bash(cp \"C:/Users/arand/Downloads/PROYECTO YAJUGÁ/LOGO SVG/YAJUGÁ Logo - Color Principal.svg\" \"C:/Users/arand/yajuga-dominio/public/logo/yajuga-with-tagline.svg\")",
       "Bash(cp \"C:/Users/arand/Downloads/PROYECTO YAJUGÁ/LOGO SVG/YAJUGÁ SÓLO TITULO Logo - Color Principal.svg\" \"C:/Users/arand/yajuga-dominio/public/logo/yajuga-title.svg\")",
       "Bash(cp \"C:/Users/arand/Downloads/PROYECTO YAJUGÁ/LOGO SVG/YAJUGÁ FLAVICON Logo - Color 1.svg\" \"C:/Users/arand/yajuga-dominio/public/favicon.svg\")",
-      "Bash(cp \"C:/Users/arand/Downloads/PROYECTO YAJUGÁ/LOGO SVG/YAJUGÁ FLAVICON Logo - Color 1.svg\" \"C:/Users/arand/yajuga-dominio/public/logo/yajuga-favicon.svg\")"
+      "Bash(cp \"C:/Users/arand/Downloads/PROYECTO YAJUGÁ/LOGO SVG/YAJUGÁ FLAVICON Logo - Color 1.svg\" \"C:/Users/arand/yajuga-dominio/public/logo/yajuga-favicon.svg\")",
+      "Bash(pnpm install *)"
     ]
   }
 }
