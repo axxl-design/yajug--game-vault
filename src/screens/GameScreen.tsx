@@ -55,6 +55,19 @@ function LoadingShell({ message }: { message: string }) {
 }
 
 export default function GameScreen() {
+  /* ──────────────────────────────────────────────────────────────
+     Rules of Hooks: TODOS los hooks (useState, useEffect, custom
+     hooks) tienen que estar acá ARRIBA, antes de cualquier `return`
+     condicional. La versión anterior llamaba `useKeyboardShortcuts`
+     después de los early returns, lo cual cambiaba la cantidad de
+     hooks entre renders → React error #310 ("Rendered more hooks
+     than during the previous render").
+
+     Pattern: declaramos todos los derivados (me, isMyTurn, etc.)
+     como `null`/default seguros cuando el state aún no está listo,
+     y los early returns van al final del bloque de hooks.
+     ────────────────────────────────────────────────────────────── */
+
   const gs = useGameStore((s) => s.gameState);
   const lastError = useGameStore((s) => s.lastError);
   const clearError = useGameStore((s) => s.clearError);
@@ -62,9 +75,6 @@ export default function GameScreen() {
   const navigate = useNavigate();
   const toast = useToast();
   const session = getSession();
-
-  const dispatch = (playerId: string, action: PlayerAction) =>
-    dispatchAction(playerId, action);
 
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
   const [logOpen, setLogOpen] = useState(false);
@@ -109,31 +119,72 @@ export default function GameScreen() {
     };
   }, [session]);
 
+  /* ── Derivados null-safe (calculados aún cuando gs/me son null) ── */
+
+  const players = gs?.players;
+  const hasPlayers = Array.isArray(players) && players.length > 0;
+  const meById =
+    session && hasPlayers ? players.find((p) => p.id === session.myPlayerId) ?? null : null;
+  const me = meById ?? cur ?? (hasPlayers ? players[0] : null);
+  const isMyTurn = !!me && (session && hasPlayers ? players[gs!.currentPlayerIndex]?.id === me.id : true);
+  const canActivateExpansion =
+    !!me && me.expansionCharge >= 100 && !me.expansionUsed && gs?.phase === 'playing' && isMyTurn;
+
+  const handleEndTurn = () => {
+    if (!me) return;
+    dispatchAction(me.id, { type: 'END_TURN' });
+  };
+
+  // `useKeyboardShortcuts` debe estar al mismo nivel que el resto de los
+  // hooks — antes de los early returns. El parámetro `enabled` controla
+  // cuándo el listener está activo, basado en si estamos en gameplay.
+  const isPlayingPhase =
+    !!gs &&
+    hasPlayers &&
+    !showAssignment &&
+    !(gs.winner && gs.phase === 'game_over');
+
+  useKeyboardShortcuts(
+    {
+      t: () => isMyTurn && handleEndTurn(),
+      e: () => canActivateExpansion && setExpansionOpen(true),
+      h: () => navigate('/tutorial'),
+      l: () => setLogOpen((o) => !o),
+      escape: () => {
+        if (cinematicExpansion) setCinematicExpansion(null);
+        else if (expansionOpen) setExpansionOpen(false);
+        else if (logOpen) setLogOpen(false);
+        else if (selectedCardId) setSelectedCardId(null);
+      },
+    },
+    isPlayingPhase,
+  );
+
+  /* ──────────────────────── Early returns ──────────────────────── */
+
   if (!gs) {
     return <LoadingShell message="Esperando datos de la partida…" />;
   }
 
   // Defensive: gameState could arrive over the network mid-shape (corrupt JSON,
   // partial sync, etc.). Guard before rendering anything that touches players.
-  if (!Array.isArray(gs.players) || gs.players.length === 0) {
+  if (!hasPlayers) {
     return <LoadingShell message="Sincronizando jugadores…" />;
   }
 
   if (gs.winner && gs.phase === 'game_over') return <GameOverScreen />;
   if (showAssignment) return <RoleAssignmentScreen onContinue={() => setShowAssignment(false)} />;
 
-  // Resolve "me": online → match by session.myPlayerId; offline (hot-seat) → cur.
-  // If neither resolves (mismatched id from network), fall back to first player
-  // rather than blanking the screen.
-  const meById = session ? gs.players.find((p) => p.id === session.myPlayerId) ?? null : null;
-  const me = meById ?? cur ?? gs.players[0] ?? null;
   if (!me) {
     return <LoadingShell message="No encontramos tu jugador en la partida." />;
   }
 
-  const others = gs.players.filter((p) => p.id !== me.id);
-  const isMyTurn = session ? gs.players[gs.currentPlayerIndex]?.id === me.id : true;
+  /* ───────────────────── Render principal ───────────────────── */
 
+  const dispatch = (playerId: string, action: PlayerAction) =>
+    dispatchAction(playerId, action);
+
+  const others = players.filter((p) => p.id !== me.id);
   const selectedCard = me.hand.find((c) => c.id === selectedCardId) ?? null;
   const meBank = me.bank.reduce((sum, c) => sum + c.value, 0);
 
@@ -204,35 +255,12 @@ export default function GameScreen() {
     }
   };
 
-  const handleEndTurn = () => {
-    dispatch(me.id, { type: 'END_TURN' });
-  };
-
-  const canActivateExpansion =
-    me.expansionCharge >= 100 && !me.expansionUsed && gs.phase === 'playing' && isMyTurn;
-
   const handleActivateExpansion = (payload: ExpansionInput) => {
     setExpansionOpen(false);
     dispatch(me.id, { type: 'ACTIVATE_EXPANSION', payload });
   };
 
-  useKeyboardShortcuts(
-    {
-      t: () => isMyTurn && handleEndTurn(),
-      e: () => canActivateExpansion && setExpansionOpen(true),
-      h: () => navigate('/tutorial'),
-      l: () => setLogOpen((o) => !o),
-      escape: () => {
-        if (cinematicExpansion) setCinematicExpansion(null);
-        else if (expansionOpen) setExpansionOpen(false);
-        else if (logOpen) setLogOpen(false);
-        else if (selectedCardId) setSelectedCardId(null);
-      },
-    },
-    !showAssignment,
-  );
-
-  const currentPlayer = gs.players[gs.currentPlayerIndex];
+  const currentPlayer = players[gs.currentPlayerIndex];
   const currentPlayerNickname = currentPlayer?.nickname ?? '—';
 
   return (
@@ -287,7 +315,7 @@ export default function GameScreen() {
                 <OpponentPanel
                   key={o.id}
                   player={o}
-                  isCurrent={gs.players[gs.currentPlayerIndex]?.id === o.id}
+                  isCurrent={players[gs.currentPlayerIndex]?.id === o.id}
                 />
               ))}
             </div>
