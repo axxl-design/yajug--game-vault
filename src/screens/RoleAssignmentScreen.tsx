@@ -4,8 +4,15 @@ import { useGameStore } from '@/stores/gameStore';
 import { ROLE_DEFINITIONS } from '@/game/roles';
 import { EXPANSION_DEFINITIONS } from '@/game/expansions';
 import { Sparkles } from 'lucide-react';
-import type { RoleId } from '@/types/game';
+import type { Player, RoleId } from '@/types/game';
 import { getSession } from '@/multiplayer/sync';
+
+// Constante estable para fallback del selector. NO usar `[]` literal en el
+// selector — Zustand v5 compara con `Object.is` y `Object.is([], [])` es
+// false, lo cual dispara un re-render → selector corre de nuevo → loop
+// infinito (React error #310). Toda referencia debe ser estable entre
+// renders cuando el path opcional sea null/undefined.
+const EMPTY_PLAYERS: readonly Player[] = [];
 
 interface Props {
   onContinue: () => void;
@@ -38,7 +45,11 @@ function readIsHost(gameId: string | undefined): boolean {
 }
 
 export default function RoleAssignmentScreen({ onContinue }: Props) {
-  const players = useGameStore((s) => s.gameState?.players ?? []);
+  // OJO: NO usar `?? []` dentro del selector — eso devuelve un array nuevo
+  // en cada llamada y rompe la equality check de Zustand, causando un loop
+  // de re-render (React #310). Usamos `EMPTY_PLAYERS` (constante de módulo)
+  // como fallback estable.
+  const players = useGameStore((s) => s.gameState?.players ?? EMPTY_PLAYERS);
   const gameId = useGameStore((s) => s.gameState?.gameId);
   const hostId = useGameStore((s) => s.gameState?.hostId);
   const [revealed, setRevealed] = useState(false);
