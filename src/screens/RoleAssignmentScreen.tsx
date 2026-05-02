@@ -5,6 +5,7 @@ import { ROLE_DEFINITIONS } from '@/game/roles';
 import { EXPANSION_DEFINITIONS } from '@/game/expansions';
 import { Sparkles } from 'lucide-react';
 import type { RoleId } from '@/types/game';
+import { getSession } from '@/multiplayer/sync';
 
 interface Props {
   onContinue: () => void;
@@ -24,18 +25,53 @@ const ROLE_GLYPH: Record<RoleId, string> = {
   corredor:      '$',
   estafador:     '?',
   banquero:      '€',
-  coleccionista: '◈',
-  arquitecto:    '◰',
+  coleccionista: '◈', // ◈
+  arquitecto:    '◰', // ◰
 };
+
+// Misma lógica que LobbyScreen: el rol vive en sessionStorage. El host
+// es el ÚNICO que puede transicionar de RoleAssignment → GameScreen para
+// todos. Si un client clickeara, generaría un estado inconsistente.
+function readIsHost(gameId: string | undefined): boolean {
+  if (!gameId || typeof sessionStorage === 'undefined') return false;
+  return sessionStorage.getItem(`mp_role_${gameId}`) === 'host';
+}
 
 export default function RoleAssignmentScreen({ onContinue }: Props) {
   const players = useGameStore((s) => s.gameState?.players ?? []);
+  const gameId = useGameStore((s) => s.gameState?.gameId);
+  const hostId = useGameStore((s) => s.gameState?.hostId);
   const [revealed, setRevealed] = useState(false);
+  const isHost = readIsHost(gameId);
+  const hostNick =
+    players.find((p) => p.id === hostId)?.nickname ??
+    players[0]?.nickname ??
+    'el anfitrión';
 
   useEffect(() => {
     const t = setTimeout(() => setRevealed(true), 2000);
     return () => clearTimeout(t);
   }, []);
+
+  const handleStart = () => {
+    // Defensive guard — la UI ya esconde el botón a clients, pero por si
+    // acaso (keyboard, devtools), no dejamos que un cliente dispare el
+    // start.
+    if (!readIsHost(gameId)) {
+      // eslint-disable-next-line no-console
+      console.warn('[role-assignment] handleStart ignored — not host');
+      return;
+    }
+    // Avisar a todos los clients para que su showAssignment local pase
+    // a false. El host también dismissa via onContinue local.
+    const session = getSession();
+    if (session?.mode === 'host') {
+      // eslint-disable-next-line no-console
+      console.info('[role-assignment] emit start-game (host)');
+      session.socket.emit('start-game');
+    }
+    onContinue();
+  };
 
   return (
     <main
@@ -146,9 +182,28 @@ export default function RoleAssignmentScreen({ onContinue }: Props) {
       </div>
 
       {revealed && (
-        <Button size="lg" onClick={onContinue} variant="primary">
-          Empezar partida
-        </Button>
+        isHost ? (
+          <Button size="lg" onClick={handleStart} variant="primary">
+            Empezar partida
+          </Button>
+        ) : (
+          <div
+            className="ed-banner"
+            data-tone="info"
+            style={{
+              padding: '14px 20px',
+              maxWidth: 480,
+              width: '100%',
+              justifyContent: 'center',
+            }}
+            role="status"
+            aria-live="polite"
+          >
+            <span style={{ fontFamily: 'var(--font-mono)', letterSpacing: '0.10em' }}>
+              Esperando que <strong>{hostNick}</strong> inicie la partida…
+            </span>
+          </div>
+        )
       )}
     </main>
   );

@@ -92,6 +92,23 @@ export default function GameScreen() {
     }
   }, [gs?.log?.length]);
 
+  // Sincronización de la transición RoleAssignment → GameScreen.
+  // Cuando el host clickea "Empezar partida" en RoleAssignmentScreen, emite
+  // 'start-game' al socket. Los clients escuchan acá y dismissan su propio
+  // showAssignment para entrar a la GameScreen junto con el host.
+  useEffect(() => {
+    if (!session || session.mode !== 'client') return;
+    const onStart = () => {
+      // eslint-disable-next-line no-console
+      console.info('[gamescreen] received start-game → dismissing assignment');
+      setShowAssignment(false);
+    };
+    session.socket.on('start-game', onStart);
+    return () => {
+      session.socket.off('start-game', onStart);
+    };
+  }, [session]);
+
   if (!gs) {
     return <LoadingShell message="Esperando datos de la partida…" />;
   }
