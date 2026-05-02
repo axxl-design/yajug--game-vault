@@ -210,9 +210,21 @@ export default function LobbyScreen() {
         });
     }
 
+    // OJO: el cleanup de este useEffect NO cierra la session.
+    //
+    // Razón: cuando `gameState` pasa a no-null (host clickeó Empezar), este
+    // componente sigue montado en la ruta /game/:gameId — pero React puede
+    // re-ejecutar el efecto si las deps cambian (StrictMode dev, futuras
+    // refactorizaciones, etc.). Si cerráramos la session en el cleanup,
+    // bastaría con cualquier re-ejecución para matar el socket del host
+    // en pleno juego, lo cual generaría "host se desconectó" en los clients
+    // y pantalla vacía en el host.
+    //
+    // El socket se cierra ÚNICAMENTE en:
+    //   - handleExit (click "Salir" / "Cancelar partida").
+    //   - beforeunload listener global (cerrar pestaña).
     return () => {
       cancelled = true;
-      closeSession();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameId, needsNickname]);

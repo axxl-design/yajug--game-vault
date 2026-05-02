@@ -44,6 +44,21 @@ export type Session = HostSession | ClientSession;
 /* Singleton — una sesión por pestaña. */
 let currentSession: Session | null = null;
 
+/**
+ * Listener global que cierra el socket cuando se cierra la pestaña /
+ * navegador. Se registra una vez al primer abrir-session y se queda hasta
+ * que el contexto JS muere. Dentro del SPA, el socket sobrevive a
+ * navegaciones internas y a re-renders — sólo muere acá o en handleExit.
+ */
+let beforeUnloadInstalled = false;
+function installBeforeUnloadGuard() {
+  if (beforeUnloadInstalled || typeof window === 'undefined') return;
+  beforeUnloadInstalled = true;
+  window.addEventListener('beforeunload', () => {
+    currentSession?.close();
+  });
+}
+
 export function getSession(): Session | null {
   return currentSession;
 }
@@ -70,6 +85,27 @@ export async function startHostSession(opts: {
   localPlayerId: string;
   localNickname: string;
 }): Promise<HostSession> {
+  installBeforeUnloadGuard();
+  // Idempotencia: si ya hay una host session activa para este mismo
+  // playerId, la reusamos en lugar de abrir un socket nuevo. Esto previene
+  // que llamadas repetidas (StrictMode dev, race conditions, refactors)
+  // destruyan una conexión sana y causen "host se desconectó" en clients.
+  if (
+    currentSession &&
+    currentSession.mode === 'host' &&
+    currentSession.myPlayerId === opts.localPlayerId &&
+    currentSession.socket.connected
+  ) {
+    // eslint-disable-next-line no-console
+    console.info('[sync host] reusing existing host session', { playerId: opts.localPlayerId });
+    return currentSession;
+  }
+  // Si hay una session de un jugador distinto (rara), la cerramos antes.
+  if (currentSession && currentSession.myPlayerId !== opts.localPlayerId) {
+    // eslint-disable-next-line no-console
+    console.info('[sync host] closing stale session before opening new');
+    currentSession.close();
+  }
   // eslint-disable-next-line no-console
   console.info('[sync host] starting', opts);
   const socket = openSocket();
@@ -199,6 +235,24 @@ export async function startClientSession(opts: {
   localPlayerId: string;
   localNickname: string;
 }): Promise<ClientSession> {
+  installBeforeUnloadGuard();
+  // Idempotencia: si ya hay una client session activa para este mismo
+  // playerId, la reusamos. Mismo razonamiento que startHostSession.
+  if (
+    currentSession &&
+    currentSession.mode === 'client' &&
+    currentSession.myPlayerId === opts.localPlayerId &&
+    currentSession.socket.connected
+  ) {
+    // eslint-disable-next-line no-console
+    console.info('[sync client] reusing existing client session', { playerId: opts.localPlayerId });
+    return currentSession;
+  }
+  if (currentSession && currentSession.myPlayerId !== opts.localPlayerId) {
+    // eslint-disable-next-line no-console
+    console.info('[sync client] closing stale session before opening new');
+    currentSession.close();
+  }
   // eslint-disable-next-line no-console
   console.info('[sync client] starting', opts);
   const socket = openSocket();

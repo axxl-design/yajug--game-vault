@@ -4,9 +4,9 @@ import HomeScreen from './screens/HomeScreen';
 import { ToastProvider } from './components/ui';
 import { useApplyTheme } from './hooks/useApplyTheme';
 
-// Code-split: las pantallas de partida (incluyen PeerJS, framer-motion pesado)
-// se cargan bajo demanda. La HomeScreen sí queda en el chunk inicial para
-// que el time-to-first-paint sea rápido.
+// Code-split: las pantallas de partida (incluyen socket.io-client, framer-motion
+// pesado) se cargan bajo demanda. La HomeScreen sí queda en el chunk inicial
+// para que el time-to-first-paint sea rápido.
 const LobbyScreen = lazy(() => import('./screens/LobbyScreen'));
 const TutorialScreen = lazy(() => import('./screens/TutorialScreen'));
 const DevScreen = import.meta.env.DEV
