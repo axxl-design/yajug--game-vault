@@ -241,6 +241,36 @@ html{scroll-behavior:smooth}
 .ley-ep{display:flex;align-items:center;gap:10px;padding:10px 18px 10px 10px;border-radius:999px;background:var(--c);color:#F6EEDC;font:700 15px 'DM Sans'}
 .ley-ep b{font:800 12px 'Bricolage Grotesque';background:rgba(20,17,15,.35);padding:5px 9px;border-radius:999px}
 @media (max-width:700px){.ley-mini{flex-basis:104px}.ley-ep{font-size:13px}}
+.qart{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:#E0A33A !important;position:relative}
+.qart span{font:800 120px/1 'Bricolage Grotesque';color:#14110F}
+.qart i{font-style:normal;font:700 10px 'DM Sans';letter-spacing:.14em;text-transform:uppercase;color:#14110F;opacity:.7}
+.gshow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.gx{display:flex;flex-direction:column;border-radius:32px;overflow:hidden;background:var(--surface);border:1px solid var(--line);transition:transform .5s cubic-bezier(.2,.9,.3,1.3),box-shadow .4s}
+.gx:hover{transform:translateY(-10px);box-shadow:0 40px 70px -30px rgba(0,0,0,.6),0 0 0 2px var(--c)}
+.gx-art{position:relative;height:280px;background:var(--c);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.gx-logo{position:absolute;top:26px;left:50%;transform:translateX(-50%);width:72%;max-width:300px;filter:drop-shadow(0 6px 0 rgba(0,0,0,.25))}
+.gx-faces{position:absolute;bottom:-18px;display:flex}
+.gx-faces img,.gx-ley img{width:108px;height:108px;border-radius:50%;object-fit:cover;border:4px solid #14110F;margin:0 -12px;transition:transform .45s cubic-bezier(.2,.9,.3,1.4)}
+.gx:hover .gx-faces img:nth-child(odd),.gx:hover .gx-ley img:nth-child(odd){transform:translateY(-12px)}
+.gx-ley{display:flex;align-items:flex-end}
+.gx-ley img{width:132px;height:132px}
+.gx-ley img:nth-child(2){width:156px;height:156px;z-index:2}
+.gx-badge{position:absolute;top:18px;right:18px;padding:6px 12px;border-radius:999px;background:#E0A33A;color:#14110F;font:800 12px 'Bricolage Grotesque';letter-spacing:.06em;text-transform:uppercase}
+.gx-q{font:800 200px/1 'Bricolage Grotesque';color:#14110F;animation:qbob 4s ease-in-out infinite}
+@keyframes qbob{50%{transform:rotate(-8deg) translateY(-8px)}}
+.gx-chips{position:absolute;inset:0;pointer-events:none}
+.gx-chips span{position:absolute;padding:6px 12px;border-radius:999px;color:#F6EEDC;font:700 12px 'DM Sans';box-shadow:0 6px 0 rgba(0,0,0,.2);animation:float 6s ease-in-out infinite}
+.gx-chips span:nth-child(1){left:8%;top:16%}.gx-chips span:nth-child(2){right:8%;top:24%;animation-delay:-2s}.gx-chips span:nth-child(3){left:10%;bottom:20%;animation-delay:-4s}.gx-chips span:nth-child(4){right:10%;bottom:14%;animation-delay:-1s}.gx-chips span:nth-child(5){left:40%;top:6%;animation-delay:-3s}
+.gx-body{display:flex;flex-direction:column;align-items:flex-start;gap:14px;padding:28px 28px 30px;flex:1}
+.gx-t{margin:0;font-size:clamp(34px,3.2vw,48px);line-height:1}
+.gx-p{margin:0;font-size:16px;line-height:1.6;flex:1}
+.gx-tags{display:flex;flex-wrap:wrap;gap:8px}
+.gx-tags span{padding:6px 12px;border-radius:999px;border:1px solid var(--line2);font:700 13px 'DM Sans'}
+.perks{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;width:100%;max-width:1000px;margin-top:44px;text-align:left}
+.perks div{padding:16px 18px;border-radius:18px;background:rgba(20,17,15,.22);font-size:14px;line-height:1.5}
+.perks b{display:block;font:800 17px 'Bricolage Grotesque';margin-bottom:4px}
+@media (max-width:1000px){.gshow{grid-template-columns:1fr}.gx-art{height:240px}.perks{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.perks{grid-template-columns:1fr}}
 @media (max-width:700px){
  .hero{min-height:960px !important;padding-top:130px !important}
  .heroh{font-size:10.6vw !important;letter-spacing:-.045em;margin-top:36px !important}
@@ -290,8 +320,8 @@ html{scroll-behavior:smooth}
 <a class="logo-link" href="#inicio" aria-label="YAJUGÁ Games Vault, inicio"><img src="/assets/iso.png" alt="" style="height: 36px; width: auto; display: block"></a>
 <div class="nav-links">
 <a class="nav-a" href="#juegos">Juegos</a>
-<a class="nav-a" href="#dominio">Dominio</a>
-<a class="nav-a" href="#roles">Roles</a>
+<a class="nav-a" href="#salas">Con amigos</a>
+<a class="nav-a" href="#roles">Dominio</a>
 <a class="nav-a" href="#leyendas">Leyendas</a>
 <a class="nav-a" href="#pronto">Próximamente</a>
 </div>
@@ -327,9 +357,9 @@ html{scroll-behavior:smooth}
 </div>
 
 <div style="position: relative; z-index: 4; max-width: 1280px; margin: 0 auto; text-align: center; display: flex; flex-direction: column; align-items: center">
-<a class="heroin" href="Jugar.dc.html" style="display: inline-flex; align-items: center; gap: 12px; min-height: 44px; padding: 6px 18px 6px 6px; border-radius: 999px; background: rgba(239,230,210,.06); border: 1px solid rgba(239,230,210,.16); font-size: 14px; color: var(--text); text-decoration: none">
-<span class="eyebrow" style="padding: 6px 12px; border-radius: 999px; background: #C13B1F; font-size: 11px">Nuevo</span>
-YAJUGÁ Dominio ya se puede jugar →
+<a class="heroin" href="#juegos" style="display: inline-flex; align-items: center; gap: 12px; min-height: 44px; padding: 6px 18px 6px 6px; border-radius: 999px; background: rgba(239,230,210,.06); border: 1px solid rgba(239,230,210,.16); font-size: 14px; color: var(--text); text-decoration: none">
+<span class="eyebrow" style="padding: 6px 12px; border-radius: 999px; background: #C13B1F; font-size: 11px">3 juegos</span>
+Dominio, Leyendas y ¿Quién soy? →
 </a>
 <h1 class="hd heroh" style="margin: 44px 0 0; font-size: clamp(28px, 7.2vw, 132px); line-height: 1.04">
 <span class="oneline heroin2">La mesa está lista.</span>
@@ -337,117 +367,75 @@ YAJUGÁ Dominio ya se puede jugar →
 </h1>
 <p class="heroin3 herop" style="margin: 36px 0 0; max-width: 540px; font-size: 19px; line-height: 1.7; color: var(--muted)">YAJUGÁ es una bóveda de juegos de mesa online. Creá una sala, invitá a tus amigos y jugá en tiempo real desde el navegador.</p>
 <div class="heroin3" style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; margin-top: 44px">
-<a class="btn btn-rust" href="Jugar.dc.html">Probar Dominio <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
-<a class="btn btn-ghost" href="#juegos">Ver los juegos</a>
+<a class="btn btn-rust" href="#juegos">Elegí tu juego <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+<a class="btn btn-ghost" href="#salas">Cómo jugar con amigos</a>
 </div>
 </div>
 
 <div class="fan par">
 <div class="fanin">
-<div class="fan-c" style="transform: translateX(-440px) translateY(40px) rotate(-17deg)"><div class="float" style="animation-delay: -1s"><div class="gc" style="--c: #6B7340; --fg: #EFE6D2"><div class="gc-in"><div class="gc-head"><span>04</span><img src="/assets/iso.png" alt=""></div><div class="gc-art"><img src="/assets/corredor.webp" alt="El Corredor"></div><div class="gc-name">El Corredor</div><div class="gc-foot"><span class="k">DOMINIO</span><span class="v">Remate Total</span></div></div></div></div></div>
-<div class="fan-c" style="transform: translateX(-224px) translateY(-2px) rotate(-8deg)"><div class="float" style="animation-delay: -2.5s"><div class="gc" style="--c: #C99022; --fg: #14110F"><div class="gc-in"><div class="gc-head"><span>01</span><img src="/assets/iso.png" alt=""></div><div class="gc-art"><img src="/assets/banquero.webp" alt="El Banquero"></div><div class="gc-name">El Banquero</div><div class="gc-foot"><span class="k">DOMINIO</span><span class="v">Bóveda Central</span></div></div></div></div></div>
-<div class="fan-c" style="transform: translateX(224px) translateY(-2px) rotate(8deg)"><div class="float" style="animation-delay: -3.5s"><div class="gc" style="--c: #C13B1F; --fg: #EFE6D2"><div class="gc-in"><div class="gc-head"><span>03</span><img src="/assets/iso.png" alt=""></div><div class="gc-art"><img src="/assets/abogado.webp" alt="El Abogado"></div><div class="gc-name">El Abogado</div><div class="gc-foot"><span class="k">DOMINIO</span><span class="v">Tribunal Supremo</span></div></div></div></div></div>
-<div class="fan-c" style="transform: translateX(440px) translateY(40px) rotate(17deg)"><div class="float" style="animation-delay: -.5s"><div class="gc" style="--c: #C8748A; --fg: #14110F"><div class="gc-in"><div class="gc-head"><span>05</span><img src="/assets/iso.png" alt=""></div><div class="gc-art"><img src="/assets/coleccionista.webp" alt="El Coleccionista"></div><div class="gc-name">El Coleccionista</div><div class="gc-foot"><span class="k">DOMINIO</span><span class="v">Galería Eterna</span></div></div></div></div></div>
-<div class="fan-c" style="transform: translateY(-46px) scale(1.12); z-index: 4"><div class="float"><div class="gc" style="--c: #2E3D6E; --fg: #EFE6D2"><div class="gc-in"><div class="gc-head"><span>02</span><img src="/assets/iso.png" alt=""></div><div class="gc-art"><img src="/assets/estafador.webp" alt="El Estafador"></div><div class="gc-name">El Estafador</div><div class="gc-foot"><span class="k">DOMINIO</span><span class="v">Casino de las Sombras</span></div></div></div></div></div>
+<div class="fan-c" style="transform: translateX(-440px) translateY(40px) rotate(-17deg)"><div class="float" style="animation-delay: -1s"><div class="gc" style="--c: #C13B1F; --fg: #EFE6D2"><div class="gc-in"><div class="gc-head"><span>LEYENDAS</span><img src="/assets/iso.png" alt=""></div><div class="gc-art"><img src="/assets/ley/napoleon.webp" alt="Napoleón"></div><div class="gc-name">Napoleón</div><div class="gc-foot"><span class="k">LEYENDAS</span><span class="v">Sol de Austerlitz</span></div></div></div></div></div>
+<div class="fan-c" style="transform: translateX(-224px) translateY(-2px) rotate(-8deg)"><div class="float" style="animation-delay: -2s"><div class="gc" style="--c: #C99022; --fg: #14110F"><div class="gc-in"><div class="gc-head"><span>DOMINIO</span><img src="/assets/iso.png" alt=""></div><div class="gc-art"><img src="/assets/banquero.webp" alt="El Banquero"></div><div class="gc-name">El Banquero</div><div class="gc-foot"><span class="k">DOMINIO</span><span class="v">Bóveda Central</span></div></div></div></div></div>
+<div class="fan-c" style="transform: translateX(224px) translateY(-2px) rotate(8deg)"><div class="float" style="animation-delay: -3s"><div class="gc" style="--c: #2E3D6E; --fg: #EFE6D2"><div class="gc-in"><div class="gc-head"><span>LEYENDAS</span><img src="/assets/iso.png" alt=""></div><div class="gc-art"><img src="/assets/ley/tesla.webp" alt="Nikola Tesla"></div><div class="gc-name">Nikola Tesla</div><div class="gc-foot"><span class="k">LEYENDAS</span><span class="v">Tormenta Eléctrica</span></div></div></div></div></div>
+<div class="fan-c" style="transform: translateX(440px) translateY(40px) rotate(17deg)"><div class="float" style="animation-delay: -0s"><div class="gc" style="--c: #2E3D6E; --fg: #EFE6D2"><div class="gc-in"><div class="gc-head"><span>DOMINIO</span><img src="/assets/iso.png" alt=""></div><div class="gc-art"><img src="/assets/estafador.webp" alt="El Estafador"></div><div class="gc-name">El Estafador</div><div class="gc-foot"><span class="k">DOMINIO</span><span class="v">Casino de las Sombras</span></div></div></div></div></div>
+<div class="fan-c" style="transform: translateY(-46px) scale(1.12); z-index: 4"><div class="float"><div class="gc" style="--c: #E0A33A; --fg: #14110F"><div class="gc-in"><div class="gc-head"><span>JUEGO 03</span><img src="/assets/iso.png" alt=""></div><div class="gc-art qart"><span>?</span><i>Historia</i><i>Deportes</i><i>Cultura pop</i></div><div class="gc-name">¿Quién soy?</div><div class="gc-foot"><span class="k">ADIVINANZAS</span><span class="v">6 categorías</span></div></div></div></div></div>
 </div>
 </div>
 
 <svg class="ribbon ribB par" viewBox="0 0 1400 320" preserveAspectRatio="none" style="top: 840px; height: 320px; z-index: 5" aria-hidden="true">
 <defs><path id="ribB" d="M-120,60 C240,240 560,280 860,170 S1240,40 1540,210"></path></defs>
 <use href="#ribB" stroke="#C99022" stroke-width="50" fill="none"></use>
-<text font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="23" fill="#14110F" letter-spacing="1" dy="8" textLength="4800" lengthAdjust="spacing"><textPath href="#ribB" startOffset="0">ROLES · DOMINIOS · CARTAS · TABLERO · ROLES · DOMINIOS · CARTAS · TABLERO · ROLES · DOMINIOS · CARTAS · TABLERO · ROLES · DOMINIOS · CARTAS · TABLERO · ROLES · DOMINIOS · CARTAS · TABLERO · ROLES · DOMINIOS · CARTAS · TABLERO · ROLES · DOMINIOS · CARTAS · TABLERO · ROLES · DOMINIOS · CARTAS · TABLERO · <animate attributeName="startOffset" from="-1200" to="0" dur="28s" repeatCount="indefinite"></animate></textPath></text>
+<text font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="23" fill="#14110F" letter-spacing="1" dy="8" textLength="4800" lengthAdjust="spacing"><textPath href="#ribB" startOffset="0">DOMINIO · LEYENDAS · ¿QUIÉN SOY? · CON AMIGOS · DOMINIO · LEYENDAS · ¿QUIÉN SOY? · CON AMIGOS · DOMINIO · LEYENDAS · ¿QUIÉN SOY? · CON AMIGOS · DOMINIO · LEYENDAS · ¿QUIÉN SOY? · CON AMIGOS · DOMINIO · LEYENDAS · ¿QUIÉN SOY? · CON AMIGOS · DOMINIO · LEYENDAS · ¿QUIÉN SOY? · CON AMIGOS · DOMINIO · LEYENDAS · ¿QUIÉN SOY? · CON AMIGOS · DOMINIO · LEYENDAS · ¿QUIÉN SOY? · CON AMIGOS · <animate attributeName="startOffset" from="-1200" to="0" dur="28s" repeatCount="indefinite"></animate></textPath></text>
 </svg>
 </section>
 
 <!-- MARQUEE -->
 <div aria-hidden="true" style="position: relative; z-index: 6; overflow: hidden; background: #EFE6D2; color: #14110F; transform: rotate(-1.2deg); margin-top: -20px">
 <div class="mq" style="padding: 22px 0">
-<div class="mq-item hd" style="font-size: 30px"><span>Tablero isométrico</span><img src="/assets/fav.png" alt="" style="height: 26px"><span>Activá tu dominio</span><img src="/assets/fav.png" alt="" style="height: 26px"><span class="serif" style="font-size: 36px; font-weight: 400">comprá, cobrá, defendé</span><img src="/assets/fav.png" alt="" style="height: 26px"><span>Tiempo Extra</span><img src="/assets/fav.png" alt="" style="height: 26px"></div>
-<div class="mq-item hd" style="font-size: 30px"><span>Tablero isométrico</span><img src="/assets/fav.png" alt="" style="height: 26px"><span>Activá tu dominio</span><img src="/assets/fav.png" alt="" style="height: 26px"><span class="serif" style="font-size: 36px; font-weight: 400">comprá, cobrá, defendé</span><img src="/assets/fav.png" alt="" style="height: 26px"><span>Tiempo Extra</span><img src="/assets/fav.png" alt="" style="height: 26px"></div>
+<div class="mq-item hd" style="font-size: 30px"><span>Dominio</span><img src="/assets/fav.png" alt="" style="height: 26px"><span>Leyendas</span><img src="/assets/fav.png" alt="" style="height: 26px"><span class="serif" style="font-size: 36px; font-weight: 400">jugá con amigos</span><img src="/assets/fav.png" alt="" style="height: 26px"><span>¿Quién soy?</span><img src="/assets/fav.png" alt="" style="height: 26px"></div>
+<div class="mq-item hd" style="font-size: 30px"><span>Dominio</span><img src="/assets/fav.png" alt="" style="height: 26px"><span>Leyendas</span><img src="/assets/fav.png" alt="" style="height: 26px"><span class="serif" style="font-size: 36px; font-weight: 400">jugá con amigos</span><img src="/assets/fav.png" alt="" style="height: 26px"><span>¿Quién soy?</span><img src="/assets/fav.png" alt="" style="height: 26px"></div>
 </div>
 </div>
 
 <!-- FEATURED -->
 <section id="juegos" class="sec" style="position: relative; overflow: hidden">
-<div class="bigword slide hide-sm" aria-hidden="true" style="top: 60px; font-size: 300px">DOMINIO DOMINIO DOMINIO</div>
+<div class="bigword slide hide-sm" aria-hidden="true" style="top: 60px; font-size: 300px">JUEGOS JUEGOS JUEGOS</div>
 <div class="wrap" style="position: relative">
 <div class="sec-head">
 <div class="rv">
-<div class="eyebrow" style="color: var(--accent)">Juego destacado · 01</div>
-<h2 class="hd h2">En la bóveda <span class="serif" style="color: var(--accent)">ahora</span></h2>
+<div class="eyebrow" style="color: var(--accent)">La bóveda · 3 juegos</div>
+<h2 class="hd h2">Elegí tu <span class="serif" style="color: var(--accent)">mesa</span></h2>
 </div>
-<p class="lead muted rv">El clásico juego de comprar propiedades y cobrar alquiler, ahora con roles, dominios y defensa en tiempo real.</p>
+<p class="lead muted rv">Tres juegos distintos, una misma forma de jugar: creá una sala, mandá el link y empiecen. Solos contra la compu o con amigos.</p>
 </div>
-<div class="featbox" style="display: flex; flex-wrap: wrap; gap: 56px 72px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 36px; padding: clamp(36px, 5.5vw, 80px)">
-<div class="rv-l featcol" style="flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column">
-<img src="/assets/dominio.png" alt="YAJUGÁ Dominio" style="width: 100%; max-width: 440px; height: auto">
-<p class="muted" style="margin: 40px 0 0; font-size: 18px; line-height: 1.75; max-width: 46ch">Tirá el dado, recorré el tablero y levantá tu imperio. Comprá ciudades, empresas y temáticas, robá cartas de acción, armá tu mano en el Mercado y cobrale a quien caiga en tus casillas.</p>
-<div class="tagrow" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 32px">
-<span class="tag" style="background: #C99022; color: #14110F">Ciudades</span>
-<span class="tag" style="background: #2A6E70">Empresas</span>
-<span class="tag" style="background: #C8748A; color: #14110F">Temáticas</span>
-<span class="tag" style="border: 1px solid var(--line2)">Cartas de acción</span>
-</div>
-<div class="featbtns" style="display: flex; gap: 14px; flex-wrap: wrap; margin-top: 48px">
-<a class="btn btn-rust" href="Jugar.dc.html">Probar la demo <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
-<a class="btn btn-ghost" href="#dominio">¿Qué es el dominio?</a>
-</div>
-</div>
-<div class="rv-r" style="flex: 1 1 480px; min-width: 0; position: relative">
-<div class="iso" role="img" aria-label="Tablero isométrico de YAJUGÁ Dominio con edificios, un dado lanzándose y fichas avanzando">
-<div class="board">
-<div class="tl cor"></div>
-<div class="tl" style="--c: #C13B1F"><i></i><div class="fig"><svg viewBox="0 0 30 36"><rect x="2" y="12" width="11" height="24" fill="#C13B1F" stroke="#14110F" stroke-width="2"></rect><rect x="14" y="3" width="13" height="33" fill="#C13B1F" stroke="#14110F" stroke-width="2"></rect><rect x="18" y="8" width="5" height="3" fill="#EFE6D2"></rect><rect x="18" y="16" width="5" height="3" fill="#EFE6D2"></rect></svg></div></div>
-<div class="tl" style="--c: #C13B1F"><i></i></div>
-<div class="tl act"></div>
-<div class="tl" style="--c: #14110F"><i></i><div class="fig"><svg viewBox="0 0 30 36"><path d="M2 36V18l7 5v-5l7 5v-5l7 5V4h5v32z" fill="#14110F" stroke="#EFE6D2" stroke-width="2" stroke-linejoin="round"></path></svg></div></div>
-<div class="tl" style="--c: #C99022"><i></i></div>
-<div class="tl cor"></div>
-<div class="bc"><img src="/assets/titulo.png" alt=""></div>
-<div class="tl" style="--c: #C8748A"><i></i><div class="fig"><svg viewBox="0 0 30 36"><path d="M9 36V10l6-9 6 9v26z" fill="#C8748A" stroke="#14110F" stroke-width="2"></path></svg></div></div>
-<div class="tl" style="--c: #C99022"><i></i><div class="fig"><svg viewBox="0 0 30 36"><rect x="2" y="12" width="11" height="24" fill="#C99022" stroke="#14110F" stroke-width="2"></rect><rect x="14" y="3" width="13" height="33" fill="#C99022" stroke="#14110F" stroke-width="2"></rect></svg></div></div>
-<div class="tl" style="--c: #C8748A"><i></i></div>
-<div class="tl" style="--c: #C99022"><i></i></div>
-<div class="tl act"></div>
-<div class="tl" style="--c: #2A6E70"><i></i><div class="fig"><svg viewBox="0 0 30 36"><circle cx="15" cy="14" r="11" fill="#EFE6D2" stroke="#2A6E70" stroke-width="3"></circle><path d="M15 3v22M4 14h22" stroke="#14110F" stroke-width="1.5"></path><path d="M15 14L7 36M15 14l8 22" stroke="#14110F" stroke-width="2.5"></path></svg></div></div>
-<div class="tl" style="--c: #6B7340"><i></i></div>
-<div class="tl act"></div>
-<div class="tl" style="--c: #6B7340"><i></i><div class="fig"><svg viewBox="0 0 30 36"><path d="M2 36V24a13 13 0 0 1 26 0v12z" fill="#6B7340" stroke="#14110F" stroke-width="2"></path><path d="M15 11V2l7 3-7 3" fill="#EFE6D2"></path></svg></div></div>
-<div class="tl" style="--c: #2A6E70"><i></i></div>
-<div class="tl cor"></div>
-<div class="tl" style="--c: #2E3D6E"><i></i></div>
-<div class="tl" style="--c: #14110F"><i></i></div>
-<div class="tl" style="--c: #2E3D6E"><i></i><div class="fig"><svg viewBox="0 0 30 36"><path d="M9 36V10l6-9 6 9v26z" fill="#2E3D6E" stroke="#14110F" stroke-width="2"></path></svg></div></div>
-<div class="tl" style="--c: #2E3D6E"><i></i></div>
-<div class="tl" style="--c: #2A6E70"><i></i></div>
-<div class="tl cor"></div>
-<div class="tok tokA"><b style="background: #C13B1F"></b></div>
-<div class="tok tokB"><b style="background: #2A6E70"></b></div>
-</div>
-<div class="dice">
-<div class="dshadow" style="left: -30px"></div>
-<div class="die die1"><div class="fc f1"></div><div class="fc f2"></div><div class="fc f3"></div><div class="fc f4"></div><div class="fc f5"></div><div class="fc f6"></div></div>
-</div>
-<div class="mini hide-sm" aria-hidden="true" style="left: 0; bottom: 30px; background: #F6EEDC; color: #14110F; animation-delay: -2s; border: 1.5px solid #14110F">
-<img src="/assets/pl/p02.webp" alt="" style="display: block; width: 100%; height: 96px; object-fit: cover">
-<div style="background: #2A6E70; color: #EFE6D2; padding: 7px 12px; font-size: 10px" class="eyebrow">Puerto Viejo</div>
-<div style="padding: 10px 12px 12px"><div class="hd" style="font-size: 17px">Faro Esmeralda</div><div style="font-size: 12px; margin-top: 8px; display: flex; justify-content: space-between"><span>Alquiler</span><strong>$1M</strong></div><div style="font-size: 12px; margin-top: 4px; display: flex; justify-content: space-between"><span>Barrio completo</span><strong>$2M</strong></div><div style="font-size: 12px; margin-top: 4px; display: flex; justify-content: space-between"><span>Hotel</span><strong>$14M</strong></div></div>
-</div>
-<div class="mini hide-sm" aria-hidden="true" style="right: 0; top: 10px; background: #2E3D6E; color: #F6EEDC; animation-delay: -5s; border: 1.5px solid #14110F">
-<div style="padding: 8px 12px; font-size: 10px; display: flex; justify-content: space-between" class="eyebrow"><span>Acción</span><span>$3M</span></div>
-<div style="padding: 6px 12px 14px; text-align: center"><div class="hd" style="font-size: 34px; line-height: 1">↶</div><div class="hd" style="font-size: 18px; margin-top: 6px">Trato Sucio</div><div style="font-size: 12px; margin-top: 6px; line-height: 1.4; opacity: .85">Te quedás con el mejor lugar suelto de un rival.</div></div>
-</div>
-</div>
-</div>
+<div class="gshow">
+<article class="gx rv-l" style="--c: #C13B1F">
+<div class="gx-art"><img class="gx-logo" src="/assets/dominio.png" alt="YAJUGÁ Dominio"><div class="gx-faces"><img src="/assets/banquero.webp" alt=""><img src="/assets/estafador.webp" alt=""><img src="/assets/abogado.webp" alt=""><img src="/assets/arquitecto.webp" alt=""></div></div>
+<div class="gx-body"><div class="eyebrow" style="color: var(--accent)">Juego 01 · Tablero</div><h3 class="hd gx-t">Dominio</h3><p class="muted gx-p">Comprá lugares de una ciudad, cobrá alquiler, jugá cartas de trato y activá el dominio de tu rol.</p>
+<div class="gx-tags"><span>6 roles</span><span>2–4 jugadores</span><span>30–45 min</span></div>
+<a class="btn btn-rust" href="Jugar.dc.html">Jugar Dominio</a></div>
+</article>
+<article class="gx rv" style="--c: #2E3D6E">
+<div class="gx-art" style="background: #141B33"><div class="gx-ley"><img src="/assets/ley/alejandro.webp" alt=""><img src="/assets/ley/newton.webp" alt=""><img src="/assets/ley/ramses.webp" alt=""></div><div class="gx-badge">Nuevo</div></div>
+<div class="gx-body"><div class="eyebrow" style="color: var(--accent)">Juego 02 · Tablero histórico</div><h3 class="hd gx-t">Leyendas</h3><p class="muted gx-p">Once figuras de la historia, seis épocas y dieciocho maravillas. Cada leyenda tiene su propio dominio.</p>
+<div class="gx-tags"><span>11 leyendas</span><span>2–4 jugadores</span><span>30–45 min</span></div>
+<a class="btn btn-rust" href="Leyendas.dc.html">Jugar Leyendas</a></div>
+</article>
+<article class="gx rv-r" style="--c: #E0A33A">
+<div class="gx-art" style="background: #E0A33A"><div class="gx-q">?</div><div class="gx-chips"><span style="background: #C13B1F">Historia</span><span style="background: #6B7340">Naturaleza</span><span style="background: #C8748A; color: #14110F">Cultura pop</span><span style="background: #2A6E70">Deportes</span><span style="background: #2E3D6E">Ciencia</span></div></div>
+<div class="gx-body"><div class="eyebrow" style="color: var(--accent)">Juego 03 · Adivinanzas</div><h3 class="hd gx-t">¿Quién soy?</h3><p class="muted gx-p">Pistas de la más difícil a la más fácil. Adiviná antes que nadie personajes, animales y lugares.</p>
+<div class="gx-tags"><span>6 categorías</span><span>1–8 jugadores</span><span>5 min</span></div>
+<a class="btn btn-rust" href="Adivina.dc.html">Jugar ¿Quién soy?</a></div>
+</article>
 </div>
 </div>
 </section>
 
 <!-- DOMAIN REVEAL -->
-<section id="dominio" class="domsec">
+<section id="salas" class="domsec">
 <div class="dom-sticky">
 <div class="dom-pre" style="position: absolute; text-align: center; padding: 24px">
-<div class="eyebrow" style="color: var(--accent)">La mecánica que cambia todo</div>
+<div class="eyebrow" style="color: var(--accent)">Así se juega en YAJUGÁ</div>
 <div class="hd" style="font-size: clamp(36px, 5vw, 72px); margin-top: 20px">Seguí bajando…</div>
 </div>
 <div class="dom-fill">
@@ -455,21 +443,27 @@ YAJUGÁ Dominio ya se puede jugar →
 <div class="dom-rings"></div>
 </div>
 <div class="dom-copy" style="position: relative; max-width: 1100px; padding: 24px clamp(20px, 3vw, 40px); text-align: center; color: #EFE6D2; display: flex; flex-direction: column; align-items: center">
-<div class="eyebrow">Nueva mecánica · Dominio</div>
-<h2 class="hd bigh" style="margin: 24px 0 0; font-size: clamp(30px, 8vw, 150px); line-height: 1.04"><span class="oneline">Activá tu</span><span class="oneline serif" style="color: #14110F; font-size: 1.08em">dominio.</span></h2>
-<p style="margin: 36px 0 0; max-width: 620px; font-size: 19px; line-height: 1.7; font-weight: 500">Cada rol tiene un dominio: una zona de poder que se carga mientras jugás. Cuando la barra se llena, lo activás y encerrás a todos los rivales dentro de tus reglas.</p>
+<div class="eyebrow">Salas con amigos · en todos los juegos</div>
+<h2 class="hd bigh" style="margin: 24px 0 0; font-size: clamp(30px, 8vw, 150px); line-height: 1.04"><span class="oneline">Armá tu</span><span class="oneline serif" style="color: #14110F; font-size: 1.08em">mesa.</span></h2>
+<p style="margin: 36px 0 0; max-width: 620px; font-size: 19px; line-height: 1.7; font-weight: 500">Sin descargas ni cuentas. Elegís un juego, creás una sala y en segundos están todos jugando, cada uno desde su celular.</p>
 <div style="width: 100%; max-width: 560px; margin-top: 44px">
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; min-height: 38px; position: relative">
-<span class="eyebrow">Carga</span>
+<span class="eyebrow">Tu sala</span>
 <div style="position: relative; height: 38px; flex: 1; display: flex; justify-content: flex-end">
-<span class="cpop" style="position: absolute; right: 0">Cobrás alquiler · +25</span>
-<span class="cpop" style="position: absolute; right: 0; animation-delay: 1.2s">Pagás alquiler · +20</span>
-<span class="cpop" style="position: absolute; right: 0; animation-delay: 2.4s">Comprás · +15</span>
-<span class="cpop" style="position: absolute; right: 0; animation-delay: 3.4s">Pasás por Salida · +10</span>
-<span class="fullmsg eyebrow" style="position: absolute; right: 0; top: 10px; color: #EFE6D2">¡Dominio listo!</span>
+<span class="cpop" style="position: absolute; right: 0">1 · Creás la sala</span>
+<span class="cpop" style="position: absolute; right: 0; animation-delay: 1.2s">2 · Mandás el link</span>
+<span class="cpop" style="position: absolute; right: 0; animation-delay: 2.4s">3 · Eligen sus personajes</span>
+<span class="cpop" style="position: absolute; right: 0; animation-delay: 3.4s">4 · ¡Empiezan!</span>
+<span class="fullmsg eyebrow" style="position: absolute; right: 0; top: 10px; color: #EFE6D2">¡Mesa llena!</span>
 </div>
 </div>
 <div class="meterbig"><i></i></div>
+</div>
+<div class="perks">
+<div><b>2 a 4 por sala</b>Si faltan jugadores, se suma la compu.</div>
+<div><b>Salí y volvé</b>La partida con amigos sigue guardada aunque cierres.</div>
+<div><b>Desde el navegador</b>En el celular o en la compu, sin instalar nada.</div>
+<div><b>Partidas rápidas</b>¿Quién soy? se juega en 5 minutos.</div>
 </div>
 </div>
 </div>
@@ -480,7 +474,7 @@ YAJUGÁ Dominio ya se puede jugar →
 <div class="wrap">
 <div class="sec-head">
 <div class="rv">
-<div class="eyebrow" style="color: var(--accent)">Y además</div>
+<div class="eyebrow" style="color: var(--accent)">Dominio y Leyendas por dentro</div>
 <h2 class="hd h2">Más reglas, <span class="serif" style="color: var(--accent)">más traiciones</span></h2>
 </div>
 </div>
@@ -693,17 +687,17 @@ YAJUGÁ Dominio ya se puede jugar →
 <div class="lock lift rv-l" style="position: relative; overflow: hidden; background: #2E3D6E; border: 1px solid var(--line); border-radius: 28px; padding: 44px; min-height: 380px; display: flex; flex-direction: column; justify-content: space-between">
 <svg class="slowspin" aria-hidden="true" width="260" height="260" viewBox="0 0 100 100" style="position: absolute; right: -70px; top: -70px; opacity: .14"><circle cx="50" cy="50" r="44" fill="none" stroke="#EFE6D2" stroke-width="4"></circle><circle cx="50" cy="50" r="20" fill="none" stroke="#EFE6D2" stroke-width="4"></circle><path d="M50 6v24M50 70v24M6 50h24M70 50h24" stroke="#EFE6D2" stroke-width="4"></path></svg>
 <div class="shake" style="width: 56px; height: 56px; border-radius: 16px; background: #EFE6D2; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#14110F" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg></div>
-<div><div class="eyebrow" style="opacity: .8">Juego 02 · Ya disponible</div><h3 class="hd" style="margin: 14px 0 0; font-size: 40px">YAJUGÁ Leyendas</h3><p style="margin: 14px 0 0; font-size: 16px; line-height: 1.6; opacity: .8">Once figuras de la historia, seis épocas y un dominio para cada leyenda.</p><a class="btn" href="Leyendas.dc.html" style="margin-top: 22px; background: #EFE6D2; color: #14110F; min-height: 48px">Jugar ahora</a></div>
+<div><div class="eyebrow" style="opacity: .8">Juego 04 · En diseño</div><h3 class="hd" style="margin: 14px 0 0; font-size: 40px">Reinos</h3><p style="margin: 14px 0 0; font-size: 16px; line-height: 1.6; opacity: .8">Estrategia 1 contra 1: elegí una leyenda, defendé tu reino y tomá el castillo rival.</p></div>
 </div>
 <div class="lock lift rv" style="position: relative; overflow: hidden; background: #2A6E70; border: 1px solid var(--line); border-radius: 28px; padding: 44px; min-height: 380px; display: flex; flex-direction: column; justify-content: space-between">
 <svg class="slowspin" aria-hidden="true" width="260" height="260" viewBox="0 0 100 100" style="position: absolute; right: -70px; top: -70px; opacity: .14"><circle cx="50" cy="50" r="44" fill="none" stroke="#EFE6D2" stroke-width="4"></circle><circle cx="50" cy="50" r="20" fill="none" stroke="#EFE6D2" stroke-width="4"></circle><path d="M50 6v24M50 70v24M6 50h24M70 50h24" stroke="#EFE6D2" stroke-width="4"></path></svg>
 <div class="shake" style="width: 56px; height: 56px; border-radius: 16px; background: #EFE6D2; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#14110F" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg></div>
-<div><div class="eyebrow" style="opacity: .8">Juego 03 · Ya disponible</div><h3 class="hd" style="margin: 14px 0 0; font-size: 40px">¿Quién soy?</h3><p style="margin: 14px 0 0; font-size: 16px; line-height: 1.6; opacity: .8">Adiviná personajes, animales y lugares con la menor cantidad de pistas.</p><a class="btn" href="Adivina.dc.html" style="margin-top: 22px; background: #EFE6D2; color: #14110F; min-height: 48px">Jugar ahora</a></div>
+<div><div class="eyebrow" style="opacity: .8">Juego 05 · En diseño</div><h3 class="hd" style="margin: 14px 0 0; font-size: 40px">Duelo de Leyendas</h3><p style="margin: 14px 0 0; font-size: 16px; line-height: 1.6; opacity: .8">Cartas cara a cara: elegí una stat, ganá la ronda y usá la habilidad de tu leyenda.</p></div>
 </div>
 <div class="lock lift rv-r" style="position: relative; overflow: hidden; background: #6B7340; border: 1px solid var(--line); border-radius: 28px; padding: 44px; min-height: 380px; display: flex; flex-direction: column; justify-content: space-between">
 <svg class="slowspin" aria-hidden="true" width="260" height="260" viewBox="0 0 100 100" style="position: absolute; right: -70px; top: -70px; opacity: .14"><circle cx="50" cy="50" r="44" fill="none" stroke="#EFE6D2" stroke-width="4"></circle><circle cx="50" cy="50" r="20" fill="none" stroke="#EFE6D2" stroke-width="4"></circle><path d="M50 6v24M50 70v24M6 50h24M70 50h24" stroke="#EFE6D2" stroke-width="4"></path></svg>
 <div class="shake" style="width: 56px; height: 56px; border-radius: 16px; background: #EFE6D2; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#14110F" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg></div>
-<div><div class="eyebrow" style="opacity: .8">Juego 04</div><h3 class="hd" style="margin: 14px 0 0; font-size: 40px">[Nombre del juego]</h3><p style="margin: 14px 0 0; font-size: 16px; line-height: 1.6; opacity: .8">[Una línea sobre el juego]</p></div>
+<div><div class="eyebrow" style="opacity: .8">Juego 06 · Tu idea</div><h3 class="hd" style="margin: 14px 0 0; font-size: 40px">¿Qué jugamos?</h3><p style="margin: 14px 0 0; font-size: 16px; line-height: 1.6; opacity: .8">La bóveda crece con lo que pide la comunidad. Escribinos qué juego querés ver acá.</p></div>
 </div>
 </div>
 </div>
@@ -720,7 +714,7 @@ YAJUGÁ Dominio ya se puede jugar →
 <div style="position: relative; display: flex; flex-direction: column; align-items: center">
 <h2 class="hd bigh" style="margin: 0; font-size: clamp(30px, 8.4vw, 140px); line-height: 1.08"><span class="oneline">¿Listo?</span><span class="oneline serif" style="font-size: 1.06em">YAJUGÁ.</span></h2>
 <p style="margin: 36px 0 0; max-width: 480px; font-size: 19px; line-height: 1.7">Armá tu primera partida de YAJUGÁ Dominio y probá cada rol contra la computadora.</p>
-<a class="btn btn-ink" href="Jugar.dc.html" style="margin-top: 44px; min-height: 60px; padding: 0 38px; font-size: 18px">Jugar la demo <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+<a class="btn btn-ink" href="#juegos" style="margin-top: 44px; min-height: 60px; padding: 0 38px; font-size: 18px">Elegir un juego <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
 </div>
 </section>
 
