@@ -1,15 +1,711 @@
 <!doctype html>
-<html lang="es" data-theme="dark">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#EFE6D2" />
-    <meta name="description" content="YAJUGÁ: DOMINIO — Cada calle tiene dueño. Cada dueño tiene precio." />
-    <title>YAJUGÁ: DOMINIO</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>YAJUGÁ Games Vault — Juegos de mesa online</title>
+<meta name="description" content="YAJUGÁ Games Vault: juegos de mesa online. Jugá YAJUGÁ Dominio con tus amigos.">
+<meta name="theme-color" content="#14110F">
+<link rel="icon" href="/assets/fav.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&amp;family=Instrument+Serif:ital@0;1&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#14110F}
+.yj{--bg:#14110F;--bg2:#0E0B0A;--surface:#1E1915;--surface2:#2B231D;--text:#EFE6D2;--text2:#D8CCB6;--muted:#B5A994;--line:rgba(239,230,210,.14);--line2:rgba(239,230,210,.3);--grid:rgba(239,230,210,.035);--stroke:rgba(239,230,210,.08);--nav:rgba(30,25,21,.72);--accent:#E0A33A;transition:background .5s,color .5s}
+.yj.light{--bg:#EFE6D2;--bg2:#E5D6B9;--surface:#F8F0E0;--surface2:#FFF9EE;--text:#14110F;--text2:#3A322B;--muted:#5E5348;--line:rgba(20,17,15,.14);--line2:rgba(20,17,15,.32);--grid:rgba(20,17,15,.05);--stroke:rgba(20,17,15,.09);--nav:rgba(248,240,224,.8);--accent:#B33A1E}
+a{color:#E0A33A}a:hover{color:#F2C46B}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+.yj{font-family:'DM Sans',system-ui,sans-serif;color:var(--text);background:var(--bg);overflow-x:clip}
+.hd{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;letter-spacing:-.03em;line-height:1.04}
+.serif{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400;letter-spacing:-.02em}
+.eyebrow{font-weight:700;font-size:13px;letter-spacing:.18em;text-transform:uppercase}
+.muted{color:var(--muted)}
+.wrap{max-width:1320px;margin:0 auto}
+.sec{padding:clamp(112px,13vw,190px) clamp(20px,3vw,40px)}
+.sec-head{display:flex;justify-content:space-between;align-items:flex-end;gap:32px 64px;flex-wrap:wrap;margin-bottom:clamp(56px,6vw,96px)}
+.h2{margin:24px 0 0;font-size:clamp(46px,6vw,96px);line-height:1.06}
+.lead{margin:0;max-width:420px;font-size:18px;line-height:1.7}
+.lift{transition:transform .5s cubic-bezier(.2,.9,.3,1.25),border-color .4s,box-shadow .5s}
+.lift:hover{transform:translateY(-8px);border-color:var(--line2);box-shadow:0 40px 60px -40px rgba(0,0,0,.9)}
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:56px;padding:0 32px;border-radius:999px;font-weight:700;font-size:16px;text-decoration:none;border:1.5px solid transparent;transition:transform .3s cubic-bezier(.2,.9,.3,1.4),box-shadow .3s,background .25s,color .25s,border-color .25s}
+.btn-rust{background:#C13B1F;color:#EFE6D2;box-shadow:0 2px 0 #7A2412,0 20px 40px -20px rgba(193,59,31,.8)}
+.btn-rust:hover{color:#EFE6D2;transform:translateY(-3px);box-shadow:0 6px 0 #7A2412,0 30px 50px -20px rgba(193,59,31,.9)}
+.btn-ghost{color:var(--text);border-color:var(--line2)}
+.btn-ghost:hover{color:var(--bg);background:var(--text);border-color:var(--text);transform:translateY(-3px)}
+.btn-ink{background:#14110F;color:#EFE6D2;box-shadow:0 2px 0 rgba(20,17,15,.4)}
+.btn-ink:hover{color:#EFE6D2;transform:translateY(-3px);box-shadow:0 6px 0 rgba(20,17,15,.4)}
+.btn svg{transition:transform .25s}.btn:hover svg{transform:translateX(4px)}
+/* header */
+.navbar{display:flex;align-items:center;justify-content:space-between;gap:24px;max-width:1320px;margin:0 auto;padding:8px 8px 8px 14px;background:var(--nav);backdrop-filter:blur(18px) saturate(1.3);-webkit-backdrop-filter:blur(18px) saturate(1.3);border:1px solid var(--line);border-radius:999px;box-shadow:0 20px 50px -24px rgba(0,0,0,.5);animation:navin .9s cubic-bezier(.2,.9,.3,1.2) both}
+@keyframes navin{from{opacity:0;transform:translateY(-30px) scale(.96)}}
+.nav-links{display:flex;align-items:center;gap:2px}
+.nav-a{position:relative;isolation:isolate;display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border-radius:999px;color:var(--text);text-decoration:none;font-weight:500;font-size:15px;transition:color .25s}
+.nav-a::before{content:'';position:absolute;inset:4px 2px;border-radius:999px;background:var(--text);transform:scale(.6);opacity:0;transition:transform .35s cubic-bezier(.2,.9,.3,1.3),opacity .25s;z-index:-1}
+.nav-a:hover{color:var(--bg)}.nav-a:hover::before{transform:scale(1);opacity:1}
+.icon-btn{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:50%;border:1px solid var(--line2);background:transparent;color:var(--text);cursor:pointer;transition:background .25s,transform .35s cubic-bezier(.2,.9,.3,1.4)}
+.icon-btn:hover{background:#C99022;color:#14110F;transform:rotate(-12deg) scale(1.06)}
+.theme-btn svg{animation:tspin .6s cubic-bezier(.2,.9,.3,1.3)}
+@keyframes tspin{from{transform:rotate(-120deg) scale(.4);opacity:0}}
+.logo-link{display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:50%;transition:transform .45s cubic-bezier(.2,.9,.3,1.4),background .3s}
+.logo-link:hover{transform:rotate(-10deg) scale(1.08);background:var(--stroke)}
+/* GAME CARD */
+.gc{position:relative;width:100%;aspect-ratio:5/7;border-radius:18px;background:#0E0B0A;padding:7px;box-shadow:0 0 0 1px rgba(239,230,210,.18),0 30px 50px -24px rgba(0,0,0,.9);overflow:hidden;transition:transform .55s cubic-bezier(.2,.9,.3,1.25),box-shadow .55s}
+.gc::after{content:'';position:absolute;inset:-60%;background:linear-gradient(115deg,transparent 44%,rgba(255,236,200,.28) 50%,transparent 56%);transform:translateX(-70%);pointer-events:none;animation:foil 7s ease-in-out infinite}
+@keyframes foil{0%,70%{transform:translateX(-70%)}100%{transform:translateX(70%)}}
+.gc-in{position:relative;height:100%;border:1.5px solid var(--c);border-radius:12px;display:flex;flex-direction:column;overflow:hidden;background:#1A1512}
+.gc-in::before,.gc-in::after{content:'';position:absolute;width:10px;height:10px;background:var(--c);transform:rotate(45deg);z-index:2}
+.gc-in::before{left:-5px;top:-5px}.gc-in::after{right:-5px;bottom:-5px}
+.gc-head{display:flex;align-items:center;justify-content:space-between;padding:7px 12px 6px;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:13px;letter-spacing:.04em;color:#EFE6D2}
+.gc-head img{height:16px;display:block}
+.gc-art{position:relative;flex:1;margin:0 7px;border-radius:8px;overflow:hidden;background:var(--c)}
+.gc-art img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.2,.8,.2,1)}
+.gc-name{margin:-16px 14px 0;position:relative;z-index:2;padding:7px 10px;border-radius:8px;background:var(--c);color:var(--fg);text-align:center;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:17px;letter-spacing:-.02em;box-shadow:0 6px 14px rgba(0,0,0,.45)}
+.gc-foot{padding:8px 12px 10px;text-align:center;color:#EFE6D2}
+.gc-foot .k{display:block;font-size:9px;font-weight:700;letter-spacing:.2em;opacity:.65}
+.gc-foot .v{display:block;font-family:'Instrument Serif',serif;font-style:italic;font-size:16px;line-height:1.1;margin-top:2px}
+.gc:hover .gc-art img{transform:scale(1.08)}
+/* hero */
+.fan{position:absolute;left:50%;bottom:-120px;width:0;height:0;z-index:3}
+.fan-c{position:absolute;width:210px;left:-105px;bottom:0;transform-origin:50% 130%}
+.fan-c .float{animation:float 6s ease-in-out infinite}
+.fan-c:hover{z-index:9}
+.fan-c .gc{cursor:pointer}
+.fan-c:hover .gc{transform:translateY(-70px) scale(1.06);box-shadow:0 0 0 2px var(--c),0 40px 60px -20px rgba(0,0,0,.95)}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+@keyframes floatR{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-18px) rotate(4deg)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.chip{position:absolute;animation:floatR 7s ease-in-out infinite}
+.heroin{animation:heroin 1.2s cubic-bezier(.2,.9,.3,1.1) both}
+.heroin2{animation:heroin 1.2s .15s cubic-bezier(.2,.9,.3,1.1) both}
+.heroin3{animation:heroin 1.2s .3s cubic-bezier(.2,.9,.3,1.1) both}
+@keyframes heroin{from{opacity:0;transform:translateY(50px);filter:blur(8px)}}
+.fanin{animation:fanin 1.5s .4s cubic-bezier(.2,.9,.3,1.15) both}
+@keyframes fanin{from{opacity:0;transform:translateY(220px)}}
+.ribbon{position:absolute;left:0;width:100%;pointer-events:none}
+.oneline{display:block;white-space:nowrap}
+.oneline+.oneline{margin-top:.12em}
+/* marquee */
+.mq{display:flex;width:max-content;animation:mq 34s linear infinite}
+.mq-rev{animation-direction:reverse}
+@keyframes mq{to{transform:translateX(-50%)}}
+.mq-item{display:flex;align-items:center;gap:40px;padding-right:40px;white-space:nowrap}
+/* board */
+.iso{position:relative;width:100%;height:560px;perspective:1800px}
+.board{position:absolute;left:50%;top:50%;width:420px;height:420px;margin:-210px 0 0 -210px;transform:rotateX(58deg) rotateZ(45deg);transform-style:preserve-3d;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));grid-template-rows:repeat(7,minmax(0,1fr));gap:4px;padding:8px;background:#0B0908;border-radius:18px}
+.board::before{content:'';position:absolute;inset:0;border-radius:18px;background:#7A2412;transform:translateZ(-22px)}
+.board::after{content:'';position:absolute;inset:-50px;border-radius:60px;background:rgba(193,59,31,.28);filter:blur(40px);transform:translateZ(-70px)}
+.tl{position:relative;background:#EFE6D2;border-radius:4px;transform-style:preserve-3d}
+.tl i{position:absolute;left:0;right:0;top:0;height:28%;background:var(--c);border-radius:4px 4px 0 0}
+.tl.cor{background:#C99022}.tl.cor i{display:none}
+.tl.act{background:#2B231D}.tl.act i{display:none}
+.fig{position:absolute;left:calc(50% - 12px);top:calc(50% - 30px);width:24px;height:30px;transform-origin:50% 100%;transform:rotateZ(-45deg) rotateX(-90deg)}
+.fig svg{display:block;width:24px;height:30px;overflow:visible}
+.bc{grid-column:2/7;grid-row:2/7;border-radius:8px;background:#C13B1F;display:flex;align-items:center;justify-content:center;background-image:repeating-linear-gradient(45deg,rgba(20,17,15,.08) 0 10px,transparent 10px 20px)}
+.bc img{width:76%;transform:rotate(-45deg)}
+.tok{position:absolute;width:40px;height:40px;transform-style:preserve-3d}
+.tok b{position:absolute;left:9px;bottom:6px;width:20px;height:30px;border:2px solid #14110F;border-radius:10px 10px 4px 4px;transform-origin:50% 100%;transform:rotateZ(-45deg) rotateX(-90deg)}
+.tokA{left:12px;top:12px;animation:tokA 5s ease-in-out infinite alternate}
+.tokB{left:12px;top:356px;animation:tokB 6s ease-in-out infinite alternate}
+@keyframes tokA{0%,12%{transform:translate3d(0,0,0)}20%{transform:translate3d(29px,0,40px)}28%{transform:translate3d(58px,0,0)}36%{transform:translate3d(87px,0,40px)}44%{transform:translate3d(116px,0,0)}52%{transform:translate3d(145px,0,40px)}60%,100%{transform:translate3d(174px,0,0)}}
+@keyframes tokB{0%,15%{transform:translate3d(0,0,0)}25%{transform:translate3d(0,-29px,40px)}35%{transform:translate3d(0,-58px,0)}45%{transform:translate3d(0,-87px,40px)}55%,100%{transform:translate3d(0,-116px,0)}}
+.dice{position:absolute;left:50%;top:34%;width:0;height:0;perspective:900px}
+.die{position:absolute;width:56px;height:56px;transform-style:preserve-3d}
+.die1{left:-74px;animation:roll1 5s cubic-bezier(.3,.7,.4,1) infinite}
+.die2{left:16px;animation:roll2 5s cubic-bezier(.3,.7,.4,1) infinite}
+.fc{position:absolute;inset:0;background-color:#EFE6D2;border:2px solid #14110F;border-radius:12px;background-repeat:no-repeat}
+.f1{transform:translateZ(28px);background-image:radial-gradient(circle at 50% 50%,#C13B1F 6px,transparent 7px)}
+.f6{transform:rotateY(180deg) translateZ(28px);background-image:radial-gradient(circle at 28% 25%,#14110F 5px,transparent 6px),radial-gradient(circle at 72% 25%,#14110F 5px,transparent 6px),radial-gradient(circle at 28% 50%,#14110F 5px,transparent 6px),radial-gradient(circle at 72% 50%,#14110F 5px,transparent 6px),radial-gradient(circle at 28% 75%,#14110F 5px,transparent 6px),radial-gradient(circle at 72% 75%,#14110F 5px,transparent 6px)}
+.f3{transform:rotateY(90deg) translateZ(28px);background-image:radial-gradient(circle at 26% 26%,#14110F 5px,transparent 6px),radial-gradient(circle at 50% 50%,#14110F 5px,transparent 6px),radial-gradient(circle at 74% 74%,#14110F 5px,transparent 6px)}
+.f4{transform:rotateY(-90deg) translateZ(28px);background-image:radial-gradient(circle at 28% 28%,#14110F 5px,transparent 6px),radial-gradient(circle at 72% 28%,#14110F 5px,transparent 6px),radial-gradient(circle at 28% 72%,#14110F 5px,transparent 6px),radial-gradient(circle at 72% 72%,#14110F 5px,transparent 6px)}
+.f2{transform:rotateX(90deg) translateZ(28px);background-image:radial-gradient(circle at 28% 28%,#14110F 5px,transparent 6px),radial-gradient(circle at 72% 72%,#14110F 5px,transparent 6px)}
+.f5{transform:rotateX(-90deg) translateZ(28px);background-image:radial-gradient(circle at 28% 28%,#14110F 5px,transparent 6px),radial-gradient(circle at 72% 28%,#14110F 5px,transparent 6px),radial-gradient(circle at 50% 50%,#14110F 5px,transparent 6px),radial-gradient(circle at 28% 72%,#14110F 5px,transparent 6px),radial-gradient(circle at 72% 72%,#14110F 5px,transparent 6px)}
+@keyframes roll1{0%{transform:translate(-220px,-260px) rotateX(0) rotateY(0) rotateZ(0);opacity:0}6%{opacity:1}34%{transform:translate(0,40px) rotateX(560deg) rotateY(330deg) rotateZ(40deg)}44%{transform:translate(8px,-6px) rotateX(680deg) rotateY(350deg) rotateZ(10deg)}54%,90%{transform:translate(12px,40px) rotateX(720deg) rotateY(360deg) rotateZ(0)}100%{transform:translate(12px,40px) rotateX(720deg) rotateY(360deg) rotateZ(0);opacity:0}}
+@keyframes roll2{0%{transform:translate(-160px,-300px) rotateX(0) rotateY(0);opacity:0}8%{opacity:1}36%{transform:translate(10px,50px) rotateX(520deg) rotateY(400deg) rotateZ(-30deg)}46%{transform:translate(18px,0) rotateX(700deg) rotateY(430deg)}56%,90%{transform:translate(22px,46px) rotateX(720deg) rotateY(450deg) rotateZ(0)}100%{transform:translate(22px,46px) rotateX(720deg) rotateY(450deg);opacity:0}}
+.dshadow{position:absolute;top:96px;width:60px;height:14px;border-radius:50%;background:rgba(0,0,0,.5);filter:blur(4px);animation:dsh 5s ease-in-out infinite}
+@keyframes dsh{0%,6%{opacity:0;transform:scale(.3)}34%,90%{opacity:1;transform:scale(1)}100%{opacity:0}}
+.mini{position:absolute;width:150px;border-radius:14px;overflow:hidden;box-shadow:0 30px 50px -20px rgba(0,0,0,.9);animation:floatR 8s ease-in-out infinite}
+/* domain reveal */
+.domsec{position:relative;height:1700px;view-timeline-name:--domv}
+.dom-sticky{position:sticky;top:0;height:900px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.dom-fill{position:absolute;inset:0;background:#C13B1F}
+.dom-rays{position:absolute;left:50%;top:50%;width:2600px;height:2600px;margin:-1300px 0 0 -1300px;background:repeating-conic-gradient(rgba(20,17,15,.12) 0 5deg,transparent 5deg 15deg);animation:spin 70s linear infinite}
+.dom-rings{position:absolute;left:50%;top:50%;width:2600px;height:2600px;margin:-1300px 0 0 -1300px;border-radius:50%;background:repeating-radial-gradient(circle,rgba(20,17,15,.2) 0 2px,transparent 2px 70px);animation:spin 50s linear infinite reverse}
+.meterbig{height:22px;border-radius:99px;background:rgba(20,17,15,.35);overflow:hidden;border:1.5px solid #14110F}
+.meterbig i{display:block;height:100%;width:100%;background:#EFE6D2;transform-origin:left;animation:mfill 6s cubic-bezier(.6,0,.3,1) infinite}
+@keyframes mfill{0%{transform:scaleX(0)}20%{transform:scaleX(.25)}40%{transform:scaleX(.45)}60%{transform:scaleX(.6)}80%,90%{transform:scaleX(1)}100%{transform:scaleX(0)}}
+.cpop{display:inline-flex;align-items:center;min-height:38px;padding:0 16px;border-radius:999px;background:#14110F;color:#EFE6D2;font-weight:700;font-size:14px;animation:cpop 6s ease-in-out infinite;opacity:0}
+@keyframes cpop{0%{opacity:0;transform:translateY(16px)}6%,16%{opacity:1;transform:none}24%,100%{opacity:0;transform:translateY(-16px)}}
+.fullmsg{animation:fullm 6s steps(1) infinite}
+@keyframes fullm{0%,79%{opacity:0}80%,96%{opacity:1}97%,100%{opacity:0}}
+/* mechanics */
+.mech{background:var(--surface);border:1px solid var(--line);border-radius:28px;padding:40px;display:flex;flex-direction:column}
+.mech-vis{position:relative;height:170px;border-radius:20px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.mech h3{margin:12px 0 0;font-size:30px}
+.mech p{margin:16px 0 0;font-size:16px;line-height:1.7;color:var(--muted)}
+@property --t{syntax:'<integer>';inherits:false;initial-value:10}
+.tcount{counter-reset:t var(--t);animation:tdown 10s linear infinite}
+.tcount::after{content:counter(t)}
+@keyframes tdown{from{--t:10}to{--t:0}}
+.tring{stroke-dasharray:176;animation:tring 10s linear infinite}
+@keyframes tring{from{stroke-dashoffset:0}to{stroke-dashoffset:176}}
+.opt{display:inline-flex;align-items:center;min-height:30px;padding:0 12px;border-radius:999px;border:1.5px solid #14110F;background:#EFE6D2;color:#14110F;font-weight:700;font-size:12px;animation:optpick 6s ease-in-out infinite}
+@keyframes optpick{0%,100%{background:#EFE6D2;color:#14110F}10%,25%{background:#14110F;color:#EFE6D2}}
+.mk{width:54px;height:76px;border-radius:8px;border:1.5px solid #14110F;animation:mkt 4.5s ease-in-out infinite}
+@keyframes mkt{0%,100%{transform:translateY(0) rotate(0)}15%{transform:translateY(-22px) rotate(-6deg)}30%{transform:translateY(0) rotate(0)}}
+.cflip{width:70px;height:98px;perspective:600px}
+.cflip-in{position:relative;width:100%;height:100%;transform-style:preserve-3d;animation:cfl 4s cubic-bezier(.6,0,.3,1) infinite}
+@keyframes cfl{0%,30%{transform:rotateY(0)}50%,80%{transform:rotateY(180deg)}100%{transform:rotateY(360deg)}}
+.cface{position:absolute;inset:0;border-radius:8px;border:1.5px solid #14110F;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;align-items:center;justify-content:center}
+.orbit{position:absolute;width:116px;height:116px;border-radius:50%;border:2px dashed rgba(20,17,15,.45);animation:spin 3s linear infinite}
+.orbit::after{content:'';position:absolute;top:-10px;left:50%;margin-left:-9px;width:18px;height:18px;border-radius:50%;background:#C13B1F;border:2px solid #14110F}
+.blink{animation:blink 1.2s steps(1) infinite}
+@keyframes blink{50%{opacity:.25}}
+/* roles */
+.thumb{display:flex;flex-direction:column;align-items:center;gap:10px;padding:10px;border-radius:20px;border:1px solid var(--line);background:var(--surface);color:var(--text);font:inherit;cursor:pointer;transition:transform .4s cubic-bezier(.2,.9,.3,1.3),border-color .3s,background .3s}
+.thumb img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:12px;filter:grayscale(.7) brightness(.7);transition:filter .4s}
+.thumb:hover{transform:translateY(-6px)}
+.thumb:hover img,.thumb.on img{filter:none}
+.thumb.on{border-color:var(--text);background:var(--surface2);transform:translateY(-6px)}
+.rings{position:absolute;left:50%;top:50%;width:600px;height:600px;margin:-300px 0 0 -300px;pointer-events:none}
+.stat{height:10px;border-radius:99px;background:var(--line);overflow:hidden}
+.stat i{display:block;height:100%;border-radius:99px;transition:width .8s cubic-bezier(.2,.9,.3,1.2)}
+.swapA{animation:swapA .7s cubic-bezier(.2,.9,.3,1.15)}
+.swapB{animation:swapB .7s cubic-bezier(.2,.9,.3,1.15)}
+@keyframes swapA{from{opacity:0;transform:translateY(30px)}}
+@keyframes swapB{from{opacity:0;transform:translateY(30px)}}
+.cardA{animation:cardA .8s cubic-bezier(.2,.9,.3,1.2)}
+.cardB{animation:cardB .8s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes cardA{from{opacity:0;transform:rotateY(-70deg) scale(.85)}}
+@keyframes cardB{from{opacity:0;transform:rotateY(70deg) scale(.85)}}
+.arrow{display:inline-flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:50%;border:1px solid var(--line2);background:transparent;color:var(--text);cursor:pointer;transition:background .25s,color .25s,transform .3s}
+.arrow:hover{background:var(--text);color:var(--bg);transform:scale(1.06)}
+.bigword{position:absolute;left:0;white-space:nowrap;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;letter-spacing:-.05em;color:transparent;-webkit-text-stroke:1px var(--stroke);pointer-events:none;line-height:.8}
+.lock:hover .shake{animation:shake .5s ease-in-out 2}
+@keyframes shake{0%,100%{transform:rotate(0)}25%{transform:rotate(-12deg)}75%{transform:rotate(12deg)}}
+.slowspin{animation:spin 18s linear infinite}
+.ico svg *{transform-box:fill-box;transform-origin:center}
+.wheel{animation:wheel 4s cubic-bezier(.6,0,.3,1) infinite}
+@keyframes wheel{0%{transform:rotate(0)}40%{transform:rotate(200deg)}55%{transform:rotate(170deg)}100%{transform:rotate(360deg)}}
+.plane{animation:plane 3.2s cubic-bezier(.5,0,.3,1) infinite}
+@keyframes plane{0%{transform:translate(-30px,30px);opacity:0}15%{opacity:1}60%{transform:translate(18px,-18px) rotate(-8deg);opacity:1}80%,100%{transform:translate(60px,-60px) rotate(-12deg);opacity:0}}
+.trail{stroke-dasharray:6 8;animation:dash 1s linear infinite}
+@keyframes dash{to{stroke-dashoffset:-28}}
+.flip{animation:flip 3s cubic-bezier(.6,0,.3,1) infinite}
+@keyframes flip{0%,30%{transform:scaleX(1)}45%{transform:scaleX(0)}60%,100%{transform:scaleX(1)}}
+.flipface{animation:face 3s steps(1) infinite}
+@keyframes face{0%,44%{opacity:0}45%,100%{opacity:1}}
+.tag{display:inline-flex;align-items:center;min-height:38px;padding:0 18px;border-radius:999px;font-weight:700;font-size:14px}
+@supports (animation-timeline: view()){
+ .rv{animation:rv linear both;animation-timeline:view();animation-range:entry 0% cover 28%}
+ .rv-l{animation:rvl linear both;animation-timeline:view();animation-range:entry 0% cover 32%}
+ .rv-r{animation:rvr linear both;animation-timeline:view();animation-range:entry 0% cover 32%}
+ .par{animation:par linear both;animation-timeline:scroll(nearest);animation-range:0 1000px}
+ .par-slow{animation:pars linear both;animation-timeline:scroll(nearest);animation-range:0 1000px}
+ .slide{animation:slide linear both;animation-timeline:view();animation-range:cover 0% cover 100%}
+ .slide-r{animation:slider linear both;animation-timeline:view();animation-range:cover 0% cover 100%}
+ .dom-fill{animation:domc linear both;animation-timeline:--domv;animation-range:contain 0% contain 45%}
+ .dom-copy{animation:domt linear both;animation-timeline:--domv;animation-range:contain 20% contain 50%}
+ .dom-pre{animation:domp linear both;animation-timeline:--domv;animation-range:contain 0% contain 25%}
+}
+@keyframes rv{from{opacity:0;transform:translateY(80px)}to{opacity:1;transform:none}}
+@keyframes rvl{from{opacity:0;transform:translateX(-100px) rotate(-3deg)}to{opacity:1;transform:none}}
+@keyframes rvr{from{opacity:0;transform:translateX(100px) rotate(3deg)}to{opacity:1;transform:none}}
+@keyframes par{to{transform:translateY(-110px)}}
+@keyframes pars{to{transform:translateY(90px)}}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(-30%)}}
+@keyframes slider{from{transform:translateX(-30%)}to{transform:translateX(0)}}
+@keyframes domc{from{clip-path:circle(5% at 50% 50%)}to{clip-path:circle(80% at 50% 50%)}}
+@keyframes domt{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:none}}
+@keyframes domp{from{opacity:1}to{opacity:0}}
+@media (max-width:900px){
+ .nav-links,.hide-sm{display:none !important}
+ .fan-c{width:130px;left:-65px}
+ .fan{bottom:-80px}
+ .iso{height:420px;transform:scale(.72)}
+}
+@media (max-width:700px){
+ .hero{min-height:1080px !important;padding-top:150px !important}
+ .heroh{font-size:10.6vw !important;letter-spacing:-.045em;margin-top:36px !important}
+ .herop{font-size:16px !important;line-height:1.6 !important;margin-top:22px !important;max-width:340px !important}
+ .ribbon{animation:none !important;width:1400px;left:50%;margin-left:-700px;transform-origin:50% 50%}
+ .ribA{top:650px !important;transform:scale(.62)}
+ .ribB{top:740px !important;transform:scale(.62)}
+ .fan{bottom:-90px}
+ .h2{font-size:12vw !important;line-height:1.02}
+ .bigh{font-size:13.5vw !important}
+ .lead{font-size:16px;max-width:none}
+ .sec-head{justify-content:center;text-align:center;align-items:center;flex-direction:column;gap:18px}
+ .featbox{padding:28px 20px !important;gap:36px !important;text-align:center}
+ .featcol{align-items:center}
+ .featcol p{font-size:16px !important;margin-top:24px !important}
+ .tagrow{display:none !important}
+ .featbtns{flex-direction:column;align-items:stretch;width:100%;margin-top:28px !important}
+ .featbtns .btn{justify-content:center}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none !important;transition:none !important}}
+</style>
+
+<style>html,body{margin:0;padding:0}</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/x-tpl" id="tpl">
+
+<div class="yj {{themeCls}}" style="min-height: 100vh">
+
+<!-- HEADER -->
+<header style="position: sticky; top: 0; z-index: 50; padding: 16px clamp(20px, 3vw, 40px) 0">
+<nav class="navbar" aria-label="Principal">
+<a class="logo-link" href="#inicio" aria-label="YAJUGÁ Games Vault, inicio"><img src="/assets/iso.png" alt="" style="height: 36px; width: auto; display: block"></a>
+<div class="nav-links">
+<a class="nav-a" href="#juegos">Juegos</a>
+<a class="nav-a" href="#dominio">Dominio</a>
+<a class="nav-a" href="#roles">Roles</a>
+<a class="nav-a" href="#pronto">Próximamente</a>
+</div>
+<div style="display: flex; align-items: center; gap: 10px">
+<button class="icon-btn theme-btn" type="button" onClick="{{toggleTheme}}" aria-label="{{themeLabel}}"><sc-if value="{{isDark}}" hint-placeholder-val="{{ true }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5"></circle><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"></path></svg></sc-if><sc-if value="{{isLight}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"></path></svg></sc-if></button>
+<button class="icon-btn hide-sm" type="button" aria-label="Buscar juegos"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg></button>
+<a class="btn btn-rust" href="Jugar.dc.html" style="min-height: 48px; padding: 0 24px; font-size: 15px">Jugar ahora</a>
+</div>
+</nav>
+</header>
+
+<!-- HERO -->
+<section id="inicio" class="hero" style="position: relative; overflow: hidden; min-height: 1160px; margin-top: -80px; padding: 200px clamp(16px, 3vw, 40px) 0; background-color: var(--bg); background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size: 72px 72px">
+<div aria-hidden="true" style="position: absolute; left: 50%; bottom: -380px; width: 1400px; height: 760px; margin-left: -700px; border-radius: 50%; background: #C13B1F; opacity: .22; filter: blur(120px)"></div>
+
+<svg class="ribbon ribA par-slow" viewBox="0 0 1400 320" preserveAspectRatio="none" style="top: 720px; height: 320px; z-index: 1" aria-hidden="true">
+<defs><path id="ribA" d="M-120,250 C200,70 460,60 720,170 S1160,300 1540,60"></path></defs>
+<use href="#ribA" stroke="#C13B1F" stroke-width="58" fill="none"></use>
+<text font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="26" fill="#EFE6D2" letter-spacing="1" dy="9" textLength="4800" lengthAdjust="spacing"><textPath href="#ribA" startOffset="0">YAJUGÁ · GAMES VAULT · TIRÁ LOS DADOS · YAJUGÁ · GAMES VAULT · TIRÁ LOS DADOS · YAJUGÁ · GAMES VAULT · TIRÁ LOS DADOS · YAJUGÁ · GAMES VAULT · TIRÁ LOS DADOS · YAJUGÁ · GAMES VAULT · TIRÁ LOS DADOS · YAJUGÁ · GAMES VAULT · TIRÁ LOS DADOS · YAJUGÁ · GAMES VAULT · TIRÁ LOS DADOS · YAJUGÁ · GAMES VAULT · TIRÁ LOS DADOS · <animate attributeName="startOffset" from="0" to="-1200" dur="24s" repeatCount="indefinite"></animate></textPath></text>
+</svg>
+
+<div class="chip hide-sm" aria-hidden="true" style="left: 8%; top: 250px; width: 64px; height: 64px; animation-delay: -2s">
+<svg viewBox="0 0 70 70" width="64" height="64"><rect x="6" y="6" width="58" height="58" rx="14" fill="#EFE6D2"></rect><circle cx="22" cy="22" r="5" fill="#14110F"></circle><circle cx="48" cy="48" r="5" fill="#14110F"></circle><circle cx="35" cy="35" r="5" fill="#C13B1F"></circle></svg>
+</div>
+<div class="chip hide-sm" aria-hidden="true" style="right: 9%; top: 230px; width: 58px; height: 58px; animation-duration: 8s">
+<svg viewBox="0 0 64 64" width="58" height="58"><circle cx="32" cy="32" r="28" fill="#C99022"></circle><circle cx="32" cy="32" r="18" fill="none" stroke="#14110F" stroke-width="2.5" stroke-dasharray="4 5"></circle><text x="32" y="40" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="22" fill="#14110F">Y</text></svg>
+</div>
+<div class="chip hide-sm" aria-hidden="true" style="right: 16%; top: 520px; width: 36px; height: 36px; animation-delay: -4s; animation-duration: 6s">
+<svg viewBox="0 0 46 46" width="36" height="36"><path d="M23 3 L28 18 L43 23 L28 28 L23 43 L18 28 L3 23 L18 18 Z" fill="#C8748A"></path></svg>
+</div>
+<div class="chip hide-sm" aria-hidden="true" style="left: 15%; top: 540px; width: 32px; height: 32px; animation-delay: -1s; animation-duration: 9s">
+<svg viewBox="0 0 40 40" width="32" height="32"><path d="M20 3 L37 20 L20 37 L3 20 Z" fill="#2A6E70"></path></svg>
+</div>
+
+<div style="position: relative; z-index: 4; max-width: 1280px; margin: 0 auto; text-align: center; display: flex; flex-direction: column; align-items: center">
+<a class="heroin" href="Jugar.dc.html" style="display: inline-flex; align-items: center; gap: 12px; min-height: 44px; padding: 6px 18px 6px 6px; border-radius: 999px; background: rgba(239,230,210,.06); border: 1px solid rgba(239,230,210,.16); font-size: 14px; color: var(--text); text-decoration: none">
+<span class="eyebrow" style="padding: 6px 12px; border-radius: 999px; background: #C13B1F; font-size: 11px">Nuevo</span>
+YAJUGÁ Dominio ya se puede jugar →
+</a>
+<h1 class="hd heroh" style="margin: 44px 0 0; font-size: clamp(28px, 7.2vw, 132px); line-height: 1.04">
+<span class="oneline heroin2">La mesa está lista.</span>
+<span class="oneline serif heroin3" style="color: var(--accent); font-size: 1.04em; line-height: 1.08">Solo faltás vos.</span>
+</h1>
+<p class="heroin3 herop" style="margin: 36px 0 0; max-width: 540px; font-size: 19px; line-height: 1.7; color: var(--muted)">YAJUGÁ es una bóveda de juegos de mesa online. Creá una sala, invitá a tus amigos y jugá en tiempo real desde el navegador.</p>
+<div class="heroin3" style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; margin-top: 44px">
+<a class="btn btn-rust" href="Jugar.dc.html">Probar Dominio <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+<a class="btn btn-ghost" href="#juegos">Ver los juegos</a>
+</div>
+</div>
+
+<div class="fan par">
+<div class="fanin">
+<div class="fan-c" style="transform: translateX(-440px) translateY(40px) rotate(-17deg)"><div class="float" style="animation-delay: -1s"><div class="gc" style="--c: #6B7340; --fg: #EFE6D2"><div class="gc-in"><div class="gc-head"><span>04</span><img src="/assets/iso.png" alt=""></div><div class="gc-art"><img src="/assets/corredor.webp" alt="El Corredor"></div><div class="gc-name">El Corredor</div><div class="gc-foot"><span class="k">DOMINIO</span><span class="v">Remate Total</span></div></div></div></div></div>
+<div class="fan-c" style="transform: translateX(-224px) translateY(-2px) rotate(-8deg)"><div class="float" style="animation-delay: -2.5s"><div class="gc" style="--c: #C99022; --fg: #14110F"><div class="gc-in"><div class="gc-head"><span>01</span><img src="/assets/iso.png" alt=""></div><div class="gc-art"><img src="/assets/banquero.webp" alt="El Banquero"></div><div class="gc-name">El Banquero</div><div class="gc-foot"><span class="k">DOMINIO</span><span class="v">Bóveda Central</span></div></div></div></div></div>
+<div class="fan-c" style="transform: translateX(224px) translateY(-2px) rotate(8deg)"><div class="float" style="animation-delay: -3.5s"><div class="gc" style="--c: #C13B1F; --fg: #EFE6D2"><div class="gc-in"><div class="gc-head"><span>03</span><img src="/assets/iso.png" alt=""></div><div class="gc-art"><img src="/assets/abogado.webp" alt="El Abogado"></div><div class="gc-name">El Abogado</div><div class="gc-foot"><span class="k">DOMINIO</span><span class="v">Tribunal Supremo</span></div></div></div></div></div>
+<div class="fan-c" style="transform: translateX(440px) translateY(40px) rotate(17deg)"><div class="float" style="animation-delay: -.5s"><div class="gc" style="--c: #C8748A; --fg: #14110F"><div class="gc-in"><div class="gc-head"><span>05</span><img src="/assets/iso.png" alt=""></div><div class="gc-art"><img src="/assets/coleccionista.webp" alt="El Coleccionista"></div><div class="gc-name">El Coleccionista</div><div class="gc-foot"><span class="k">DOMINIO</span><span class="v">Galería Eterna</span></div></div></div></div></div>
+<div class="fan-c" style="transform: translateY(-46px) scale(1.12); z-index: 4"><div class="float"><div class="gc" style="--c: #2E3D6E; --fg: #EFE6D2"><div class="gc-in"><div class="gc-head"><span>02</span><img src="/assets/iso.png" alt=""></div><div class="gc-art"><img src="/assets/estafador.webp" alt="El Estafador"></div><div class="gc-name">El Estafador</div><div class="gc-foot"><span class="k">DOMINIO</span><span class="v">Casino de las Sombras</span></div></div></div></div></div>
+</div>
+</div>
+
+<svg class="ribbon ribB par" viewBox="0 0 1400 320" preserveAspectRatio="none" style="top: 840px; height: 320px; z-index: 5" aria-hidden="true">
+<defs><path id="ribB" d="M-120,60 C240,240 560,280 860,170 S1240,40 1540,210"></path></defs>
+<use href="#ribB" stroke="#C99022" stroke-width="50" fill="none"></use>
+<text font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="23" fill="#14110F" letter-spacing="1" dy="8" textLength="4800" lengthAdjust="spacing"><textPath href="#ribB" startOffset="0">ROLES · DOMINIOS · CARTAS · TABLERO · ROLES · DOMINIOS · CARTAS · TABLERO · ROLES · DOMINIOS · CARTAS · TABLERO · ROLES · DOMINIOS · CARTAS · TABLERO · ROLES · DOMINIOS · CARTAS · TABLERO · ROLES · DOMINIOS · CARTAS · TABLERO · ROLES · DOMINIOS · CARTAS · TABLERO · ROLES · DOMINIOS · CARTAS · TABLERO · <animate attributeName="startOffset" from="-1200" to="0" dur="28s" repeatCount="indefinite"></animate></textPath></text>
+</svg>
+</section>
+
+<!-- MARQUEE -->
+<div aria-hidden="true" style="position: relative; z-index: 6; overflow: hidden; background: #EFE6D2; color: #14110F; transform: rotate(-1.2deg); margin-top: -20px">
+<div class="mq" style="padding: 22px 0">
+<div class="mq-item hd" style="font-size: 30px"><span>Tablero isométrico</span><img src="/assets/fav.png" alt="" style="height: 26px"><span>Activá tu dominio</span><img src="/assets/fav.png" alt="" style="height: 26px"><span class="serif" style="font-size: 36px; font-weight: 400">comprá, cobrá, defendé</span><img src="/assets/fav.png" alt="" style="height: 26px"><span>Tiempo Extra</span><img src="/assets/fav.png" alt="" style="height: 26px"></div>
+<div class="mq-item hd" style="font-size: 30px"><span>Tablero isométrico</span><img src="/assets/fav.png" alt="" style="height: 26px"><span>Activá tu dominio</span><img src="/assets/fav.png" alt="" style="height: 26px"><span class="serif" style="font-size: 36px; font-weight: 400">comprá, cobrá, defendé</span><img src="/assets/fav.png" alt="" style="height: 26px"><span>Tiempo Extra</span><img src="/assets/fav.png" alt="" style="height: 26px"></div>
+</div>
+</div>
+
+<!-- FEATURED -->
+<section id="juegos" class="sec" style="position: relative; overflow: hidden">
+<div class="bigword slide hide-sm" aria-hidden="true" style="top: 60px; font-size: 300px">DOMINIO DOMINIO DOMINIO</div>
+<div class="wrap" style="position: relative">
+<div class="sec-head">
+<div class="rv">
+<div class="eyebrow" style="color: var(--accent)">Juego destacado · 01</div>
+<h2 class="hd h2">En la bóveda <span class="serif" style="color: var(--accent)">ahora</span></h2>
+</div>
+<p class="lead muted rv">El clásico juego de comprar propiedades y cobrar alquiler, ahora con roles, dominios y defensa en tiempo real.</p>
+</div>
+<div class="featbox" style="display: flex; flex-wrap: wrap; gap: 56px 72px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 36px; padding: clamp(36px, 5.5vw, 80px)">
+<div class="rv-l featcol" style="flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column">
+<img src="/assets/dominio.png" alt="YAJUGÁ Dominio" style="width: 100%; max-width: 440px; height: auto">
+<p class="muted" style="margin: 40px 0 0; font-size: 18px; line-height: 1.75; max-width: 46ch">Tirá los dados, recorré el tablero y levantá tu imperio. Comprá ciudades, empresas y temáticas, robá cartas de acción, armá tu mano en el Mercado y cobrale a quien caiga en tus casillas.</p>
+<div class="tagrow" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 32px">
+<span class="tag" style="background: #C99022; color: #14110F">Ciudades</span>
+<span class="tag" style="background: #2A6E70">Empresas</span>
+<span class="tag" style="background: #C8748A; color: #14110F">Temáticas</span>
+<span class="tag" style="border: 1px solid var(--line2)">Cartas de acción</span>
+</div>
+<div class="featbtns" style="display: flex; gap: 14px; flex-wrap: wrap; margin-top: 48px">
+<a class="btn btn-rust" href="Jugar.dc.html">Probar la demo <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+<a class="btn btn-ghost" href="#dominio">¿Qué es el dominio?</a>
+</div>
+</div>
+<div class="rv-r" style="flex: 1 1 480px; min-width: 0; position: relative">
+<div class="iso" role="img" aria-label="Tablero isométrico de YAJUGÁ Dominio con edificios, dados lanzándose y fichas avanzando">
+<div class="board">
+<div class="tl cor"></div>
+<div class="tl" style="--c: #C13B1F"><i></i><div class="fig"><svg viewBox="0 0 30 36"><rect x="2" y="12" width="11" height="24" fill="#C13B1F" stroke="#14110F" stroke-width="2"></rect><rect x="14" y="3" width="13" height="33" fill="#C13B1F" stroke="#14110F" stroke-width="2"></rect><rect x="18" y="8" width="5" height="3" fill="#EFE6D2"></rect><rect x="18" y="16" width="5" height="3" fill="#EFE6D2"></rect></svg></div></div>
+<div class="tl" style="--c: #C13B1F"><i></i></div>
+<div class="tl act"></div>
+<div class="tl" style="--c: #14110F"><i></i><div class="fig"><svg viewBox="0 0 30 36"><path d="M2 36V18l7 5v-5l7 5v-5l7 5V4h5v32z" fill="#14110F" stroke="#EFE6D2" stroke-width="2" stroke-linejoin="round"></path></svg></div></div>
+<div class="tl" style="--c: #C99022"><i></i></div>
+<div class="tl cor"></div>
+<div class="bc"><img src="/assets/titulo.png" alt=""></div>
+<div class="tl" style="--c: #C8748A"><i></i><div class="fig"><svg viewBox="0 0 30 36"><path d="M9 36V10l6-9 6 9v26z" fill="#C8748A" stroke="#14110F" stroke-width="2"></path></svg></div></div>
+<div class="tl" style="--c: #C99022"><i></i><div class="fig"><svg viewBox="0 0 30 36"><rect x="2" y="12" width="11" height="24" fill="#C99022" stroke="#14110F" stroke-width="2"></rect><rect x="14" y="3" width="13" height="33" fill="#C99022" stroke="#14110F" stroke-width="2"></rect></svg></div></div>
+<div class="tl" style="--c: #C8748A"><i></i></div>
+<div class="tl" style="--c: #C99022"><i></i></div>
+<div class="tl act"></div>
+<div class="tl" style="--c: #2A6E70"><i></i><div class="fig"><svg viewBox="0 0 30 36"><circle cx="15" cy="14" r="11" fill="#EFE6D2" stroke="#2A6E70" stroke-width="3"></circle><path d="M15 3v22M4 14h22" stroke="#14110F" stroke-width="1.5"></path><path d="M15 14L7 36M15 14l8 22" stroke="#14110F" stroke-width="2.5"></path></svg></div></div>
+<div class="tl" style="--c: #6B7340"><i></i></div>
+<div class="tl act"></div>
+<div class="tl" style="--c: #6B7340"><i></i><div class="fig"><svg viewBox="0 0 30 36"><path d="M2 36V24a13 13 0 0 1 26 0v12z" fill="#6B7340" stroke="#14110F" stroke-width="2"></path><path d="M15 11V2l7 3-7 3" fill="#EFE6D2"></path></svg></div></div>
+<div class="tl" style="--c: #2A6E70"><i></i></div>
+<div class="tl cor"></div>
+<div class="tl" style="--c: #2E3D6E"><i></i></div>
+<div class="tl" style="--c: #14110F"><i></i></div>
+<div class="tl" style="--c: #2E3D6E"><i></i><div class="fig"><svg viewBox="0 0 30 36"><path d="M9 36V10l6-9 6 9v26z" fill="#2E3D6E" stroke="#14110F" stroke-width="2"></path></svg></div></div>
+<div class="tl" style="--c: #2E3D6E"><i></i></div>
+<div class="tl" style="--c: #2A6E70"><i></i></div>
+<div class="tl cor"></div>
+<div class="tok tokA"><b style="background: #C13B1F"></b></div>
+<div class="tok tokB"><b style="background: #2A6E70"></b></div>
+</div>
+<div class="dice">
+<div class="dshadow" style="left: -76px"></div>
+<div class="dshadow" style="left: 14px; animation-delay: .1s"></div>
+<div class="die die1"><div class="fc f1"></div><div class="fc f2"></div><div class="fc f3"></div><div class="fc f4"></div><div class="fc f5"></div><div class="fc f6"></div></div>
+<div class="die die2"><div class="fc f1"></div><div class="fc f2"></div><div class="fc f3"></div><div class="fc f4"></div><div class="fc f5"></div><div class="fc f6"></div></div>
+</div>
+<div class="mini hide-sm" aria-hidden="true" style="left: 0; bottom: 30px; background: #F6EEDC; color: #14110F; animation-delay: -2s; border: 1.5px solid #14110F">
+<img src="/assets/pl/p02.webp" alt="" style="display: block; width: 100%; height: 96px; object-fit: cover">
+<div style="background: #2A6E70; color: #EFE6D2; padding: 7px 12px; font-size: 10px" class="eyebrow">Puerto Viejo</div>
+<div style="padding: 10px 12px 12px"><div class="hd" style="font-size: 17px">Faro Esmeralda</div><div style="font-size: 12px; margin-top: 8px; display: flex; justify-content: space-between"><span>Alquiler</span><strong>$1M</strong></div><div style="font-size: 12px; margin-top: 4px; display: flex; justify-content: space-between"><span>Barrio completo</span><strong>$2M</strong></div><div style="font-size: 12px; margin-top: 4px; display: flex; justify-content: space-between"><span>Hotel</span><strong>$14M</strong></div></div>
+</div>
+<div class="mini hide-sm" aria-hidden="true" style="right: 0; top: 10px; background: #2E3D6E; color: #F6EEDC; animation-delay: -5s; border: 1.5px solid #14110F">
+<div style="padding: 8px 12px; font-size: 10px; display: flex; justify-content: space-between" class="eyebrow"><span>Acción</span><span>$3M</span></div>
+<div style="padding: 6px 12px 14px; text-align: center"><div class="hd" style="font-size: 34px; line-height: 1">↶</div><div class="hd" style="font-size: 18px; margin-top: 6px">Trato Sucio</div><div style="font-size: 12px; margin-top: 6px; line-height: 1.4; opacity: .85">Te quedás con el mejor lugar suelto de un rival.</div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- DOMAIN REVEAL -->
+<section id="dominio" class="domsec">
+<div class="dom-sticky">
+<div class="dom-pre" style="position: absolute; text-align: center; padding: 24px">
+<div class="eyebrow" style="color: var(--accent)">La mecánica que cambia todo</div>
+<div class="hd" style="font-size: clamp(36px, 5vw, 72px); margin-top: 20px">Seguí bajando…</div>
+</div>
+<div class="dom-fill">
+<div class="dom-rays"></div>
+<div class="dom-rings"></div>
+</div>
+<div class="dom-copy" style="position: relative; max-width: 1100px; padding: 24px clamp(20px, 3vw, 40px); text-align: center; color: #EFE6D2; display: flex; flex-direction: column; align-items: center">
+<div class="eyebrow">Nueva mecánica · Dominio</div>
+<h2 class="hd bigh" style="margin: 24px 0 0; font-size: clamp(30px, 8vw, 150px); line-height: 1.04"><span class="oneline">Activá tu</span><span class="oneline serif" style="color: #14110F; font-size: 1.08em">dominio.</span></h2>
+<p style="margin: 36px 0 0; max-width: 620px; font-size: 19px; line-height: 1.7; font-weight: 500">Cada rol tiene un dominio: una zona de poder que se carga mientras jugás. Cuando la barra se llena, lo activás y encerrás a todos los rivales dentro de tus reglas.</p>
+<div style="width: 100%; max-width: 560px; margin-top: 44px">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; min-height: 38px; position: relative">
+<span class="eyebrow">Carga</span>
+<div style="position: relative; height: 38px; flex: 1; display: flex; justify-content: flex-end">
+<span class="cpop" style="position: absolute; right: 0">Cobrás alquiler · +25</span>
+<span class="cpop" style="position: absolute; right: 0; animation-delay: 1.2s">Pagás alquiler · +20</span>
+<span class="cpop" style="position: absolute; right: 0; animation-delay: 2.4s">Comprás · +15</span>
+<span class="cpop" style="position: absolute; right: 0; animation-delay: 3.4s">Pasás por Salida · +10</span>
+<span class="fullmsg eyebrow" style="position: absolute; right: 0; top: 10px; color: #EFE6D2">¡Dominio listo!</span>
+</div>
+</div>
+<div class="meterbig"><i></i></div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- MECHANICS -->
+<section id="mecanicas" class="sec">
+<div class="wrap">
+<div class="sec-head">
+<div class="rv">
+<div class="eyebrow" style="color: var(--accent)">Y además</div>
+<h2 class="hd h2">Más reglas, <span class="serif" style="color: var(--accent)">más traiciones</span></h2>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 28px">
+<div class="mech lift rv">
+<div class="mech-vis" style="background: #C13B1F; flex-direction: column; gap: 14px" aria-hidden="true">
+<div style="position: relative; width: 64px; height: 64px">
+<svg width="64" height="64" viewBox="0 0 64 64" style="transform: rotate(-90deg)"><circle cx="32" cy="32" r="28" fill="#EFE6D2" stroke="#7A2412" stroke-width="5"></circle><circle class="tring" cx="32" cy="32" r="28" fill="none" stroke="#14110F" stroke-width="5" stroke-linecap="round"></circle></svg>
+<div class="hd tcount" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #14110F"></div>
+</div>
+<div style="display: flex; gap: 6px"><span class="opt">Bloquear</span><span class="opt" style="animation-delay: 2s">Negociar</span><span class="opt" style="animation-delay: 4s">Contraatacar</span></div>
+</div>
+<div class="eyebrow" style="color: var(--accent); margin-top: 32px">Contra reloj</div>
+<h3 class="hd">Sistema de Defensa</h3>
+<p>Cuando te cobran, tenés segundos para decidir: bloquear, negociar o contraatacar.</p>
+</div>
+<div class="mech lift rv">
+<div class="mech-vis" style="background: #C99022; gap: 12px" aria-hidden="true">
+<div class="mk" style="background: #2A6E70"></div>
+<div class="mk" style="background: #EFE6D2; animation-delay: .4s"></div>
+<div class="mk" style="background: #C8748A; animation-delay: .8s"></div>
+</div>
+<div class="eyebrow" style="color: var(--accent); margin-top: 32px">3 cartas a la venta</div>
+<h3 class="hd">Mercado</h3>
+<p>Siempre hay tres cartas a la vista. Comprá, guardalas en tu mano y usalas cuando más duela.</p>
+</div>
+<div class="mech lift rv">
+<div class="mech-vis" style="background: #2E3D6E" aria-hidden="true">
+<div class="cflip"><div class="cflip-in"><div class="cface" style="background: #C13B1F"><img src="/assets/iso.png" alt="" style="width: 34px"></div><div class="cface" style="background: #EFE6D2; transform: rotateY(180deg); color: #14110F; font: 800 22px 'Bricolage Grotesque', sans-serif">$150</div></div></div>
+</div>
+<div class="eyebrow" style="color: var(--accent); margin-top: 32px">Suerte o desgracia</div>
+<h3 class="hd">Cartas de acción</h3>
+<p>Caé en una casilla de Acción y robá una carta: herencias, multas, huelgas o un empujón a tu dominio.</p>
+</div>
+<div class="mech lift rv">
+<div class="mech-vis" style="background: #EFE6D2" aria-hidden="true">
+<div class="orbit"></div>
+<div class="hd blink" style="position: relative; font-size: 18px; text-align: center; line-height: 1.05; color: #14110F">Última<br>vuelta</div>
+</div>
+<div class="eyebrow" style="color: var(--accent); margin-top: 32px">El final se define acá</div>
+<h3 class="hd">Tiempo Extra</h3>
+<p>Una última vuelta al tablero con alquileres al doble para dar vuelta la partida.</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ROLES -->
+<section id="roles" class="sec" style="position: relative; overflow: hidden; background: var(--bg2)">
+<div class="bigword slide-r hide-sm" aria-hidden="true" style="bottom: 40px; font-size: 280px">ROLES ROLES ROLES ROLES</div>
+<div class="wrap" style="position: relative">
+<div class="sec-head rv">
+<div>
+<div class="eyebrow" style="color: var(--accent)">Los 6 roles de Dominio</div>
+<h2 class="hd h2" style="font-size: clamp(50px, 7vw, 112px)">Elegí <span class="serif" style="color: var(--accent)">quién sos</span></h2>
+</div>
+<p class="lead muted">Cada rol juega distinto y tiene su propio dominio. Tocá un personaje para conocerlo.</p>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 64px 96px; align-items: center">
+<div style="flex: 1 1 340px; display: flex; justify-content: center; position: relative; min-height: 560px; align-items: center; perspective: 1400px">
+<svg class="rings slowspin" viewBox="0 0 600 600" aria-hidden="true"><circle cx="300" cy="300" r="290" fill="none" stroke="{{sel.color}}" stroke-width="2" stroke-dasharray="4 14"></circle><circle cx="300" cy="300" r="230" fill="none" stroke="{{sel.color}}" stroke-width="1.5" opacity=".6"></circle><circle cx="300" cy="300" r="170" fill="none" stroke="#EFE6D2" stroke-width="1" opacity=".18"></circle></svg>
+<div class="{{cardAnim}}" style="width: 340px; position: relative">
+<div class="gc" style="--c: {{sel.color}}; --fg: {{sel.fg}}"><div class="gc-in"><div class="gc-head"><span>{{sel.num}}</span><img src="/assets/iso.png" alt=""></div><div class="gc-art"><img src="{{sel.img}}" alt="{{sel.name}}"></div><div class="gc-name" style="font-size: 26px; padding: 10px 14px">{{sel.name}}</div><div class="gc-foot" style="padding: 12px 14px 16px"><span class="k">DOMINIO</span><span class="v" style="font-size: 24px">{{sel.dom}}</span></div></div></div>
+</div>
+</div>
+
+<div class="{{swap}}" style="flex: 1 1 460px; min-width: 0">
+<div style="display: flex; align-items: center; gap: 14px">
+<span style="width: 14px; height: 14px; border-radius: 50%; background: {{sel.color}}; box-shadow: 0 0 0 4px var(--line)"></span>
+<span class="eyebrow muted">Rol {{sel.num}} de 06</span>
+</div>
+<h3 class="hd" style="margin: 20px 0 0; font-size: clamp(48px, 6vw, 92px)">{{sel.name}}</h3>
+<p class="serif" style="margin: 16px 0 0; font-size: 30px; color: var(--accent)">“{{sel.quote}}”</p>
+<p class="muted" style="margin: 20px 0 0; font-size: 18px; line-height: 1.7; max-width: 52ch">{{sel.style}}</p>
+<div style="margin-top: 36px; padding: 28px; border-radius: 24px; background: var(--surface); border: 1px solid var(--line); position: relative; overflow: hidden">
+<div style="position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: {{sel.color}}"></div>
+<div class="eyebrow" style="color: var(--accent)">Su dominio</div>
+<div class="hd" style="font-size: 32px; margin-top: 12px">{{sel.dom}}</div>
+<p style="margin: 12px 0 0; font-size: 16px; line-height: 1.7; color: var(--text2)">{{sel.domDesc}}</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 32px; margin-top: 32px">
+<sc-for list="{{sel.stats}}" as="s" hint-placeholder-count="4">
+<div><div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: 700; margin-bottom: 8px"><span>{{s.label}}</span><span class="muted">{{s.v}}/5</span></div><div class="stat"><i style="width: {{s.w}}; background: {{sel.color}}"></i></div></div>
+</sc-for>
+</div>
+<div style="display: flex; gap: 12px; margin-top: 40px">
+<button class="arrow" type="button" onClick="{{prev}}" aria-label="Rol anterior"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg></button>
+<button class="arrow" type="button" onClick="{{next}}" aria-label="Rol siguiente"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
+</div>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 16px; margin-top: 80px">
+<sc-for list="{{thumbs}}" as="t" hint-placeholder-count="6">
+<button class="thumb {{t.cls}}" type="button" onClick="{{t.pick}}" aria-label="Ver {{t.name}}"><img src="{{t.img}}" alt=""><span style="font-weight: 700; font-size: 14px">{{t.name}}</span></button>
+</sc-for>
+</div>
+</div>
+</section>
+
+<!-- HOW -->
+<section id="como" class="sec">
+<div class="wrap">
+<div class="sec-head rv" style="justify-content: center; text-align: center">
+<div>
+<div class="eyebrow" style="color: var(--accent)">Empezar es fácil</div>
+<h2 class="hd h2">Tres pasos <span class="serif" style="color: var(--accent)">y adentro</span></h2>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 28px">
+<div class="lift rv" style="background: var(--surface); border: 1px solid var(--line); border-radius: 28px; padding: 44px; display: flex; flex-direction: column">
+<div class="ico" style="width: 108px; height: 108px; border-radius: 24px; background: #C99022; display: flex; align-items: center; justify-content: center">
+<svg width="78" height="78" viewBox="0 0 84 84" fill="none" aria-hidden="true"><circle cx="42" cy="42" r="30" fill="#EFE6D2" stroke="#14110F" stroke-width="3.5"></circle><g class="wheel"><circle cx="42" cy="42" r="15" stroke="#14110F" stroke-width="3.5"></circle><path d="M42 18v10M42 56v10M18 42h10M56 42h10M25 25l7 7M52 52l7 7M59 25l-7 7M32 52l-7 7" stroke="#14110F" stroke-width="3.5" stroke-linecap="round"></path><circle cx="42" cy="42" r="5" fill="#C13B1F"></circle></g></svg>
+</div>
+<div class="eyebrow" style="color: var(--accent); margin-top: 36px">Paso 01</div>
+<h3 class="hd" style="margin: 12px 0 0; font-size: 34px">Abrí una sala</h3>
+<p class="muted" style="margin: 16px 0 0; font-size: 17px; line-height: 1.7">Elegí el juego y creá tu sala privada en un toque. Sin descargas.</p>
+</div>
+<div class="lift rv" style="background: var(--surface); border: 1px solid var(--line); border-radius: 28px; padding: 44px; display: flex; flex-direction: column">
+<div class="ico" style="width: 108px; height: 108px; border-radius: 24px; background: #2A6E70; display: flex; align-items: center; justify-content: center; overflow: hidden">
+<svg width="78" height="78" viewBox="0 0 84 84" fill="none" aria-hidden="true"><path class="trail" d="M12 72 L40 44" stroke="#EFE6D2" stroke-width="3" stroke-linecap="round"></path><g class="plane"><path d="M22 46 L66 22 L52 66 L42 50 Z" fill="#EFE6D2" stroke="#14110F" stroke-width="3" stroke-linejoin="round"></path><path d="M42 50 L66 22" stroke="#14110F" stroke-width="3" stroke-linecap="round"></path></g></svg>
+</div>
+<div class="eyebrow" style="color: var(--accent); margin-top: 36px">Paso 02</div>
+<h3 class="hd" style="margin: 12px 0 0; font-size: 34px">Pasá el link</h3>
+<p class="muted" style="margin: 16px 0 0; font-size: 17px; line-height: 1.7">Mandale el enlace a tus amigos por WhatsApp o donde quieras.</p>
+</div>
+<div class="lift rv" style="background: var(--surface); border: 1px solid var(--line); border-radius: 28px; padding: 44px; display: flex; flex-direction: column">
+<div class="ico" style="width: 108px; height: 108px; border-radius: 24px; background: #C13B1F; display: flex; align-items: center; justify-content: center">
+<svg width="78" height="78" viewBox="0 0 84 84" fill="none" aria-hidden="true"><rect x="12" y="20" width="32" height="46" rx="5" fill="#2E3D6E" stroke="#14110F" stroke-width="3" transform="rotate(-10 28 43)"></rect><g class="flip"><rect x="38" y="16" width="34" height="48" rx="5" fill="#EFE6D2" stroke="#14110F" stroke-width="3"></rect><g class="flipface"><rect x="38" y="16" width="34" height="48" rx="5" fill="#C99022" stroke="#14110F" stroke-width="3"></rect><text x="55" y="48" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="22" fill="#14110F">Y</text></g></g></svg>
+</div>
+<div class="eyebrow" style="color: var(--accent); margin-top: 36px">Paso 03</div>
+<h3 class="hd" style="margin: 12px 0 0; font-size: 34px">Jugá en vivo</h3>
+<p class="muted" style="margin: 16px 0 0; font-size: 17px; line-height: 1.7">Cada tirada y cada jugada se ve al instante en todas las pantallas.</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- COMING SOON -->
+<section id="pronto" class="sec" style="padding-top: 0">
+<div class="wrap">
+<div class="sec-head rv">
+<div>
+<div class="eyebrow" style="color: var(--accent)">Próximamente</div>
+<h2 class="hd h2">La bóveda <span class="serif" style="color: var(--accent)">crece</span></h2>
+</div>
+<p class="lead muted">Nuevos juegos en camino, cada uno con su propio color de la paleta YAJUGÁ.</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 28px">
+<div class="lock lift rv-l" style="position: relative; overflow: hidden; background: #2E3D6E; border: 1px solid var(--line); border-radius: 28px; padding: 44px; min-height: 380px; display: flex; flex-direction: column; justify-content: space-between">
+<svg class="slowspin" aria-hidden="true" width="260" height="260" viewBox="0 0 100 100" style="position: absolute; right: -70px; top: -70px; opacity: .14"><circle cx="50" cy="50" r="44" fill="none" stroke="#EFE6D2" stroke-width="4"></circle><circle cx="50" cy="50" r="20" fill="none" stroke="#EFE6D2" stroke-width="4"></circle><path d="M50 6v24M50 70v24M6 50h24M70 50h24" stroke="#EFE6D2" stroke-width="4"></path></svg>
+<div class="shake" style="width: 56px; height: 56px; border-radius: 16px; background: #EFE6D2; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#14110F" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg></div>
+<div><div class="eyebrow" style="opacity: .8">Juego 02</div><h3 class="hd" style="margin: 14px 0 0; font-size: 40px">[Nombre del juego]</h3><p style="margin: 14px 0 0; font-size: 16px; line-height: 1.6; opacity: .8">[Una línea sobre el juego]</p></div>
+</div>
+<div class="lock lift rv" style="position: relative; overflow: hidden; background: #2A6E70; border: 1px solid var(--line); border-radius: 28px; padding: 44px; min-height: 380px; display: flex; flex-direction: column; justify-content: space-between">
+<svg class="slowspin" aria-hidden="true" width="260" height="260" viewBox="0 0 100 100" style="position: absolute; right: -70px; top: -70px; opacity: .14"><circle cx="50" cy="50" r="44" fill="none" stroke="#EFE6D2" stroke-width="4"></circle><circle cx="50" cy="50" r="20" fill="none" stroke="#EFE6D2" stroke-width="4"></circle><path d="M50 6v24M50 70v24M6 50h24M70 50h24" stroke="#EFE6D2" stroke-width="4"></path></svg>
+<div class="shake" style="width: 56px; height: 56px; border-radius: 16px; background: #EFE6D2; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#14110F" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg></div>
+<div><div class="eyebrow" style="opacity: .8">Juego 03</div><h3 class="hd" style="margin: 14px 0 0; font-size: 40px">[Nombre del juego]</h3><p style="margin: 14px 0 0; font-size: 16px; line-height: 1.6; opacity: .8">[Una línea sobre el juego]</p></div>
+</div>
+<div class="lock lift rv-r" style="position: relative; overflow: hidden; background: #6B7340; border: 1px solid var(--line); border-radius: 28px; padding: 44px; min-height: 380px; display: flex; flex-direction: column; justify-content: space-between">
+<svg class="slowspin" aria-hidden="true" width="260" height="260" viewBox="0 0 100 100" style="position: absolute; right: -70px; top: -70px; opacity: .14"><circle cx="50" cy="50" r="44" fill="none" stroke="#EFE6D2" stroke-width="4"></circle><circle cx="50" cy="50" r="20" fill="none" stroke="#EFE6D2" stroke-width="4"></circle><path d="M50 6v24M50 70v24M6 50h24M70 50h24" stroke="#EFE6D2" stroke-width="4"></path></svg>
+<div class="shake" style="width: 56px; height: 56px; border-radius: 16px; background: #EFE6D2; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#14110F" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg></div>
+<div><div class="eyebrow" style="opacity: .8">Juego 04</div><h3 class="hd" style="margin: 14px 0 0; font-size: 40px">[Nombre del juego]</h3><p style="margin: 14px 0 0; font-size: 16px; line-height: 1.6; opacity: .8">[Una línea sobre el juego]</p></div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- FINAL CTA -->
+<section id="jugar" style="position: relative; overflow: hidden; background: #C13B1F; padding: clamp(140px, 14vw, 210px) 24px; text-align: center; color: #EFE6D2">
+<div class="dom-rays" aria-hidden="true" style="opacity: .8"></div>
+<div aria-hidden="true" style="position: absolute; left: 0; right: 0; top: 40px; overflow: hidden; opacity: .14">
+<div class="mq mq-rev"><div class="mq-item hd" style="font-size: 64px"><span>YAJUGÁ · YAJUGÁ · YAJUGÁ · YAJUGÁ · YAJUGÁ ·</span></div><div class="mq-item hd" style="font-size: 64px"><span>YAJUGÁ · YAJUGÁ · YAJUGÁ · YAJUGÁ · YAJUGÁ ·</span></div></div>
+</div>
+<div class="chip hide-sm" aria-hidden="true" style="left: 7%; bottom: 110px; width: 150px"><div class="gc" style="--c: #2A6E70; --fg: #EFE6D2; transform: rotate(-12deg)"><div class="gc-in"><div class="gc-head"><span>06</span></div><div class="gc-art"><img src="/assets/arquitecto.webp" alt=""></div><div class="gc-name" style="font-size: 13px">El Arquitecto</div><div class="gc-foot"><span class="k">DOMINIO</span></div></div></div></div>
+<div class="chip hide-sm" aria-hidden="true" style="right: 7%; bottom: 140px; width: 150px; animation-delay: -3s"><div class="gc" style="--c: #2E3D6E; --fg: #EFE6D2; transform: rotate(10deg)"><div class="gc-in"><div class="gc-head"><span>02</span></div><div class="gc-art"><img src="/assets/estafador.webp" alt=""></div><div class="gc-name" style="font-size: 13px">El Estafador</div><div class="gc-foot"><span class="k">DOMINIO</span></div></div></div></div>
+<div style="position: relative; display: flex; flex-direction: column; align-items: center">
+<h2 class="hd bigh" style="margin: 0; font-size: clamp(30px, 8.4vw, 140px); line-height: 1.08"><span class="oneline">¿Listo?</span><span class="oneline serif" style="font-size: 1.06em">YAJUGÁ.</span></h2>
+<p style="margin: 36px 0 0; max-width: 480px; font-size: 19px; line-height: 1.7">Armá tu primera partida de YAJUGÁ Dominio y probá cada rol contra la computadora.</p>
+<a class="btn btn-ink" href="Jugar.dc.html" style="margin-top: 44px; min-height: 60px; padding: 0 38px; font-size: 18px">Jugar la demo <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer style="padding: 96px clamp(20px, 3vw, 40px) 44px">
+<div class="wrap" style="display: flex; flex-wrap: wrap; gap: 56px; justify-content: space-between; align-items: flex-start">
+<div style="display: flex; flex-direction: column; gap: 24px; max-width: 320px">
+<img src="/assets/logo.png" alt="YAJUGÁ Games Vault" style="width: 220px; height: auto">
+<p class="muted" style="margin: 0; font-size: 15px; line-height: 1.7">Juegos de mesa digitales para jugar online con amigos.</p>
+</div>
+<div style="display: flex; gap: 80px; flex-wrap: wrap">
+<div style="display: flex; flex-direction: column; gap: 4px"><div class="eyebrow" style="color: var(--accent); margin-bottom: 10px">Jugar</div><a href="Jugar.dc.html" style="color: var(--text); text-decoration: none; padding: 8px 0">Dominio</a><a href="#roles" style="color: var(--text); text-decoration: none; padding: 8px 0">Roles</a><a href="#pronto" style="color: var(--text); text-decoration: none; padding: 8px 0">Próximamente</a></div>
+<div style="display: flex; flex-direction: column; gap: 4px"><div class="eyebrow" style="color: var(--accent); margin-bottom: 10px">Comunidad</div><a href="#inicio" style="color: var(--text); text-decoration: none; padding: 8px 0">Instagram</a><a href="#inicio" style="color: var(--text); text-decoration: none; padding: 8px 0">TikTok</a><a href="#inicio" style="color: var(--text); text-decoration: none; padding: 8px 0">Discord</a></div>
+</div>
+</div>
+<div class="wrap muted" style="margin-top: 80px; padding-top: 28px; border-top: 1px solid var(--line); font-size: 14px">© 2026 YAJUGÁ Games Vault</div>
+</footer>
+
+</div>
+</script>
+<script src="https://cdn.jsdelivr.net/npm/morphdom@2.7.4/dist/morphdom-umd.min.js"></script>
+<script src="/dc.js"></script>
+
+<script>
+
+const RIMG = {
+  banquero: '/assets/banquero.webp',
+  estafador: '/assets/estafador.webp',
+  abogado: '/assets/abogado.webp',
+  corredor: '/assets/corredor.webp',
+  coleccionista: '/assets/coleccionista.webp',
+  arquitecto: '/assets/arquitecto.webp'
+};
+const RS = [
+  { id: 'banquero', num: '01', name: 'El Banquero', color: '#C99022', fg: '#14110F', quote: 'El dinero siempre manda.', style: 'Juega lento y seguro: acumula efectivo y cobra por todo lo que se mueve en el tablero.', dom: 'Bóveda Central', domDesc: 'Encierra a todos en su bóveda. Durante una vuelta completa, cada pago que haga un rival le deja un 25% extra de comisión.', st: [5, 2, 4, 3] },
+  { id: 'estafador', num: '02', name: 'El Estafador', color: '#2E3D6E', fg: '#EFE6D2', quote: 'Nada es lo que parece.', style: 'Vive del riesgo: apuesta, engaña y da vuelta partidas que parecían perdidas.', dom: 'Casino de las Sombras', domDesc: 'Arrastra a todos a su mesa de juego. Cada rival tira un dado: del 1 al 4 le paga $150; con 5 o 6, el Estafador le paga $60.', st: [3, 4, 2, 4] },
+  { id: 'abogado', num: '03', name: 'El Abogado', color: '#C13B1F', fg: '#EFE6D2', quote: 'Todo tiene una cláusula.', style: 'Castiga al que va primero: su juicio puede quitarle al líder su mejor propiedad.', dom: 'Tribunal Supremo', domDesc: 'Abre un juicio contra el rival más rico. Si el dado dicta culpable (4 o más), le confisca su propiedad más valiosa.', st: [2, 3, 5, 4] },
+  { id: 'corredor', num: '04', name: 'El Corredor', color: '#6B7340', fg: '#EFE6D2', quote: 'Siempre hay un trato.', style: 'Compra barato y vende caro: su remate le arranca propiedades a los rivales a precio de liquidación.', dom: 'Remate Total', domDesc: 'Convierte el tablero en una subasta: obliga a un rival a venderle su mejor propiedad al 60% de su precio.', st: [4, 4, 2, 3] },
+  { id: 'coleccionista', num: '05', name: 'El Coleccionista', color: '#C8748A', fg: '#14110F', quote: 'Lo raro vale el doble.', style: 'Junta cartas como trofeos y se queda con las mejores de la mano de los demás.', dom: 'Galería Eterna', domDesc: 'Encierra a los rivales en su galería: cada uno le entrega su mejor carta de la mano, o $100 si no tiene ninguna.', st: [3, 2, 3, 5] },
+  { id: 'arquitecto', num: '06', name: 'El Arquitecto', color: '#2A6E70', fg: '#EFE6D2', quote: 'Primero el plano, después el imperio.', style: 'Construye un imperio caro y obliga a todos a pasar por él.', dom: 'Ciudad Infinita', domDesc: 'Reconstruye el tablero a su medida: teletransporta a todos los rivales a su propiedad más cara y les cobra el alquiler.', st: [4, 5, 2, 3] }
+];
+const LABELS = ['Economía', 'Ataque', 'Defensa', 'Control'];
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    let t = 'dark';
+    try { t = localStorage.getItem('yj-theme') || (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'); } catch (e) {}
+    this.state = { sel: 1, n: 0, theme: t };
+  }
+  go(i) { this.setState((s) => ({ sel: (i + RS.length) % RS.length, n: s.n + 1 })); }
+  renderVals() {
+    const r = RS[this.state.sel];
+    const sel = { ...r, img: RIMG[r.id], stats: r.st.map((v, k) => ({ label: LABELS[k], v, w: (v / 5) * 100 + '%' })) };
+    return {
+      sel,
+      themeCls: this.state.theme === 'light' ? 'light' : '',
+      isDark: this.state.theme !== 'light', isLight: this.state.theme === 'light',
+      themeLabel: this.state.theme === 'light' ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro',
+      toggleTheme: () => { const t = this.state.theme === 'light' ? 'dark' : 'light'; try { localStorage.setItem('yj-theme', t); } catch (e) {} this.setState({ theme: t }); },
+      swap: this.state.n % 2 ? 'swapA' : 'swapB',
+      cardAnim: this.state.n === 0 ? '' : this.state.n % 2 ? 'cardA' : 'cardB',
+      thumbs: RS.map((x, k) => ({ name: x.name, img: RIMG[x.id], cls: k === this.state.sel ? 'on' : '', pick: () => this.go(k) })),
+      prev: () => this.go(this.state.sel - 1),
+      next: () => this.go(this.state.sel + 1)
+    };
+  }
+}
+
+DCBoot(Component,'tpl');
+</script>
+</body>
 </html>
