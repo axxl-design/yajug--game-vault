@@ -299,6 +299,7 @@ a{color:#E0A33A}
 .pick.mine{outline:4px solid #E0A33A;outline-offset:4px}
 .fly.r3{animation-name:flyr3}
 @keyframes flyr3{0%{left:50%;top:50%;transform:scale(.55) rotate(6deg)}35%{left:50%;top:44%;transform:scale(.9) rotate(-6deg)}100%{left:calc(100% - 130px);top:200px;transform:scale(.2) rotate(18deg);opacity:.5}}
+.vote{position:absolute;left:50%;top:50%;z-index:65;transform:translate(-50%,-50%);width:min(440px,92%);padding:26px;border-radius:26px;background:#1E1915;border:1px solid rgba(239,230,210,.2);box-shadow:0 30px 70px rgba(0,0,0,.6);animation:toast .4s cubic-bezier(.2,.9,.3,1.3)}
 @media (hover:none){.tphoto{display:none}}
 @media (max-width:700px){
 .top{padding:10px 10px 0;gap:8px}
@@ -347,6 +348,7 @@ a{color:#E0A33A}
 <div class="online">
 <div><div class="eyebrow" style="color: #E0A33A">Jugar con amigos</div><div class="hd" style="font-size: 28px; margin-top: 10px">Armá una sala online</div><p class="muted" style="margin: 10px 0 0; font-size: 15px; line-height: 1.6">De 2 a 4 jugadores. Si son 2, se suma la computadora.</p></div>
 <label class="fld"><span>Tu nombre</span><input type="text" maxlength="16" placeholder="Ej: Axel" value="{{fName}}" onInput="{{onName}}"></label>
+<sc-if value="{{hasLast}}" hint-placeholder-val="{{ false }}"><button class="btn b-rust" type="button" onClick="{{rejoin}}">Volver a tu partida · {{lastCode}}</button></sc-if>
 <div class="onrow"><button class="btn b-rust" type="button" onClick="{{mkRoom}}">Crear sala</button></div>
 <div class="onrow"><label class="fld" style="flex: 1"><span>Código de sala</span><input type="text" maxlength="5" placeholder="ABCDE" value="{{fCode}}" onInput="{{onCode}}" style="text-transform: uppercase; letter-spacing: .2em"></label><button class="btn" type="button" onClick="{{joinRoom}}">Unirme</button></div>
 </div>
@@ -437,6 +439,7 @@ a{color:#E0A33A}
 <div class="feed" aria-live="polite"><sc-for list="{{feed}}" as="l" hint-placeholder-count="2"><span class="fi">{{l.t}}</span></sc-for></div>
 
 <div class="camctl">
+<sc-if value="{{canVoteStart}}" hint-placeholder-val="{{ false }}"><button class="iconbtn" type="button" onClick="{{voteStart}}" aria-label="Proponer terminar la partida"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4h11l-2 4 2 4H5"></path></svg></button></sc-if>
 <button class="iconbtn" type="button" onClick="{{openRules}}" aria-label="Reglas del juego" style="font: 800 18px 'Bricolage Grotesque'">?</button>
 <button class="iconbtn" type="button" onClick="{{zoomIn}}" aria-label="Acercar">+</button>
 <button class="iconbtn" type="button" onClick="{{zoomOut}}" aria-label="Alejar">−</button>
@@ -575,6 +578,16 @@ a{color:#E0A33A}
 <div class="dom" role="status" style="background: #C13B1F; color: #EFE6D2"><div class="dom-ray"></div><div style="position: relative; text-align: center; padding: 24px"><div class="eyebrow dtext" style="font-size: 13px">Última ronda</div><div class="hd dtext" style="font-size: clamp(60px, 10vw, 140px); margin-top: 16px">Tiempo Extra</div><div class="serif dtext" style="font-size: 28px; margin-top: 16px">Todos los alquileres cobran el doble</div></div></div>
 </sc-if>
 
+<sc-if value="{{showVote}}" hint-placeholder-val="{{ false }}">
+<div class="vote" role="dialog" aria-label="Votación para terminar la partida">
+<div class="eyebrow" style="color: #E0A33A">Votación</div>
+<div class="hd" style="font-size: 26px; margin-top: 10px">¿Terminamos la partida?</div>
+<p class="muted" style="margin: 10px 0 0; font-size: 15px; line-height: 1.55">{{voteTxt}}</p>
+<div class="eyebrow" style="margin-top: 14px; opacity: .85">{{voteTally}}</div>
+<sc-if value="{{voteMine}}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 12px; margin-top: 18px"><button class="btn b-rust" type="button" onClick="{{voteYes}}" style="flex: 1">Sí, terminar</button><button class="btn" type="button" onClick="{{voteNo}}" style="flex: 1">Seguir jugando</button></div></sc-if>
+<sc-if value="{{voteWait}}" hint-placeholder-val="{{ false }}"><div class="muted" style="margin-top: 16px; font-size: 14px">Votaste que sí. Esperando al resto…</div></sc-if>
+</div>
+</sc-if>
 <sc-if value="{{showToast}}" hint-placeholder-val="{{ false }}"><div class="toast" role="status">{{toast}}</div></sc-if>
 </div>
 </script>
@@ -716,9 +729,9 @@ class Component extends DCLogic {
     this.state = { v: 0 };
   }
   componentWillUnmount() { this.clearAll(); }
-  clearAll() { this.timers.forEach(clearTimeout); this.timers = []; if (this.defInt) clearInterval(this.defInt); this.defInt = null; }
+  clearAll() { this.timers.forEach(clearTimeout); this.timers = []; clearInterval(this.voteInt); if (this.defInt) clearInterval(this.defInt); this.defInt = null; }
   later(fn, ms) { const id = setTimeout(fn, ms); this.timers.push(id); return id; }
-  refresh() { this.setState({ v: Date.now() + Math.random() }); if (this.net && this.net.host && this.g.screen !== 'pick') this.net.push(this.g); }
+  refresh() { this.setState({ v: Date.now() + Math.random() }); if (this.net && this.net.host && this.g.screen !== 'pick') { this.g.ver = (this.g.ver || 0) + 1; this.net.push(this.g); } }
   you(k) { return !this.g.mp && k === 0; }
   fresh() { return { fly: [], look: null, catching: false, drawN: 0, screen: 'pick', players: [], turn: 0, round: 1, owners: {}, houses: {}, phase: 'idle', dice: [1], rolls: 0, log: [], market: [], bought: false, modal: null, def: null, dom: null, aura: null, act: null, cine: false, overtime: false, toast: null, focus: 0, deck: [], discard: [], plays: 0, commission: null, diceShow: false }; }
   maxRounds() { return this.props.rounds ?? 8; }
@@ -989,7 +1002,7 @@ class Component extends DCLogic {
     }
     return '';
   }
-  end(broke) { const g = this.g; this.clearAll(); g.screen = 'end'; g.broke = broke; g.def = null; g.modal = null; g.dom = null; g.act = null; g.cine = false; this.ui.sheet = null; this.refresh(); }
+  end(broke) { const g = this.g; this.clearAll(); clearInterval(this.voteInt); g.vote = null; g.screen = 'end'; g.broke = broke; g.def = null; g.modal = null; g.dom = null; g.act = null; g.cine = false; this.ui.sheet = null; this.refresh(); }
 
   propCard(i) {
     const t = TILES[i]; const gr = GR[t.g]; const L = this.lvl(i); const o = this.g.owners[i]; const full = o !== undefined && this.complete(o, t.g);
@@ -1006,7 +1019,7 @@ class Component extends DCLogic {
 
   startMP(list) {
     this.clearAll();
-    const g = this.fresh(); g.mp = true;
+    const g = this.fresh(); g.mp = true; g.hostSeat = 0;
     g.players = list.map((x) => ({ name: x.name, roleId: x.roleId, bot: !!x.bot, money: this.props.startMoney ?? 15, pos: 0, hand: [], charge: 0 }));
     this.g = g;
     g.players.forEach((p, k) => { if (p.bot) this.give(k, RULES.start); });
@@ -1033,16 +1046,46 @@ class Component extends DCLogic {
     else if ((name === 'buy' || name === 'pass') && mine && g.modal && g.phase === 'buy') { const mm = g.modal; g.modal = null; if (name === 'buy') this.buyTile(pi, mm.i); else this.log(`${p.name} pasó de comprar ${TILES[mm.i].n}`); this.afterLand(pi); }
     else if (name === 'actOk' && mine && g.act) { const a = g.act; g.act = null; const msg = this.applyNews(pi, a.c); this.log(`Noticia «${a.c.name}»: ${msg}`); if (this.broke()) return; this.afterLand(pi); }
     else if (name === 'def' && g.def && g.def.payer === pi) this.resolve(args[0]);
+    else if (name === 'voteStart' && g.mp && !g.vote && pi === (g.hostSeat || 0)) { g.vote = { by: pi, yes: { [pi]: true }, t: 30 }; this.log(`${p.name} propone terminar la partida`); this.voteTick(); this.voteCheck(); }
+    else if (name === 'vote' && g.vote && this.voters().includes(pi)) { if (args[0]) { g.vote.yes[pi] = true; this.voteCheck(); } else { this.log(`${p.name} votó seguir jugando: la partida continúa`); this.toast(`${p.name} quiere seguir: la partida continúa`); g.vote = null; this.refresh(); } }
+  }
+  voters() { return this.g.players.map((p, k) => k).filter((k) => !this.g.players[k].bot); }
+  voteCheck() {
+    const g = this.g; if (!g.vote) return;
+    if (this.voters().every((k) => g.vote.yes[k])) { g.vote = null; g.byVote = true; this.log('Todos votaron terminar la partida'); this.end(false); return; }
+    this.refresh();
+  }
+  voteTick() {
+    clearInterval(this.voteInt);
+    this.voteInt = setInterval(() => { const g = this.g; if (!g.vote) { clearInterval(this.voteInt); return; } g.vote.t -= 1; if (g.vote.t <= 0) { clearInterval(this.voteInt); g.vote = null; this.toast('No votaron todos a tiempo: la partida sigue'); } this.refresh(); }, 1000);
   }
   takeover(pi) {
     const g = this.g; const p = g.players[pi]; if (!p || p.bot || g.screen !== 'game') return;
-    p.bot = true; p.name += ' (compu)'; this.log(`${p.name} se desconectó: juega la computadora`);
+    p.bot = true; p.away = true; this.log(`${p.name} salió: la compu juega por ${p.name} hasta que vuelva`);
     if (g.turn !== pi) { this.refresh(); return; }
     if (g.phase === 'draw' || g.phase === 'roll') { g.phase = 'bot'; this.refresh(); this.botTurn(); }
     else if (g.phase === 'action') { g.phase = 'idle'; this.next(); }
     else if (g.phase === 'buy' && g.modal) { g.modal = null; this.afterLand(pi); }
     else if (g.act) { this.doAct(pi, 'actOk', []); }
     else this.refresh();
+  }
+  comeback(pi) {
+    const g = this.g; const p = g.players[pi]; if (!p || !p.away) return;
+    p.bot = false; p.away = false; this.log(`${p.name} volvió a la partida`);
+    if (g.turn === pi && g.phase === 'roll') this.refresh(); else this.refresh();
+  }
+  resume() {
+    const g = this.g; if (g.screen !== 'game') { this.refresh(); return; }
+    this.clearAll(); g.fly = []; g.look = null; g.catching = false; g.cine = false;
+    if (g.dom) { g.dom = null; }
+    if (g.vote) this.voteTick();
+    const pi = g.turn; const p = g.players[pi];
+    if (g.def) { const d = g.def; g.def = null; if (!d.done) this.settle(d.payer, d.owner, d.amount, 'accept'); if (this.broke()) return; this.afterLand(pi); return; }
+    if (p.bot) { g.modal = null; g.act = null; if (['draw', 'roll', 'bot', 'idle', 'drawing'].includes(g.phase)) { g.phase = 'bot'; this.refresh(); this.later(() => this.botTurn(), 700); } else { g.phase = 'bot'; this.afterLand(pi); } return; }
+    if (g.phase === 'drawing') g.phase = 'roll';
+    else if (g.phase === 'rolling' || g.phase === 'moving' || g.phase === 'idle' || g.phase === 'bot') g.phase = 'action';
+    else if (g.phase === 'card' && g.act) g.act.flip = true;
+    this.refresh();
   }
   renderVals() {
     const g = this.g; const S = this.seat || 0; const me = g.players[S]; const cur = g.players[g.turn];
@@ -1051,7 +1094,7 @@ class Component extends DCLogic {
     const cam = this.cam;
     const L = this.lobby; const taken = L ? L.players.filter((x) => x.id !== L.me && x.role).map((x) => x.role) : [];
     const roles = ROLES.map((r) => ({ ...r, img: IMG[r.id], pick: () => { if (L) { if (!taken.includes(r.id)) window.YJNet.pickRole(this, r.id); } else this.start(r.id); }, pcls: L ? (taken.includes(r.id) ? 'taken' : L.players.some((x) => x.id === L.me && x.role === r.id) ? 'mine' : '') : '' }));
-    const pv = (p, k) => { const r = this.role(p); return { name: p.name, role: r.name, img: IMG[r.id], color: r.color, money: M(p.money), charge: p.charge, props: this.owned(k).length, cls: k === g.turn ? 'on' : '' }; };
+    const pv = (p, k) => { const r = this.role(p); return { name: p.name + (p.away ? ' · fuera' : ''), role: r.name, img: IMG[r.id], color: r.color, money: M(p.money), charge: p.charge, props: this.owned(k).length, cls: k === g.turn ? 'on' : '' }; };
     const meV = me ? { ...pv(me, S), ring: Math.round(151 * (1 - me.charge / 100)) } : { color: '#C13B1F', ring: 151, charge: 0 };
     const rivIdx = g.players.map((p, k) => k).filter((k) => k !== S);
     const rivals = rivIdx.map((k) => g.players[k]).map((p, n) => ({ ...pv(p, rivIdx[n]), ring: Math.round(126 * (1 - p.charge / 100)) }));
@@ -1133,9 +1176,17 @@ class Component extends DCLogic {
       showAura: !!g.aura && !g.dom, aura: g.aura ? { ...g.aura, left: g.aura.turns === 1 ? 'último turno' : `${g.aura.turns} turnos` } : { id: '', color: '', fg: '', name: '', left: '' }, showDom: !!g.dom, dom: { ...dom, hasResult: !!dom.result }, showCine: !!g.cine,
       showToast: !!g.toast && (g.toastTo === null || g.toastTo === undefined || g.toastTo === S), toast: g.toast || '',
       ranking, winName: win.name, winVerb: me && win.name === me.name ? 'dominás la ciudad' : 'domina la ciudad', winImg: win.img,
-      endKicker: g.broke ? 'Alguien quedó en bancarrota' : 'Fin de la partida',
-      restart: () => { if (this.net && window.YJNet) window.YJNet.leave(this); this.clearAll(); this.g = this.fresh(); this.lobby = null; this.seat = 0; this.refresh(); },
-      netOk: typeof window !== 'undefined' && !!window.YJNet && !L, isLobby: !!L && g.screen === 'pick', notLobby: !L,
+      endKicker: g.broke ? 'Alguien quedó en bancarrota' : g.byVote ? 'Terminaron la partida por votación' : 'Fin de la partida',
+      canVoteStart: !!g.mp && g.screen === 'game' && !g.vote && S === (g.hostSeat || 0),
+      voteStart: () => this.act('voteStart'),
+      showVote: !!g.vote && g.screen === 'game',
+      voteMine: !!g.vote && !g.vote.yes[S] && this.voters().includes(S),
+      voteWait: !!g.vote && !!g.vote.yes[S],
+      voteTxt: g.vote ? `${this.nm(g.vote.by)} propone terminar la partida ahora. Gana quien tenga más patrimonio (efectivo + lugares).` : '',
+      voteTally: g.vote ? `${this.voters().filter((k) => g.vote.yes[k]).length} de ${this.voters().length} votaron que sí · ${Math.max(0, g.vote.t)} s` : '',
+      voteYes: () => this.act('vote', true), voteNo: () => this.act('vote', false),
+      restart: () => { if (this.net && window.YJNet) window.YJNet.leave(this, true); this.clearAll(); this.g = this.fresh(); this.lobby = null; this.seat = 0; this.refresh(); },
+      netOk: typeof window !== 'undefined' && !!window.YJNet && !L, hasLast: !L && typeof window !== 'undefined' && !!window.YJNet && !!window.YJNet.last(), lastCode: (typeof window !== 'undefined' && window.YJNet && window.YJNet.last()) ? window.YJNet.last().code : '', rejoin: () => { const l = window.YJNet.last(); if (l) window.YJNet.join(this, l.code, l.name || this.form.name || 'Jugador'); }, isLobby: !!L && g.screen === 'pick', notLobby: !L,
       fName: this.form.name, fCode: this.form.code,
       onName: (e) => { this.form.name = e.target.value.slice(0, 16); },
       onCode: (e) => { this.form.code = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 5); this.refresh(); },
@@ -1145,7 +1196,7 @@ class Component extends DCLogic {
       lobPlayers: L ? L.players.map((x) => { const r = ROLES.find((q) => q.id === x.role); return { name: x.name + (x.id === L.me ? ' (vos)' : ''), host: x.host ? 'Anfitrión' : '', role: r ? r.name : 'Eligiendo rol…', img: r ? IMG[r.id] : '', color: r ? r.color : '#3E3731', hasImg: !!r }; }) : [],
       copyLink: () => { try { navigator.clipboard.writeText(L.link); L.msg = '¡Link copiado! Mandáselo a tus amigos.'; } catch (e) { L.msg = L.link; } this.refresh(); },
       startRoom: () => { if (L && L.host) window.YJNet.start(this); },
-      leaveRoom: () => { window.YJNet.leave(this); this.lobby = null; this.refresh(); }
+      leaveRoom: () => { window.YJNet.leave(this, true); this.lobby = null; this.refresh(); }
     };
   }
 }
