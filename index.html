@@ -271,6 +271,21 @@ html{scroll-behavior:smooth}
 .perks b{display:block;font:800 17px 'Bricolage Grotesque';margin-bottom:4px}
 @media (max-width:1000px){.gshow{grid-template-columns:1fr}.gx-art{height:240px}.perks{grid-template-columns:1fr 1fr}}
 @media (max-width:560px){.perks{grid-template-columns:1fr}}
+.nw{white-space:nowrap}
+.ptabs{display:flex;gap:8px;padding:6px;border-radius:999px;background:rgba(239,230,210,.08);border:1px solid rgba(239,230,210,.14)}
+.ptab{display:flex;align-items:center;gap:8px;min-height:46px;padding:0 20px;border-radius:999px;border:0;background:transparent;color:#EFE6D2;font:700 15px 'DM Sans';cursor:pointer;transition:background .25s,color .25s}
+.ptab small{font-size:12px;opacity:.65}
+.ptab.on{background:#E0A33A;color:#14110F}
+.ptab:focus-visible{outline:3px solid #E0A33A;outline-offset:2px}
+.pgrid{display:grid;grid-template-columns:340px minmax(0,1fr);gap:48px;align-items:center}
+.pcard-wrap{position:relative;display:flex;justify-content:center;align-items:center;min-height:400px;perspective:1400px}
+.pcard-wrap .rings{width:400px;height:400px}
+.pdom{margin-top:20px;padding:16px 18px;border-radius:18px;background:rgba(239,230,210,.06);border:1px solid rgba(239,230,210,.14);border-left:5px solid var(--c)}
+.pdom p{margin:8px 0 0;font-size:15px;line-height:1.55;color:rgba(239,230,210,.82)}
+.pstats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:20px}
+.pst{display:flex;justify-content:space-between;font-size:12px;font-weight:700;margin-bottom:6px}
+@media (max-width:900px){.pgrid{grid-template-columns:1fr;gap:24px}.pcard-wrap{min-height:360px}.pstats{grid-template-columns:1fr 1fr}}
+@media (max-width:700px){.nw{font-size:12vw !important}.ptabs{width:100%}.ptab{flex:1;justify-content:center;padding:0 10px}}
 @media (max-width:700px){
  .hero{min-height:960px !important;padding-top:130px !important}
  .heroh{font-size:10.6vw !important;letter-spacing:-.045em;margin-top:36px !important}
@@ -321,8 +336,7 @@ html{scroll-behavior:smooth}
 <div class="nav-links">
 <a class="nav-a" href="#juegos">Juegos</a>
 <a class="nav-a" href="#salas">Con amigos</a>
-<a class="nav-a" href="#roles">Dominio</a>
-<a class="nav-a" href="#leyendas">Leyendas</a>
+<a class="nav-a" href="#personajes">Personajes</a>
 <a class="nav-a" href="#pronto">Próximamente</a>
 </div>
 <div class="nav-right" style="display: flex; align-items: center; gap: 10px">
@@ -378,7 +392,7 @@ Dominio, Leyendas y ¿Quién soy? →
 <div class="fan-c" style="transform: translateX(-224px) translateY(-2px) rotate(-8deg)"><div class="float" style="animation-delay: -2s"><div class="gc" style="--c: #C99022; --fg: #14110F"><div class="gc-in"><div class="gc-head"><span>DOMINIO</span><img src="/assets/iso.png" alt=""></div><div class="gc-art"><img src="/assets/banquero.webp" alt="El Banquero"></div><div class="gc-name">El Banquero</div><div class="gc-foot"><span class="k">DOMINIO</span><span class="v">Bóveda Central</span></div></div></div></div></div>
 <div class="fan-c" style="transform: translateX(224px) translateY(-2px) rotate(8deg)"><div class="float" style="animation-delay: -3s"><div class="gc" style="--c: #2E3D6E; --fg: #EFE6D2"><div class="gc-in"><div class="gc-head"><span>LEYENDAS</span><img src="/assets/iso.png" alt=""></div><div class="gc-art"><img src="/assets/ley/tesla.webp" alt="Nikola Tesla"></div><div class="gc-name">Nikola Tesla</div><div class="gc-foot"><span class="k">LEYENDAS</span><span class="v">Tormenta Eléctrica</span></div></div></div></div></div>
 <div class="fan-c" style="transform: translateX(440px) translateY(40px) rotate(17deg)"><div class="float" style="animation-delay: -0s"><div class="gc" style="--c: #2E3D6E; --fg: #EFE6D2"><div class="gc-in"><div class="gc-head"><span>DOMINIO</span><img src="/assets/iso.png" alt=""></div><div class="gc-art"><img src="/assets/estafador.webp" alt="El Estafador"></div><div class="gc-name">El Estafador</div><div class="gc-foot"><span class="k">DOMINIO</span><span class="v">Casino de las Sombras</span></div></div></div></div></div>
-<div class="fan-c" style="transform: translateY(-46px) scale(1.12); z-index: 4"><div class="float"><div class="gc" style="--c: #E0A33A; --fg: #14110F"><div class="gc-in"><div class="gc-head"><span>JUEGO 03</span><img src="/assets/iso.png" alt=""></div><div class="gc-art qart"><span>?</span><i>Historia</i><i>Deportes</i><i>Cultura pop</i></div><div class="gc-name">¿Quién soy?</div><div class="gc-foot"><span class="k">ADIVINANZAS</span><span class="v">6 categorías</span></div></div></div></div></div>
+<div class="fan-c" style="transform: translateY(-46px) scale(1.12); z-index: 4"><div class="float"><div class="gc" style="--c: #C99022; --fg: #14110F"><div class="gc-in"><div class="gc-head"><span>LEYENDAS</span><img src="/assets/iso.png" alt=""></div><div class="gc-art"><img src="/assets/ley/ramses.webp" alt="Ramsés II"></div><div class="gc-name">Ramsés II</div><div class="gc-foot"><span class="k">LEYENDAS</span><span class="v">Eternidad del Nilo</span></div></div></div></div></div>
 </div>
 </div>
 
@@ -410,7 +424,7 @@ Dominio, Leyendas y ¿Quién soy? →
 </div>
 <div class="gshow">
 <article class="gx rv-l" style="--c: #C13B1F">
-<div class="gx-art"><img class="gx-logo" src="/assets/dominio.png" alt="YAJUGÁ Dominio"><div class="gx-faces"><img src="/assets/banquero.webp" alt=""><img src="/assets/estafador.webp" alt=""><img src="/assets/abogado.webp" alt=""><img src="/assets/arquitecto.webp" alt=""></div></div>
+<div class="gx-art" style="background: #2A140F"><div class="gx-ley"><img src="/assets/banquero.webp" alt=""><img src="/assets/estafador.webp" alt=""><img src="/assets/abogado.webp" alt=""></div><div class="gx-badge" style="background: #C13B1F; color: #F6EEDC">El original</div></div>
 <div class="gx-body"><div class="eyebrow" style="color: var(--accent)">Juego 01 · Tablero</div><h3 class="hd gx-t">Dominio</h3><p class="muted gx-p">Comprá lugares de una ciudad, cobrá alquiler, jugá cartas de trato y activá el dominio de tu rol.</p>
 <div class="gx-tags"><span>6 roles</span><span>2–4 jugadores</span><span>30–45 min</span></div>
 <a class="btn btn-rust" href="Jugar.dc.html">Jugar Dominio</a></div>
@@ -444,7 +458,7 @@ Dominio, Leyendas y ¿Quién soy? →
 </div>
 <div class="dom-copy" style="position: relative; max-width: 1100px; padding: 24px clamp(20px, 3vw, 40px); text-align: center; color: #EFE6D2; display: flex; flex-direction: column; align-items: center">
 <div class="eyebrow">Salas con amigos · en todos los juegos</div>
-<h2 class="hd bigh" style="margin: 24px 0 0; font-size: clamp(30px, 8vw, 150px); line-height: 1.04"><span class="oneline">Armá tu</span><span class="oneline serif" style="color: #14110F; font-size: 1.08em">mesa.</span></h2>
+<h2 class="hd bigh" style="margin: 24px 0 0; font-size: clamp(30px, 8vw, 150px); line-height: 1.04"><span class="oneline">Armá tu <span class="serif" style="color: #14110F; font-size: 1.08em">mesa.</span></span></h2>
 <p style="margin: 36px 0 0; max-width: 620px; font-size: 19px; line-height: 1.7; font-weight: 500">Sin descargas ni cuentas. Elegís un juego, creás una sala y en segundos están todos jugando, cada uno desde su celular.</p>
 <div style="width: 100%; max-width: 560px; margin-top: 44px">
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; min-height: 38px; position: relative">
@@ -522,60 +536,6 @@ Dominio, Leyendas y ¿Quién soy? →
 </div>
 </section>
 
-<!-- ROLES -->
-<section id="roles" class="sec" style="position: relative; overflow: hidden; background: var(--bg2)">
-<div class="bigword slide-r hide-sm" aria-hidden="true" style="bottom: 40px; font-size: 280px">ROLES ROLES ROLES ROLES</div>
-<div class="wrap" style="position: relative">
-<div class="sec-head rv">
-<div>
-<div class="eyebrow" style="color: var(--accent)">Los 6 roles de Dominio</div>
-<h2 class="hd h2" style="font-size: clamp(50px, 7vw, 112px)">Elegí <span class="serif" style="color: var(--accent)">quién sos</span></h2>
-</div>
-<p class="lead muted">Cada rol juega distinto y tiene su propio dominio. Tocá un personaje para conocerlo.</p>
-</div>
-
-<div style="display: flex; flex-wrap: wrap; gap: 64px 96px; align-items: center">
-<div style="flex: 1 1 340px; display: flex; justify-content: center; position: relative; min-height: 560px; align-items: center; perspective: 1400px">
-<svg class="rings slowspin" viewBox="0 0 600 600" aria-hidden="true"><circle cx="300" cy="300" r="290" fill="none" stroke="{{sel.color}}" stroke-width="2" stroke-dasharray="4 14"></circle><circle cx="300" cy="300" r="230" fill="none" stroke="{{sel.color}}" stroke-width="1.5" opacity=".6"></circle><circle cx="300" cy="300" r="170" fill="none" stroke="#EFE6D2" stroke-width="1" opacity=".18"></circle></svg>
-<div class="{{cardAnim}}" style="width: 340px; position: relative">
-<div class="gc" style="--c: {{sel.color}}; --fg: {{sel.fg}}"><div class="gc-in"><div class="gc-head"><span>{{sel.num}}</span><img src="/assets/iso.png" alt=""></div><div class="gc-art"><img src="{{sel.img}}" alt="{{sel.name}}"></div><div class="gc-name" style="font-size: 26px; padding: 10px 14px">{{sel.name}}</div><div class="gc-foot" style="padding: 12px 14px 16px"><span class="k">DOMINIO</span><span class="v" style="font-size: 24px">{{sel.dom}}</span></div></div></div>
-</div>
-</div>
-
-<div class="{{swap}}" style="flex: 1 1 460px; min-width: 0">
-<div style="display: flex; align-items: center; gap: 14px">
-<span style="width: 14px; height: 14px; border-radius: 50%; background: {{sel.color}}; box-shadow: 0 0 0 4px var(--line)"></span>
-<span class="eyebrow muted">Rol {{sel.num}} de 06</span>
-</div>
-<h3 class="hd" style="margin: 20px 0 0; font-size: clamp(48px, 6vw, 92px)">{{sel.name}}</h3>
-<p class="serif" style="margin: 16px 0 0; font-size: 30px; color: var(--accent)">“{{sel.quote}}”</p>
-<p class="muted" style="margin: 20px 0 0; font-size: 18px; line-height: 1.7; max-width: 52ch">{{sel.style}}</p>
-<div style="margin-top: 36px; padding: 28px; border-radius: 24px; background: var(--surface); border: 1px solid var(--line); position: relative; overflow: hidden">
-<div style="position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: {{sel.color}}"></div>
-<div class="eyebrow" style="color: var(--accent)">Su dominio</div>
-<div class="hd" style="font-size: 32px; margin-top: 12px">{{sel.dom}}</div>
-<p style="margin: 12px 0 0; font-size: 16px; line-height: 1.7; color: var(--text2)">{{sel.domDesc}}</p>
-</div>
-<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 32px; margin-top: 32px">
-<sc-for list="{{sel.stats}}" as="s" hint-placeholder-count="4">
-<div><div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: 700; margin-bottom: 8px"><span>{{s.label}}</span><span class="muted">{{s.v}}/5</span></div><div class="stat"><i style="width: {{s.w}}; background: {{sel.color}}"></i></div></div>
-</sc-for>
-</div>
-<div style="display: flex; gap: 12px; margin-top: 40px">
-<button class="arrow" type="button" onClick="{{prev}}" aria-label="Rol anterior"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg></button>
-<button class="arrow" type="button" onClick="{{next}}" aria-label="Rol siguiente"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
-</div>
-</div>
-</div>
-
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 16px; margin-top: 80px">
-<sc-for list="{{thumbs}}" as="t" hint-placeholder-count="6">
-<button class="thumb {{t.cls}}" type="button" onClick="{{t.pick}}" aria-label="Ver {{t.name}}"><img src="{{t.img}}" alt=""><span style="font-weight: 700; font-size: 14px">{{t.name}}</span></button>
-</sc-for>
-</div>
-</div>
-</section>
-
 <!-- HOW -->
 <section id="como" class="sec">
 <div class="wrap">
@@ -615,61 +575,42 @@ Dominio, Leyendas y ¿Quién soy? →
 </section>
 
 <!-- COMING SOON -->
-<!-- LEYENDAS -->
-<section id="leyendas" class="sec ley">
-<div class="bigword slide-r hide-sm" aria-hidden="true" style="bottom: 40px; font-size: 260px; color: rgba(239,230,210,.05)">LEYENDAS LEYENDAS LEYENDAS</div>
+<!-- PERSONAJES -->
+<section id="personajes" class="sec ley" style="padding-top: clamp(96px, 10vw, 150px); padding-bottom: clamp(96px, 10vw, 150px)">
 <div class="wrap" style="position: relative">
-<div class="sec-head rv">
+<div class="sec-head rv" style="margin-bottom: 40px">
 <div>
-<div class="eyebrow" style="color: #E0A33A">Juego 02 · Ya disponible</div>
-<h2 class="hd h2">YAJUGÁ <span class="serif" style="color: #E0A33A">Leyendas</span></h2>
+<div class="eyebrow" style="color: #E0A33A">17 personajes · 2 juegos</div>
+<h2 class="hd h2 nw">Elegí <span class="serif" style="color: #E0A33A">quién sos</span></h2>
 </div>
-<div style="display: flex; flex-direction: column; gap: 22px; align-items: flex-start"><p class="lead" style="color: rgba(239,230,210,.78)">Once figuras que cambiaron la historia se sientan a la misma mesa. Comprá maravillas de cada época, armá tu imperio y activá el dominio de tu leyenda.</p><a class="btn btn-rust" href="Leyendas.dc.html">Jugar Leyendas <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a></div>
-</div>
-
-<div style="display: flex; flex-wrap: wrap; gap: 64px 96px; align-items: center">
-<div style="flex: 1 1 340px; display: flex; justify-content: center; position: relative; min-height: 560px; align-items: center; perspective: 1400px">
-<svg class="rings slowspin" viewBox="0 0 600 600" aria-hidden="true"><circle cx="300" cy="300" r="290" fill="none" stroke="{{ley.c}}" stroke-width="2" stroke-dasharray="4 14"></circle><circle cx="300" cy="300" r="230" fill="none" stroke="#E0A33A" stroke-width="1.5" opacity=".5"></circle><circle cx="300" cy="300" r="170" fill="none" stroke="#EFE6D2" stroke-width="1" opacity=".18"></circle></svg>
-<div class="{{leyCard}}" style="width: 340px; position: relative">
-<div class="gc" style="--c: {{ley.c}}; --fg: {{ley.fg}}"><div class="gc-in"><div class="gc-head"><span>{{leyN}}</span><img src="/assets/iso.png" alt=""></div><div class="gc-art"><img src="{{ley.img}}" alt="{{ley.name}}"></div><div class="gc-name" style="font-size: 25px; padding: 10px 14px">{{ley.name}}</div><div class="gc-foot" style="padding: 12px 14px 16px"><span class="k">DOMINIO</span><span class="v ley-v">{{ley.dom}}</span></div></div></div>
+<div class="ptabs" role="tablist" aria-label="Juego">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="2"><button class="ptab {{t.cls}}" type="button" role="tab" onClick="{{t.go}}">{{t.name}}<small>{{t.count}}</small></button></sc-for>
 </div>
 </div>
-
-<div class="{{leySwap}}" style="flex: 1 1 460px; min-width: 0">
-<div style="display: flex; align-items: center; gap: 14px">
-<span style="width: 14px; height: 14px; border-radius: 50%; background: {{ley.c}}; box-shadow: 0 0 0 4px rgba(239,230,210,.15)"></span>
-<span class="eyebrow" style="opacity: .7">Leyenda {{leyN}} de 11 · {{ley.ep}}</span>
+<div class="pgrid">
+<div class="pcard-wrap">
+<svg class="rings slowspin" viewBox="0 0 600 600" aria-hidden="true"><circle cx="300" cy="300" r="290" fill="none" stroke="{{pc.color}}" stroke-width="2" stroke-dasharray="4 14"></circle><circle cx="300" cy="300" r="230" fill="none" stroke="#E0A33A" stroke-width="1.5" opacity=".5"></circle></svg>
+<div class="{{pAnimC}}" style="width: 250px; position: relative">
+<div class="gc" style="--c: {{pc.color}}; --fg: {{pc.fg}}"><div class="gc-in"><div class="gc-head"><span>{{pc.num}}</span><img src="/assets/iso.png" alt=""></div><div class="gc-art"><img src="{{pc.img}}" alt="{{pc.name}}"></div><div class="gc-name" style="font-size: 20px">{{pc.name}}</div><div class="gc-foot"><span class="k">DOMINIO</span><span class="v ley-v" style="font-size: 15px !important">{{pc.dom}}</span></div></div></div>
 </div>
-<h3 class="hd" style="margin: 20px 0 0; font-size: clamp(44px, 5.6vw, 88px); line-height: 1">{{ley.name}}</h3>
-<p class="hd" style="margin: 14px 0 0; font-size: 22px; color: #E0A33A">{{ley.yrs}}</p>
-<p style="margin: 18px 0 0; font-size: 18px; line-height: 1.7; max-width: 52ch; color: rgba(239,230,210,.82)">{{ley.bio}}</p>
-<div style="margin-top: 32px; padding: 28px; border-radius: 24px; background: rgba(239,230,210,.06); border: 1px solid rgba(239,230,210,.14); position: relative; overflow: hidden">
-<div style="position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: {{ley.c}}"></div>
-<div class="eyebrow" style="color: #E0A33A">Su dominio</div>
-<div class="hd" style="font-size: 32px; margin-top: 12px">{{ley.dom}}</div>
-<p style="margin: 12px 0 0; font-size: 16px; line-height: 1.7; color: rgba(239,230,210,.82)">{{ley.fx}}</p>
 </div>
-<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 32px; margin-top: 32px">
-<sc-for list="{{leyStats}}" as="s" hint-placeholder-count="4">
-<div><div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: 700; margin-bottom: 8px"><span>{{s.label}}</span><span style="opacity: .6">{{s.v}}/5</span></div><div class="stat" style="background: rgba(239,230,210,.12)"><i style="width: {{s.w}}; background: {{ley.c}}"></i></div></div>
+<div class="{{pAnimT}}" style="min-width: 0">
+<div class="eyebrow" style="opacity: .7"><span class="ley-dot" style="background: {{pc.color}}"></span>{{pc.game}} · {{pc.idx}} · {{pc.sub}}</div>
+<h3 class="hd" style="margin: 14px 0 0; font-size: clamp(36px, 4.2vw, 64px); line-height: 1">{{pc.name}}</h3>
+<p style="margin: 14px 0 0; font-size: 17px; line-height: 1.6; max-width: 56ch; color: rgba(239,230,210,.82)">{{pc.text}}</p>
+<div class="pdom" style="--c: {{pc.color}}"><div class="eyebrow" style="color: #E0A33A; font-size: 11px">Su dominio · {{pc.dom}}</div><p>{{pc.domTxt}}</p></div>
+<div class="pstats"><sc-for list="{{pc.stats}}" as="s" hint-placeholder-count="4"><div><div class="pst"><span>{{s.label}}</span><span style="opacity: .6">{{s.v}}/5</span></div><div class="stat" style="background: rgba(239,230,210,.12)"><i style="width: {{s.w}}; background: {{pc.color}}"></i></div></div></sc-for></div>
+<div style="display: flex; gap: 10px; margin-top: 22px; align-items: center">
+<button class="arrow" type="button" onClick="{{pPrev}}" aria-label="Anterior" style="color: #EFE6D2; border-color: rgba(239,230,210,.3)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg></button>
+<button class="arrow" type="button" onClick="{{pNext}}" aria-label="Siguiente" style="color: #EFE6D2; border-color: rgba(239,230,210,.3)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
+<a class="btn btn-rust" href="{{pc.href}}" style="margin-left: 8px; min-height: 48px">Jugar {{pc.game}}</a>
+</div>
+</div>
+</div>
+<div class="ley-deck" style="margin-top: 36px; padding-top: 24px">
+<sc-for list="{{pThumbs}}" as="t" hint-placeholder-count="11">
+<button class="ley-mini {{t.cls}}" type="button" onClick="{{t.pick}}" aria-label="Ver a {{t.name}}" style="flex-basis: 104px"><div class="gc" style="--c: {{t.c}}; --fg: {{t.fg}}"><div class="gc-in"><div class="gc-head" style="font-size: 9px; padding: 4px 7px 3px"><span>{{t.n}}</span></div><div class="gc-art"><img src="{{t.img}}" alt=""></div><div class="gc-name" style="font-size: 11px; margin: -10px 5px 7px; padding: 4px 3px">{{t.name}}</div></div></div></button>
 </sc-for>
-</div>
-<div style="display: flex; gap: 12px; margin-top: 40px">
-<button class="arrow" type="button" onClick="{{leyPrev}}" aria-label="Leyenda anterior" style="color: #EFE6D2; border-color: rgba(239,230,210,.3)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg></button>
-<button class="arrow" type="button" onClick="{{leyNext}}" aria-label="Leyenda siguiente" style="color: #EFE6D2; border-color: rgba(239,230,210,.3)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
-</div>
-</div>
-</div>
-
-<div class="ley-deck">
-<sc-for list="{{leyThumbs}}" as="t" hint-placeholder-count="11">
-<button class="ley-mini {{t.cls}}" type="button" onClick="{{t.pick}}" aria-label="Ver a {{t.name}}"><div class="gc" style="--c: {{t.c}}; --fg: {{t.fg}}"><div class="gc-in"><div class="gc-head" style="font-size: 10px; padding: 5px 8px 4px"><span>{{t.n}}</span></div><div class="gc-art"><img src="{{t.img}}" alt=""></div><div class="gc-name" style="font-size: 12px; margin: -12px 6px 8px; padding: 5px 4px">{{t.name}}</div></div></div></button>
-</sc-for>
-</div>
-
-<div class="ley-epochs rv">
-<div class="eyebrow" style="opacity: .7">El tablero viaja por seis épocas</div>
-<div class="ley-ep-row"><sc-for list="{{epocas}}" as="e" hint-placeholder-count="6"><div class="ley-ep" style="--c: {{e.c}}"><b>{{e.k}}</b>{{e.n}}</div></sc-for></div>
 </div>
 </div>
 </section>
@@ -726,7 +667,7 @@ Dominio, Leyendas y ¿Quién soy? →
 <p class="muted" style="margin: 0; font-size: 15px; line-height: 1.7">Juegos de mesa digitales para jugar online con amigos.</p>
 </div>
 <div style="display: flex; gap: 80px; flex-wrap: wrap">
-<div style="display: flex; flex-direction: column; gap: 4px"><div class="eyebrow" style="color: var(--accent); margin-bottom: 10px">Jugar</div><a href="Jugar.dc.html" style="color: var(--text); text-decoration: none; padding: 8px 0">Dominio</a><a href="#roles" style="color: var(--text); text-decoration: none; padding: 8px 0">Roles</a><a href="#pronto" style="color: var(--text); text-decoration: none; padding: 8px 0">Próximamente</a></div>
+<div style="display: flex; flex-direction: column; gap: 4px"><div class="eyebrow" style="color: var(--accent); margin-bottom: 10px">Jugar</div><a href="Jugar.dc.html" style="color: var(--text); text-decoration: none; padding: 8px 0">Dominio</a><a href="#personajes" style="color: var(--text); text-decoration: none; padding: 8px 0">Roles</a><a href="#pronto" style="color: var(--text); text-decoration: none; padding: 8px 0">Próximamente</a></div>
 <div style="display: flex; flex-direction: column; gap: 4px"><div class="eyebrow" style="color: var(--accent); margin-bottom: 10px">Comunidad</div><a href="#inicio" style="color: var(--text); text-decoration: none; padding: 8px 0">Instagram</a><a href="#inicio" style="color: var(--text); text-decoration: none; padding: 8px 0">TikTok</a><a href="#inicio" style="color: var(--text); text-decoration: none; padding: 8px 0">Discord</a></div>
 </div>
 </div>
@@ -750,7 +691,7 @@ const RIMG = {
 };
 const RS = [
   { id: 'banquero', num: '01', name: 'El Banquero', color: '#C99022', fg: '#14110F', quote: 'El dinero siempre manda.', style: 'Juega lento y seguro: acumula efectivo y cobra por todo lo que se mueve en el tablero.', dom: 'Bóveda Central', domDesc: 'Encierra a todos en su bóveda. Durante una vuelta completa, cada pago que haga un rival le deja un 25% extra de comisión.', st: [5, 2, 4, 3] },
-  { id: 'estafador', num: '02', name: 'El Estafador', color: '#2E3D6E', fg: '#EFE6D2', quote: 'Nada es lo que parece.', style: 'Vive del riesgo: apuesta, engaña y da vuelta partidas que parecían perdidas.', dom: 'Casino de las Sombras', domDesc: 'Arrastra a todos a su mesa de juego. Cada rival tira un dado: del 1 al 4 le paga $150; con 5 o 6, el Estafador le paga $60.', st: [3, 4, 2, 4] },
+  { id: 'estafador', num: '02', name: 'El Estafador', color: '#2E3D6E', fg: '#EFE6D2', quote: 'Nada es lo que parece.', style: 'Vive del riesgo: apuesta, engaña y da vuelta partidas que parecían perdidas.', dom: 'Casino de las Sombras', domDesc: 'Arrastra a todos a su mesa de juego. Cada rival tira un dado: del 1 al 4 le paga $3M; con 5 o 6, el Estafador le paga $1M.', st: [3, 4, 2, 4] },
   { id: 'abogado', num: '03', name: 'El Abogado', color: '#C13B1F', fg: '#EFE6D2', quote: 'Todo tiene una cláusula.', style: 'Castiga al que va primero: su juicio puede quitarle al líder su mejor propiedad.', dom: 'Tribunal Supremo', domDesc: 'Abre un juicio contra el rival más rico. Si el dado dicta culpable (4 o más), le confisca su propiedad más valiosa.', st: [2, 3, 5, 4] },
   { id: 'corredor', num: '04', name: 'El Corredor', color: '#6B7340', fg: '#EFE6D2', quote: 'Siempre hay un trato.', style: 'Compra barato y vende caro: su remate le arranca propiedades a los rivales a precio de liquidación.', dom: 'Remate Total', domDesc: 'Convierte el tablero en una subasta: obliga a un rival a venderle su mejor propiedad al 60% de su precio.', st: [4, 4, 2, 3] },
   { id: 'coleccionista', num: '05', name: 'El Coleccionista', color: '#C8748A', fg: '#14110F', quote: 'Lo raro vale el doble.', style: 'Junta cartas como trofeos y se queda con las mejores de la mano de los demás.', dom: 'Galería Eterna', domDesc: 'Encierra a los rivales en su galería: cada uno le entrega su mejor carta de la mano, o $100 si no tiene ninguna.', st: [3, 2, 3, 5] },
@@ -781,13 +722,21 @@ class Component extends DCLogic {
     this.state = { sel: 1, n: 0, theme: t, lsel: 0, ln: 0 };
   }
   go(i) { this.setState((s) => ({ sel: (i + RS.length) % RS.length, n: s.n + 1 })); }
-  goL(k) { const n = LEY.length; this.setState({ lsel: ((k % n) + n) % n, ln: (this.state.ln || 0) + 1 }); }
+  goL(k) { const n = LEY.length; this.setState({ lsel: ((k % n) + n) % n, ln: (this.state.ln || 0) + 1, n: this.state.n + 1 }); }
   renderVals() {
     const r = RS[this.state.sel];
     const sel = { ...r, img: RIMG[r.id], stats: r.st.map((v, k) => ({ label: LABELS[k], v, w: (v / 5) * 100 + '%' })) };
-    const L = LEY[this.state.lsel || 0];
+    const L = LEY[this.state.lsel || 0]; const tab = this.state.tab || 'dom';
+    const pc = tab === 'dom' ? { name: r.name, color: r.color, fg: r.fg, img: RIMG[r.id], num: r.num, idx: `Rol ${r.num} de 06`, sub: r.quote, game: 'Dominio', href: 'Jugar.dc.html', text: r.style, dom: r.dom, domTxt: r.domDesc, stats: r.st.map((v, k) => ({ label: LABELS[k], v, w: (v / 5) * 100 + '%' })) }
+      : { name: L.name, color: L.c, fg: FGL(L.c), img: L.img, num: String((this.state.lsel || 0) + 1).padStart(2, '0'), idx: `${String((this.state.lsel || 0) + 1).padStart(2, '0')} de 11`, sub: L.yrs, game: 'Leyendas', href: 'Leyendas.dc.html', text: L.bio, dom: L.dom, domTxt: L.fx, stats: L.st.map((v, k) => ({ label: ['Conquista', 'Fortuna', 'Ingenio', 'Defensa'][k], v, w: (v / 5) * 100 + '%' })) };
+    const pThumbs = tab === 'dom' ? RS.map((x, k) => ({ name: x.name, c: x.color, fg: x.fg, img: RIMG[x.id], n: x.num, cls: k === this.state.sel ? 'on' : '', pick: () => this.go(k) }))
+      : LEY.map((x, k) => ({ name: x.name, c: x.c, fg: FGL(x.c), img: x.img, n: String(k + 1).padStart(2, '0'), cls: k === (this.state.lsel || 0) ? 'on' : '', pick: () => this.goL(k) }));
     return {
-      sel,
+      sel, pc, pThumbs,
+      tabs: [['dom', 'Dominio', '6 roles'], ['ley', 'Leyendas', '11 leyendas']].map(([id, name, count]) => ({ name, count, cls: tab === id ? 'on' : '', go: () => this.setState({ tab: id, n: this.state.n + 1 }) })),
+      pAnimT: this.state.n % 2 ? 'swapA' : 'swapB', pAnimC: !this.state.n ? '' : this.state.n % 2 ? 'cardA' : 'cardB',
+      pPrev: () => (tab === 'dom' ? this.go(this.state.sel - 1) : this.goL((this.state.lsel || 0) - 1)),
+      pNext: () => (tab === 'dom' ? this.go(this.state.sel + 1) : this.goL((this.state.lsel || 0) + 1)),
       ley: { ...L, fg: FGL(L.c) }, leyN: String((this.state.lsel || 0) + 1).padStart(2, '0'),
       leySwap: this.state.ln % 2 ? 'swapA' : 'swapB', leyCard: !this.state.ln ? '' : this.state.ln % 2 ? 'cardA' : 'cardB',
       leyStats: L.st.map((v, k) => ({ label: ['Conquista', 'Fortuna', 'Ingenio', 'Defensa'][k], v, w: (v / 5) * 100 + '%' })),

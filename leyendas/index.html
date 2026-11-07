@@ -342,7 +342,7 @@ a{color:#E0A33A}
 <div style="text-align: center; max-width: 720px; margin: 48px auto 60px">
 <div class="eyebrow" style="color: #E0A33A">Bienvenido a YAJUGÁ Leyendas</div>
 <h1 class="hd" style="margin: 20px 0 0; font-size: clamp(44px, 6vw, 80px)">Elegí tu <span class="serif" style="color: #E0A33A; font-size: 1.08em">leyenda</span></h1>
-<p class="muted" style="margin: 24px 0 0; font-size: 18px; line-height: 1.7">Once figuras de la historia, seis épocas y dieciocho maravillas. Comprá, completá épocas, construí, robá tratos y cargá tu dominio para atrapar a todos en tu leyenda.</p>
+<p class="muted" style="margin: 24px 0 0; font-size: 18px; line-height: 1.7">Once figuras de la historia, seis épocas y dieciocho maravillas. Comprá, completá épocas, construí, robá pergaminos y cargá tu dominio para atrapar a todos en tu leyenda.</p>
 </div>
 <sc-if value="{{netOk}}" hint-placeholder-val="{{ false }}">
 <div class="online">
@@ -400,7 +400,7 @@ a{color:#E0A33A}
 <sc-for list="{{cars}}" as="c" hint-placeholder-count="0"><div class="car" style="background: {{c.color}}; animation-delay: {{c.delay}}s; animation-duration: {{c.dur}}s"></div></sc-for>
 <div class="park">
 <div class="pile" style="left: 9%; top: 9%; background: #C13B1F; color: #F6EEDC; transform: rotate(-8deg)"><span class="qm" style="font-size: 64px">?</span><span class="eyebrow">Crónicas</span></div>
-<button class="pile deck {{pileCls}}" type="button" onClick="{{drawNow}}" aria-label="Robar cartas del mazo de Tratos" style="right: 9%; bottom: 9%; background: #C99022; color: #14110F; transform: rotate(6deg)"><img src="/assets/iso.png" alt="" style="width: 52px"><span class="eyebrow">Tratos</span><b class="pgrab">Tocá para robar</b></button>
+<button class="pile deck {{pileCls}}" type="button" onClick="{{drawNow}}" aria-label="Robar cartas del mazo de Pergaminos" style="right: 9%; bottom: 9%; background: #C99022; color: #14110F; transform: rotate(6deg)"><img src="/assets/iso.png" alt="" style="width: 52px"><span class="eyebrow">Pergaminos</span><b class="pgrab">Tocá para robar</b></button>
 <div class="plate"><img src="/assets/titulo.png" alt="YAJUGÁ" style="width: 100%; display: block"><div style="display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 12px"><span style="height: 2px; flex: 1; background: #14110F"></span><span class="hd" style="font-size: 26px; color: #C13B1F; letter-spacing: .02em">LEYENDAS</span><span style="height: 2px; flex: 1; background: #14110F"></span></div></div>
 </div>
 <div class="cloud" style="top: 8%"></div>
@@ -427,7 +427,7 @@ a{color:#E0A33A}
 <div class="cap hd roundp" style="padding: 12px 22px; font-size: 16px">{{roundTxt}}</div>
 <sc-if value="{{showAura}}" hint-placeholder-val="{{ false }}"><div class="cap eyebrow aurap" style="padding: 7px 14px; font-size: 10px; background: {{aura.color}}; color: {{aura.fg}}">Dominio activo · {{aura.name}} · {{aura.left}}</div></sc-if>
 <div class="cap eyebrow pills" style="padding: 7px 14px; font-size: 10px; opacity: .85"><span>{{playsTxt}}</span><span class="dk">· {{deckTxt}}</span></div>
-<sc-if value="{{overtime}}" hint-placeholder-val="{{ false }}"><div class="cap eyebrow" style="padding: 8px 16px; background: #C13B1F">Tiempo extra · alquiler x2</div></sc-if>
+<sc-if value="{{overtime}}" hint-placeholder-val="{{ false }}"><div class="cap eyebrow" style="padding: 8px 16px; background: #C13B1F">Tiempo extra · tributo x2</div></sc-if>
 </div>
 <div class="rivals" style="display: flex; flex-direction: column; gap: 10px; align-items: flex-end">
 <sc-for list="{{rivals}}" as="p" hint-placeholder-count="2">
@@ -480,7 +480,7 @@ a{color:#E0A33A}
 <sc-for list="{{estate}}" as="s" hint-placeholder-count="0">
 <div class="slot"><div class="eyebrow" style="color: {{s.c2}}">{{s.title}} · {{s.count}}</div><div class="stack">
 <sc-for list="{{s.cards}}" as="p" hint-placeholder-count="1">
-<div class="dd" style="--c: {{p.color}}; --fg: {{p.fg}}"><div class="dd-photo"><img src="{{p.img}}" alt=""></div><div class="dd-title"><small>Título de propiedad · {{p.barrio}}</small><b>{{p.name}}</b></div><div class="dd-rows"><sc-for list="{{p.rows}}" as="r" hint-placeholder-count="7"><div class="dd-row {{r.cls}}"><span class="l"><sc-for list="{{r.hs}}" as="h" hint-placeholder-count="0"><i class="hi {{h.c}}"></i></sc-for>{{r.l}}</span><b>{{r.v}}</b></div></sc-for></div><div class="dd-foot"><span>Precio <strong>{{p.price}}</strong></span><span>Casa <strong>{{p.hc}}</strong> c/u</span></div></div>
+<div class="dd" style="--c: {{p.color}}; --fg: {{p.fg}}"><div class="dd-photo"><img src="{{p.img}}" alt=""></div><div class="dd-title"><small>Escritura real · {{p.barrio}}</small><b>{{p.name}}</b></div><div class="dd-rows"><sc-for list="{{p.rows}}" as="r" hint-placeholder-count="7"><div class="dd-row {{r.cls}}"><span class="l"><sc-for list="{{r.hs}}" as="h" hint-placeholder-count="0"><i class="hi {{h.c}}"></i></sc-for>{{r.l}}</span><b>{{r.v}}</b></div></sc-for></div><div class="dd-foot"><span>Precio <strong>{{p.price}}</strong></span><span>Casa <strong>{{p.hc}}</strong> c/u</span></div></div>
 </sc-for>
 </div><button class="btn {{s.btnCls}}" type="button" onClick="{{s.build}}" disabled="{{s.off}}" style="min-width: 220px">{{s.btn}}</button></div>
 </sc-for>
@@ -510,7 +510,7 @@ a{color:#E0A33A}
 <sc-if value="{{showPeek}}" hint-placeholder-val="{{ false }}">
 <div class="ov" onClick="{{closePeek}}"><div style="display: flex; flex-direction: column; align-items: center; gap: 16px; animation: pop .45s cubic-bezier(.2,.9,.3,1.3)">
 <div class="eyebrow" style="color: #E0A33A">{{peekOwner}}</div>
-<div class="dd big" style="--c: {{peek.color}}; --fg: {{peek.fg}}"><div class="dd-photo"><img src="{{peek.img}}" alt=""></div><div class="dd-title"><small>Título de propiedad · {{peek.barrio}}</small><b>{{peek.name}}</b></div><div class="dd-rows"><sc-for list="{{peek.rows}}" as="r" hint-placeholder-count="7"><div class="dd-row {{r.cls}}"><span class="l"><sc-for list="{{r.hs}}" as="h" hint-placeholder-count="0"><i class="hi {{h.c}}"></i></sc-for>{{r.l}}</span><b>{{r.v}}</b></div></sc-for></div><div class="dd-foot"><span>Precio <strong>{{peek.price}}</strong></span><span>Casa <strong>{{peek.hc}}</strong> c/u</span></div></div>
+<div class="dd big" style="--c: {{peek.color}}; --fg: {{peek.fg}}"><div class="dd-photo"><img src="{{peek.img}}" alt=""></div><div class="dd-title"><small>Escritura real · {{peek.barrio}}</small><b>{{peek.name}}</b></div><div class="dd-rows"><sc-for list="{{peek.rows}}" as="r" hint-placeholder-count="7"><div class="dd-row {{r.cls}}"><span class="l"><sc-for list="{{r.hs}}" as="h" hint-placeholder-count="0"><i class="hi {{h.c}}"></i></sc-for>{{r.l}}</span><b>{{r.v}}</b></div></sc-for></div><div class="dd-foot"><span>Precio <strong>{{peek.price}}</strong></span><span>Casa <strong>{{peek.hc}}</strong> c/u</span></div></div>
 <div class="serif" style="font-size: 20px; color: #D8CCB6; max-width: 320px; text-align: center">“{{peek.flav}}”</div>
 <button class="btn" type="button" onClick="{{closePeek}}">Cerrar</button>
 </div></div>
@@ -520,7 +520,7 @@ a{color:#E0A33A}
 <sc-if value="{{showBuy}}" hint-placeholder-val="{{ false }}">
 <div class="ov"><div style="display: flex; flex-direction: column; align-items: center; gap: 16px; animation: pop .5s cubic-bezier(.2,.9,.3,1.3)">
 <div class="eyebrow" style="color: #E0A33A">Lugar libre · {{buy.barrio}}</div>
-<div class="dd big" style="--c: {{buy.color}}; --fg: {{buy.fg}}"><div class="dd-photo"><img src="{{buy.img}}" alt=""></div><div class="dd-title"><small>Título de propiedad · {{buy.barrio}}</small><b>{{buy.name}}</b></div><div class="dd-rows"><sc-for list="{{buy.rows}}" as="r" hint-placeholder-count="7"><div class="dd-row {{r.cls}}"><span class="l"><sc-for list="{{r.hs}}" as="h" hint-placeholder-count="0"><i class="hi {{h.c}}"></i></sc-for>{{r.l}}</span><b>{{r.v}}</b></div></sc-for></div><div class="dd-foot"><span>Precio <strong>{{buy.price}}</strong></span><span>Casa <strong>{{buy.hc}}</strong> c/u</span></div></div>
+<div class="dd big" style="--c: {{buy.color}}; --fg: {{buy.fg}}"><div class="dd-photo"><img src="{{buy.img}}" alt=""></div><div class="dd-title"><small>Escritura real · {{buy.barrio}}</small><b>{{buy.name}}</b></div><div class="dd-rows"><sc-for list="{{buy.rows}}" as="r" hint-placeholder-count="7"><div class="dd-row {{r.cls}}"><span class="l"><sc-for list="{{r.hs}}" as="h" hint-placeholder-count="0"><i class="hi {{h.c}}"></i></sc-for>{{r.l}}</span><b>{{r.v}}</b></div></sc-for></div><div class="dd-foot"><span>Precio <strong>{{buy.price}}</strong></span><span>Casa <strong>{{buy.hc}}</strong> c/u</span></div></div>
 <div class="buyrow" style="display: flex; gap: 14px"><button class="btn b-rust" type="button" onClick="{{doBuy}}" disabled="{{buyOff}}" style="min-width: 160px">Comprar · {{buy.price}}</button><button class="btn" type="button" onClick="{{doPass}}" style="min-width: 160px">Pasar</button></div>
 </div></div>
 </sc-if>
@@ -575,7 +575,7 @@ a{color:#E0A33A}
 </sc-if>
 
 <sc-if value="{{showCine}}" hint-placeholder-val="{{ false }}">
-<div class="dom" role="status" style="background: #C13B1F; color: #EFE6D2"><div class="dom-ray"></div><div style="position: relative; text-align: center; padding: 24px"><div class="eyebrow dtext" style="font-size: 13px">Última ronda</div><div class="hd dtext" style="font-size: clamp(60px, 10vw, 140px); margin-top: 16px">Tiempo Extra</div><div class="serif dtext" style="font-size: 28px; margin-top: 16px">Todos los alquileres cobran el doble</div></div></div>
+<div class="dom" role="status" style="background: #C13B1F; color: #EFE6D2"><div class="dom-ray"></div><div style="position: relative; text-align: center; padding: 24px"><div class="eyebrow dtext" style="font-size: 13px">Última ronda</div><div class="hd dtext" style="font-size: clamp(60px, 10vw, 140px); margin-top: 16px">Tiempo Extra</div><div class="serif dtext" style="font-size: 28px; margin-top: 16px">Todos los tributoes cobran el doble</div></div></div>
 </sc-if>
 
 <sc-if value="{{showVote}}" hint-placeholder-val="{{ false }}">
@@ -615,41 +615,41 @@ const P = {
 };
 const pic = (k) => (k[0] === 'L' ? '/assets/lpl/' : '/assets/pl/') + k + '.webp';
 const ROLES = [
-  { id: 'alejandro', name: 'Alejandro Magno', color: '#2A6E70', fg: '#EFE6D2', yrs: '356–323 a.C.', bio: 'Rey de Macedonia y alumno de Aristóteles. Conquistó desde Grecia hasta la India sin perder una batalla importante.', dom: 'Falange Eterna', domDesc: 'Un muro de escudos rodea a los rivales: le conquista a cada uno su lugar más barato (o le cobra $2M si no tiene).' },
-  { id: 'freud', name: 'Sigmund Freud', color: '#2E3D6E', fg: '#EFE6D2', yrs: '1856–1939', bio: 'Padre del psicoanálisis. Propuso que el inconsciente guía buena parte de lo que hacemos.', dom: 'Diván del Inconsciente', domDesc: 'Todo se vuelve un sueño: cada rival le entrega su mejor carta de la mano (o $1M si no tiene).' },
-  { id: 'gengis', name: 'Gengis Kan', color: '#6B7340', fg: '#EFE6D2', yrs: 'c. 1162–1227', bio: 'Unificó a las tribus mongolas y fundó el imperio continuo más grande de la historia.', dom: 'Estepa sin Fin', domDesc: 'La horda galopa por el tablero: cada rival le entrega el 20% de su efectivo (máximo $5M).' },
+  { id: 'alejandro', name: 'Alejandro Magno', color: '#2A6E70', fg: '#EFE6D2', yrs: '356–323 a.C.', bio: 'Rey de Macedonia y alumno de Aristóteles. Conquistó desde Grecia hasta la India sin perder una batalla importante.', dom: 'Falange Eterna', domDesc: 'Un muro de escudos rodea a los rivales: le conquista a cada uno su lugar más barato (o le cobra 2 oro si no tiene).' },
+  { id: 'freud', name: 'Sigmund Freud', color: '#2E3D6E', fg: '#EFE6D2', yrs: '1856–1939', bio: 'Padre del psicoanálisis. Propuso que el inconsciente guía buena parte de lo que hacemos.', dom: 'Diván del Inconsciente', domDesc: 'Todo se vuelve un sueño: cada rival le entrega su mejor carta de la mano (o 1 oro si no tiene).' },
+  { id: 'gengis', name: 'Gengis Kan', color: '#6B7340', fg: '#EFE6D2', yrs: 'c. 1162–1227', bio: 'Unificó a las tribus mongolas y fundó el imperio continuo más grande de la historia.', dom: 'Estepa sin Fin', domDesc: 'La horda galopa por el tablero: cada rival le entrega el 20% de su oro (máximo 5 oro).' },
   { id: 'isabel', name: 'Isabel I', color: '#C13B1F', fg: '#EFE6D2', yrs: '1533–1603', bio: 'Reina de Inglaterra por 44 años. Venció a la Armada Invencible y abrió una edad de oro.', dom: 'Corte Dorada', domDesc: 'Todos se inclinan: durante una vuelta, cada pago que haga un rival le deja un 30% de tributo.' },
-  { id: 'leonardo', name: 'Leonardo da Vinci', color: '#C8748A', fg: '#14110F', yrs: '1452–1519', bio: 'Pintor de La Gioconda e inventor que dibujó máquinas voladoras siglos antes de su tiempo.', dom: 'Taller de los Inventos', domDesc: 'Engranajes gigantes cubren el tablero: se lleva gratis la mejor carta del Mercado y construye una casa gratis en cada época completa.' },
-  { id: 'napoleon', name: 'Napoleón Bonaparte', color: '#C13B1F', fg: '#EFE6D2', yrs: '1769–1821', bio: 'Emperador de Francia, vencedor en Austerlitz y autor del Código Civil. Terminó exiliado en Santa Elena.', dom: 'Sol de Austerlitz', domDesc: 'Duelo de dados contra cada rival: si gana, le quita su lugar más barato; si pierde, le paga $1M.' },
-  { id: 'newton', name: 'Isaac Newton', color: '#2E3D6E', fg: '#EFE6D2', yrs: '1643–1727', bio: 'Formuló las leyes del movimiento y la gravitación universal, y desarrolló el cálculo.', dom: 'Gravedad Absoluta', domDesc: 'Todos caen como manzanas en su lugar más caro y le pagan el alquiler.' },
-  { id: 'tesla', name: 'Nikola Tesla', color: '#2E3D6E', fg: '#EFE6D2', yrs: '1856–1943', bio: 'Pionero de la corriente alterna, que hoy alimenta casi toda la electricidad del mundo.', dom: 'Tormenta Eléctrica', domDesc: 'Rayos sobre el tablero: durante una vuelta sus alquileres se duplican y cada rival pierde la mitad de su carga de dominio.' },
-  { id: 'mozart', name: 'W. A. Mozart', color: '#C13B1F', fg: '#EFE6D2', yrs: '1756–1791', bio: 'Niño prodigio de Salzburgo que escribió más de 600 obras, como La flauta mágica.', dom: 'Gran Sinfonía', domDesc: 'Todos bailan a su ritmo: cada rival le paga $1M por cada carta que tenga en la mano (máximo $5M).' },
-  { id: 'juana', name: 'Juana de Arco', color: '#6B7340', fg: '#EFE6D2', yrs: 'c. 1412–1431', bio: 'Joven campesina que lideró al ejército francés y levantó el sitio de Orleans en 1429.', dom: 'Estandarte de Orleans', domDesc: 'Un escudo de luz la cubre: durante una vuelta no paga alquiler y cada rival le paga $1M.' },
+  { id: 'leonardo', name: 'Leonardo da Vinci', color: '#C8748A', fg: '#14110F', yrs: '1452–1519', bio: 'Pintor de La Gioconda e inventor que dibujó máquinas voladoras siglos antes de su tiempo.', dom: 'Taller de los Inventos', domDesc: 'Engranajes gigantes cubren el tablero: se lleva gratis la mejor carta del Mercado y levanta un monumento gratis en cada época completa.' },
+  { id: 'napoleon', name: 'Napoleón Bonaparte', color: '#C13B1F', fg: '#EFE6D2', yrs: '1769–1821', bio: 'Emperador de Francia, vencedor en Austerlitz y autor del Código Civil. Terminó exiliado en Santa Elena.', dom: 'Sol de Austerlitz', domDesc: 'Duelo de dados contra cada rival: si gana, le quita su lugar más barato; si pierde, le paga 1 oro.' },
+  { id: 'newton', name: 'Isaac Newton', color: '#2E3D6E', fg: '#EFE6D2', yrs: '1643–1727', bio: 'Formuló las leyes del movimiento y la gravitación universal, y desarrolló el cálculo.', dom: 'Gravedad Absoluta', domDesc: 'Todos caen como manzanas en su lugar más caro y le pagan el tributo.' },
+  { id: 'tesla', name: 'Nikola Tesla', color: '#2E3D6E', fg: '#EFE6D2', yrs: '1856–1943', bio: 'Pionero de la corriente alterna, que hoy alimenta casi toda la electricidad del mundo.', dom: 'Tormenta Eléctrica', domDesc: 'Rayos sobre el tablero: durante una vuelta sus tributoes se duplican y cada rival pierde la mitad de su carga de dominio.' },
+  { id: 'mozart', name: 'W. A. Mozart', color: '#C13B1F', fg: '#EFE6D2', yrs: '1756–1791', bio: 'Niño prodigio de Salzburgo que escribió más de 600 obras, como La flauta mágica.', dom: 'Gran Sinfonía', domDesc: 'Todos bailan a su ritmo: cada rival le paga 1 oro por cada carta que tenga en la mano (máximo 5 oro).' },
+  { id: 'juana', name: 'Juana de Arco', color: '#6B7340', fg: '#EFE6D2', yrs: 'c. 1412–1431', bio: 'Joven campesina que lideró al ejército francés y levantó el sitio de Orleans en 1429.', dom: 'Estandarte de Orleans', domDesc: 'Un escudo de luz la cubre: durante una vuelta no paga tributo y cada rival le paga 1 oro.' },
   { id: 'ramses', name: 'Ramsés II', color: '#C99022', fg: '#14110F', yrs: 'c. 1303–1213 a.C.', bio: 'Faraón que reinó 66 años, levantó Abu Simbel y firmó uno de los primeros tratados de paz.', dom: 'Eternidad del Nilo', domDesc: 'El Nilo cruza el tablero: durante dos vueltas sus lugares cobran un 50% más.' }
 ];
 const PAT = { alejandro: 'abogado', freud: 'estafador', gengis: 'corredor', isabel: 'banquero', leonardo: 'arquitecto', napoleon: 'abogado', newton: 'arquitecto', tesla: 'arquitecto', mozart: 'estafador', juana: 'coleccionista', ramses: 'banquero' };
 const GR = {
-  egipto: { name: 'Antiguo Egipto', color: '#C99022', c2: '#8A6213', fg: '#14110F', base: 1, houses: [2, 4, 7, 10], hotel: 14, hc: 1 },
-  clasico: { name: 'Mundo Clásico', color: '#2A6E70', c2: '#2A6E70', fg: '#F6EEDC', base: 1, houses: [3, 5, 8, 11], hotel: 15, hc: 1 },
-  medieval: { name: 'Edad Media', color: '#6B7340', c2: '#5A6133', fg: '#F6EEDC', base: 2, houses: [4, 7, 10, 13], hotel: 17, hc: 2 },
-  renacer: { name: 'Renacimiento', color: '#C8748A', c2: '#A3506A', fg: '#14110F', base: 2, houses: [5, 8, 11, 14], hotel: 18, hc: 2 },
-  imperial: { name: 'Era Imperial', color: '#C13B1F', c2: '#C13B1F', fg: '#F6EEDC', base: 3, houses: [6, 10, 13, 16], hotel: 20, hc: 3 },
-  moderna: { name: 'Era Moderna', color: '#2E3D6E', c2: '#2E3D6E', fg: '#F6EEDC', base: 3, houses: [7, 12, 15, 18], hotel: 22, hc: 3 }
+  egipto: { name: 'Antiguo Egipto', color: '#C99022', c2: '#8A6213', fg: '#14110F', base: 1, houses: [2, 4, 7, 10], maravilla: 14, hc: 1 },
+  clasico: { name: 'Mundo Clásico', color: '#2A6E70', c2: '#2A6E70', fg: '#F6EEDC', base: 1, houses: [3, 5, 8, 11], maravilla: 15, hc: 1 },
+  medieval: { name: 'Edad Media', color: '#6B7340', c2: '#5A6133', fg: '#F6EEDC', base: 2, houses: [4, 7, 10, 13], maravilla: 17, hc: 2 },
+  renacer: { name: 'Renacimiento', color: '#C8748A', c2: '#A3506A', fg: '#14110F', base: 2, houses: [5, 8, 11, 14], maravilla: 18, hc: 2 },
+  imperial: { name: 'Era Imperial', color: '#C13B1F', c2: '#C13B1F', fg: '#F6EEDC', base: 3, houses: [6, 10, 13, 16], maravilla: 20, hc: 3 },
+  moderna: { name: 'Era Moderna', color: '#2E3D6E', c2: '#2E3D6E', fg: '#F6EEDC', base: 3, houses: [7, 12, 15, 18], maravilla: 22, hc: 3 }
 };
 const TILES = [
-  { n: 'Portal del Tiempo', k: 'corner', img: 'L00', sub: 'Salida · cobrás $2M' },
+  { n: 'Portal del Tiempo', k: 'corner', img: 'L00', sub: 'Salida · cobrás 2 oro' },
   { n: 'Valle de los Reyes', k: 'prop', g: 'egipto', p: 1, img: 'L01', f: 'Los faraones duermen con sus tesoros.' },
   { n: 'Templo de Abu Simbel', k: 'prop', g: 'egipto', p: 1, img: 'L02', f: 'El sol entra hasta el fondo dos veces al año.' },
   { n: 'Crónicas', k: 'news' },
   { n: 'Pirámides de Guiza', k: 'prop', g: 'egipto', p: 2, img: 'L04', f: 'La única maravilla antigua que sigue en pie.' },
   { n: 'Partenón de Atenas', k: 'prop', g: 'clasico', p: 2, img: 'L05', f: 'Mármol blanco sobre la Acrópolis.' },
-  { n: 'Oráculo de Delfos', k: 'corner', img: 'L06', sub: 'Profecía · cobrás $1M' },
+  { n: 'Oráculo de Delfos', k: 'corner', img: 'L06', sub: 'Profecía · cobrás 1 oro' },
   { n: 'Biblioteca de Alejandría', k: 'prop', g: 'clasico', p: 2, img: 'L07', f: 'Todo el saber del mundo en rollos.' },
   { n: 'Coliseo de Roma', k: 'prop', g: 'clasico', p: 2, img: 'L08', f: 'Cincuenta mil gargantas gritando.' },
   { n: 'Gran Muralla China', k: 'prop', g: 'medieval', p: 3, img: 'L09', f: 'Miles de kilómetros de piedra.' },
   { n: 'Karakórum', k: 'prop', g: 'medieval', p: 3, img: 'L10', f: 'La capital de la estepa.' },
   { n: 'Catedral de Reims', k: 'prop', g: 'medieval', p: 3, img: 'L11', f: 'Donde se coronaban los reyes de Francia.' },
-  { n: 'Santa Elena', k: 'corner', img: 'L12', sub: 'Exilio · pagás $2M' },
+  { n: 'Santa Elena', k: 'corner', img: 'L12', sub: 'Exilio · pagás 2 oro' },
   { n: 'Duomo de Florencia', k: 'prop', g: 'renacer', p: 3, img: 'L13', f: 'La cúpula que nadie creía posible.' },
   { n: 'Gran Canal de Venecia', k: 'prop', g: 'renacer', p: 3, img: 'L14', f: 'Góndolas, palacios y comercio.' },
   { n: 'Crónicas', k: 'news' },
@@ -663,56 +663,56 @@ const TILES = [
   { n: 'Torre Wardenclyffe', k: 'prop', g: 'moderna', p: 5, img: 'L23', f: 'Energía por el aire, sin cables.' }
 ];
 const DEAL = [
-  { id: 'cobrador', name: 'Cobrador', ic: '$', color: '#C99022', c2: '#8A6213', fg: '#14110F', cost: 3, w: 3, desc: 'El rival más rico te paga $3M.' },
-  { id: 'fiesta', name: 'Banquete Real', ic: '★', color: '#C8748A', c2: '#A3506A', fg: '#14110F', cost: 2, w: 3, desc: 'Cada rival te paga $2M.' },
-  { id: 'sucio', name: 'Trato Sucio', ic: '↶', color: '#2E3D6E', c2: '#2E3D6E', fg: '#F6EEDC', cost: 3, w: 2, desc: 'Te quedás con el mejor lugar suelto de un rival.' },
-  { id: 'forzado', name: 'Trato Forzado', ic: '⇄', color: '#2A6E70', c2: '#2A6E70', fg: '#F6EEDC', cost: 3, w: 2, desc: 'Cambiás tu peor lugar por el mejor suelto de un rival.' },
-  { id: 'rompe', name: 'Rompetratos', ic: '✕', color: '#C13B1F', c2: '#C13B1F', fg: '#F6EEDC', cost: 5, w: 1, desc: 'Le robás una época completa a un rival.' },
-  { id: 'nilo', name: '¡Ni loco!', ic: '!', color: '#14110F', c2: '#14110F', fg: '#F6EEDC', cost: 4, w: 2, passive: true, desc: 'Se activa sola: cancela un trato en tu contra o bloquea un alquiler.' },
-  { id: 'doble', name: 'Doble Alquiler', ic: '×2', color: '#6B7340', c2: '#5A6133', fg: '#F6EEDC', cost: 1, w: 2, passive: true, desc: 'Se activa sola: el próximo alquiler que cobres vale el doble.' },
-  { id: 'paso', name: 'Paso Libre', ic: '+2', color: '#C99022', c2: '#8A6213', fg: '#14110F', cost: 1, w: 2, desc: 'Robás 2 cartas del mazo de Tratos.' },
-  { id: 'foco', name: 'Concentración', ic: '◎', color: '#2E3D6E', c2: '#2E3D6E', fg: '#F6EEDC', cost: 3, w: 2, desc: 'Tu dominio carga +40%.' },
-  { id: 'subsidio', name: 'Subsidio', ic: '+$', color: '#6B7340', c2: '#5A6133', fg: '#F6EEDC', cost: 1, w: 3, desc: 'Cobrás $2M del banco.' }
+  { id: 'cobrador', name: 'Recaudador del Rey', ic: '♛', color: '#C99022', c2: '#8A6213', fg: '#14110F', cost: 3, w: 3, desc: 'El rival más rico te paga 3 oro.' },
+  { id: 'fiesta', name: 'Banquete Real', ic: '♨', color: '#C8748A', c2: '#A3506A', fg: '#14110F', cost: 2, w: 3, desc: 'Cada rival te paga 2 oro.' },
+  { id: 'sucio', name: 'Espionaje', ic: '◐', color: '#2E3D6E', c2: '#2E3D6E', fg: '#F6EEDC', cost: 3, w: 2, desc: 'Te quedás con el mejor lugar suelto de un rival.' },
+  { id: 'forzado', name: 'Tratado de Paz', ic: '⇄', color: '#2A6E70', c2: '#2A6E70', fg: '#F6EEDC', cost: 3, w: 2, desc: 'Cambiás tu peor lugar por el mejor suelto de un rival.' },
+  { id: 'rompe', name: 'Conquista', ic: '⚔', color: '#C13B1F', c2: '#C13B1F', fg: '#F6EEDC', cost: 5, w: 1, desc: 'Le robás una época completa a un rival.' },
+  { id: 'nilo', name: '¡Veto!', ic: '✋', color: '#14110F', c2: '#14110F', fg: '#F6EEDC', cost: 4, w: 2, passive: true, desc: 'Se activa sola: cancela un trato en tu contra o bloquea un tributo.' },
+  { id: 'doble', name: 'Impuesto de Guerra', ic: '×2', color: '#6B7340', c2: '#5A6133', fg: '#F6EEDC', cost: 1, w: 2, passive: true, desc: 'Se activa sola: el próximo tributo que cobres vale el doble.' },
+  { id: 'paso', name: 'Mensajero Real', ic: '✉', color: '#C99022', c2: '#8A6213', fg: '#14110F', cost: 1, w: 2, desc: 'Robás 2 cartas del mazo de Pergaminos.' },
+  { id: 'foco', name: 'Profecía', ic: '◎', color: '#2E3D6E', c2: '#2E3D6E', fg: '#F6EEDC', cost: 3, w: 2, desc: 'Tu dominio carga +40%.' },
+  { id: 'subsidio', name: 'Mecenazgo', ic: '✦', color: '#6B7340', c2: '#5A6133', fg: '#F6EEDC', cost: 1, w: 3, desc: 'Cobrás 2 oro del banco.' }
 ];
 DEAL.push(
-  { id: 'm1', type: 'money', amt: 1, name: 'Billete de $1M', ic: '1', color: '#6B7340', c2: '#5A6133', fg: '#F6EEDC', cost: 1, w: 4, desc: 'Depositalo en tu banco: +$1M.' },
-  { id: 'm2', type: 'money', amt: 2, name: 'Billete de $2M', ic: '2', color: '#2A6E70', c2: '#2A6E70', fg: '#F6EEDC', cost: 2, w: 3, desc: 'Depositalo en tu banco: +$2M.' },
-  { id: 'm3', type: 'money', amt: 3, name: 'Billete de $3M', ic: '3', color: '#C99022', c2: '#8A6213', fg: '#14110F', cost: 3, w: 2, desc: 'Depositalo en tu banco: +$3M.' },
-  { id: 'm5', type: 'money', amt: 5, name: 'Billete de $5M', ic: '5', color: '#C13B1F', c2: '#C13B1F', fg: '#F6EEDC', cost: 5, w: 1, desc: 'Depositalo en tu banco: +$5M.' },
-  { id: 'm10', type: 'money', amt: 10, name: 'Billete de $10M', ic: '10', color: '#2E3D6E', c2: '#2E3D6E', fg: '#F6EEDC', cost: 10, w: 1, desc: 'El billete más grande de la ciudad: +$10M.' },
-  { id: 'rentaA', type: 'rent', groups: ['egipto', 'clasico'], name: 'Renta Egipto · Clásico', ic: 'R', color: '#2A6E70', c2: '#2A6E70', fg: '#F6EEDC', cost: 1, w: 2, desc: 'Cada rival te paga el alquiler de tu mejor lugar en Antiguo Egipto o Mundo Clásico.' },
-  { id: 'rentaB', type: 'rent', groups: ['medieval', 'renacer'], name: 'Renta Medieval · Renacimiento', ic: 'R', color: '#C99022', c2: '#8A6213', fg: '#14110F', cost: 1, w: 2, desc: 'Cada rival te paga el alquiler de tu mejor lugar en Edad Media o Renacimiento.' },
-  { id: 'rentaC', type: 'rent', groups: ['imperial', 'moderna'], name: 'Renta Imperial · Moderna', ic: 'R', color: '#C13B1F', c2: '#C13B1F', fg: '#F6EEDC', cost: 1, w: 2, desc: 'Cada rival te paga el alquiler de tu mejor lugar en Era Imperial o Era Moderna.' },
-  { id: 'rentaW', type: 'rent', groups: null, single: true, name: 'Renta Comodín', ic: 'R*', color: '#14110F', c2: '#14110F', fg: '#F6EEDC', cost: 3, w: 1, desc: 'El rival más rico te paga el alquiler de tu mejor lugar, de cualquier época.' },
-  { id: 'casa', type: 'build', name: 'Constructora', ic: '⌂', color: '#6B7340', c2: '#5A6133', fg: '#F6EEDC', cost: 3, w: 2, desc: 'Construís una casa gratis en una época completa.' },
-  { id: 'hotel', type: 'build', name: 'Gran Hotel', ic: 'H', color: '#C13B1F', c2: '#C13B1F', fg: '#F6EEDC', cost: 4, w: 1, desc: 'Convertís gratis 4 casas en un hotel.' },
-  { id: 'embargo', name: 'Embargo', ic: '⛓', color: '#2E3D6E', c2: '#2E3D6E', fg: '#F6EEDC', cost: 3, w: 1, desc: 'El rival con más cartas pierde 2 cartas de su mano al azar.' },
-  { id: 'apagon', name: 'Apagón', ic: '✶', color: '#14110F', c2: '#14110F', fg: '#F6EEDC', cost: 2, w: 1, desc: 'Le quitás 30% de dominio a cada rival.' }
+  { id: 'm1', type: 'money', amt: 1, name: 'Moneda de oro', ic: '1', color: '#6B7340', c2: '#5A6133', fg: '#F6EEDC', cost: 1, w: 4, desc: 'Guardáslo en tu banco: +1 oro.' },
+  { id: 'm2', type: 'money', amt: 2, name: 'Bolsa de oro', ic: '2', color: '#2A6E70', c2: '#2A6E70', fg: '#F6EEDC', cost: 2, w: 3, desc: 'Guardáslo en tu banco: +2 oro.' },
+  { id: 'm3', type: 'money', amt: 3, name: 'Arcón de oro', ic: '3', color: '#C99022', c2: '#8A6213', fg: '#14110F', cost: 3, w: 2, desc: 'Guardáslo en tu banco: +3 oro.' },
+  { id: 'm5', type: 'money', amt: 5, name: 'Cofre del tesoro', ic: '5', color: '#C13B1F', c2: '#C13B1F', fg: '#F6EEDC', cost: 5, w: 1, desc: 'Guardáslo en tu banco: +5 oro.' },
+  { id: 'm10', type: 'money', amt: 10, name: 'Tesoro real', ic: '10', color: '#2E3D6E', c2: '#2E3D6E', fg: '#F6EEDC', cost: 10, w: 1, desc: 'El mayor tesoro del reino: +10 oro.' },
+  { id: 'rentaA', type: 'rent', groups: ['egipto', 'clasico'], name: 'Tributo Egipto · Clásico', ic: 'T', color: '#2A6E70', c2: '#2A6E70', fg: '#F6EEDC', cost: 1, w: 2, desc: 'Cada rival te paga el tributo de tu mejor lugar en Antiguo Egipto o Mundo Clásico.' },
+  { id: 'rentaB', type: 'rent', groups: ['medieval', 'renacer'], name: 'Tributo Medieval · Renacimiento', ic: 'T', color: '#C99022', c2: '#8A6213', fg: '#14110F', cost: 1, w: 2, desc: 'Cada rival te paga el tributo de tu mejor lugar en Edad Media o Renacimiento.' },
+  { id: 'rentaC', type: 'rent', groups: ['imperial', 'moderna'], name: 'Tributo Imperial · Moderno', ic: 'T', color: '#C13B1F', c2: '#C13B1F', fg: '#F6EEDC', cost: 1, w: 2, desc: 'Cada rival te paga el tributo de tu mejor lugar en Era Imperial o Era Moderna.' },
+  { id: 'rentaW', type: 'rent', groups: null, single: true, name: 'Tributo Universal', ic: 'T*', color: '#14110F', c2: '#14110F', fg: '#F6EEDC', cost: 3, w: 1, desc: 'El rival más rico te paga el tributo de tu mejor lugar, de cualquier época.' },
+  { id: 'casa', type: 'build', name: 'Arquitectos del Rey', ic: '⌂', color: '#6B7340', c2: '#5A6133', fg: '#F6EEDC', cost: 3, w: 2, desc: 'Levantás un monumento gratis en una época completa.' },
+  { id: 'hotel', type: 'build', name: 'Gran Maravilla', ic: '♜', color: '#C13B1F', c2: '#C13B1F', fg: '#F6EEDC', cost: 4, w: 1, desc: 'Convertís gratis 4 monumentos en una maravilla.' },
+  { id: 'embargo', name: 'Saqueo', ic: '⚑', color: '#2E3D6E', c2: '#2E3D6E', fg: '#F6EEDC', cost: 3, w: 1, desc: 'El rival con más cartas pierde 2 cartas de su mano al azar.' },
+  { id: 'apagon', name: 'Eclipse', ic: '☾', color: '#14110F', c2: '#14110F', fg: '#F6EEDC', cost: 2, w: 1, desc: 'Le quitás 30% de dominio a cada rival.' }
 );
 const PILE = [800, 776];
 const RULES = { start: 5, draw: 2, drawEmpty: 4, plays: 2, handMax: 6, market: 1 };
 const RULES_TXT = [
-  { h: 'Objetivo', t: 'Terminar con el mayor patrimonio (efectivo + lugares + casas) después de las rondas y el Tiempo Extra. Si alguien queda en negativo, la partida termina.' },
-  { h: 'Inicio', t: `Cada jugador arranca con $15M y ${RULES.start} cartas del mazo de Tratos. El Mercado muestra 3 cartas boca arriba.` },
-  { h: 'Tu turno, paso a paso', t: `1) Robás ${RULES.draw} cartas (${RULES.drawEmpty} si no tenés ninguna). 2) Antes de tirar podés jugar cartas. 3) Tirás y movés: la casilla se resuelve (comprar, pagar alquiler o Noticia). 4) Después de tirar usás tus acciones: jugar cartas, comprar 1 en el Mercado o construir. 5) Fin de turno. En total: ${RULES.plays} acciones por turno.` },
-  { h: 'Tablero + cartas', t: 'El tablero te da lugares y alquileres pasivos: cobrás cuando un rival cae en lo tuyo. Las cartas son tu jugada activa: cobrar sin esperar (Renta, Cobrador, Fiesta), robar lugares (Trato Sucio, Rompetratos), construir gratis o defenderte (¡Ni loco!). Cuantos más lugares tengas, más valen tus cartas de Renta.' },
-  { h: 'Acciones', t: `Tenés ${RULES.plays} acciones por turno, antes o después de tirar. Cada una puede ser: jugar una carta (un billete también cuenta), comprar en el Mercado o construir una casa. Activar tu dominio no gasta acción. ¡Ni loco! y Doble Alquiler se activan solas y no cuentan.` },
+  { h: 'Objetivo', t: 'Terminar con el mayor patrimonio (oro + lugares + monumentos) después de las rondas y el Tiempo Extra. Si alguien queda en negativo, la partida termina.' },
+  { h: 'Inicio', t: `Cada jugador arranca con 15 oro y ${RULES.start} cartas del mazo de Pergaminos. El Mercado muestra 3 cartas boca arriba.` },
+  { h: 'Tu turno, paso a paso', t: `1) Robás ${RULES.draw} cartas (${RULES.drawEmpty} si no tenés ninguna). 2) Antes de tirar podés jugar cartas. 3) Tirás y movés: la casilla se resuelve (comprar, pagar tributo o Noticia). 4) Después de tirar usás tus acciones: jugar cartas, comprar 1 en el Mercado o construir. 5) Fin de turno. En total: ${RULES.plays} acciones por turno.` },
+  { h: 'Tablero + cartas', t: 'El tablero te da lugares y tributoes pasivos: cobrás cuando un rival cae en lo tuyo. Las cartas son tu jugada activa: cobrar sin esperar (Renta, Recaudador, Fiesta), robar lugares (Espionaje, Conquista), construir gratis o defenderte (¡Veto!). Cuantos más lugares tengas, más valen tus cartas de Renta.' },
+  { h: 'Acciones', t: `Tenés ${RULES.plays} acciones por turno, antes o después de tirar. Cada una puede ser: jugar una carta (una moneda también cuenta), comprar en el Mercado o levantar un monumento. Activar tu dominio no gasta acción. ¡Veto! y Impuesto de Guerra se activan solas y no cuentan.` },
   { h: 'Mano', t: `Máximo ${RULES.handMax} cartas al terminar tu turno; las sobrantes de menor valor van al descarte. Si el mazo se vacía, se mezcla el descarte.` },
   { h: 'Mercado', t: `${RULES.market} compra por turno, después de tirar. La carta va a tu mano y se repone del mazo.` },
-  { h: 'Lugares y épocas', t: 'Caé en un lugar libre para comprarlo. Época completa = alquiler doble y permiso para construir casas (hasta 4) y luego hotel, parejo entre los lugares.' },
-  { h: 'Defensa', t: 'Cuando te cobran alquiler tenés 8 segundos: Bloquear, Negociar o Contraatacar.' },
-  { h: 'Activar dominio', t: 'Cobrar alquiler (+25), pagar (+20), comprar (+15) y pasar el Portal (+10) cargan tu dominio. Al 100% lo activás y atrapás a los rivales en tu área de poder.' },
-  { h: 'Tiempo Extra', t: 'Después de la última ronda se juega una vuelta más con alquileres x2.' }
+  { h: 'Lugares y épocas', t: 'Caé en un lugar libre para comprarlo. Época completa = tributo doble y permiso para levantar monumentos (hasta 4) y luego una maravilla, parejo entre los lugares.' },
+  { h: 'Defensa', t: 'Cuando te cobran tributo tenés 8 segundos: Bloquear, Negociar o Contraatacar.' },
+  { h: 'Activar dominio', t: 'Cobrar tributo (+25), pagar (+20), comprar (+15) y pasar el Portal (+10) cargan tu dominio. Al 100% lo activás y atrapás a los rivales en tu área de poder.' },
+  { h: 'Tiempo Extra', t: 'Después de la última ronda se juega una vuelta más con tributoes x2.' }
 ];
 const BAG = []; DEAL.forEach((c) => { for (let k = 0; k < c.w; k++) BAG.push(c); });
 const NEWS = [
-  { id: 'herencia', name: 'Tesoro del faraón', ic: '$', desc: 'Encontrás un tesoro escondido: ganás $3M.' },
-  { id: 'auditoria', name: 'Impuesto del rey', ic: '!', desc: 'Pagás $1M por cada lugar que tengas.' },
+  { id: 'herencia', name: 'Tesoro del faraón', ic: '$', desc: 'Encontrás un tesoro escondido: ganás 3 oro.' },
+  { id: 'auditoria', name: 'Impuesto del rey', ic: '!', desc: 'Pagás 1 oro por cada lugar que tengas.' },
   { id: 'inspira', name: 'Inspiración divina', ic: '◎', desc: 'Tu dominio se carga +40%.' },
-  { id: 'viaje', name: 'Salto en el tiempo', ic: '→', desc: 'Volvés al Portal del Tiempo y cobrás $2M.' },
-  { id: 'huelga', name: 'Tributo de los pueblos', ic: '♛', desc: 'Cada rival te paga $1M.' },
-  { id: 'multa', name: 'Peste negra', ic: '−', desc: 'Pagás $2M para curar a tu pueblo.' },
-  { id: 'contrabando', name: 'Mapa secreto', ic: '?', desc: 'Robás 1 carta de Tratos gratis.' }
+  { id: 'viaje', name: 'Salto en el tiempo', ic: '→', desc: 'Volvés al Portal del Tiempo y cobrás 2 oro.' },
+  { id: 'huelga', name: 'Tributo de los pueblos', ic: '♛', desc: 'Cada rival te paga 1 oro.' },
+  { id: 'multa', name: 'Peste negra', ic: '−', desc: 'Pagás 2 oro para curar a tu pueblo.' },
+  { id: 'contrabando', name: 'Mapa secreto', ic: '?', desc: 'Robás 1 carta de Pergaminos gratis.' }
 ];
 const FACE = { 1: [0, 0], 6: [0, 180], 3: [0, -90], 4: [0, 90], 2: [-90, 0], 5: [90, 0] };
 const GROUPS = Object.keys(GR);
@@ -721,7 +721,7 @@ const CARS = [{ color: '#C13B1F', delay: 0, dur: 34 }, { color: '#C99022', delay
 function cell(i) { if (i <= 6) return [1, i + 1]; if (i <= 12) return [i - 5, 7]; if (i <= 18) return [7, 7 - (i - 12)]; return [7 - (i - 18), 1]; }
 function rotOf(i) { if (i % 6 === 0) return 0; if (i < 6) return 180; if (i < 12) return -90; if (i < 18) return 0; return 90; }
 function center(i) { const [r, c] = cell(i); const pos = (n) => (n === 1 ? 85 : n === 7 ? 1035 : 170 + (n - 1.5) * 156); return [pos(c), pos(r)]; }
-function M(n) { return (n < 0 ? '-$' : '$') + Math.abs(Math.round(n)) + 'M'; }
+function M(n) { return (n < 0 ? '−' : '') + Math.abs(Math.round(n)) + ' oro'; }
 function rnd(n) { if (n <= 1) return 0; try { const a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] % n; } catch (e) { return Math.floor(Math.random() * n); } }
 function shuf(a) { for (let k = a.length - 1; k > 0; k--) { const j = rnd(k + 1); [a[k], a[j]] = [a[j], a[k]]; } return a; }
 function spread(a, key) { for (let k = 1; k < a.length; k++) { if (key(a[k]) === key(a[k - 1])) { const j = a.findIndex((x, m) => m > k && key(x) !== key(a[k - 1])); if (j > 0) [a[k], a[j]] = [a[j], a[k]]; } } return a; }
@@ -760,7 +760,7 @@ class Component extends DCLogic {
   loose(pi) { return this.owned(pi).filter((i) => !this.complete(pi, TILES[i].g)); }
   give(pi, n) { const p = this.g.players[pi]; for (let k = 0; k < n; k++) p.hand.push(this.drawDeal()); return n; }
   takeCard(pi, id) { const p = this.g.players[pi]; const k = p.hand.findIndex((c) => c.id === id); if (k < 0) return false; this.toDiscard(p.hand.splice(k, 1)[0]); return true; }
-  nilo(target, by) { if (this.takeCard(target, 'nilo')) { const m = `${this.nm(target)} jugó ¡Ni loco! y canceló el trato de ${this.nm(by)}`; this.log(m); this.toast(m); return true; } return false; }
+  nilo(target, by) { if (this.takeCard(target, 'nilo')) { const m = `${this.nm(target)} jugó ¡Veto! y canceló el trato de ${this.nm(by)}`; this.log(m); this.toast(m); return true; } return false; }
   mob() { return typeof window !== 'undefined' && window.innerWidth < 700; }
   followOn() { this.cam.follow = true; this.cam.px = 0; this.cam.py = 0; const z = this.mob() ? 0.7 : 1.05; if (this.cam.s < z - 0.1) this.cam.s = z; }
 
@@ -789,7 +789,7 @@ class Component extends DCLogic {
   lvl(i) { return this.g.houses[i] || 0; }
   rentFor(i, oi) { const t = TILES[i]; const gr = GR[t.g]; const L = this.lvl(i); let r = L === 5 ? gr.hotel : L > 0 ? gr.houses[L - 1] : (this.complete(oi, t.g) ? gr.base * 2 : gr.base); if (this.g.overtime) r *= 2; const b = this.g.boost; if (b && b.turns > 0 && b.pi === oi) r = Math.round(r * b.mult); return r; }
   buildTarget(pi, gr) { if (!this.complete(pi, gr)) return null; const idx = groupIdx(gr).sort((a, b) => this.lvl(a) - this.lvl(b)); return this.lvl(idx[0]) < 5 ? idx[0] : null; }
-  build(pi, gr) { const i = this.buildTarget(pi, gr); if (i === null || this.playsLeft(pi) <= 0) return false; const c = GR[gr].hc; if (this.g.players[pi].money < c) return false; this.pay(pi, null, c); if (pi === this.g.turn) this.g.plays = (this.g.plays || 0) + 1; this.g.houses[i] = this.lvl(i) + 1; this.log(`${this.nm(pi)} construyó ${this.lvl(i) === 5 ? 'un hotel' : 'una casa'} en ${TILES[i].n}`); this.refresh(); return true; }
+  build(pi, gr) { const i = this.buildTarget(pi, gr); if (i === null || this.playsLeft(pi) <= 0) return false; const c = GR[gr].hc; if (this.g.players[pi].money < c) return false; this.pay(pi, null, c); if (pi === this.g.turn) this.g.plays = (this.g.plays || 0) + 1; this.g.houses[i] = this.lvl(i) + 1; this.log(`${this.nm(pi)} construyó ${this.lvl(i) === 5 ? 'una maravilla' : 'un monumento'} en ${TILES[i].n}`); this.refresh(); return true; }
   botBuild(pi) { GROUPS.forEach((gr) => { let n = 0; while (n < 2 && this.buildTarget(pi, gr) !== null && this.g.players[pi].money - GR[gr].hc >= 6 && Math.random() < 0.7) { this.build(pi, gr); n += 1; } }); }
 
   rollDice(pi, cb) {
@@ -803,7 +803,7 @@ class Component extends DCLogic {
     const step = () => {
       const p = g.players[pi];
       p.pos = (p.pos + 1) % 24; g.focus = p.pos;
-      if (p.pos === 0) { p.money += 2; this.addCharge(pi, 10); this.log(`${p.name} pasó por el Portal del Tiempo: +$2M`); }
+      if (p.pos === 0) { p.money += 2; this.addCharge(pi, 10); this.log(`${p.name} pasó por el Portal del Tiempo: +2 oro`); }
       left -= 1; this.refresh();
       if (left > 0) this.later(step, 380); else this.later(done, 520);
     };
@@ -813,9 +813,9 @@ class Component extends DCLogic {
     const g = this.g; const p = g.players[pi]; const t = TILES[p.pos];
     const cont = () => this.afterLand(pi);
     if (t.k === 'corner') {
-      if (p.pos === 6) { p.money += 1; this.log(`${p.name} escuchó al Oráculo: +$1M`); }
+      if (p.pos === 6) { p.money += 1; this.log(`${p.name} escuchó al Oráculo: +1 oro`); }
       if (p.pos === 18) { this.addCharge(pi, 20); this.log(`${p.name} fue coronado: +20 de dominio`); }
-      if (p.pos === 12) { this.pay(pi, null, 2); this.log(`${p.name} fue exiliado a Santa Elena: paga $2M`); if (this.broke()) return; }
+      if (p.pos === 12) { this.pay(pi, null, 2); this.log(`${p.name} fue exiliado a Santa Elena: paga 2 oro`); if (this.broke()) return; }
       this.refresh(); return cont();
     }
     if (t.k === 'news') {
@@ -835,13 +835,13 @@ class Component extends DCLogic {
   }
   applyNews(pi, c) {
     const g = this.g; const p = g.players[pi];
-    if (c.id === 'herencia') { p.money += 3; return '+$3M'; }
+    if (c.id === 'herencia') { p.money += 3; return '+3 oro'; }
     if (c.id === 'auditoria') { const n = this.owned(pi).length; this.pay(pi, null, n); return `paga ${M(n)}`; }
     if (c.id === 'inspira') { this.addCharge(pi, 40); return 'dominio +40%'; }
-    if (c.id === 'viaje') { p.pos = 0; g.focus = 0; p.money += 2; this.addCharge(pi, 10); return 'vuelve al Portal del Tiempo, +$2M'; }
-    if (c.id === 'huelga') { g.players.forEach((o, k) => { if (k !== pi) this.pay(k, pi, 1); }); return 'cada rival le paga $1M'; }
-    if (c.id === 'multa') { this.pay(pi, null, 2); return 'paga $2M'; }
-    if (c.id === 'contrabando') return this.give(pi, 1) ? 'roba 1 carta de Tratos' : 'mano llena';
+    if (c.id === 'viaje') { p.pos = 0; g.focus = 0; p.money += 2; this.addCharge(pi, 10); return 'vuelve al Portal del Tiempo, +2 oro'; }
+    if (c.id === 'huelga') { g.players.forEach((o, k) => { if (k !== pi) this.pay(k, pi, 1); }); return 'cada rival le paga 1 oro'; }
+    if (c.id === 'multa') { this.pay(pi, null, 2); return 'paga 2 oro'; }
+    if (c.id === 'contrabando') return this.give(pi, 1) ? 'roba 1 carta de Pergaminos' : 'mano llena';
     return '';
   }
   buyTile(pi, i) {
@@ -859,8 +859,8 @@ class Component extends DCLogic {
   chargeRent(payer, owner, i, cont) {
     const g = this.g; const P = g.players[payer];
     let amount = this.rentFor(i, owner);
-    const sh = g.shield; if (sh && sh.turns > 0 && sh.pi === payer) { this.log(`${P.name} está bajo el Estandarte de Orleans: no paga alquiler`); if (!P.bot) this.toast('El Estandarte de Orleans te protege: no pagás alquiler', payer); return cont ? cont() : undefined; }
-    if (this.takeCard(owner, 'doble')) { amount *= 2; this.log(`${this.nm(owner)} jugó Doble Alquiler`); }
+    const sh = g.shield; if (sh && sh.turns > 0 && sh.pi === payer) { this.log(`${P.name} está bajo el Estandarte de Orleans: no paga tributo`); if (!P.bot) this.toast('El Estandarte de Orleans te protege: no pagás tributo', payer); return cont ? cont() : undefined; }
+    if (this.takeCard(owner, 'doble')) { amount *= 2; this.log(`${this.nm(owner)} jugó Impuesto de Guerra`); }
     if (!P.bot) {
       g.phase = 'defense'; g.def = { payer, owner, i, amount, secs: 8, done: false, result: '' }; this.cont = cont;
       this.defInt = setInterval(() => { if (!g.def || g.def.done) return; g.def.secs -= 1; if (g.def.secs <= 0) this.resolve('timeout'); else this.refresh(); }, 1000);
@@ -874,7 +874,7 @@ class Component extends DCLogic {
   }
   settle(payer, owner, amount, choice) {
     const P = this.g.players[payer], O = this.g.players[owner]; const you = this.you(payer); let msg;
-    if (choice === 'block' && this.takeCard(payer, 'nilo')) { msg = you ? '¡Ni loco! No pagás nada' : `${P.name} gritó ¡Ni loco! y no paga nada`; this.addCharge(payer, 10); }
+    if (choice === 'block' && this.takeCard(payer, 'nilo')) { msg = you ? '¡Veto! No pagás nada' : `${P.name} gritó ¡Veto! y no paga nada`; this.addCharge(payer, 10); }
     else if (choice === 'nego') {
       const ok = Math.random() < 0.6; const pay = ok ? Math.max(1, Math.round(amount / 2)) : amount;
       this.pay(payer, owner, pay); this.addCharge(payer, 20); this.addCharge(owner, 25);
@@ -911,7 +911,7 @@ class Component extends DCLogic {
   beginTurn() {
     const g = this.g; const p = g.players[g.turn];
     g.focus = p.pos; g.plays = 0; const n = p.hand.length ? RULES.draw : RULES.drawEmpty;
-    if (!p.bot) { g.phase = 'draw'; g.drawN = n; this.lookPile(); this.toast(`Tu turno: tocá el mazo de Tratos y robá ${n} cartas`, g.turn); this.refresh(); }
+    if (!p.bot) { g.phase = 'draw'; g.drawN = n; this.lookPile(); this.toast(`Tu turno: tocá el mazo de Pergaminos y robá ${n} cartas`, g.turn); this.refresh(); }
     else { g.phase = 'bot'; this.flyDraw(g.turn, n, () => { this.followOn(); this.refresh(); this.later(() => this.botTurn(), 500); }); }
   }
   lookPile() { this.g.look = PILE; this.cam.follow = false; this.cam.px = 0; this.cam.py = 0; this.cam.s = this.mob() ? 0.62 : 1; }
@@ -953,23 +953,23 @@ class Component extends DCLogic {
     const g = this.g; const p = g.players[pi]; const c = p.hand[idx];
     if (!c || !this.canPlay(pi, c) || this.playsLeft(pi) <= 0) return '';
     p.hand.splice(idx, 1); g.plays = (g.plays || 0) + 1; this.toDiscard(c); let msg = '';
-    if (c.type === 'money') { p.money += c.amt; msg = `deposita ${M(c.amt)}`; }
+    if (c.type === 'money') { p.money += c.amt; msg = `guarda ${M(c.amt)}`; }
     if (c.type === 'rent') {
       const b = this.bestRent(pi, c.groups); let amt = b.r; if (this.takeCard(pi, 'doble')) amt *= 2;
       const targets = c.single ? [this.rivalsOf(pi).sort((x, y) => g.players[y].money - g.players[x].money)[0]] : this.rivalsOf(pi);
       msg = targets.map((k) => (this.nilo(k, pi) ? `${this.nm(k)} se niega` : (this.pay(k, pi, amt, false), `${this.nm(k)} paga ${M(amt)}`))).join(' · ') + ` (${TILES[b.i].n})`;
       this.addCharge(pi, 25);
     }
-    if (c.id === 'casa') { const gr = GROUPS.find((x) => { const t = this.buildTarget(pi, x); return t !== null && this.lvl(t) < 4; }); const t = this.buildTarget(pi, gr); g.houses[t] = this.lvl(t) + 1; msg = `casa gratis en ${TILES[t].n}`; }
-    if (c.id === 'hotel') { const t = this.owned(pi).find((i) => this.lvl(i) === 4); g.houses[t] = 5; msg = `hotel en ${TILES[t].n}`; }
+    if (c.id === 'casa') { const gr = GROUPS.find((x) => { const t = this.buildTarget(pi, x); return t !== null && this.lvl(t) < 4; }); const t = this.buildTarget(pi, gr); g.houses[t] = this.lvl(t) + 1; msg = `monumento gratis en ${TILES[t].n}`; }
+    if (c.id === 'hotel') { const t = this.owned(pi).find((i) => this.lvl(i) === 4); g.houses[t] = 5; msg = `maravilla en ${TILES[t].n}`; }
     if (c.id === 'embargo') { const t = this.rivalsOf(pi).sort((x, y) => g.players[y].hand.length - g.players[x].hand.length)[0]; if (this.nilo(t, pi)) msg = 'cancelado'; else { const o = g.players[t]; let n = 0; while (n < 2 && o.hand.length) { this.toDiscard(o.hand.splice(rnd(o.hand.length), 1)[0]); n += 1; } msg = `${this.nm(t)} pierde ${n} cartas`; } }
     if (c.id === 'apagon') { msg = this.rivalsOf(pi).map((k) => (this.nilo(k, pi) ? `${this.nm(k)} se niega` : ((g.players[k].charge = Math.max(0, g.players[k].charge - 30)), `${this.nm(k)} −30%`))).join(' · '); }
-    if (c.id === 'subsidio') { p.money += 2; msg = '+$2M'; }
+    if (c.id === 'subsidio') { p.money += 2; msg = '+2 oro'; }
     if (c.id === 'foco') { this.addCharge(pi, 40); msg = 'dominio +40%'; }
     if (c.id === 'paso' && g.players[pi].bot) msg = `roba ${this.give(pi, 2)} cartas`;
     if (c.id === 'paso' && !g.players[pi].bot) { const ph = g.phase; this.flyDraw(pi, 2, () => { this.followOn(); this.refresh(); }); g.phase = ph; msg = 'roba 2 cartas del mazo'; }
-    if (c.id === 'cobrador') { const t = this.rivalsOf(pi).sort((a, b) => g.players[b].money - g.players[a].money)[0]; if (this.nilo(t, pi)) msg = 'cancelado'; else { this.pay(t, pi, 3, false); msg = `${this.nm(t)} paga $3M`; } }
-    if (c.id === 'fiesta') msg = this.rivalsOf(pi).map((k) => (this.nilo(k, pi) ? `${this.nm(k)} se niega` : (this.pay(k, pi, 2, false), `${this.nm(k)} paga $2M`))).join(' · ');
+    if (c.id === 'cobrador') { const t = this.rivalsOf(pi).sort((a, b) => g.players[b].money - g.players[a].money)[0]; if (this.nilo(t, pi)) msg = 'cancelado'; else { this.pay(t, pi, 3, false); msg = `${this.nm(t)} paga 3 oro`; } }
+    if (c.id === 'fiesta') msg = this.rivalsOf(pi).map((k) => (this.nilo(k, pi) ? `${this.nm(k)} se niega` : (this.pay(k, pi, 2, false), `${this.nm(k)} paga 2 oro`))).join(' · ');
     if (c.id === 'sucio') { const b = this.bestLoose(pi); if (this.nilo(b.k, pi)) msg = 'cancelado'; else { g.owners[b.i] = pi; msg = `se queda con ${TILES[b.i].n} de ${this.nm(b.k)}`; } }
     if (c.id === 'forzado') { const b = this.bestLoose(pi); const mine = this.owned(pi).sort((x, y) => TILES[x].p - TILES[y].p)[0]; if (this.nilo(b.k, pi)) msg = 'cancelado'; else { g.owners[b.i] = pi; g.owners[mine] = b.k; msg = `cambia ${TILES[mine].n} por ${TILES[b.i].n}`; } }
     if (c.id === 'rompe') { const s = this.bestSet(pi); if (this.nilo(s.k, pi)) msg = 'cancelado'; else { groupIdx(s.gr).forEach((i) => { g.owners[i] = pi; }); msg = `se queda con todo ${GR[s.gr].name} de ${this.nm(s.k)}`; } }
@@ -990,25 +990,25 @@ class Component extends DCLogic {
     const who = (k) => (this.you(k) ? 'Vos' : this.nm(k));
     const n = g.players.length;
     const cheap = (k) => this.owned(k).sort((a, b) => TILES[a].p - TILES[b].p)[0];
-    if (id === 'alejandro') return rv.map((k) => { const t = cheap(k); if (t !== undefined) { g.owners[t] = pi; delete g.houses[t]; return `${who(k)} pierde ${TILES[t].n}`; } this.pay(k, pi, 2, false); return `${who(k)} paga $2M`; }).join(' · ');
-    if (id === 'freud') return rv.map((k) => { const o = g.players[k]; if (!o.hand.length) { this.pay(k, pi, 1, false); return `${who(k)} sin cartas: paga $1M`; } o.hand.sort((a, b) => (b.cost || 0) - (a.cost || 0)); const c = o.hand.shift(); p.hand.push(c); return `${who(k)} entrega «${c.name}»`; }).join(' · ');
+    if (id === 'alejandro') return rv.map((k) => { const t = cheap(k); if (t !== undefined) { g.owners[t] = pi; delete g.houses[t]; return `${who(k)} pierde ${TILES[t].n}`; } this.pay(k, pi, 2, false); return `${who(k)} paga 2 oro`; }).join(' · ');
+    if (id === 'freud') return rv.map((k) => { const o = g.players[k]; if (!o.hand.length) { this.pay(k, pi, 1, false); return `${who(k)} sin cartas: paga 1 oro`; } o.hand.sort((a, b) => (b.cost || 0) - (a.cost || 0)); const c = o.hand.shift(); p.hand.push(c); return `${who(k)} entrega «${c.name}»`; }).join(' · ');
     if (id === 'gengis') return rv.map((k) => { const amt = Math.min(5, Math.max(1, Math.floor(g.players[k].money * 0.2))); this.pay(k, pi, amt, false); return `${who(k)} entrega ${M(amt)}`; }).join(' · ');
     if (id === 'isabel') { g.commission = { pi, turns: n, pct: 0.3 }; return 'Durante la próxima vuelta, cada pago de un rival deja un 30% de tributo a la Corona.'; }
     if (id === 'leonardo') {
       const out = []; if (g.market.length) { let bi = 0; g.market.forEach((c, k) => { if ((c.cost || 0) > (g.market[bi].cost || 0)) bi = k; }); const c = g.market[bi]; p.hand.push(c); g.market[bi] = this.drawDeal(g.market.map((x) => x.id)); out.push(`se lleva «${c.name}» del Mercado`); }
-      GROUPS.forEach((gr) => { const t = this.buildTarget(pi, gr); if (t !== null) { g.houses[t] = this.lvl(t) + 1; out.push(`construye gratis en ${TILES[t].n}`); } });
+      GROUPS.forEach((gr) => { const t = this.buildTarget(pi, gr); if (t !== null) { g.houses[t] = this.lvl(t) + 1; out.push(`levanta un monumento en ${TILES[t].n}`); } });
       return out.length ? out.join(' · ') : 'El taller no encontró nada que mejorar.';
     }
-    if (id === 'napoleon') return rv.map((k) => { const a = 1 + rnd(6), b = 1 + rnd(6); if (a > b) { const t = cheap(k); if (t !== undefined) { g.owners[t] = pi; delete g.houses[t]; return `${a} contra ${b}: gana ${TILES[t].n} de ${who(k)}`; } this.pay(k, pi, 2, false); return `${a} contra ${b}: ${who(k)} paga $2M`; } this.pay(pi, k, 1, false); return `${a} contra ${b}: paga $1M a ${who(k)}`; }).join(' · ');
+    if (id === 'napoleon') return rv.map((k) => { const a = 1 + rnd(6), b = 1 + rnd(6); if (a > b) { const t = cheap(k); if (t !== undefined) { g.owners[t] = pi; delete g.houses[t]; return `${a} contra ${b}: gana ${TILES[t].n} de ${who(k)}`; } this.pay(k, pi, 2, false); return `${a} contra ${b}: ${who(k)} paga 2 oro`; } this.pay(pi, k, 1, false); return `${a} contra ${b}: paga 1 oro a ${who(k)}`; }).join(' · ');
     if (id === 'newton') {
       const best = this.owned(pi).sort((a, b) => TILES[b].p - TILES[a].p)[0];
-      if (best === undefined) { rv.forEach((k) => this.pay(k, pi, 1, false)); return 'Sin lugares propios: cada rival paga $1M.'; }
+      if (best === undefined) { rv.forEach((k) => this.pay(k, pi, 1, false)); return 'Sin lugares propios: cada rival paga 1 oro.'; }
       const rent = this.rentFor(best, pi); rv.forEach((k) => { g.players[k].pos = best; this.pay(k, pi, rent, false); }); g.focus = best; this.followOn();
       return `Todos cayeron en ${TILES[best].n} y pagaron ${M(rent)} cada uno.`;
     }
-    if (id === 'tesla') { g.boost = { pi, turns: n, mult: 2 }; rv.forEach((k) => { g.players[k].charge = Math.floor((g.players[k].charge || 0) / 2); }); return 'Durante una vuelta sus alquileres valen el doble. Los rivales pierden la mitad de su carga.'; }
+    if (id === 'tesla') { g.boost = { pi, turns: n, mult: 2 }; rv.forEach((k) => { g.players[k].charge = Math.floor((g.players[k].charge || 0) / 2); }); return 'Durante una vuelta sus tributoes valen el doble. Los rivales pierden la mitad de su carga.'; }
     if (id === 'mozart') return rv.map((k) => { const amt = Math.min(5, Math.max(1, g.players[k].hand.length)); this.pay(k, pi, amt, false); return `${who(k)} paga ${M(amt)}`; }).join(' · ');
-    if (id === 'juana') { g.shield = { pi, turns: n }; rv.forEach((k) => this.pay(k, pi, 1, false)); return 'Durante una vuelta no paga alquiler. Cada rival le paga $1M.'; }
+    if (id === 'juana') { g.shield = { pi, turns: n }; rv.forEach((k) => this.pay(k, pi, 1, false)); return 'Durante una vuelta no paga tributo. Cada rival le paga 1 oro.'; }
     if (id === 'ramses') { g.boost = { pi, turns: n * 2, mult: 1.5 }; return 'Durante dos vueltas sus lugares cobran un 50% más.'; }
     return '';
   }
@@ -1018,10 +1018,10 @@ class Component extends DCLogic {
     const t = TILES[i]; const gr = GR[t.g]; const L = this.lvl(i); const o = this.g.owners[i]; const full = o !== undefined && this.complete(o, t.g);
     const H = (n) => Array.from({ length: n }, () => ({ c: '' }));
     const rows = [
-      { l: 'Alquiler', v: M(gr.base), hs: [], cls: L === 0 && !full && o !== undefined ? 'cur' : '' },
+      { l: 'Tributo', v: M(gr.base), hs: [], cls: L === 0 && !full && o !== undefined ? 'cur' : '' },
       { l: 'Época completa', v: M(gr.base * 2), hs: [], cls: L === 0 && full ? 'cur' : '' },
-      ...gr.houses.map((v, k) => ({ l: `${k + 1} casa${k ? 's' : ''}`, v: M(v), hs: H(k + 1), cls: L === k + 1 ? 'cur' : '' })),
-      { l: 'Hotel', v: M(gr.hotel), hs: [{ c: 'h' }], cls: L === 5 ? 'cur' : '' }
+      ...gr.houses.map((v, k) => ({ l: `${k + 1} monumento${k ? 's' : ''}`, v: M(v), hs: H(k + 1), cls: L === k + 1 ? 'cur' : '' })),
+      { l: 'Maravilla', v: M(gr.hotel), hs: [{ c: 'h' }], cls: L === 5 ? 'cur' : '' }
     ];
     return { name: t.n, barrio: gr.name, color: gr.color, fg: gr.fg, img: pic(t.img), price: M(t.p), hc: M(gr.hc), flav: t.f, rows };
   }
@@ -1112,7 +1112,7 @@ class Component extends DCLogic {
       const [row, col] = cell(i); const o = g.owners[i]; const isProp = t.k === 'prop';
       const gr = isProp ? GR[t.g] : null;
       const orl = o !== undefined ? this.role(g.players[o]) : null;
-      return { row, col, rot: rotOf(i), isProp, isCorner: t.k === 'corner', isNews: t.k === 'news', name: t.n, sub: t.sub || '', img: t.img ? pic(t.img) : '', color: gr ? gr.color : '', fg: gr ? gr.fg : '', barrio: gr ? gr.name : '', price: t.p ? M(t.p) : '', owned: o !== undefined, ownColor: orl ? orl.color : '', ownFg: orl ? orl.fg : '', ownInit: o === 0 ? 'Vos' : o !== undefined ? 'R' + o : '', hs: isProp ? (this.lvl(i) === 5 ? [{ cls: 'hotel' }] : Array.from({ length: this.lvl(i) }, () => ({ cls: '' }))) : [], popC: gr ? (gr.color === '#2E3D6E' ? '#2E3D6E' : gr.color) : '#8A6213', popK: gr ? gr.name : 'Esquina', popRL: o === undefined ? 'Alquiler base' : 'Alquiler actual', popRV: isProp ? M(o === undefined ? GR[t.g].base : this.rentFor(i, o)) : '', popTxt: isProp ? (o === undefined ? `Libre · ${M(t.p)} · alquiler ${M(GR[t.g].base)}` : `Alquiler actual ${M(this.rentFor(i, o))}`) : (t.sub || ''), rentTxt: isProp ? (o === undefined ? `Libre · alquiler ${M(GR[t.g].base)}` : `Alquiler actual ${M(this.rentFor(i, o))}`) : '', peek: () => { if (this.dragMoved || !isProp) return; this.ui.peek = i; this.refresh(); }, cls: (t.k === 'corner' ? 'cor ' : t.k === 'news' ? 'news ' : '') + (col === 1 || col === 7 ? (t.k === 'corner' ? '' : 'side ') : '') + (row === 1 ? 'pdown ' : '') + (g.screen === 'game' && i === g.focus ? 'here' : '') };
+      return { row, col, rot: rotOf(i), isProp, isCorner: t.k === 'corner', isNews: t.k === 'news', name: t.n, sub: t.sub || '', img: t.img ? pic(t.img) : '', color: gr ? gr.color : '', fg: gr ? gr.fg : '', barrio: gr ? gr.name : '', price: t.p ? M(t.p) : '', owned: o !== undefined, ownColor: orl ? orl.color : '', ownFg: orl ? orl.fg : '', ownInit: o === 0 ? 'Vos' : o !== undefined ? 'R' + o : '', hs: isProp ? (this.lvl(i) === 5 ? [{ cls: 'hotel' }] : Array.from({ length: this.lvl(i) }, () => ({ cls: '' }))) : [], popC: gr ? (gr.color === '#2E3D6E' ? '#2E3D6E' : gr.color) : '#8A6213', popK: gr ? gr.name : 'Esquina', popRL: o === undefined ? 'Tributo base' : 'Tributo actual', popRV: isProp ? M(o === undefined ? GR[t.g].base : this.rentFor(i, o)) : '', popTxt: isProp ? (o === undefined ? `Libre · ${M(t.p)} · tributo ${M(GR[t.g].base)}` : `Tributo actual ${M(this.rentFor(i, o))}`) : (t.sub || ''), rentTxt: isProp ? (o === undefined ? `Libre · tributo ${M(GR[t.g].base)}` : `Tributo actual ${M(this.rentFor(i, o))}`) : '', peek: () => { if (this.dragMoved || !isProp) return; this.ui.peek = i; this.refresh(); }, cls: (t.k === 'corner' ? 'cor ' : t.k === 'news' ? 'news ' : '') + (col === 1 || col === 7 ? (t.k === 'corner' ? '' : 'side ') : '') + (row === 1 ? 'pdown ' : '') + (g.screen === 'game' && i === g.focus ? 'here' : '') };
     });
     const toks = [];
     g.players.forEach((p, k) => { const [x, y] = center(p.pos); const same = g.players.filter((q, j) => q.pos === p.pos && j < k).length; toks.push({ x: Math.round(x - 22 + same * 26), y: Math.round(y + 20 - same * 10), color: this.role(p).color, cls: k === 0 ? 'me' : '' }); });
@@ -1125,19 +1125,19 @@ class Component extends DCLogic {
     const canBuyM = human && g.phase === 'action' && !busy && !g.bought && !!me && this.playsLeft(S) > 0;
     const sh = this.ui.sheet;
     let deals = [];
-    if (sh === 'hand') deals = (me ? me.hand : []).map((c, idx) => { const noPlays = this.playsLeft(S) <= 0; const ok = canPlayNow && !noPlays && this.canPlay(S, c); return { ...this.dealCard(c), off: c.passive || !ok, btn: c.passive ? 'Se activa sola' : canPlayNow && noPlays ? 'Sin acciones este turno' : !ok ? 'No disponible ahora' : c.type === 'money' ? `Depositar ${M(c.amt)}` : 'Jugar carta', btnCls: ok ? 'b-rust' : '', act: () => { if (ok) { this.ui.sheet = null; this.act('play', idx); } } }; });
+    if (sh === 'hand') deals = (me ? me.hand : []).map((c, idx) => { const noPlays = this.playsLeft(S) <= 0; const ok = canPlayNow && !noPlays && this.canPlay(S, c); return { ...this.dealCard(c), off: c.passive || !ok, btn: c.passive ? 'Se activa sola' : canPlayNow && noPlays ? 'Sin acciones este turno' : !ok ? 'No disponible ahora' : c.type === 'money' ? `Guardásr ${M(c.amt)}` : 'Jugar carta', btnCls: ok ? 'b-rust' : '', act: () => { if (ok) { this.ui.sheet = null; this.act('play', idx); } } }; });
     if (sh === 'market') deals = g.market.map((c, k) => ({ ...this.dealCard(c, 'Mercado'), off: !(canBuyM && me.money >= c.cost), btn: `Comprar · ${M(c.cost)}`, btnCls: 'b-rust', act: () => { if (canBuyM && me.money >= c.cost) this.act('buyM', k); } }));
     const canBuildNow = human && g.phase === 'action' && !busy && this.playsLeft(S) > 0;
-    const estate = me ? GROUPS.map((gr) => { const mine = this.owned(S).filter((i) => TILES[i].g === gr); if (!mine.length) return null; const tgt = this.buildTarget(S, gr); const ok = canBuildNow && tgt !== null && me.money >= GR[gr].hc; return { title: GR[gr].name, c2: GR[gr].color === '#2E3D6E' ? '#8FA2DA' : GR[gr].color, count: `${mine.length}/3`, cards: mine.map((i) => this.propCard(i)), btn: !this.complete(S, gr) ? 'Completá la época para construir' : tgt === null ? 'Barrio al máximo' : `Construir ${this.lvl(tgt) === 4 ? 'hotel' : 'casa'} · ${M(GR[gr].hc)}`, btnCls: ok ? 'b-rust' : '', off: !ok, build: () => { if (ok) this.act('build', gr); } }; }).filter(Boolean) : [];
+    const estate = me ? GROUPS.map((gr) => { const mine = this.owned(S).filter((i) => TILES[i].g === gr); if (!mine.length) return null; const tgt = this.buildTarget(S, gr); const ok = canBuildNow && tgt !== null && me.money >= GR[gr].hc; return { title: GR[gr].name, c2: GR[gr].color === '#2E3D6E' ? '#8FA2DA' : GR[gr].color, count: `${mine.length}/3`, cards: mine.map((i) => this.propCard(i)), btn: !this.complete(S, gr) ? 'Completá la época para levantar monumentos' : tgt === null ? 'Época al máximo' : `Levantar ${this.lvl(tgt) === 4 ? 'maravilla' : 'monumento'} · ${M(GR[gr].hc)}`, btnCls: ok ? 'b-rust' : '', off: !ok, build: () => { if (ok) this.act('build', gr); } }; }).filter(Boolean) : [];
     const sheets = {
       hand: ['Tu mano', `Acciones este turno: ${g.turn === S ? this.playsLeft(S) : 0} de ${RULES.plays} (jugar, comprar o construir) · máximo ${RULES.handMax} cartas al terminar el turno.`, deals.length === 0, `No tenés cartas. Si empezás tu turno sin cartas, robás ${RULES.drawEmpty}.`],
       rules: ['Reglas de YAJUGÁ Leyendas', 'Monopoly + Monopoly Deal con figuras de la historia y sus dominios.', false, ''],
-      market: ['Mercado de tratos', g.bought ? 'Ya compraste este turno.' : this.playsLeft(S) <= 0 ? 'No te quedan acciones este turno.' : 'Una compra por turno, después de tirar. Gasta 1 acción.', false, ''],
-      estate: ['Tus épocas', 'Completá una época para duplicar el alquiler y construir casas y hoteles. Tocá cualquier casilla del tablero para ver su título.', estate.length === 0, 'Todavía no tenés lugares. Caé en uno libre para comprarlo.']
+      market: ['Mercado del reino', g.bought ? 'Ya compraste este turno.' : this.playsLeft(S) <= 0 ? 'No te quedan acciones este turno.' : 'Una compra por turno, después de tirar. Gasta 1 acción.', false, ''],
+      estate: ['Tus épocas', 'Completá una época para duplicar el tributo y levantar monumentos y maravillas. Tocá cualquier casilla del tablero para ver su título.', estate.length === 0, 'Todavía no tenés lugares. Caé en uno libre para comprarlo.']
     };
     const SH = sh ? sheets[sh] : ['', '', false, ''];
     const m = g.modal; const d = g.def;
-    const ranking = g.players.map((p, k) => ({ p, k, w: this.worth(k) })).sort((a, b) => b.w - a.w).map((x, i) => ({ pos: i + 1, name: x.p.name, img: IMG[x.p.roleId], worth: M(x.w), detail: `${this.role(x.p).name} · efectivo ${M(x.p.money)}` }));
+    const ranking = g.players.map((p, k) => ({ p, k, w: this.worth(k) })).sort((a, b) => b.w - a.w).map((x, i) => ({ pos: i + 1, name: x.p.name, img: IMG[x.p.roleId], worth: M(x.w), detail: `${this.role(x.p).name} · oro ${M(x.p.money)}` }));
     const win = ranking[0] || { name: '', img: '' };
     const dom = g.dom || { id: '', color: '#C13B1F', fg: '#EFE6D2', img: '', kicker: '', title: '', desc: '', result: '', glyphs: [], trapped: [] };
     const [x1, y1] = FACE[g.dice[0]], [x2, y2] = FACE[1]; const sp = g.rolls * 720;
@@ -1181,7 +1181,7 @@ class Component extends DCLogic {
       defText: d ? `Caíste en ${TILES[d.i].n}, de ${this.nm(d.owner)}. Tenés unos segundos para decidir.` : '',
       defSecs: d ? Math.max(0, d.secs) : 0, defOffset: d ? Math.round(207 * (1 - Math.max(0, d.secs) / 8)) : 0,
       defChoosing: !!d && !d.done, defDone: !!d && d.done, defResult: d ? d.result : '',
-      blockOff: !(me && me.hand.some((c) => c.id === 'nilo')), blockTxt: me && me.hand.some((c) => c.id === 'nilo') ? 'Usás tu carta ¡Ni loco! y no pagás nada.' : 'Necesitás una carta ¡Ni loco! en la mano.',
+      blockOff: !(me && me.hand.some((c) => c.id === 'nilo')), blockTxt: me && me.hand.some((c) => c.id === 'nilo') ? 'Usás tu carta ¡Veto! y no pagás nada.' : 'Necesitás una carta ¡Veto! en la mano.',
       defBlock: () => this.act('def', 'block'), defNego: () => this.act('def', 'nego'), defCounter: () => this.act('def', 'counter'),
       showAura: !!g.aura && !g.dom, aura: g.aura ? { ...g.aura, left: g.aura.turns === 1 ? 'último turno' : `${g.aura.turns} turnos` } : { id: '', color: '', fg: '', name: '', left: '' }, showDom: !!g.dom, dom: { ...dom, hasResult: !!dom.result }, showCine: !!g.cine,
       showToast: !!g.toast && (g.toastTo === null || g.toastTo === undefined || g.toastTo === S), toast: g.toast || '',
@@ -1192,7 +1192,7 @@ class Component extends DCLogic {
       showVote: !!g.vote && g.screen === 'game',
       voteMine: !!g.vote && !g.vote.yes[S] && this.voters().includes(S),
       voteWait: !!g.vote && !!g.vote.yes[S],
-      voteTxt: g.vote ? `${this.nm(g.vote.by)} propone terminar la partida ahora. Gana quien tenga más patrimonio (efectivo + lugares).` : '',
+      voteTxt: g.vote ? `${this.nm(g.vote.by)} propone terminar la partida ahora. Gana quien tenga más patrimonio (oro + lugares).` : '',
       voteTally: g.vote ? `${this.voters().filter((k) => g.vote.yes[k]).length} de ${this.voters().length} votaron que sí · ${Math.max(0, g.vote.t)} s` : '',
       voteYes: () => this.act('vote', true), voteNo: () => this.act('vote', false),
       restart: () => { if (this.net && window.YJNet) window.YJNet.leave(this, true); this.clearAll(); this.g = this.fresh(); this.lobby = null; this.seat = 0; this.refresh(); },
