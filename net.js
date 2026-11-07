@@ -3,20 +3,21 @@
 (function () {
   var URL = 'https://zvmydfzirtvfhbxvhryi.supabase.co';
   var KEY = 'sb_publishable_s0aBPe2GodEt9j3oeSp3jg_iUL9MZBw';
+  var GAME = window.YJ_GAME || 'dominio'; var PATH = GAME === 'dominio' ? '/jugar' : '/' + GAME;
   var sb = null;
   function client() { if (!sb) sb = window.supabase.createClient(URL, KEY, { auth: { persistSession: false }, realtime: { params: { eventsPerSecond: 20 } } }); return sb; }
   function store(k, v) { try { if (v === undefined) return JSON.parse(localStorage.getItem(k) || 'null'); if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); } catch (e) { return null; } }
   var myId = store('yj-pid');
   if (!myId) { myId = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Math.random()).slice(2) + Date.now(); store('yj-pid', myId); }
   function mkCode() { var A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789', s = ''; for (var i = 0; i < 5; i++) s += A[Math.floor(Math.random() * A.length)]; return s; }
-  function linkFor(c) { return location.origin + '/jugar?sala=' + c; }
-  function setUrl(c) { try { history.replaceState(null, '', c ? '/jugar?sala=' + c : '/jugar'); } catch (e) {} }
+  function linkFor(c) { return location.origin + PATH + '?sala=' + c; }
+  function setUrl(c) { try { history.replaceState(null, '', c ? PATH + '?sala=' + c : PATH); } catch (e) {} }
   function loadRoom(code) { return client().from('rooms').select('state,seats,ver').eq('code', code).maybeSingle().then(function (r) { return r.data || null; }, function () { return null; }); }
 
   function open(comp, code, name, creating) {
     setUrl(code);
     comp.lobby = { code: code, link: linkFor(code), host: !!creating, me: myId, players: [], err: '', msg: creating ? 'Compartí el código o el link con tus amigos.' : 'Conectando con la sala…' };
-    var ch = client().channel('yj-' + code, { config: { broadcast: { self: false, ack: false }, presence: { key: myId } } });
+    var ch = client().channel('yj-' + GAME + '-' + code, { config: { broadcast: { self: false, ack: false }, presence: { key: myId } } });
     var net = {
       host: !!creating, ch: ch, code: code, last: 0, timer: null, saveT: null, savedAt: 0, seats: {}, roles: {}, roster: [], present: [], inGame: false, name: name,
       send: function (n, args) { ch.send({ type: 'broadcast', event: 'act', payload: { from: myId, name: n, args: args || [] } }); },
@@ -36,7 +37,7 @@
       }
     };
     comp.net = net;
-    store('yj-last', { code: code, name: name });
+    store('yj-last-' + GAME, { code: code, name: name });
 
     function lobbyOut() {
       var players = net.roster.map(function (x) { return { id: x.id, name: x.name, host: x.id === leaderLobby(), role: net.roles[x.id] || '' }; });
@@ -123,6 +124,7 @@
     comp.seat = creating ? 0 : null;
     if (creating) { go(); comp.refresh(); return; }
     loadRoom(code).then(function (row) {
+      if (row && row.state && (row.state.game || 'dominio') !== GAME) { comp.lobby.err = 'Ese código es de otro juego de YAJUGÁ.'; comp.refresh(); return; }
       if (row && row.state && row.state.screen === 'game') {
         var s = row.seats ? row.seats[myId] : undefined;
         if (s === undefined) { comp.lobby.err = 'Esta partida ya empezó y no estás en ella.'; comp.refresh(); return; }
@@ -137,13 +139,13 @@
     clearTimeout(net.timer); clearTimeout(net.saveT);
     try { net.ch.untrack(); } catch (e) {}
     try { client().removeChannel(net.ch); } catch (e) {}
-    if (forget || !net.inGame) store('yj-last', null);
+    if (forget || !net.inGame) store('yj-last-' + GAME, null);
     comp.net = null; comp.lobby = null; comp.seat = 0; setUrl(null);
   }
   window.YJNet = {
     create: function (comp, name) { open(comp, mkCode(), name, true); },
     join: function (comp, code, name) { open(comp, code.toUpperCase(), name, false); },
-    last: function () { return store('yj-last'); },
+    last: function () { return store('yj-last-' + GAME); },
     pickRole: function (comp, role) {
       var net = comp.net; if (!net) return;
       if (net.host) { var taken = Object.keys(net.roles).some(function (id) { return net.roles[id] === role && id !== myId; }); if (!taken) net.roles[myId] = role; net.lobbyOut(); }

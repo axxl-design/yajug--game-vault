@@ -40,7 +40,7 @@
         if (one) { var fn = look(scope, one[1]); if (typeof fn === 'function') o2 += ' data-on-' + name.slice(2).toLowerCase() + '="' + (H.push(fn) - 1) + '"'; }
         continue;
       }
-      if (name === 'href') val = val.replace(/^Main\.dc\.html/, '/').replace(/^Jugar\.dc\.html/, '/jugar').replace(/^Adivina\.dc\.html/, '/adivina');
+      if (name === 'href') val = val.replace(/^Main\.dc\.html/, '/').replace(/^Jugar\.dc\.html/, '/jugar').replace(/^Adivina\.dc\.html/, '/adivina').replace(/^Leyendas\.dc\.html/, '/leyendas');
       if (one) {
         var v = look(scope, one[1]);
         if (v === false || v == null) { if (BOOL[name]) continue; v = ''; }

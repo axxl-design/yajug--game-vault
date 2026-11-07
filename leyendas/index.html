@@ -1,0 +1,1217 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Jugar · YAJUGÁ Leyendas</title>
+<meta name="description" content="YAJUGÁ Games Vault: juegos de mesa online. Jugá YAJUGÁ Dominio con tus amigos.">
+<meta name="theme-color" content="#14110F">
+<link rel="icon" href="/assets/fav.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&amp;family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&amp;family=Instrument+Serif:ital@0;1&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#14110F}
+*{box-sizing:border-box}
+a{color:#E0A33A}
+.g{position:relative;height:100vh;min-height:700px;overflow:hidden;font-family:'DM Sans',system-ui,sans-serif;color:#EFE6D2;background:#14110F}
+.hd{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;letter-spacing:-.03em;line-height:1.04}
+.serif{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400;letter-spacing:-.01em}
+.eyebrow{font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase}
+.muted{color:#B5A994}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:50px;padding:0 26px;border-radius:999px;border:1.5px solid rgba(239,230,210,.35);font:700 15px 'DM Sans',sans-serif;cursor:pointer;text-decoration:none;color:#EFE6D2;background:transparent;transition:transform .3s cubic-bezier(.2,.9,.3,1.4),background .25s,color .25s}
+.btn:hover{transform:translateY(-3px);background:#EFE6D2;color:#14110F}
+.btn[disabled]{opacity:.35;cursor:not-allowed;transform:none;background:transparent;color:#EFE6D2}
+.b-rust{background:#C13B1F;border-color:#C13B1F;box-shadow:0 2px 0 #7A2412,0 18px 30px -16px rgba(193,59,31,.8)}
+.b-rust:hover{background:#C13B1F;color:#EFE6D2;box-shadow:0 6px 0 #7A2412}
+/* ===== STAGE / CAMERA (2D) ===== */
+.stage{position:absolute;inset:0;overflow:hidden;cursor:grab;touch-action:none;background:#D9C9AA;background-image:radial-gradient(circle at 50% 50%,rgba(255,248,234,.5),transparent 60%),linear-gradient(rgba(20,17,15,.06) 2px,transparent 2px),linear-gradient(90deg,rgba(20,17,15,.06) 2px,transparent 2px);background-size:auto,120px 120px,120px 120px}
+.stage::after{content:'';position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 220px rgba(20,17,15,.55)}
+.stage.dragging{cursor:grabbing}
+.cam{position:absolute;left:50%;top:50%;width:0;height:0;pointer-events:none}
+.world{position:absolute;left:0;top:0;width:1120px;height:1120px;transform-origin:0 0;transition:transform 1s cubic-bezier(.2,.8,.2,1)}
+.dragging .world,.world.dragging{transition:none}
+.board{position:absolute;inset:0;display:grid;grid-template-columns:170px repeat(5,minmax(0,1fr)) 170px;grid-template-rows:170px repeat(5,minmax(0,1fr)) 170px;background:#14110F;border-radius:26px;padding:0;box-shadow:0 0 0 14px #C13B1F,0 0 0 17px #14110F,0 40px 80px 10px rgba(20,17,15,.55)}
+.tl{position:relative;overflow:visible;pointer-events:auto;cursor:pointer}
+.tbox{position:absolute;left:50%;top:50%;width:156px;height:170px;margin:-85px 0 0 -78px;display:flex;flex-direction:column;background:#F6EEDC;border:1.5px solid #14110F;overflow:hidden}
+.tl.cor .tbox{width:170px;height:170px;margin:-85px 0 0 -85px;background:#C99022}
+.tl.side .tbox{width:170px;height:156px;margin:-78px 0 0 -85px}
+.tband{flex:none;height:42px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border-bottom:1.5px solid #14110F}
+.tband b{font:700 8px 'DM Sans';letter-spacing:.18em;text-transform:uppercase}
+.hs{display:flex;gap:3px;min-height:10px;align-items:flex-end}
+.hs i{width:10px;height:10px;background:#F6EEDC;clip-path:polygon(50% 0,100% 45%,100% 100%,0 100%,0 45%)}
+.hs i.hotel{width:20px;background:#14110F}
+.tname{flex:1;display:flex;align-items:center;justify-content:center;padding:8px 12px;text-align:center;font:800 15.5px/1.06 'Bricolage Grotesque',sans-serif;letter-spacing:-.02em;color:#14110F}
+.tl.side .tname{font-size:15px;padding:6px 14px}
+.tprice{flex:none;display:flex;justify-content:center;padding-bottom:10px}
+.tprice span{display:inline-flex;align-items:center;min-height:22px;padding:0 10px;border-radius:99px;background:#14110F;color:#F6EEDC;font:800 12px 'Bricolage Grotesque'}
+.tl:hover{z-index:60}
+.rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-top:24px}
+.rcard{padding:18px 20px;border-radius:20px;background:rgba(239,230,210,.06);border:1px solid rgba(239,230,210,.12)}
+.rcard b{display:block;font:800 18px 'Bricolage Grotesque';color:#E0A33A;margin-bottom:8px}
+.rcard p{margin:0;font-size:14px;line-height:1.55;color:rgba(239,230,210,.82)}
+.tphoto{position:absolute;left:50%;bottom:calc(50% + 70px);width:250px;z-index:70;pointer-events:none;background:#F6EEDC;border:2px solid #14110F;border-radius:20px;overflow:hidden;box-shadow:0 26px 60px rgba(20,17,15,.5);opacity:0;transform:translate(-50%,30px) scale(.82);transform-origin:50% 100%;transition:opacity .3s,transform .5s cubic-bezier(.2,.9,.3,1.2)}
+.tl.pdown .tphoto{bottom:auto;top:calc(50% + 70px);transform-origin:50% 0;transform:translate(-50%,-30px) scale(.82)}
+.tphoto img{display:block;width:100%;height:auto;aspect-ratio:auto;transform:scale(1.08);transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+.tphoto .pcap{display:block;padding:14px 16px 16px;border-top:2px solid #14110F;color:#14110F;line-height:1.2;text-align:left;white-space:normal}
+.tphoto .pk{display:block;margin:0 0 6px;font:700 10px/1.2 'DM Sans';letter-spacing:.14em;text-transform:uppercase}
+.tphoto .pn{display:block;margin:0 0 12px;font:800 19px/1.1 'Bricolage Grotesque';letter-spacing:-.02em}
+.tphoto .prow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-top:10px;border-top:1.5px dashed rgba(20,17,15,.25)}
+.tphoto .prow div{display:flex;flex-direction:column;gap:2px;font:600 10px/1.2 'DM Sans';letter-spacing:.08em;text-transform:uppercase;color:rgba(20,17,15,.6)}
+.tphoto .prow div:last-child{align-items:flex-end;text-align:right}
+.tphoto .prow strong{font:800 17px/1.1 'Bricolage Grotesque';letter-spacing:-.01em;text-transform:none;color:#14110F}
+.tl:hover .tphoto{opacity:1;transform:translate(-50%,0) scale(1)}
+.tl:hover .tphoto img{transform:scale(1)}
+.cbody{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:14px;text-align:center;color:#14110F}
+.cbody b{font:800 19px/1.05 'Bricolage Grotesque';letter-spacing:-.02em}
+.cbody span{font:700 10px 'DM Sans';letter-spacing:.12em;text-transform:uppercase}
+.flag{position:absolute;right:7px;top:48px;z-index:4;width:30px;height:30px;border-radius:50%;border:2.5px solid #14110F;box-shadow:0 3px 0 #14110F;display:flex;align-items:center;justify-content:center;font:800 10px 'Bricolage Grotesque';animation:flagpop .5s cubic-bezier(.2,.9,.3,1.5)}
+@keyframes flagpop{from{transform:scale(0) rotate(-40deg)}}
+/* deed (título de propiedad) */
+.dd{position:relative;flex:none;width:240px;border-radius:16px;background:#F6EEDC;color:#14110F;border:2px solid #14110F;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 2px 0 #14110F,0 26px 40px -22px rgba(0,0,0,.8);transition:transform .45s cubic-bezier(.2,.9,.3,1.3)}
+.dd-photo{height:136px;border-bottom:2px solid #14110F;overflow:hidden}
+.dd-photo img{display:block;width:100%;height:100%;object-fit:cover}
+.dd-title{background:var(--c);color:var(--fg);text-align:center;padding:9px 12px 11px;border-bottom:2px solid #14110F}
+.dd-title small{display:block;font:700 8px 'DM Sans';letter-spacing:.22em;text-transform:uppercase;opacity:.85}
+.dd-title b{display:block;margin-top:4px;font:800 20px/1.05 'Bricolage Grotesque';letter-spacing:-.02em}
+.dd-rows{padding:10px 14px 6px;display:flex;flex-direction:column;gap:3px}
+.dd-row{display:flex;align-items:center;gap:6px;font-size:11.5px;padding:2px 4px;border-radius:6px}
+.dd-row::after{content:'';order:2;flex:1;border-bottom:1.5px dotted rgba(20,17,15,.3)}
+.dd-row .l{order:1;display:inline-flex;align-items:center;gap:4px}
+.dd-row b{order:3;font:800 13px 'Bricolage Grotesque'}
+.dd-row.cur{background:var(--c);color:var(--fg)}
+.dd-row.cur::after{border-color:transparent}
+.hi{display:inline-block;width:9px;height:9px;background:#6B7340;clip-path:polygon(50% 0,100% 45%,100% 100%,0 100%,0 45%)}
+.hi.h{width:16px;background:#C13B1F}
+.dd-foot{display:flex;justify-content:space-between;padding:9px 14px 11px;border-top:1.5px dashed rgba(20,17,15,.3);font-size:11px}
+.dd-foot strong{font:800 13px 'Bricolage Grotesque'}
+.dd.big{transform:scale(1.2);margin:40px 30px}
+.slot:hover .dd{transform:translateY(-10px) rotate(-1.5deg)}
+.stack .dd{margin-top:-262px}.stack .dd:first-child{margin-top:0}
+.news .tbox{background:#C13B1F;align-items:center;justify-content:center;color:#F6EEDC;background-image:repeating-linear-gradient(45deg,rgba(20,17,15,.1) 0 8px,transparent 8px 16px)}
+.qm{font-family:'Instrument Serif',serif;font-style:italic;font-size:92px;line-height:.8}
+.tl.here .tbox{box-shadow:inset 0 0 0 4px #E0A33A}
+.tl.here::after{content:'';position:absolute;inset:-6px;border-radius:14px;border:4px solid #E0A33A;animation:herepulse 1.4s ease-out infinite;z-index:3;pointer-events:none}
+@keyframes herepulse{0%{opacity:1;transform:scale(.96)}100%{opacity:0;transform:scale(1.12)}}
+/* center */
+.mid{grid-column:2/7;grid-row:2/7;position:relative;margin:0;background:#3E3731;overflow:hidden}
+.road{position:absolute;inset:0;border:2px dashed rgba(246,238,220,.4);margin:12px;border-radius:16px;pointer-events:none}
+.park{position:absolute;inset:26px;border-radius:22px;overflow:hidden;border:3px solid #14110F;background:#E7D9BC;background-image:radial-gradient(circle at 50% 50%,rgba(255,248,234,.7),transparent 55%),repeating-linear-gradient(45deg,rgba(20,17,15,.04) 0 14px,transparent 14px 28px)}
+.park img.map{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.42;mix-blend-mode:multiply}
+.plate{position:absolute;left:50%;top:50%;width:420px;margin:-90px 0 0 -210px;padding:22px 28px 18px;border-radius:24px;background:#F6EEDC;border:3px solid #14110F;box-shadow:0 8px 0 #14110F,0 30px 60px -20px rgba(20,17,15,.6);text-align:center}
+.pile{position:absolute;width:118px;height:164px;border-radius:14px;border:3px solid #14110F;box-shadow:5px 5px 0 #F6EEDC,9px 9px 0 #14110F;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;transition:transform .4s cubic-bezier(.2,.9,.3,1.3)}
+.car{position:absolute;left:0;top:0;width:26px;height:14px;border-radius:5px;border:2px solid #14110F;offset-path:path('M13 13 H767 V767 H13 Z');offset-rotate:auto;animation:drive 34s linear infinite}
+@keyframes drive{from{offset-distance:0%}to{offset-distance:100%}}
+.cloud{position:absolute;width:420px;height:200px;border-radius:50%;background:rgba(20,17,15,.14);filter:blur(30px);animation:cloud 60s linear infinite;pointer-events:none}
+@keyframes cloud{from{transform:translateX(-500px)}to{transform:translateX(1700px)}}
+.tok{position:absolute;z-index:5;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;border:3.5px solid #14110F;box-shadow:0 6px 0 #14110F,0 14px 14px rgba(20,17,15,.35);animation:hop .38s cubic-bezier(.3,.7,.4,1.4);transition:left .3s,top .3s}
+.tok::after{content:'';position:absolute;inset:7px;border-radius:50%;border:2.5px solid rgba(246,238,220,.85)}
+.tok.me{width:46px;height:46px;margin:-23px 0 0 -23px}
+@keyframes hop{0%{transform:translateY(0) scale(1)}40%{transform:translateY(-30px) scale(1.12)}100%{transform:translateY(0) scale(1)}}
+/* dice */
+.dice{position:absolute;left:50%;top:22%;margin-left:-74px;display:flex;gap:24px;perspective:700px;z-index:6;pointer-events:none;transition:opacity .4s}
+.dw{width:62px;height:62px}
+.tossA{animation:tossA 1s cubic-bezier(.3,.7,.4,1)}.tossB{animation:tossB 1s cubic-bezier(.3,.7,.4,1)}
+@keyframes tossA{0%{transform:translate(-220px,140px) scale(.6)}55%{transform:translate(0,0)}70%{transform:translate(0,-30px)}85%,100%{transform:translate(0,0)}}
+@keyframes tossB{0%{transform:translate(-220px,140px) scale(.6)}55%{transform:translate(0,0)}70%{transform:translate(0,-30px)}85%,100%{transform:translate(0,0)}}
+.die{position:relative;width:62px;height:62px;transform-style:preserve-3d;transition:transform 1s cubic-bezier(.25,.8,.3,1)}
+.fc{position:absolute;inset:0;background-color:#F6EEDC;border:3px solid #14110F;border-radius:13px;background-repeat:no-repeat}
+.f1{transform:translateZ(31px);background-image:radial-gradient(circle at 50% 50%,#C13B1F 7px,transparent 8px)}
+.f6{transform:rotateY(180deg) translateZ(31px);background-image:radial-gradient(circle at 28% 25%,#14110F 5px,transparent 6px),radial-gradient(circle at 72% 25%,#14110F 5px,transparent 6px),radial-gradient(circle at 28% 50%,#14110F 5px,transparent 6px),radial-gradient(circle at 72% 50%,#14110F 5px,transparent 6px),radial-gradient(circle at 28% 75%,#14110F 5px,transparent 6px),radial-gradient(circle at 72% 75%,#14110F 5px,transparent 6px)}
+.f3{transform:rotateY(90deg) translateZ(31px);background-image:radial-gradient(circle at 26% 26%,#14110F 5px,transparent 6px),radial-gradient(circle at 50% 50%,#14110F 5px,transparent 6px),radial-gradient(circle at 74% 74%,#14110F 5px,transparent 6px)}
+.f4{transform:rotateY(-90deg) translateZ(31px);background-image:radial-gradient(circle at 28% 28%,#14110F 5px,transparent 6px),radial-gradient(circle at 72% 28%,#14110F 5px,transparent 6px),radial-gradient(circle at 28% 72%,#14110F 5px,transparent 6px),radial-gradient(circle at 72% 72%,#14110F 5px,transparent 6px)}
+.f2{transform:rotateX(90deg) translateZ(31px);background-image:radial-gradient(circle at 28% 28%,#14110F 5px,transparent 6px),radial-gradient(circle at 72% 72%,#14110F 5px,transparent 6px)}
+.f5{transform:rotateX(-90deg) translateZ(31px);background-image:radial-gradient(circle at 28% 28%,#14110F 5px,transparent 6px),radial-gradient(circle at 72% 28%,#14110F 5px,transparent 6px),radial-gradient(circle at 50% 50%,#14110F 5px,transparent 6px),radial-gradient(circle at 28% 72%,#14110F 5px,transparent 6px),radial-gradient(circle at 72% 72%,#14110F 5px,transparent 6px)}
+/* ===== HUD (identidad web: cápsulas oscuras) ===== */
+.cap{display:flex;align-items:center;gap:12px;background:rgba(20,17,15,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(239,230,210,.16);border-radius:999px;box-shadow:0 20px 40px -20px rgba(0,0,0,.7)}
+.top{position:absolute;left:0;right:0;top:0;z-index:20;display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding:16px 20px;pointer-events:none}
+.top > *{pointer-events:auto}
+.av{position:relative;width:54px;height:54px;flex:none}
+.av img{position:absolute;inset:5px;width:44px;height:44px;border-radius:50%;object-fit:cover}
+.av svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.ringp{transition:stroke-dashoffset .8s cubic-bezier(.2,.8,.2,1)}
+.rb{display:flex;align-items:center;gap:10px;padding:5px 16px 5px 5px;transition:transform .4s cubic-bezier(.2,.9,.3,1.3),border-color .3s}
+.rb.on{border-color:#E0A33A;transform:translateY(4px)}
+.iconbtn{display:inline-flex;align-items:center;justify-content:center;width:50px;height:50px;border-radius:50%;background:rgba(20,17,15,.86);border:1px solid rgba(239,230,210,.16);color:#EFE6D2;cursor:pointer;text-decoration:none;font:700 20px 'DM Sans';transition:transform .35s cubic-bezier(.2,.9,.3,1.4),background .25s,color .25s}
+.iconbtn:hover{transform:scale(1.08);background:#EFE6D2;color:#14110F}
+.iconbtn.on{background:#E0A33A;color:#14110F}
+.iconbtn:focus-visible,.nb:focus-visible,.roll:focus-visible{outline:3px solid #E0A33A;outline-offset:3px}
+.feed{position:absolute;left:50%;top:88px;transform:translateX(-50%);z-index:19;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none}
+.fi{padding:8px 16px;border-radius:999px;background:rgba(20,17,15,.75);color:#EFE6D2;font-size:13px;white-space:nowrap;animation:fin .5s cubic-bezier(.2,.9,.3,1.2)}
+.fi:first-child{background:#EFE6D2;color:#14110F;font-weight:700}
+@keyframes fin{from{opacity:0;transform:translateY(-12px) scale(.92)}}
+.camctl{position:absolute;right:20px;top:50%;transform:translateY(-50%);z-index:20;display:flex;flex-direction:column;gap:10px}
+.dock{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:20;display:flex;align-items:center;gap:6px;padding:8px}
+.nb{all:unset;position:relative;isolation:isolate;display:inline-flex;align-items:center;gap:9px;min-height:50px;padding:0 20px;border-radius:999px;cursor:pointer;color:#EFE6D2;font:700 14px 'DM Sans';transition:color .25s}
+.nb::before{content:'';position:absolute;inset:3px;border-radius:999px;background:#EFE6D2;transform:scale(.6);opacity:0;transition:transform .35s cubic-bezier(.2,.9,.3,1.3),opacity .25s;z-index:-1}
+.nb:hover{color:#14110F}.nb:hover::before{transform:scale(1);opacity:1}
+.nb .badge{min-width:20px;height:20px;padding:0 6px;border-radius:99px;background:#C13B1F;color:#EFE6D2;font:700 11px 'DM Sans';display:inline-flex;align-items:center;justify-content:center}
+.nb.ready{color:#14110F}.nb.ready::before{background:#E0A33A;transform:scale(1);opacity:1;animation:rdy 1.2s ease-in-out infinite}
+@keyframes rdy{50%{transform:scale(1.06)}}
+.roll{all:unset;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;width:112px;height:112px;margin:-44px 10px 0;border-radius:50%;cursor:pointer;text-align:center;font:800 18px 'Bricolage Grotesque';transition:transform .35s cubic-bezier(.2,.9,.3,1.4)}
+.roll:hover{transform:translateY(-4px) scale(1.04)}
+.roll.go{background:#C13B1F;color:#EFE6D2;box-shadow:0 3px 0 #7A2412,0 0 0 6px rgba(20,17,15,.86),0 24px 40px -14px rgba(193,59,31,.9)}
+.roll.go::after{content:'';position:absolute;inset:-6px;border-radius:50%;border:3px solid #C13B1F;animation:ringout 1.6s ease-out infinite}
+@keyframes ringout{0%{transform:scale(1);opacity:.9}100%{transform:scale(1.35);opacity:0}}
+.roll.end{background:#EFE6D2;color:#14110F;box-shadow:0 3px 0 #8E8270,0 0 0 6px rgba(20,17,15,.86)}
+.roll.wait{background:#2B231D;color:#B5A994;cursor:default;font-size:13px;box-shadow:0 0 0 6px rgba(20,17,15,.86)}
+.roll small{font:700 10px 'DM Sans';letter-spacing:.16em;text-transform:uppercase;opacity:.85}
+/* ===== CARTA YAJUGÁ (diseño propio) ===== */
+.yc{position:relative;flex:none;width:230px;height:340px;border-radius:20px;background:#F6EEDC;color:#14110F;border:2px solid #14110F;padding:9px;box-shadow:0 2px 0 #14110F,0 26px 40px -22px rgba(0,0,0,.8);transition:transform .45s cubic-bezier(.2,.9,.3,1.3)}
+.yc-in{position:relative;height:100%;border:1.5px solid var(--c);border-radius:13px;display:flex;flex-direction:column;align-items:center;padding:10px 12px 8px}
+.yc-arch{position:relative;width:100%;height:128px;border-radius:100px 100px 10px 10px;overflow:hidden;border:2px solid #14110F;background:var(--c)}
+.yc-arch img{width:100%;height:100%;object-fit:cover;display:block}
+.yc-arch .glyph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',serif;font-style:italic;font-size:76px;color:var(--fg)}
+.yc-coin{position:absolute;right:4px;top:108px;width:58px;height:58px;border-radius:50%;background:var(--c);color:var(--fg);border:2px solid #14110F;box-shadow:0 3px 0 #14110F;display:flex;flex-direction:column;align-items:center;justify-content:center;font:800 17px/1 'Bricolage Grotesque';z-index:2}
+.yc-coin small{font:700 7px 'DM Sans';letter-spacing:.14em;margin-top:2px}
+.yc-kicker{margin-top:12px;display:flex;align-items:center;gap:6px;align-self:flex-start;font:700 9px 'DM Sans';letter-spacing:.18em;text-transform:uppercase;color:var(--c2)}
+.yc-name{align-self:flex-start;margin-top:4px;font:800 21px/1.02 'Bricolage Grotesque';letter-spacing:-.025em;text-align:left;max-width:150px}
+.yc-flav{align-self:flex-start;margin-top:4px;font-family:'Instrument Serif',serif;font-style:italic;font-size:14px;line-height:1.2;color:#5E5348;text-align:left}
+.yc-perf{width:calc(100% + 24px);height:10px;margin:8px -12px 4px;background:radial-gradient(circle at 5px 5px,#14110F 2px,transparent 2.5px) 0 0/12px 10px repeat-x;opacity:.35}
+.yc-rents{width:100%;display:flex;flex-direction:column;gap:3px}
+.yc-rents div{display:flex;align-items:baseline;gap:6px;font-size:11px}
+.yc-rents div::after{content:'';order:2;flex:1;border-bottom:1.5px dotted rgba(20,17,15,.35)}
+.yc-rents span{order:1}
+.yc-rents b{order:3;font:800 14px 'Bricolage Grotesque'}
+.yc-rents div.full span{font-weight:700;color:var(--c2)}
+.yc-desc{width:100%;margin-top:6px;font-size:12.5px;line-height:1.4;text-align:left;color:#3A322B}
+.yc-foot{margin-top:auto;width:100%;display:flex;justify-content:space-between;align-items:center;font:700 8px 'DM Sans';letter-spacing:.2em;color:#8E8270}
+.yc-foot img{height:18px;display:block}
+.yc.big{transform:scale(1.28);margin:44px 30px}
+/* ===== sheets / overlays ===== */
+.shade{position:absolute;inset:0;z-index:28;background:rgba(10,8,7,.55);backdrop-filter:blur(3px);animation:fade .25s}
+.sheet{position:absolute;left:50%;bottom:0;transform:translateX(-50%);z-index:30;width:min(1180px,100%);max-height:80%;overflow:auto;background:#1E1915;border:1px solid rgba(239,230,210,.16);border-bottom:0;border-radius:34px 34px 0 0;padding:28px 32px 40px;animation:sheetin .5s cubic-bezier(.2,.9,.3,1.1)}
+@keyframes sheetin{from{transform:translate(-50%,100%)}}
+.row{display:flex;gap:28px;overflow-x:auto;padding:20px 6px 14px}
+.slot{flex:none;display:flex;flex-direction:column;align-items:center;gap:16px}
+.slot:hover .yc{transform:translateY(-10px) rotate(-1.5deg)}
+.stack{display:flex;flex-direction:column;align-items:center}
+.stack .yc{margin-top:-276px}.stack .yc:first-child{margin-top:0}
+.ov{position:absolute;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(10,8,7,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);animation:fade .25s ease-out}
+@keyframes fade{from{opacity:0}}
+@keyframes pop{from{opacity:0;transform:scale(.8) translateY(40px)}}
+.panel{width:100%;max-width:560px;background:#1E1915;border:1px solid rgba(239,230,210,.18);border-radius:30px;padding:34px;box-shadow:0 40px 80px rgba(0,0,0,.6);animation:pop .45s cubic-bezier(.2,.9,.3,1.3)}
+.dopt{all:unset;display:flex;flex-direction:column;gap:4px;width:100%;box-sizing:border-box;padding:16px 20px;border-radius:18px;border:1px solid rgba(239,230,210,.22);background:#14110F;cursor:pointer;transition:transform .25s cubic-bezier(.2,.9,.3,1.4),border-color .2s}
+.dopt:hover{transform:translateX(6px);border-color:#E0A33A}
+.dopt[disabled]{opacity:.35;cursor:not-allowed;transform:none}
+.flipwrap{perspective:1200px;width:230px;height:340px;margin:0 auto}
+.flipper{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.3,.8,.3,1.1)}
+.flipper.on{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.face.backf{border-radius:20px;border:2px solid #14110F;background:#C13B1F;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 9px #C13B1F,inset 0 0 0 10.5px #F6EEDC;background-image:repeating-linear-gradient(45deg,rgba(20,17,15,.12) 0 10px,transparent 10px 20px)}
+.face.front{transform:rotateY(180deg)}
+.dom{position:absolute;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#0A0807;color:var(--df);animation:dzshake .5s 1.25s both}
+@keyframes dzshake{0%,100%{transform:none}20%{transform:translate(-14px,8px)}40%{transform:translate(12px,-10px)}60%{transform:translate(-8px,-6px)}80%{transform:translate(6px,6px)}}
+.dz-bg{position:absolute;inset:-10%;background:radial-gradient(circle at 50% 45%,color-mix(in srgb,var(--dc) 100%,#fff 12%) 0,var(--dc) 38%,color-mix(in srgb,var(--dc) 55%,#000) 100%);clip-path:circle(0% at 50% 50%);animation:dzopen 1s 1.2s cubic-bezier(.7,0,.2,1) forwards}
+@keyframes dzopen{to{clip-path:circle(80% at 50% 50%)}}
+.dz-pat{position:absolute;inset:-50%;opacity:0;animation:dzpat 1.2s 1.6s forwards,dzdrift 26s 1.6s linear infinite}
+@keyframes dzpat{to{opacity:1}}
+@keyframes dzdrift{to{transform:translate(120px,120px) rotate(6deg)}}
+.dz-banquero .dz-pat{background:repeating-radial-gradient(circle at 50% 50%,rgba(10,8,7,.28) 0 3px,transparent 3px 70px),repeating-conic-gradient(from 0deg at 50% 50%,rgba(10,8,7,.22) 0 2deg,transparent 2deg 12deg);animation:dzpat 1.2s 1.6s forwards,spin 30s 1.6s linear infinite}
+.dz-estafador .dz-pat{background:repeating-linear-gradient(45deg,rgba(239,230,210,.12) 0 3px,transparent 3px 56px),repeating-linear-gradient(-45deg,rgba(239,230,210,.12) 0 3px,transparent 3px 56px)}
+.dz-abogado .dz-pat{background:repeating-linear-gradient(0deg,rgba(10,8,7,.16) 0 2px,transparent 2px 64px)}
+.dz-corredor .dz-pat{background:repeating-linear-gradient(0deg,rgba(10,8,7,.22) 0 4px,transparent 4px 44px),repeating-linear-gradient(90deg,rgba(239,230,210,.08) 0 120px,transparent 120px 240px)}
+.dz-coleccionista .dz-pat{background:repeating-linear-gradient(90deg,rgba(10,8,7,.3) 0 6px,transparent 6px 150px),repeating-linear-gradient(0deg,rgba(10,8,7,.3) 0 6px,transparent 6px 190px)}
+.dz-arquitecto .dz-pat{background:repeating-linear-gradient(90deg,rgba(239,230,210,.22) 0 2px,transparent 2px 120px),repeating-linear-gradient(0deg,rgba(239,230,210,.22) 0 2px,transparent 2px 120px),repeating-linear-gradient(90deg,rgba(239,230,210,.08) 0 1px,transparent 1px 24px),repeating-linear-gradient(0deg,rgba(239,230,210,.08) 0 1px,transparent 1px 24px)}
+.dz-bars{position:absolute;inset:0;display:none;background:repeating-linear-gradient(90deg,transparent 0 9%,#14110F 9% 10.5%);transform:translateY(-105%);animation:dzbars .55s 2.1s cubic-bezier(.6,0,.3,1.4) forwards}
+.dz-abogado .dz-bars,.dz-banquero .dz-bars{display:block}
+.dz-banquero .dz-bars{background:repeating-linear-gradient(90deg,transparent 0 12%,rgba(10,8,7,.55) 12% 13%)}
+@keyframes dzbars{to{transform:none}}
+.dz-glyphs span{position:absolute;bottom:-80px;font:800 40px 'Bricolage Grotesque',system-ui,sans-serif;color:var(--df);opacity:0;animation:dzgl 6s linear infinite}
+@keyframes dzgl{0%{opacity:0;transform:translateY(0) rotate(0)}10%{opacity:.55}100%{opacity:0;transform:translateY(-120vh) rotate(160deg)}}
+.dz-vig{position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 220px 60px rgba(0,0,0,.65)}
+.dz-flash{position:absolute;inset:0;background:#FFF8EA;opacity:0;animation:dzflash .7s 1.15s ease-out}
+@keyframes dzflash{0%{opacity:.95}100%{opacity:0}}
+.dz-call{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.05em;text-align:center;font:800 clamp(54px,11vw,190px)/.92 'Bricolage Grotesque',sans-serif;letter-spacing:-.04em;text-transform:uppercase;color:#EFE6D2;animation:dzcall 1.5s cubic-bezier(.2,.8,.2,1) forwards}
+.dz-call span:last-child{color:transparent;-webkit-text-stroke:2px #EFE6D2}
+@keyframes dzcall{0%{opacity:0;transform:scale(2.2);filter:blur(10px)}25%{opacity:1;transform:scale(1);filter:none}75%{opacity:1;transform:scale(.96)}100%{opacity:0;transform:scale(.6);filter:blur(6px)}}
+.dz-main{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;padding:24px;max-width:980px;opacity:0;animation:dzmain .8s 1.5s cubic-bezier(.2,.9,.3,1.2) forwards}
+@keyframes dzmain{from{opacity:0;transform:scale(1.3)}to{opacity:1;transform:none}}
+.dz-por{width:clamp(130px,17vw,210px);aspect-ratio:1;border-radius:50%;padding:6px;background:var(--df);box-shadow:0 0 0 12px rgba(10,8,7,.25),0 0 80px 20px color-mix(in srgb,var(--dc) 60%,#fff);animation:dzpor 2.4s 1.5s ease-in-out infinite}
+.dz-por img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block}
+@keyframes dzpor{50%{box-shadow:0 0 0 22px rgba(10,8,7,.18),0 0 130px 40px color-mix(in srgb,var(--dc) 60%,#fff)}}
+.dz-kick{margin-top:28px;font:700 13px 'DM Sans';letter-spacing:.32em;text-transform:uppercase}
+.dz-title{margin-top:10px;font:800 clamp(52px,9vw,150px)/.92 'Bricolage Grotesque',sans-serif;letter-spacing:-.045em;text-transform:uppercase;text-shadow:0 8px 0 rgba(10,8,7,.3)}
+.dz-desc{margin-top:22px;max-width:640px;font:600 clamp(16px,1.6vw,20px)/1.5 'DM Sans',sans-serif}
+.dz-trap{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px;margin-top:24px}
+.dz-trap b{font:700 11px 'DM Sans';letter-spacing:.24em;text-transform:uppercase;opacity:.8}
+.dz-tp{display:inline-flex;align-items:center;gap:8px;padding:4px 14px 4px 4px;border-radius:999px;background:#14110F;color:#EFE6D2;font:700 14px 'DM Sans';border:2px solid var(--tc);opacity:0;animation:dztp .6s cubic-bezier(.2,.9,.3,1.4) forwards}
+.dz-tp img{width:30px;height:30px;border-radius:50%;object-fit:cover}
+@keyframes dztp{from{opacity:0;transform:scale(2.4) translateY(-60px)}to{opacity:1;transform:none}}
+.dz-res{margin-top:26px;padding:18px 26px;border-radius:20px;background:#14110F;color:#EFE6D2;font:700 18px/1.45 'DM Sans';max-width:720px;border:2px solid var(--df);animation:dztp .6s cubic-bezier(.2,.9,.3,1.3)}
+.aura{position:absolute;inset:0;z-index:2;pointer-events:none;box-shadow:inset 0 0 0 6px var(--dc),inset 0 0 160px 30px color-mix(in srgb,var(--dc) 70%,transparent);overflow:hidden;animation:aurap 3s ease-in-out infinite}
+.aura .dz-pat{opacity:.35 !important;animation:dzdrift 26s linear infinite !important;mix-blend-mode:multiply}
+.aura.dz-banquero .dz-pat{animation:spin 40s linear infinite !important}
+@keyframes aurap{50%{box-shadow:inset 0 0 0 10px var(--dc),inset 0 0 220px 60px color-mix(in srgb,var(--dc) 70%,transparent)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.dtext{animation:dt .9s .3s cubic-bezier(.2,.9,.3,1.2) both}
+@keyframes dt{from{opacity:0;transform:translateY(40px) scale(.92);letter-spacing:.2em}}
+.dom-ray{position:absolute;left:50%;top:50%;width:2400px;height:2400px;margin:-1200px 0 0 -1200px;background:repeating-conic-gradient(rgba(10,8,7,.14) 0 6deg,transparent 6deg 18deg);animation:spin 60s linear infinite reverse}
+.dres{animation:pop .5s cubic-bezier(.2,.9,.3,1.3) both}
+.toast{position:absolute;left:50%;top:150px;z-index:70;transform:translateX(-50%);max-width:min(640px,92%);padding:14px 24px;border-radius:999px;background:#EFE6D2;color:#14110F;font-weight:700;font-size:15px;box-shadow:0 14px 34px rgba(0,0,0,.45);animation:toast .4s cubic-bezier(.2,.9,.3,1.3);text-align:center}
+@keyframes toast{from{opacity:0;transform:translate(-50%,-30px)}}
+.ring-t{transition:stroke-dashoffset 1s linear}
+.pick{all:unset;cursor:pointer;display:block;border-radius:22px;background:#1E1915;border:1px solid rgba(239,230,210,.16);overflow:hidden;transition:transform .45s cubic-bezier(.2,.9,.3,1.3),border-color .3s}
+.pick:hover{transform:translateY(-10px);border-color:var(--c)}
+.pick:focus-visible{outline:3px solid #E0A33A;outline-offset:4px}
+.pick .ph{aspect-ratio:1/1;overflow:hidden;background:var(--c)}
+.pick img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .7s}
+.pick:hover img{transform:scale(1.06)}
+@media (max-width:860px){.rivals{display:none !important}.camctl{top:auto;bottom:150px;transform:none}.nb span.lbl{display:none}.nb{padding:0 14px}.roll{width:96px;height:96px}}
+.btn,.nb,.roll,.cap,.fi{white-space:nowrap}
+.pile.deck{font:inherit;cursor:default;pointer-events:none}
+.pile.deck .pgrab{display:none}
+.pile.deck.can{pointer-events:auto;cursor:pointer;animation:pileglow 1.4s ease-in-out infinite}
+.pile.deck.can .pgrab{display:block;position:absolute;left:50%;top:-46px;transform:translateX(-50%);white-space:nowrap;padding:7px 14px;border-radius:999px;background:#14110F;color:#F6EEDC;font:700 13px 'DM Sans';animation:pgrab 1s ease-in-out infinite alternate}
+@keyframes pileglow{50%{box-shadow:5px 5px 0 #F6EEDC,9px 9px 0 #14110F,0 0 0 10px rgba(224,163,58,.55),0 0 60px 20px rgba(224,163,58,.5)}}
+@keyframes pgrab{to{transform:translate(-50%,-6px)}}
+.flyl{position:absolute;inset:0;z-index:25;pointer-events:none;perspective:1000px}
+.fly{position:absolute;left:50%;top:50%;width:96px;height:134px;margin:-67px 0 0 -48px;animation:flyme 1.4s cubic-bezier(.5,0,.3,1) both}
+.fly.r1{animation-name:flyr1}.fly.r2{animation-name:flyr2}
+@keyframes flyme{0%{left:50%;top:50%;transform:scale(.55) rotate(6deg)}30%{left:50%;top:40%;transform:scale(1.25) rotate(-4deg)}62%{left:50%;top:40%;transform:scale(1.2) rotate(2deg)}100%{left:calc(50% - 300px);top:calc(100% - 50px);transform:scale(.22) rotate(-14deg);opacity:.6}}
+@keyframes flyr1{0%{left:50%;top:50%;transform:scale(.55) rotate(6deg)}35%{left:50%;top:44%;transform:scale(.9) rotate(-6deg)}100%{left:calc(100% - 130px);top:60px;transform:scale(.2) rotate(18deg);opacity:.5}}
+@keyframes flyr2{0%{left:50%;top:50%;transform:scale(.55) rotate(6deg)}35%{left:50%;top:44%;transform:scale(.9) rotate(-6deg)}100%{left:calc(100% - 130px);top:130px;transform:scale(.2) rotate(18deg);opacity:.5}}
+.flyin{position:absolute;inset:0;transform-style:preserve-3d;animation:flyflip 1.4s both}
+.fly.back .flyin{animation:none}
+@keyframes flyflip{0%,18%{transform:rotateY(0)}38%,100%{transform:rotateY(180deg)}}
+.ff{position:absolute;inset:0;border-radius:12px;border:2.5px solid #14110F;backface-visibility:hidden;-webkit-backface-visibility:hidden;box-shadow:0 18px 40px rgba(0,0,0,.45)}
+.ff.fb{display:flex;align-items:center;justify-content:center;background:#C99022;background-image:repeating-linear-gradient(45deg,rgba(20,17,15,.12) 0 8px,transparent 8px 16px)}
+.ff.fb img{width:44px}
+.ff.fr{transform:rotateY(180deg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:10px;text-align:center}
+.ff.fr b{font:800 34px 'Bricolage Grotesque'}
+.ff.fr span{font:800 13px/1.1 'Bricolage Grotesque'}
+.nb.hand.catch{animation:catchb .5s cubic-bezier(.2,.9,.3,1.6)}
+.nb.hand.catch .badge{animation:catchb .5s cubic-bezier(.2,.9,.3,1.6)}
+@keyframes catchb{40%{transform:scale(1.25)}}
+@media (max-width:700px){@keyframes flyme{0%{left:50%;top:50%;transform:scale(.55) rotate(6deg)}30%{left:50%;top:40%;transform:scale(1.1) rotate(-4deg)}62%{left:50%;top:40%;transform:scale(1.05) rotate(2deg)}100%{left:42px;top:calc(100% - 40px);transform:scale(.2) rotate(-14deg);opacity:.6}}}
+.online{max-width:760px;margin:0 auto 40px;padding:28px;border-radius:28px;background:#1E1915;border:1px solid rgba(239,230,210,.16);display:flex;flex-direction:column;gap:18px}
+.onrow{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}
+.fld{display:flex;flex-direction:column;gap:8px;font:700 12px 'DM Sans';letter-spacing:.12em;text-transform:uppercase;color:#B5A994}
+.fld input{min-height:50px;padding:0 18px;border-radius:14px;border:1.5px solid rgba(239,230,210,.25);background:#14110F;color:#EFE6D2;font:600 17px 'DM Sans';letter-spacing:normal;text-transform:none}
+.fld input:focus{outline:3px solid #E0A33A;outline-offset:2px}
+.lobby .code{font-size:clamp(56px,10vw,96px);letter-spacing:.12em;margin:8px 0 16px;color:#E0A33A}
+.lplayers{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.lp{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:18px;background:#14110F;border:2px solid var(--c)}
+.lp img{width:46px;height:46px;border-radius:50%;object-fit:cover}
+.lp b{display:block;font-size:16px}.lp span{font-size:13px;color:#B5A994}.lp em{font-style:normal;color:#E0A33A;font-weight:700}
+.pick.taken{opacity:.3;pointer-events:none}
+.pick.mine{outline:4px solid #E0A33A;outline-offset:4px}
+.fly.r3{animation-name:flyr3}
+@keyframes flyr3{0%{left:50%;top:50%;transform:scale(.55) rotate(6deg)}35%{left:50%;top:44%;transform:scale(.9) rotate(-6deg)}100%{left:calc(100% - 130px);top:200px;transform:scale(.2) rotate(18deg);opacity:.5}}
+.vote{position:absolute;left:50%;top:50%;z-index:65;transform:translate(-50%,-50%);width:min(440px,92%);padding:26px;border-radius:26px;background:#1E1915;border:1px solid rgba(239,230,210,.2);box-shadow:0 30px 70px rgba(0,0,0,.6);animation:toast .4s cubic-bezier(.2,.9,.3,1.3)}
+@media (hover:none){.tphoto{display:none}}
+@media (max-width:700px){
+.top{padding:calc(10px + env(safe-area-inset-top, 0px)) 10px 0;gap:8px}
+.top .iconbtn{width:40px;height:40px}.top .iconbtn img{height:24px !important}
+.mecap{padding:4px 14px 4px 4px !important;gap:8px}
+.mecap .av{width:40px !important;height:40px !important}.mecap .av svg{width:40px;height:40px}.mecap .av img{inset:4px !important;width:32px !important;height:32px !important}
+.mecap .hd{font-size:19px !important}
+.mysub{display:none}
+.roundp{padding:9px 14px !important;font-size:13px !important}
+.pills{padding:5px 10px !important;font-size:9px !important;letter-spacing:.1em}
+.pills .dk{display:none}
+.tname{font-size:21px !important;padding:6px 10px !important}.tband b{font-size:10px}.tprice span{font-size:15px;min-height:26px}.cbody b{font-size:23px}.cbody span{font-size:11px}
+.dz-call{font-size:15vw}.dz-title{font-size:13vw}.dz-por{width:120px}.dz-res{font-size:15px}.aurap{font-size:9px !important}
+.feed{top:72px;max-width:94%}.fi{font-size:11px;padding:6px 12px;white-space:normal;text-align:center}
+.toast{top:118px;font-size:13px;padding:12px 18px;border-radius:18px;max-width:92%}
+.camctl{flex-direction:row;top:auto;right:auto;left:50%;bottom:calc(112px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);gap:8px}
+.camctl .iconbtn{width:40px;height:40px;font-size:17px}
+.dock{left:10px;right:10px;bottom:calc(12px + env(safe-area-inset-bottom, 0px));transform:none;justify-content:space-between;gap:0;padding:6px}
+.nb{padding:0 12px;min-height:44px}
+.roll{width:82px;height:82px;margin:-30px 4px 0;font-size:15px}.roll small{font-size:8px;letter-spacing:.1em}
+.buyrow{width:100%}.buyrow .btn{min-width:0 !important;flex:1;padding:0 16px}
+.sheet{padding:22px 16px !important}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none !important;transition:none !important}}
+</style>
+
+<style>html,body{margin:0;padding:0}html,body{height:100%;overflow:hidden;background:#14110F;overscroll-behavior:none}#root{position:fixed;inset:0;height:100vh;height:100dvh}#root>*{height:100%}</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/x-tpl" id="tpl">
+
+<div class="g">
+
+<!-- PICK -->
+<sc-if value="{{isPick}}" hint-placeholder-val="{{ true }}">
+<main style="position: absolute; inset: 0; overflow: auto">
+<div style="max-width: 1240px; margin: 0 auto; padding: 32px 24px 80px">
+<div style="display: flex; justify-content: space-between; align-items: center"><a href="Main.dc.html" aria-label="Volver al inicio" style="display: inline-flex; min-height: 44px; align-items: center"><img src="/assets/iso.png" alt="" style="height: 44px"></a><a class="btn" href="Main.dc.html">Salir</a></div>
+<div style="text-align: center; max-width: 720px; margin: 48px auto 60px">
+<div class="eyebrow" style="color: #E0A33A">Bienvenido a YAJUGÁ Leyendas</div>
+<h1 class="hd" style="margin: 20px 0 0; font-size: clamp(44px, 6vw, 80px)">Elegí tu <span class="serif" style="color: #E0A33A; font-size: 1.08em">leyenda</span></h1>
+<p class="muted" style="margin: 24px 0 0; font-size: 18px; line-height: 1.7">Once figuras de la historia, seis épocas y dieciocho maravillas. Comprá, completá épocas, construí, robá tratos y cargá tu dominio para atrapar a todos en tu leyenda.</p>
+</div>
+<sc-if value="{{netOk}}" hint-placeholder-val="{{ false }}">
+<div class="online">
+<div><div class="eyebrow" style="color: #E0A33A">Jugar con amigos</div><div class="hd" style="font-size: 28px; margin-top: 10px">Armá una sala online</div><p class="muted" style="margin: 10px 0 0; font-size: 15px; line-height: 1.6">De 2 a 4 jugadores. Si son 2, se suma la computadora.</p></div>
+<label class="fld"><span>Tu nombre</span><input type="text" maxlength="16" placeholder="Ej: Axel" value="{{fName}}" onInput="{{onName}}"></label>
+<sc-if value="{{hasLast}}" hint-placeholder-val="{{ false }}"><button class="btn b-rust" type="button" onClick="{{rejoin}}">Volver a tu partida · {{lastCode}}</button></sc-if>
+<div class="onrow"><button class="btn b-rust" type="button" onClick="{{mkRoom}}">Crear sala</button></div>
+<div class="onrow"><label class="fld" style="flex: 1"><span>Código de sala</span><input type="text" maxlength="5" placeholder="ABCDE" value="{{fCode}}" onInput="{{onCode}}" style="text-transform: uppercase; letter-spacing: .2em"></label><button class="btn" type="button" onClick="{{joinRoom}}">Unirme</button></div>
+</div>
+<div class="eyebrow" style="text-align: center; margin: 0 0 24px; opacity: .7">O jugá solo contra la computadora: elegí tu rol</div>
+</sc-if>
+<sc-if value="{{isLobby}}" hint-placeholder-val="{{ false }}">
+<div class="online lobby">
+<div style="text-align: center"><div class="eyebrow" style="color: #E0A33A">Sala · {{lob.count}}</div><div class="hd code">{{lob.code}}</div><button class="btn" type="button" onClick="{{copyLink}}">Copiar link de invitación</button><div class="muted" style="margin-top: 10px; font-size: 14px; word-break: break-all">{{lob.msg}}</div><div style="margin-top: 8px; color: #E8705A; font-weight: 700">{{lob.err}}</div></div>
+<div class="lplayers"><sc-for list="{{lobPlayers}}" as="lp" hint-placeholder-count="2"><div class="lp" style="--c: {{lp.color}}"><sc-if value="{{lp.hasImg}}" hint-placeholder-val="{{ false }}"><img src="{{lp.img}}" alt=""></sc-if><div><b>{{lp.name}}</b><span>{{lp.role}} <em>{{lp.host}}</em></span></div></div></sc-for></div>
+<div class="onrow" style="justify-content: center"><sc-if value="{{lob.host}}" hint-placeholder-val="{{ false }}"><button class="btn b-rust" type="button" onClick="{{startRoom}}" disabled="{{lob.startOff}}">{{lob.startTxt}}</button></sc-if><button class="btn" type="button" onClick="{{leaveRoom}}">Salir de la sala</button></div>
+<div class="eyebrow" style="text-align: center; opacity: .7">Elegí tu leyenda abajo · cada una solo una vez</div>
+</div>
+</sc-if>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 28px">
+<sc-for list="{{roles}}" as="r" hint-placeholder-count="6">
+<button class="pick {{r.pcls}}" type="button" onClick="{{r.pick}}" style="--c: {{r.color}}">
+<div class="ph"><img src="{{r.img}}" alt="{{r.name}}"></div>
+<div style="padding: 22px 24px 26px"><div class="hd" style="font-size: 26px">{{r.name}}</div><div class="eyebrow" style="opacity: .65; margin-top: 6px">{{r.yrs}}</div><div style="font-size: 14px; line-height: 1.55; margin-top: 10px; color: rgba(239,230,210,.85)">{{r.bio}}</div><div class="eyebrow" style="color: #E0A33A; margin-top: 14px">Dominio · {{r.dom}}</div><div class="muted" style="font-size: 14px; line-height: 1.6; margin-top: 8px">{{r.domDesc}}</div></div>
+</button>
+</sc-for>
+</div>
+</div>
+</main>
+</sc-if>
+
+<!-- GAME -->
+<sc-if value="{{isGame}}" hint-placeholder-val="{{ false }}">
+<div class="stage {{dragCls}}" onPointerDown="{{pDown}}" onPointerMove="{{pMove}}" onPointerUp="{{pUp}}" onPointerLeave="{{pUp}}" onWheel="{{wheel}}">
+<sc-if value="{{showAura}}" hint-placeholder-val="{{ false }}"><div class="aura dz-{{aura.id}}" style="--dc: {{aura.color}}" aria-hidden="true"><div class="dz-pat"></div></div></sc-if>
+<div class="cam">
+<div class="world {{dragCls}}" style="transform: translate({{camX}}px, {{camY}}px) scale({{camS}}) translate({{fx}}px, {{fy}}px)">
+<div class="board">
+<sc-for list="{{tiles}}" as="t" hint-placeholder-count="24">
+<div class="tl {{t.cls}}" style="grid-column: {{t.col}}; grid-row: {{t.row}}" onClick="{{t.peek}}">
+<div class="tbox">
+<sc-if value="{{t.isProp}}" hint-placeholder-val="{{ true }}">
+<div class="tband" style="background: {{t.color}}; color: {{t.fg}}"><b>{{t.barrio}}</b><span class="hs"><sc-for list="{{t.hs}}" as="h" hint-placeholder-count="0"><i class="{{h.cls}}"></i></sc-for></span></div>
+<div class="tname">{{t.name}}</div><div class="tprice"><span>{{t.price}}</span></div>
+<sc-if value="{{t.owned}}" hint-placeholder-val="{{ false }}"><div class="flag" style="background: {{t.ownColor}}; color: {{t.ownFg}}">{{t.ownInit}}</div></sc-if>
+</sc-if>
+<sc-if value="{{t.isCorner}}" hint-placeholder-val="{{ false }}"><div class="cbody"><b>{{t.name}}</b><span>{{t.sub}}</span></div></sc-if>
+<sc-if value="{{t.isNews}}" hint-placeholder-val="{{ false }}"><div class="qm">?</div><div class="eyebrow" style="margin-top: 12px">Crónicas</div></sc-if>
+</div>
+<sc-if value="{{t.img}}" hint-placeholder-val="{{ false }}"><div class="tphoto"><img src="{{t.img}}" alt="{{t.name}}"><div class="pcap"><div class="pk" style="color: {{t.popC}}">{{t.popK}}</div><div class="pn">{{t.name}}</div><sc-if value="{{t.isProp}}" hint-placeholder-val="{{ true }}"><div class="prow"><div>Precio<strong>{{t.price}}</strong></div><div>{{t.popRL}}<strong>{{t.popRV}}</strong></div></div></sc-if><sc-if value="{{t.isCorner}}" hint-placeholder-val="{{ false }}"><div class="prow"><div>Efecto<strong>{{t.sub}}</strong></div></div></sc-if></div></div></sc-if>
+</div>
+</sc-for>
+<div class="mid">
+<div class="road"></div>
+<sc-for list="{{cars}}" as="c" hint-placeholder-count="0"><div class="car" style="background: {{c.color}}; animation-delay: {{c.delay}}s; animation-duration: {{c.dur}}s"></div></sc-for>
+<div class="park">
+<div class="pile" style="left: 9%; top: 9%; background: #C13B1F; color: #F6EEDC; transform: rotate(-8deg)"><span class="qm" style="font-size: 64px">?</span><span class="eyebrow">Crónicas</span></div>
+<button class="pile deck {{pileCls}}" type="button" onClick="{{drawNow}}" aria-label="Robar cartas del mazo de Tratos" style="right: 9%; bottom: 9%; background: #C99022; color: #14110F; transform: rotate(6deg)"><img src="/assets/iso.png" alt="" style="width: 52px"><span class="eyebrow">Tratos</span><b class="pgrab">Tocá para robar</b></button>
+<div class="plate"><img src="/assets/titulo.png" alt="YAJUGÁ" style="width: 100%; display: block"><div style="display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 12px"><span style="height: 2px; flex: 1; background: #14110F"></span><span class="hd" style="font-size: 26px; color: #C13B1F; letter-spacing: .02em">LEYENDAS</span><span style="height: 2px; flex: 1; background: #14110F"></span></div></div>
+</div>
+<div class="cloud" style="top: 8%"></div>
+<div class="cloud" style="top: 58%; animation-delay: -30s; animation-duration: 80s"></div>
+</div>
+</div>
+<sc-for list="{{toks}}" as="k" hint-placeholder-count="0"><div class="tok {{k.cls}}" style="left: {{k.x}}px; top: {{k.y}}px; background: {{k.color}}"></div></sc-for>
+</div>
+</div>
+<div class="dice" aria-label="{{diceLabel}}" role="img" style="opacity: {{diceOp}}">
+<div class="dw {{toss}}"><div class="die" style="transform: {{d1}}"><div class="fc f1"></div><div class="fc f2"></div><div class="fc f3"></div><div class="fc f4"></div><div class="fc f5"></div><div class="fc f6"></div></div></div>
+</div>
+</div>
+
+<div class="top">
+<div style="display: flex; gap: 10px; align-items: center">
+<a href="Main.dc.html" class="iconbtn" aria-label="Salir al inicio"><img src="/assets/iso.png" alt="" style="height: 32px"></a>
+<div class="cap mecap" style="padding: 5px 22px 5px 5px">
+<div class="av"><svg width="54" height="54" viewBox="0 0 54 54" aria-hidden="true"><circle cx="27" cy="27" r="24" fill="none" stroke="rgba(239,230,210,.14)" stroke-width="4"></circle><circle class="ringp" cx="27" cy="27" r="24" fill="none" stroke="{{me.color}}" stroke-width="4" stroke-linecap="round" stroke-dasharray="151" style="stroke-dashoffset: {{me.ring}}"></circle></svg><img src="{{me.img}}" alt="{{me.role}}"></div>
+<div><div class="hd" style="font-size: 26px">{{me.money}}</div><div class="eyebrow muted mysub" style="margin-top: 4px; font-size: 10px">Dominio {{me.charge}}% · {{me.props}} lugares</div></div>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 8px">
+<div class="cap hd roundp" style="padding: 12px 22px; font-size: 16px">{{roundTxt}}</div>
+<sc-if value="{{showAura}}" hint-placeholder-val="{{ false }}"><div class="cap eyebrow aurap" style="padding: 7px 14px; font-size: 10px; background: {{aura.color}}; color: {{aura.fg}}">Dominio activo · {{aura.name}} · {{aura.left}}</div></sc-if>
+<div class="cap eyebrow pills" style="padding: 7px 14px; font-size: 10px; opacity: .85"><span>{{playsTxt}}</span><span class="dk">· {{deckTxt}}</span></div>
+<sc-if value="{{overtime}}" hint-placeholder-val="{{ false }}"><div class="cap eyebrow" style="padding: 8px 16px; background: #C13B1F">Tiempo extra · alquiler x2</div></sc-if>
+</div>
+<div class="rivals" style="display: flex; flex-direction: column; gap: 10px; align-items: flex-end">
+<sc-for list="{{rivals}}" as="p" hint-placeholder-count="2">
+<div class="cap rb {{p.cls}}"><div class="av" style="width: 46px; height: 46px"><svg width="46" height="46" viewBox="0 0 46 46" aria-hidden="true"><circle class="ringp" cx="23" cy="23" r="20" fill="none" stroke="{{p.color}}" stroke-width="4" stroke-linecap="round" stroke-dasharray="126" style="stroke-dashoffset: {{p.ring}}"></circle></svg><img src="{{p.img}}" alt="{{p.role}}" style="inset: 5px; width: 36px; height: 36px"></div><div><div style="font-weight: 700; font-size: 13px">{{p.name}}</div><div class="hd" style="font-size: 17px">{{p.money}}</div></div><span style="width: 14px; height: 14px; border-radius: 50%; background: {{p.color}}; border: 2px solid #EFE6D2"></span></div>
+</sc-for>
+</div>
+</div>
+
+<div class="feed" aria-live="polite"><sc-for list="{{feed}}" as="l" hint-placeholder-count="2"><span class="fi">{{l.t}}</span></sc-for></div>
+
+<div class="camctl">
+<sc-if value="{{canVoteStart}}" hint-placeholder-val="{{ false }}"><button class="iconbtn" type="button" onClick="{{voteStart}}" aria-label="Proponer terminar la partida"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4h11l-2 4 2 4H5"></path></svg></button></sc-if>
+<button class="iconbtn" type="button" onClick="{{openRules}}" aria-label="Reglas del juego" style="font: 800 18px 'Bricolage Grotesque'">?</button>
+<button class="iconbtn" type="button" onClick="{{zoomIn}}" aria-label="Acercar">+</button>
+<button class="iconbtn" type="button" onClick="{{zoomOut}}" aria-label="Alejar">−</button>
+<button class="iconbtn {{followCls}}" type="button" onClick="{{followMe}}" aria-label="Seguir la ficha"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v4M12 18v4M2 12h4M18 12h4"></path></svg></button>
+<button class="iconbtn" type="button" onClick="{{overview}}" aria-label="Ver toda la ciudad"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"></rect></svg></button>
+</div>
+
+<div class="flyl" aria-hidden="true"><sc-for list="{{fly}}" as="f" hint-placeholder-count="0"><div class="fly {{f.cls}}" style="animation-delay: {{f.d}}s"><div class="flyin" style="animation-delay: {{f.d}}s"><div class="ff fb"><img src="/assets/iso.png" alt=""></div><div class="ff fr" style="background: {{f.color}}; color: {{f.fg}}"><b>{{f.ic}}</b><span>{{f.name}}</span></div></div></div></sc-for></div>
+<div class="dock cap">
+<button class="nb hand {{handCls}}" type="button" onClick="{{openHand}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="10" height="15" rx="2" transform="rotate(-10 8 12)"></rect><rect x="10" y="4" width="10" height="15" rx="2"></rect></svg><span class="lbl">Mano</span><sc-if value="{{handCount}}" hint-placeholder-val="{{ false }}"><b class="badge">{{handCount}}</b></sc-if></button>
+<button class="nb" type="button" onClick="{{openMarket}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l2-5h14l2 5M3 9h18v3a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0zM5 14v6h14v-6"></path></svg><span class="lbl">Mercado</span></button>
+<sc-if value="{{canDraw}}" hint-placeholder-val="{{ false }}"><button class="roll go" type="button" onClick="{{drawNow}}" aria-label="Robar cartas"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="11" height="15" rx="2"></rect><rect x="9" y="6" width="11" height="15" rx="2"></rect></svg>Robar<small>{{drawN}} cartas</small></button></sc-if>
+<sc-if value="{{canRoll}}" hint-placeholder-val="{{ true }}"><button class="roll go" type="button" onClick="{{roll}}" aria-label="Tirar el dado"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"></circle><circle cx="15.5" cy="15.5" r="1.5" fill="currentColor"></circle><circle cx="12" cy="12" r="1.5" fill="currentColor"></circle></svg>Tirar<small>el dado</small></button></sc-if>
+<sc-if value="{{canAct}}" hint-placeholder-val="{{ false }}"><button class="roll end" type="button" onClick="{{endTurn}}" aria-label="Terminar turno">Fin<small>de turno</small></button></sc-if>
+<sc-if value="{{waiting}}" hint-placeholder-val="{{ false }}"><div class="roll wait" role="status">{{status}}</div></sc-if>
+<button class="nb" type="button" onClick="{{openEstate}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M3 21V10l6-5 6 5v11zM15 21V8h6v13zM1 21h22"></path></svg><span class="lbl">Épocas</span></button>
+<button class="nb {{domReady}}" type="button" onClick="{{useDom}}" aria-label="Dominio {{domName}}, carga {{me.charge}}%"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-opacity=".3" stroke-width="3"></circle><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="57" style="stroke-dashoffset: {{domMini}}" transform="rotate(-90 12 12)"></circle></svg><span class="lbl">{{domLbl}}</span></button>
+</div>
+
+<sc-if value="{{sheetOpen}}" hint-placeholder-val="{{ false }}">
+<div class="shade" onClick="{{closeSheet}}"></div>
+<div class="sheet" role="dialog" aria-label="{{sheetTitle}}">
+<div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px">
+<div><div class="hd" style="font-size: 34px">{{sheetTitle}}</div><div class="muted" style="font-size: 15px; margin-top: 8px">{{sheetSub}}</div></div>
+<button class="iconbtn" type="button" onClick="{{closeSheet}}" aria-label="Cerrar">✕</button>
+</div>
+<sc-if value="{{sheetEmpty}}" hint-placeholder-val="{{ false }}"><div class="muted" style="margin-top: 26px; padding: 28px; border: 1.5px dashed rgba(239,230,210,.25); border-radius: 22px; text-align: center; font-size: 15px">{{sheetEmptyTxt}}</div></sc-if>
+<sc-if value="{{isDeals}}" hint-placeholder-val="{{ false }}"><div class="row">
+<sc-for list="{{deals}}" as="c" hint-placeholder-count="0">
+<div class="slot">
+<div class="yc" style="--c: {{c.color}}; --c2: {{c.c2}}; --fg: {{c.fg}}"><div class="yc-in"><div class="yc-arch"><div class="glyph">{{c.ic}}</div></div><div class="yc-coin">{{c.val}}<small>VALOR</small></div><div class="yc-kicker">{{c.kind}}</div><div class="yc-name">{{c.name}}</div><div class="yc-perf"></div><div class="yc-desc">{{c.desc}}</div><div class="yc-foot"><span>YAJUGÁ · DOMINIO</span><img src="/assets/iso.png" alt=""></div></div></div>
+<button class="btn {{c.btnCls}}" type="button" onClick="{{c.act}}" disabled="{{c.off}}" style="min-width: 200px">{{c.btn}}</button>
+</div>
+</sc-for>
+</div></sc-if>
+<sc-if value="{{isRules}}" hint-placeholder-val="{{ false }}"><div class="rgrid"><sc-for list="{{rulesList}}" as="r" hint-placeholder-count="6"><div class="rcard"><b>{{r.h}}</b><p>{{r.t}}</p></div></sc-for></div></sc-if>
+<sc-if value="{{isEstate}}" hint-placeholder-val="{{ false }}"><div class="row" style="align-items: flex-start">
+<sc-for list="{{estate}}" as="s" hint-placeholder-count="0">
+<div class="slot"><div class="eyebrow" style="color: {{s.c2}}">{{s.title}} · {{s.count}}</div><div class="stack">
+<sc-for list="{{s.cards}}" as="p" hint-placeholder-count="1">
+<div class="dd" style="--c: {{p.color}}; --fg: {{p.fg}}"><div class="dd-photo"><img src="{{p.img}}" alt=""></div><div class="dd-title"><small>Título de propiedad · {{p.barrio}}</small><b>{{p.name}}</b></div><div class="dd-rows"><sc-for list="{{p.rows}}" as="r" hint-placeholder-count="7"><div class="dd-row {{r.cls}}"><span class="l"><sc-for list="{{r.hs}}" as="h" hint-placeholder-count="0"><i class="hi {{h.c}}"></i></sc-for>{{r.l}}</span><b>{{r.v}}</b></div></sc-for></div><div class="dd-foot"><span>Precio <strong>{{p.price}}</strong></span><span>Casa <strong>{{p.hc}}</strong> c/u</span></div></div>
+</sc-for>
+</div><button class="btn {{s.btnCls}}" type="button" onClick="{{s.build}}" disabled="{{s.off}}" style="min-width: 220px">{{s.btn}}</button></div>
+</sc-for>
+</div></sc-if>
+</div>
+</sc-if>
+</sc-if>
+
+<!-- END -->
+<sc-if value="{{isEnd}}" hint-placeholder-val="{{ false }}">
+<main style="position: absolute; inset: 0; overflow: auto">
+<div style="max-width: 720px; margin: 0 auto; padding: 72px 24px 96px; text-align: center; display: flex; flex-direction: column; align-items: center">
+<img class="dimg" src="{{winImg}}" alt="" style="width: 180px; height: 180px; color: #E0A33A">
+<div class="eyebrow" style="color: #E0A33A; margin-top: 44px">{{endKicker}}</div>
+<h1 class="hd" style="margin: 16px 0 0; font-size: clamp(44px, 6vw, 72px)">{{winName}} <span class="serif" style="color: #E0A33A">{{winVerb}}</span></h1>
+<div style="width: 100%; margin-top: 48px; display: flex; flex-direction: column; gap: 12px">
+<sc-for list="{{ranking}}" as="r" hint-placeholder-count="3">
+<div class="cap" style="justify-content: space-between; padding: 10px 26px 10px 10px; border-radius: 26px"><div style="display: flex; align-items: center; gap: 14px"><span class="hd" style="font-size: 24px; width: 30px">{{r.pos}}</span><img src="{{r.img}}" alt="" style="width: 54px; height: 54px; border-radius: 50%; object-fit: cover"><div style="text-align: left"><div class="hd" style="font-size: 19px">{{r.name}}</div><div class="muted" style="font-size: 13px; margin-top: 4px">{{r.detail}}</div></div></div><span class="hd" style="font-size: 24px">{{r.worth}}</span></div>
+</sc-for>
+</div>
+<div style="display: flex; gap: 14px; margin-top: 44px; flex-wrap: wrap; justify-content: center"><button class="btn b-rust" type="button" onClick="{{restart}}">Jugar de nuevo</button><a class="btn" href="Main.dc.html">Volver al inicio</a></div>
+</div>
+</main>
+</sc-if>
+
+<!-- PEEK -->
+<sc-if value="{{showPeek}}" hint-placeholder-val="{{ false }}">
+<div class="ov" onClick="{{closePeek}}"><div style="display: flex; flex-direction: column; align-items: center; gap: 16px; animation: pop .45s cubic-bezier(.2,.9,.3,1.3)">
+<div class="eyebrow" style="color: #E0A33A">{{peekOwner}}</div>
+<div class="dd big" style="--c: {{peek.color}}; --fg: {{peek.fg}}"><div class="dd-photo"><img src="{{peek.img}}" alt=""></div><div class="dd-title"><small>Título de propiedad · {{peek.barrio}}</small><b>{{peek.name}}</b></div><div class="dd-rows"><sc-for list="{{peek.rows}}" as="r" hint-placeholder-count="7"><div class="dd-row {{r.cls}}"><span class="l"><sc-for list="{{r.hs}}" as="h" hint-placeholder-count="0"><i class="hi {{h.c}}"></i></sc-for>{{r.l}}</span><b>{{r.v}}</b></div></sc-for></div><div class="dd-foot"><span>Precio <strong>{{peek.price}}</strong></span><span>Casa <strong>{{peek.hc}}</strong> c/u</span></div></div>
+<div class="serif" style="font-size: 20px; color: #D8CCB6; max-width: 320px; text-align: center">“{{peek.flav}}”</div>
+<button class="btn" type="button" onClick="{{closePeek}}">Cerrar</button>
+</div></div>
+</sc-if>
+
+<!-- BUY -->
+<sc-if value="{{showBuy}}" hint-placeholder-val="{{ false }}">
+<div class="ov"><div style="display: flex; flex-direction: column; align-items: center; gap: 16px; animation: pop .5s cubic-bezier(.2,.9,.3,1.3)">
+<div class="eyebrow" style="color: #E0A33A">Lugar libre · {{buy.barrio}}</div>
+<div class="dd big" style="--c: {{buy.color}}; --fg: {{buy.fg}}"><div class="dd-photo"><img src="{{buy.img}}" alt=""></div><div class="dd-title"><small>Título de propiedad · {{buy.barrio}}</small><b>{{buy.name}}</b></div><div class="dd-rows"><sc-for list="{{buy.rows}}" as="r" hint-placeholder-count="7"><div class="dd-row {{r.cls}}"><span class="l"><sc-for list="{{r.hs}}" as="h" hint-placeholder-count="0"><i class="hi {{h.c}}"></i></sc-for>{{r.l}}</span><b>{{r.v}}</b></div></sc-for></div><div class="dd-foot"><span>Precio <strong>{{buy.price}}</strong></span><span>Casa <strong>{{buy.hc}}</strong> c/u</span></div></div>
+<div class="buyrow" style="display: flex; gap: 14px"><button class="btn b-rust" type="button" onClick="{{doBuy}}" disabled="{{buyOff}}" style="min-width: 160px">Comprar · {{buy.price}}</button><button class="btn" type="button" onClick="{{doPass}}" style="min-width: 160px">Pasar</button></div>
+</div></div>
+</sc-if>
+
+<!-- NEWS -->
+<sc-if value="{{showAct}}" hint-placeholder-val="{{ false }}">
+<div class="ov"><div style="display: flex; flex-direction: column; align-items: center; gap: 28px">
+<div class="eyebrow" style="color: #E0A33A">Crónicas de la historia</div>
+<div class="flipwrap"><div class="flipper {{actFlip}}">
+<div class="face backf"><img src="/assets/iso.png" alt="" style="width: 96px"></div>
+<div class="face front"><div class="yc" style="--c: #C13B1F; --c2: #C13B1F; --fg: #F6EEDC"><div class="yc-in"><div class="yc-arch"><div class="glyph">{{act.ic}}</div></div><div class="yc-kicker" style="margin-top: 16px">Noticia de último momento</div><div class="yc-name" style="max-width: 100%">{{act.name}}</div><div class="yc-perf"></div><div class="yc-desc" style="font-size: 14px">{{act.desc}}</div><div class="yc-foot"><span>CIUDAD DOMINIO</span><img src="/assets/iso.png" alt=""></div></div></div></div>
+</div></div>
+<button class="btn" type="button" onClick="{{actOk}}" style="min-width: 220px; background: #EFE6D2; color: #14110F">Aceptar</button>
+</div></div>
+</sc-if>
+
+<!-- DEFENSE -->
+<sc-if value="{{showDef}}" hint-placeholder-val="{{ false }}">
+<div class="ov"><div class="panel" role="dialog" aria-label="Sistema de Defensa">
+<div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px">
+<div><div class="eyebrow" style="color: #E0A33A">Sistema de Defensa</div><div class="hd" style="margin-top: 12px; font-size: 38px">Te cobran {{defAmount}}</div><p class="muted" style="margin: 12px 0 0; font-size: 15px; line-height: 1.6">{{defText}}</p></div>
+<div style="position: relative; flex: none; width: 80px; height: 80px"><svg width="80" height="80" viewBox="0 0 80 80" style="transform: rotate(-90deg)" aria-hidden="true"><circle cx="40" cy="40" r="33" fill="#14110F" stroke="rgba(239,230,210,.12)" stroke-width="6"></circle><circle class="ring-t" cx="40" cy="40" r="33" fill="none" stroke="#C13B1F" stroke-width="6" stroke-linecap="round" stroke-dasharray="207" style="stroke-dashoffset: {{defOffset}}"></circle></svg><div class="hd" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 28px">{{defSecs}}</div></div>
+</div>
+<sc-if value="{{defChoosing}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 26px">
+<button class="dopt" type="button" onClick="{{defBlock}}" disabled="{{blockOff}}"><span class="hd" style="font-size: 20px">Bloquear</span><span class="muted" style="font-size: 14px">{{blockTxt}}</span></button>
+<button class="dopt" type="button" onClick="{{defNego}}"><span class="hd" style="font-size: 20px">Negociar</span><span class="muted" style="font-size: 14px">60% de chance de pagar solo la mitad.</span></button>
+<button class="dopt" type="button" onClick="{{defCounter}}"><span class="hd" style="font-size: 20px">Contraatacar</span><span class="muted" style="font-size: 14px">40% de chance de que te paguen a vos. Si fallás, pagás el doble.</span></button>
+</div>
+<p class="muted" style="margin: 16px 0 0; font-size: 13px">Si se acaba el tiempo, pagás el total.</p>
+</sc-if>
+<sc-if value="{{defDone}}" hint-placeholder-val="{{ false }}"><div class="hd dres" style="margin-top: 26px; padding: 20px; border-radius: 18px; background: #EFE6D2; color: #14110F; font-size: 21px; line-height: 1.3">{{defResult}}</div></sc-if>
+</div></div>
+</sc-if>
+
+<!-- DOMAIN -->
+<sc-if value="{{showDom}}" hint-placeholder-val="{{ false }}">
+<div class="dom dz-{{dom.id}}" role="status" style="--dc: {{dom.color}}; --df: {{dom.fg}}">
+<div class="dz-bg"></div><div class="dz-pat"></div><div class="dz-bars"></div>
+<div class="dz-glyphs" aria-hidden="true"><sc-for list="{{dom.glyphs}}" as="gl" hint-placeholder-count="0"><span style="left: {{gl.x}}%; font-size: {{gl.s}}px; animation-delay: {{gl.d}}s; animation-duration: {{gl.t}}s">{{gl.c}}</span></sc-for></div>
+<div class="dz-vig"></div><div class="dz-flash"></div>
+<div class="dz-call" aria-hidden="true"><span>Dominio</span><span>activado</span></div>
+<div class="dz-main">
+<div class="dz-por"><img src="{{dom.img}}" alt=""></div>
+<div class="dz-kick">{{dom.kicker}}</div>
+<div class="dz-title">{{dom.title}}</div>
+<div class="dz-desc">{{dom.desc}}</div>
+<div class="dz-trap"><b>Atrapados</b><sc-for list="{{dom.trapped}}" as="tp" hint-placeholder-count="0"><span class="dz-tp" style="--tc: {{tp.color}}; animation-delay: {{tp.d}}s"><img src="{{tp.img}}" alt="">{{tp.name}}</span></sc-for></div>
+<sc-if value="{{dom.hasResult}}" hint-placeholder-val="{{ false }}"><div class="dz-res">{{dom.result}}</div></sc-if>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{showCine}}" hint-placeholder-val="{{ false }}">
+<div class="dom" role="status" style="background: #C13B1F; color: #EFE6D2"><div class="dom-ray"></div><div style="position: relative; text-align: center; padding: 24px"><div class="eyebrow dtext" style="font-size: 13px">Última ronda</div><div class="hd dtext" style="font-size: clamp(60px, 10vw, 140px); margin-top: 16px">Tiempo Extra</div><div class="serif dtext" style="font-size: 28px; margin-top: 16px">Todos los alquileres cobran el doble</div></div></div>
+</sc-if>
+
+<sc-if value="{{showVote}}" hint-placeholder-val="{{ false }}">
+<div class="vote" role="dialog" aria-label="Votación para terminar la partida">
+<div class="eyebrow" style="color: #E0A33A">Votación</div>
+<div class="hd" style="font-size: 26px; margin-top: 10px">¿Terminamos la partida?</div>
+<p class="muted" style="margin: 10px 0 0; font-size: 15px; line-height: 1.55">{{voteTxt}}</p>
+<div class="eyebrow" style="margin-top: 14px; opacity: .85">{{voteTally}}</div>
+<sc-if value="{{voteMine}}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 12px; margin-top: 18px"><button class="btn b-rust" type="button" onClick="{{voteYes}}" style="flex: 1">Sí, terminar</button><button class="btn" type="button" onClick="{{voteNo}}" style="flex: 1">Seguir jugando</button></div></sc-if>
+<sc-if value="{{voteWait}}" hint-placeholder-val="{{ false }}"><div class="muted" style="margin-top: 16px; font-size: 14px">Votaste que sí. Esperando al resto…</div></sc-if>
+</div>
+</sc-if>
+<sc-if value="{{showToast}}" hint-placeholder-val="{{ false }}"><div class="toast" role="status">{{toast}}</div></sc-if>
+</div>
+</script>
+<script src="https://cdn.jsdelivr.net/npm/morphdom@2.7.4/dist/morphdom-umd.min.js"></script>
+<script src="/dc.js"></script>
+<script>window.YJ_GAME='leyendas'</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/net.js"></script>
+<script>
+
+const ISO = '/assets/iso.png';
+const IMG = {
+  alejandro: '/assets/ley/alejandro.webp', freud: '/assets/ley/freud.webp', gengis: '/assets/ley/gengis.webp',
+  isabel: '/assets/ley/isabel.webp', leonardo: '/assets/ley/leonardo.webp', napoleon: '/assets/ley/napoleon.webp',
+  newton: '/assets/ley/newton.webp', tesla: '/assets/ley/tesla.webp', mozart: '/assets/ley/mozart.webp',
+  juana: '/assets/ley/juana.webp', ramses: '/assets/ley/ramses.webp'
+};
+const P = {
+  L00: '523393dc913d57054b8e8a6058519919', L01: '78d15a87785edefcde4cb83d493bda30', L02: '04da7c02e70fb7e6cd29f33972a50e18', L03: 'f7c165350753a8da5751de946917c289',
+  L04: '8da7392f1b7f193bcd2f45ae46b4a772', L05: '677ceda18c0c8e914b612a7473717159', L06: 'fed6c14da98040b45ecf216999f0085a', L07: '6c53515d6d2dbdeb3dd2f01310aaf9bf',
+  L08: '92aa1bb0aa68cc7ed4cf2b09a5d81925', L09: '0c297b766f13f2b084c4775aad751033', L10: '1c2d1ae2defc0732eb5ff27536224586', L11: '138771767c0d267df67a1472613658f4',
+  L12: 'c872c3ac7085e6c1b2952415b04e70b4', L13: '50e18b551804aa819a8101b82421ab7c', L14: 'e68d1fd674571bf581255c5208b26892', L16: '68d165e35e2e7384f7610f9cf771e628',
+  L17: 'f7ecf017139b7fe6f968ae2c261fa550', L18: '07bd3ec6002058edbc64bf09dd610923', L19: '5a5abc507fcc31212f8c4b1008085c97', L20: '5b7dad3c146782bf1640134f3b26f3e5',
+  L21: '3315d60a9402d32518ad0afbfb27d864', L22: '46b9779b13b168ce01051025ac1c270c', L23: '6cffc0ca46a4514f13450711880b592d'
+};
+const pic = (k) => (k[0] === 'L' ? '/assets/lpl/' : '/assets/pl/') + k + '.webp';
+const ROLES = [
+  { id: 'alejandro', name: 'Alejandro Magno', color: '#2A6E70', fg: '#EFE6D2', yrs: '356–323 a.C.', bio: 'Rey de Macedonia y alumno de Aristóteles. Conquistó desde Grecia hasta la India sin perder una batalla importante.', dom: 'Falange Eterna', domDesc: 'Un muro de escudos rodea a los rivales: le conquista a cada uno su lugar más barato (o le cobra $2M si no tiene).' },
+  { id: 'freud', name: 'Sigmund Freud', color: '#2E3D6E', fg: '#EFE6D2', yrs: '1856–1939', bio: 'Padre del psicoanálisis. Propuso que el inconsciente guía buena parte de lo que hacemos.', dom: 'Diván del Inconsciente', domDesc: 'Todo se vuelve un sueño: cada rival le entrega su mejor carta de la mano (o $1M si no tiene).' },
+  { id: 'gengis', name: 'Gengis Kan', color: '#6B7340', fg: '#EFE6D2', yrs: 'c. 1162–1227', bio: 'Unificó a las tribus mongolas y fundó el imperio continuo más grande de la historia.', dom: 'Estepa sin Fin', domDesc: 'La horda galopa por el tablero: cada rival le entrega el 20% de su efectivo (máximo $5M).' },
+  { id: 'isabel', name: 'Isabel I', color: '#C13B1F', fg: '#EFE6D2', yrs: '1533–1603', bio: 'Reina de Inglaterra por 44 años. Venció a la Armada Invencible y abrió una edad de oro.', dom: 'Corte Dorada', domDesc: 'Todos se inclinan: durante una vuelta, cada pago que haga un rival le deja un 30% de tributo.' },
+  { id: 'leonardo', name: 'Leonardo da Vinci', color: '#C8748A', fg: '#14110F', yrs: '1452–1519', bio: 'Pintor de La Gioconda e inventor que dibujó máquinas voladoras siglos antes de su tiempo.', dom: 'Taller de los Inventos', domDesc: 'Engranajes gigantes cubren el tablero: se lleva gratis la mejor carta del Mercado y construye una casa gratis en cada época completa.' },
+  { id: 'napoleon', name: 'Napoleón Bonaparte', color: '#C13B1F', fg: '#EFE6D2', yrs: '1769–1821', bio: 'Emperador de Francia, vencedor en Austerlitz y autor del Código Civil. Terminó exiliado en Santa Elena.', dom: 'Sol de Austerlitz', domDesc: 'Duelo de dados contra cada rival: si gana, le quita su lugar más barato; si pierde, le paga $1M.' },
+  { id: 'newton', name: 'Isaac Newton', color: '#2E3D6E', fg: '#EFE6D2', yrs: '1643–1727', bio: 'Formuló las leyes del movimiento y la gravitación universal, y desarrolló el cálculo.', dom: 'Gravedad Absoluta', domDesc: 'Todos caen como manzanas en su lugar más caro y le pagan el alquiler.' },
+  { id: 'tesla', name: 'Nikola Tesla', color: '#2E3D6E', fg: '#EFE6D2', yrs: '1856–1943', bio: 'Pionero de la corriente alterna, que hoy alimenta casi toda la electricidad del mundo.', dom: 'Tormenta Eléctrica', domDesc: 'Rayos sobre el tablero: durante una vuelta sus alquileres se duplican y cada rival pierde la mitad de su carga de dominio.' },
+  { id: 'mozart', name: 'W. A. Mozart', color: '#C13B1F', fg: '#EFE6D2', yrs: '1756–1791', bio: 'Niño prodigio de Salzburgo que escribió más de 600 obras, como La flauta mágica.', dom: 'Gran Sinfonía', domDesc: 'Todos bailan a su ritmo: cada rival le paga $1M por cada carta que tenga en la mano (máximo $5M).' },
+  { id: 'juana', name: 'Juana de Arco', color: '#6B7340', fg: '#EFE6D2', yrs: 'c. 1412–1431', bio: 'Joven campesina que lideró al ejército francés y levantó el sitio de Orleans en 1429.', dom: 'Estandarte de Orleans', domDesc: 'Un escudo de luz la cubre: durante una vuelta no paga alquiler y cada rival le paga $1M.' },
+  { id: 'ramses', name: 'Ramsés II', color: '#C99022', fg: '#14110F', yrs: 'c. 1303–1213 a.C.', bio: 'Faraón que reinó 66 años, levantó Abu Simbel y firmó uno de los primeros tratados de paz.', dom: 'Eternidad del Nilo', domDesc: 'El Nilo cruza el tablero: durante dos vueltas sus lugares cobran un 50% más.' }
+];
+const PAT = { alejandro: 'abogado', freud: 'estafador', gengis: 'corredor', isabel: 'banquero', leonardo: 'arquitecto', napoleon: 'abogado', newton: 'arquitecto', tesla: 'arquitecto', mozart: 'estafador', juana: 'coleccionista', ramses: 'banquero' };
+const GR = {
+  egipto: { name: 'Antiguo Egipto', color: '#C99022', c2: '#8A6213', fg: '#14110F', base: 1, houses: [2, 4, 7, 10], hotel: 14, hc: 1 },
+  clasico: { name: 'Mundo Clásico', color: '#2A6E70', c2: '#2A6E70', fg: '#F6EEDC', base: 1, houses: [3, 5, 8, 11], hotel: 15, hc: 1 },
+  medieval: { name: 'Edad Media', color: '#6B7340', c2: '#5A6133', fg: '#F6EEDC', base: 2, houses: [4, 7, 10, 13], hotel: 17, hc: 2 },
+  renacer: { name: 'Renacimiento', color: '#C8748A', c2: '#A3506A', fg: '#14110F', base: 2, houses: [5, 8, 11, 14], hotel: 18, hc: 2 },
+  imperial: { name: 'Era Imperial', color: '#C13B1F', c2: '#C13B1F', fg: '#F6EEDC', base: 3, houses: [6, 10, 13, 16], hotel: 20, hc: 3 },
+  moderna: { name: 'Era Moderna', color: '#2E3D6E', c2: '#2E3D6E', fg: '#F6EEDC', base: 3, houses: [7, 12, 15, 18], hotel: 22, hc: 3 }
+};
+const TILES = [
+  { n: 'Portal del Tiempo', k: 'corner', img: 'L00', sub: 'Salida · cobrás $2M' },
+  { n: 'Valle de los Reyes', k: 'prop', g: 'egipto', p: 1, img: 'L01', f: 'Los faraones duermen con sus tesoros.' },
+  { n: 'Templo de Abu Simbel', k: 'prop', g: 'egipto', p: 1, img: 'L02', f: 'El sol entra hasta el fondo dos veces al año.' },
+  { n: 'Crónicas', k: 'news' },
+  { n: 'Pirámides de Guiza', k: 'prop', g: 'egipto', p: 2, img: 'L04', f: 'La única maravilla antigua que sigue en pie.' },
+  { n: 'Partenón de Atenas', k: 'prop', g: 'clasico', p: 2, img: 'L05', f: 'Mármol blanco sobre la Acrópolis.' },
+  { n: 'Oráculo de Delfos', k: 'corner', img: 'L06', sub: 'Profecía · cobrás $1M' },
+  { n: 'Biblioteca de Alejandría', k: 'prop', g: 'clasico', p: 2, img: 'L07', f: 'Todo el saber del mundo en rollos.' },
+  { n: 'Coliseo de Roma', k: 'prop', g: 'clasico', p: 2, img: 'L08', f: 'Cincuenta mil gargantas gritando.' },
+  { n: 'Gran Muralla China', k: 'prop', g: 'medieval', p: 3, img: 'L09', f: 'Miles de kilómetros de piedra.' },
+  { n: 'Karakórum', k: 'prop', g: 'medieval', p: 3, img: 'L10', f: 'La capital de la estepa.' },
+  { n: 'Catedral de Reims', k: 'prop', g: 'medieval', p: 3, img: 'L11', f: 'Donde se coronaban los reyes de Francia.' },
+  { n: 'Santa Elena', k: 'corner', img: 'L12', sub: 'Exilio · pagás $2M' },
+  { n: 'Duomo de Florencia', k: 'prop', g: 'renacer', p: 3, img: 'L13', f: 'La cúpula que nadie creía posible.' },
+  { n: 'Gran Canal de Venecia', k: 'prop', g: 'renacer', p: 3, img: 'L14', f: 'Góndolas, palacios y comercio.' },
+  { n: 'Crónicas', k: 'news' },
+  { n: 'Castillo de Amboise', k: 'prop', g: 'renacer', p: 4, img: 'L16', f: 'El último hogar de Leonardo.' },
+  { n: 'Torre de Londres', k: 'prop', g: 'imperial', p: 4, img: 'L17', f: 'Joyas de la corona y cuervos guardianes.' },
+  { n: 'Coronación', k: 'corner', img: 'L18', sub: 'Gloria · +20 de dominio' },
+  { n: 'Palacio de Versalles', k: 'prop', g: 'imperial', p: 4, img: 'L19', f: 'Espejos, jardines y lujo real.' },
+  { n: 'Arco del Triunfo', k: 'prop', g: 'imperial', p: 4, img: 'L20', f: 'Victorias grabadas en piedra.' },
+  { n: 'Teatro Imperial de Viena', k: 'prop', g: 'moderna', p: 5, img: 'L21', f: 'Donde la música se volvió leyenda.' },
+  { n: 'Trinity College', k: 'prop', g: 'moderna', p: 5, img: 'L22', f: 'Un manzano que cambió la física.' },
+  { n: 'Torre Wardenclyffe', k: 'prop', g: 'moderna', p: 5, img: 'L23', f: 'Energía por el aire, sin cables.' }
+];
+const DEAL = [
+  { id: 'cobrador', name: 'Cobrador', ic: '$', color: '#C99022', c2: '#8A6213', fg: '#14110F', cost: 3, w: 3, desc: 'El rival más rico te paga $3M.' },
+  { id: 'fiesta', name: 'Banquete Real', ic: '★', color: '#C8748A', c2: '#A3506A', fg: '#14110F', cost: 2, w: 3, desc: 'Cada rival te paga $2M.' },
+  { id: 'sucio', name: 'Trato Sucio', ic: '↶', color: '#2E3D6E', c2: '#2E3D6E', fg: '#F6EEDC', cost: 3, w: 2, desc: 'Te quedás con el mejor lugar suelto de un rival.' },
+  { id: 'forzado', name: 'Trato Forzado', ic: '⇄', color: '#2A6E70', c2: '#2A6E70', fg: '#F6EEDC', cost: 3, w: 2, desc: 'Cambiás tu peor lugar por el mejor suelto de un rival.' },
+  { id: 'rompe', name: 'Rompetratos', ic: '✕', color: '#C13B1F', c2: '#C13B1F', fg: '#F6EEDC', cost: 5, w: 1, desc: 'Le robás una época completa a un rival.' },
+  { id: 'nilo', name: '¡Ni loco!', ic: '!', color: '#14110F', c2: '#14110F', fg: '#F6EEDC', cost: 4, w: 2, passive: true, desc: 'Se activa sola: cancela un trato en tu contra o bloquea un alquiler.' },
+  { id: 'doble', name: 'Doble Alquiler', ic: '×2', color: '#6B7340', c2: '#5A6133', fg: '#F6EEDC', cost: 1, w: 2, passive: true, desc: 'Se activa sola: el próximo alquiler que cobres vale el doble.' },
+  { id: 'paso', name: 'Paso Libre', ic: '+2', color: '#C99022', c2: '#8A6213', fg: '#14110F', cost: 1, w: 2, desc: 'Robás 2 cartas del mazo de Tratos.' },
+  { id: 'foco', name: 'Concentración', ic: '◎', color: '#2E3D6E', c2: '#2E3D6E', fg: '#F6EEDC', cost: 3, w: 2, desc: 'Tu dominio carga +40%.' },
+  { id: 'subsidio', name: 'Subsidio', ic: '+$', color: '#6B7340', c2: '#5A6133', fg: '#F6EEDC', cost: 1, w: 3, desc: 'Cobrás $2M del banco.' }
+];
+DEAL.push(
+  { id: 'm1', type: 'money', amt: 1, name: 'Billete de $1M', ic: '1', color: '#6B7340', c2: '#5A6133', fg: '#F6EEDC', cost: 1, w: 4, desc: 'Depositalo en tu banco: +$1M.' },
+  { id: 'm2', type: 'money', amt: 2, name: 'Billete de $2M', ic: '2', color: '#2A6E70', c2: '#2A6E70', fg: '#F6EEDC', cost: 2, w: 3, desc: 'Depositalo en tu banco: +$2M.' },
+  { id: 'm3', type: 'money', amt: 3, name: 'Billete de $3M', ic: '3', color: '#C99022', c2: '#8A6213', fg: '#14110F', cost: 3, w: 2, desc: 'Depositalo en tu banco: +$3M.' },
+  { id: 'm5', type: 'money', amt: 5, name: 'Billete de $5M', ic: '5', color: '#C13B1F', c2: '#C13B1F', fg: '#F6EEDC', cost: 5, w: 1, desc: 'Depositalo en tu banco: +$5M.' },
+  { id: 'm10', type: 'money', amt: 10, name: 'Billete de $10M', ic: '10', color: '#2E3D6E', c2: '#2E3D6E', fg: '#F6EEDC', cost: 10, w: 1, desc: 'El billete más grande de la ciudad: +$10M.' },
+  { id: 'rentaA', type: 'rent', groups: ['egipto', 'clasico'], name: 'Renta Egipto · Clásico', ic: 'R', color: '#2A6E70', c2: '#2A6E70', fg: '#F6EEDC', cost: 1, w: 2, desc: 'Cada rival te paga el alquiler de tu mejor lugar en Antiguo Egipto o Mundo Clásico.' },
+  { id: 'rentaB', type: 'rent', groups: ['medieval', 'renacer'], name: 'Renta Medieval · Renacimiento', ic: 'R', color: '#C99022', c2: '#8A6213', fg: '#14110F', cost: 1, w: 2, desc: 'Cada rival te paga el alquiler de tu mejor lugar en Edad Media o Renacimiento.' },
+  { id: 'rentaC', type: 'rent', groups: ['imperial', 'moderna'], name: 'Renta Imperial · Moderna', ic: 'R', color: '#C13B1F', c2: '#C13B1F', fg: '#F6EEDC', cost: 1, w: 2, desc: 'Cada rival te paga el alquiler de tu mejor lugar en Era Imperial o Era Moderna.' },
+  { id: 'rentaW', type: 'rent', groups: null, single: true, name: 'Renta Comodín', ic: 'R*', color: '#14110F', c2: '#14110F', fg: '#F6EEDC', cost: 3, w: 1, desc: 'El rival más rico te paga el alquiler de tu mejor lugar, de cualquier época.' },
+  { id: 'casa', type: 'build', name: 'Constructora', ic: '⌂', color: '#6B7340', c2: '#5A6133', fg: '#F6EEDC', cost: 3, w: 2, desc: 'Construís una casa gratis en una época completa.' },
+  { id: 'hotel', type: 'build', name: 'Gran Hotel', ic: 'H', color: '#C13B1F', c2: '#C13B1F', fg: '#F6EEDC', cost: 4, w: 1, desc: 'Convertís gratis 4 casas en un hotel.' },
+  { id: 'embargo', name: 'Embargo', ic: '⛓', color: '#2E3D6E', c2: '#2E3D6E', fg: '#F6EEDC', cost: 3, w: 1, desc: 'El rival con más cartas pierde 2 cartas de su mano al azar.' },
+  { id: 'apagon', name: 'Apagón', ic: '✶', color: '#14110F', c2: '#14110F', fg: '#F6EEDC', cost: 2, w: 1, desc: 'Le quitás 30% de dominio a cada rival.' }
+);
+const PILE = [800, 776];
+const RULES = { start: 5, draw: 2, drawEmpty: 4, plays: 2, handMax: 6, market: 1 };
+const RULES_TXT = [
+  { h: 'Objetivo', t: 'Terminar con el mayor patrimonio (efectivo + lugares + casas) después de las rondas y el Tiempo Extra. Si alguien queda en negativo, la partida termina.' },
+  { h: 'Inicio', t: `Cada jugador arranca con $15M y ${RULES.start} cartas del mazo de Tratos. El Mercado muestra 3 cartas boca arriba.` },
+  { h: 'Tu turno, paso a paso', t: `1) Robás ${RULES.draw} cartas (${RULES.drawEmpty} si no tenés ninguna). 2) Antes de tirar podés jugar cartas. 3) Tirás y movés: la casilla se resuelve (comprar, pagar alquiler o Noticia). 4) Después de tirar usás tus acciones: jugar cartas, comprar 1 en el Mercado o construir. 5) Fin de turno. En total: ${RULES.plays} acciones por turno.` },
+  { h: 'Tablero + cartas', t: 'El tablero te da lugares y alquileres pasivos: cobrás cuando un rival cae en lo tuyo. Las cartas son tu jugada activa: cobrar sin esperar (Renta, Cobrador, Fiesta), robar lugares (Trato Sucio, Rompetratos), construir gratis o defenderte (¡Ni loco!). Cuantos más lugares tengas, más valen tus cartas de Renta.' },
+  { h: 'Acciones', t: `Tenés ${RULES.plays} acciones por turno, antes o después de tirar. Cada una puede ser: jugar una carta (un billete también cuenta), comprar en el Mercado o construir una casa. Activar tu dominio no gasta acción. ¡Ni loco! y Doble Alquiler se activan solas y no cuentan.` },
+  { h: 'Mano', t: `Máximo ${RULES.handMax} cartas al terminar tu turno; las sobrantes de menor valor van al descarte. Si el mazo se vacía, se mezcla el descarte.` },
+  { h: 'Mercado', t: `${RULES.market} compra por turno, después de tirar. La carta va a tu mano y se repone del mazo.` },
+  { h: 'Lugares y épocas', t: 'Caé en un lugar libre para comprarlo. Época completa = alquiler doble y permiso para construir casas (hasta 4) y luego hotel, parejo entre los lugares.' },
+  { h: 'Defensa', t: 'Cuando te cobran alquiler tenés 8 segundos: Bloquear, Negociar o Contraatacar.' },
+  { h: 'Activar dominio', t: 'Cobrar alquiler (+25), pagar (+20), comprar (+15) y pasar el Portal (+10) cargan tu dominio. Al 100% lo activás y atrapás a los rivales en tu área de poder.' },
+  { h: 'Tiempo Extra', t: 'Después de la última ronda se juega una vuelta más con alquileres x2.' }
+];
+const BAG = []; DEAL.forEach((c) => { for (let k = 0; k < c.w; k++) BAG.push(c); });
+const NEWS = [
+  { id: 'herencia', name: 'Tesoro del faraón', ic: '$', desc: 'Encontrás un tesoro escondido: ganás $3M.' },
+  { id: 'auditoria', name: 'Impuesto del rey', ic: '!', desc: 'Pagás $1M por cada lugar que tengas.' },
+  { id: 'inspira', name: 'Inspiración divina', ic: '◎', desc: 'Tu dominio se carga +40%.' },
+  { id: 'viaje', name: 'Salto en el tiempo', ic: '→', desc: 'Volvés al Portal del Tiempo y cobrás $2M.' },
+  { id: 'huelga', name: 'Tributo de los pueblos', ic: '♛', desc: 'Cada rival te paga $1M.' },
+  { id: 'multa', name: 'Peste negra', ic: '−', desc: 'Pagás $2M para curar a tu pueblo.' },
+  { id: 'contrabando', name: 'Mapa secreto', ic: '?', desc: 'Robás 1 carta de Tratos gratis.' }
+];
+const FACE = { 1: [0, 0], 6: [0, 180], 3: [0, -90], 4: [0, 90], 2: [-90, 0], 5: [90, 0] };
+const GROUPS = Object.keys(GR);
+const CARS = [{ color: '#C13B1F', delay: 0, dur: 34 }, { color: '#C99022', delay: -9, dur: 40 }, { color: '#2A6E70', delay: -18, dur: 30 }, { color: '#EFE6D2', delay: -26, dur: 38 }, { color: '#C8748A', delay: -4, dur: 44 }];
+
+function cell(i) { if (i <= 6) return [1, i + 1]; if (i <= 12) return [i - 5, 7]; if (i <= 18) return [7, 7 - (i - 12)]; return [7 - (i - 18), 1]; }
+function rotOf(i) { if (i % 6 === 0) return 0; if (i < 6) return 180; if (i < 12) return -90; if (i < 18) return 0; return 90; }
+function center(i) { const [r, c] = cell(i); const pos = (n) => (n === 1 ? 85 : n === 7 ? 1035 : 170 + (n - 1.5) * 156); return [pos(c), pos(r)]; }
+function M(n) { return (n < 0 ? '-$' : '$') + Math.abs(Math.round(n)) + 'M'; }
+function rnd(n) { if (n <= 1) return 0; try { const a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] % n; } catch (e) { return Math.floor(Math.random() * n); } }
+function shuf(a) { for (let k = a.length - 1; k > 0; k--) { const j = rnd(k + 1); [a[k], a[j]] = [a[j], a[k]]; } return a; }
+function spread(a, key) { for (let k = 1; k < a.length; k++) { if (key(a[k]) === key(a[k - 1])) { const j = a.findIndex((x, m) => m > k && key(x) !== key(a[k - 1])); if (j > 0) [a[k], a[j]] = [a[j], a[k]]; } } return a; }
+function groupIdx(g) { return TILES.map((x, k) => (x.g === g ? k : -1)).filter((k) => k >= 0); }
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.timers = []; this.uid = 0; this.g = this.fresh();
+    this.cam = { s: this.mob() ? 0.3 : 0.6, px: 0, py: 0, follow: false, drag: null };
+    this.ui = { sheet: null };
+    this.seat = 0; this.net = null; this.lobby = null; this.form = { name: '', code: '' };
+    this.state = { v: 0 };
+  }
+  componentWillUnmount() { this.clearAll(); }
+  clearAll() { this.timers.forEach(clearTimeout); this.timers = []; clearInterval(this.voteInt); if (this.defInt) clearInterval(this.defInt); this.defInt = null; }
+  later(fn, ms) { const id = setTimeout(fn, ms); this.timers.push(id); return id; }
+  refresh() { this.setState({ v: Date.now() + Math.random() }); if (this.net && this.net.host && this.g.screen !== 'pick') { this.g.ver = (this.g.ver || 0) + 1; this.net.push(this.g); } }
+  you(k) { return !this.g.mp && k === 0; }
+  fresh() { return { game: 'leyendas', boost: null, shield: null, fly: [], look: null, catching: false, drawN: 0, screen: 'pick', players: [], turn: 0, round: 1, owners: {}, houses: {}, phase: 'idle', dice: [1], rolls: 0, log: [], market: [], bought: false, modal: null, def: null, dom: null, aura: null, act: null, cine: false, overtime: false, toast: null, focus: 0, deck: [], discard: [], plays: 0, commission: null, diceShow: false }; }
+  maxRounds() { return this.props.rounds ?? 8; }
+  log(t) { this.g.log.unshift({ t }); this.g.log = this.g.log.slice(0, 2); }
+  toast(t, to) { this.g.toastTo = to === undefined ? null : to; this.g.toast = t; this.refresh(); clearTimeout(this.toastT); this.toastT = this.later(() => { this.g.toast = null; this.refresh(); }, 2800); }
+  role(p) { return ROLES.find((r) => r.id === p.roleId); }
+  nm(k) { return this.g.players[k].name; }
+  card(c) { this.uid += 1; return { ...c, uid: this.uid }; }
+  shuffle(a) { return spread(shuf(a), (c) => c.id); }
+  drawDeal(avoid) { const g = this.g; if (!avoid && g.lastDraw) avoid = [g.lastDraw]; if (!g.deck || !g.deck.length) { g.deck = this.shuffle(g.discard && g.discard.length ? g.discard : BAG.slice()); g.discard = []; if (g.round > 1) this.log('Se mezcló el descarte: mazo nuevo'); } let c = g.deck.pop(); if (avoid && avoid.includes(c.id)) { const j = g.deck.findIndex((x) => !avoid.includes(x.id)); if (j >= 0) { const alt = g.deck[j]; g.deck[j] = c; c = alt; } } g.lastDraw = c.id; return this.card(c); }
+  toDiscard(c) { if (!c) return; const base = DEAL.find((d) => d.id === c.id && (d.amt === c.amt) && (!d.groups || String(d.groups) === String(c.groups))) || DEAL.find((d) => d.id === c.id); if (base) this.g.discard.push(base); }
+  playsLeft(pi) { const g = this.g; return pi === g.turn ? RULES.plays - (g.plays || 0) : 0; }
+  trimHand(pi) { const p = this.g.players[pi]; const out = []; if (p.hand.length <= RULES.handMax) return out; p.hand.sort((a, b) => (b.cost || 0) - (a.cost || 0)); while (p.hand.length > RULES.handMax) { const c = p.hand.pop(); this.toDiscard(c); out.push(c.name); } return out; }
+  owned(pi) { return Object.keys(this.g.owners).filter((k) => this.g.owners[k] === pi).map(Number); }
+  countIn(pi, grp) { return this.owned(pi).filter((i) => TILES[i].g === grp).length; }
+  addCharge(pi, n) { const p = this.g.players[pi]; p.charge = Math.min(100, p.charge + n); }
+  complete(pi, grp) { const idx = groupIdx(grp); return idx.length > 0 && idx.every((k) => this.g.owners[k] === pi); }
+  loose(pi) { return this.owned(pi).filter((i) => !this.complete(pi, TILES[i].g)); }
+  give(pi, n) { const p = this.g.players[pi]; for (let k = 0; k < n; k++) p.hand.push(this.drawDeal()); return n; }
+  takeCard(pi, id) { const p = this.g.players[pi]; const k = p.hand.findIndex((c) => c.id === id); if (k < 0) return false; this.toDiscard(p.hand.splice(k, 1)[0]); return true; }
+  nilo(target, by) { if (this.takeCard(target, 'nilo')) { const m = `${this.nm(target)} jugó ¡Ni loco! y canceló el trato de ${this.nm(by)}`; this.log(m); this.toast(m); return true; } return false; }
+  mob() { return typeof window !== 'undefined' && window.innerWidth < 700; }
+  followOn() { this.cam.follow = true; this.cam.px = 0; this.cam.py = 0; const z = this.mob() ? 0.7 : 1.05; if (this.cam.s < z - 0.1) this.cam.s = z; }
+
+  start(roleId) {
+    this.clearAll();
+    const g = this.fresh();
+    const others = ROLES.filter((r) => r.id !== roleId).map((r) => r.id).sort(() => Math.random() - 0.5).slice(0, 2);
+    const mk = (name, rid, bot) => ({ name, roleId: rid, bot, money: this.props.startMoney ?? 15, pos: 0, hand: [], charge: 0 });
+    g.players = [mk('Vos', roleId, false), mk('Rival 1', others[0], true), mk('Rival 2', others[1], true)];
+    this.g = g;
+    g.players.forEach((p, k) => { if (k > 0) this.give(k, RULES.start); });
+    g.market = []; for (let k = 0; k < 3; k++) g.market.push(this.drawDeal(g.market.map((c) => c.id)));
+    g.screen = 'game'; g.phase = 'idle';
+    this.cam = { s: 0.6, px: 0, py: 0, follow: false, drag: null };
+    this.log('Bienvenidos a YAJUGÁ Leyendas');
+    this.refresh();
+    this.later(() => this.beginTurn(), 900);
+  }
+
+  pay(from, to, amt, comm = true) {
+    const g = this.g; const P = g.players[from];
+    P.money -= amt; if (to !== null) g.players[to].money += amt;
+    const c = g.commission;
+    if (comm && c && c.turns > 0 && c.pi !== from && amt > 0) { const extra = Math.max(1, Math.round(amt * (c.pct || 0.25))); P.money -= extra; g.players[c.pi].money += extra; this.log(`Corte Dorada: ${P.name} paga ${M(extra)} de tributo`); }
+  }
+  lvl(i) { return this.g.houses[i] || 0; }
+  rentFor(i, oi) { const t = TILES[i]; const gr = GR[t.g]; const L = this.lvl(i); let r = L === 5 ? gr.hotel : L > 0 ? gr.houses[L - 1] : (this.complete(oi, t.g) ? gr.base * 2 : gr.base); if (this.g.overtime) r *= 2; const b = this.g.boost; if (b && b.turns > 0 && b.pi === oi) r = Math.round(r * b.mult); return r; }
+  buildTarget(pi, gr) { if (!this.complete(pi, gr)) return null; const idx = groupIdx(gr).sort((a, b) => this.lvl(a) - this.lvl(b)); return this.lvl(idx[0]) < 5 ? idx[0] : null; }
+  build(pi, gr) { const i = this.buildTarget(pi, gr); if (i === null || this.playsLeft(pi) <= 0) return false; const c = GR[gr].hc; if (this.g.players[pi].money < c) return false; this.pay(pi, null, c); if (pi === this.g.turn) this.g.plays = (this.g.plays || 0) + 1; this.g.houses[i] = this.lvl(i) + 1; this.log(`${this.nm(pi)} construyó ${this.lvl(i) === 5 ? 'un hotel' : 'una casa'} en ${TILES[i].n}`); this.refresh(); return true; }
+  botBuild(pi) { GROUPS.forEach((gr) => { let n = 0; while (n < 2 && this.buildTarget(pi, gr) !== null && this.g.players[pi].money - GR[gr].hc >= 6 && Math.random() < 0.7) { this.build(pi, gr); n += 1; } }); }
+
+  rollDice(pi, cb) {
+    const g = this.g; g.diceBag = g.diceBag || {}; let bag = g.diceBag[pi]; if (!bag || !bag.length) { bag = []; for (let x = 1; x <= 6; x++) { bag.push(x); bag.push(x); } bag = spread(shuf(bag), (d) => d); g.diceBag[pi] = bag; } const a = bag.pop(); const b = 0;
+    g.dice = [a]; g.rolls += 1; g.phase = 'rolling'; g.diceShow = true; this.followOn(); this.refresh();
+    this.later(() => { this.log(`${this.nm(pi)} sacó ${a}`); cb(a); }, 1150);
+    this.later(() => { g.diceShow = false; this.refresh(); }, 2600);
+  }
+  move(pi, n, done) {
+    const g = this.g; g.phase = 'moving'; let left = n;
+    const step = () => {
+      const p = g.players[pi];
+      p.pos = (p.pos + 1) % 24; g.focus = p.pos;
+      if (p.pos === 0) { p.money += 2; this.addCharge(pi, 10); this.log(`${p.name} pasó por el Portal del Tiempo: +$2M`); }
+      left -= 1; this.refresh();
+      if (left > 0) this.later(step, 380); else this.later(done, 520);
+    };
+    this.later(step, 150);
+  }
+  land(pi) {
+    const g = this.g; const p = g.players[pi]; const t = TILES[p.pos];
+    const cont = () => this.afterLand(pi);
+    if (t.k === 'corner') {
+      if (p.pos === 6) { p.money += 1; this.log(`${p.name} escuchó al Oráculo: +$1M`); }
+      if (p.pos === 18) { this.addCharge(pi, 20); this.log(`${p.name} fue coronado: +20 de dominio`); }
+      if (p.pos === 12) { this.pay(pi, null, 2); this.log(`${p.name} fue exiliado a Santa Elena: paga $2M`); if (this.broke()) return; }
+      this.refresh(); return cont();
+    }
+    if (t.k === 'news') {
+      if (!g.news || !g.news.length) { g.news = spread(shuf(NEWS.slice()), (x) => x.name); if (g.lastNews && g.news[g.news.length - 1].name === g.lastNews) g.news.unshift(g.news.pop()); } const c = g.news.pop(); g.lastNews = c.name;
+      if (!p.bot) { g.phase = 'card'; g.act = { c, flip: false }; this.refresh(); this.later(() => { if (g.act) { g.act.flip = true; this.refresh(); } }, 300); return; }
+      const msg = this.applyNews(pi, c); this.toast(`${p.name} robó «${c.name}»: ${msg}`);
+      if (this.broke()) return; return cont();
+    }
+    const own = g.owners[p.pos];
+    if (own === undefined) {
+      if (!p.bot) { g.phase = 'buy'; g.modal = { i: p.pos }; this.refresh(); return; }
+      if (p.money - t.p >= 3 && Math.random() < 0.8) this.buyTile(pi, p.pos);
+      return cont();
+    }
+    if (own === pi) { this.refresh(); return cont(); }
+    return this.chargeRent(pi, own, p.pos, cont);
+  }
+  applyNews(pi, c) {
+    const g = this.g; const p = g.players[pi];
+    if (c.id === 'herencia') { p.money += 3; return '+$3M'; }
+    if (c.id === 'auditoria') { const n = this.owned(pi).length; this.pay(pi, null, n); return `paga ${M(n)}`; }
+    if (c.id === 'inspira') { this.addCharge(pi, 40); return 'dominio +40%'; }
+    if (c.id === 'viaje') { p.pos = 0; g.focus = 0; p.money += 2; this.addCharge(pi, 10); return 'vuelve al Portal del Tiempo, +$2M'; }
+    if (c.id === 'huelga') { g.players.forEach((o, k) => { if (k !== pi) this.pay(k, pi, 1); }); return 'cada rival le paga $1M'; }
+    if (c.id === 'multa') { this.pay(pi, null, 2); return 'paga $2M'; }
+    if (c.id === 'contrabando') return this.give(pi, 1) ? 'roba 1 carta de Tratos' : 'mano llena';
+    return '';
+  }
+  buyTile(pi, i) {
+    const p = this.g.players[pi];
+    this.pay(pi, null, TILES[i].p); this.g.owners[i] = pi; this.addCharge(pi, 15);
+    this.log(`${p.name} compró ${TILES[i].n}`);
+    if (this.complete(pi, TILES[i].g)) this.toast(`¡${p.name} completó ${GR[TILES[i].g].name}! Renta máxima`);
+    this.refresh();
+  }
+  afterLand(pi) {
+    const g = this.g; if (g.screen !== 'game') return;
+    if (g.players[pi].bot) { this.botCards(pi); this.botMarket(pi); this.botBuild(pi); this.later(() => this.next(), 1200); }
+    else { g.phase = 'action'; this.refresh(); }
+  }
+  chargeRent(payer, owner, i, cont) {
+    const g = this.g; const P = g.players[payer];
+    let amount = this.rentFor(i, owner);
+    const sh = g.shield; if (sh && sh.turns > 0 && sh.pi === payer) { this.log(`${P.name} está bajo el Estandarte de Orleans: no paga alquiler`); if (!P.bot) this.toast('El Estandarte de Orleans te protege: no pagás alquiler', payer); return cont ? cont() : undefined; }
+    if (this.takeCard(owner, 'doble')) { amount *= 2; this.log(`${this.nm(owner)} jugó Doble Alquiler`); }
+    if (!P.bot) {
+      g.phase = 'defense'; g.def = { payer, owner, i, amount, secs: 8, done: false, result: '' }; this.cont = cont;
+      this.defInt = setInterval(() => { if (!g.def || g.def.done) return; g.def.secs -= 1; if (g.def.secs <= 0) this.resolve('timeout'); else this.refresh(); }, 1000);
+      this.refresh(); return;
+    }
+    const r = Math.random();
+    const choice = P.hand.some((c) => c.id === 'nilo') ? 'block' : r < 0.5 ? 'nego' : r < 0.75 ? 'counter' : 'accept';
+    const msg = this.settle(payer, owner, amount, choice);
+    if (!g.players[owner].bot) this.toast(msg, owner);
+    if (this.broke()) return; this.refresh(); cont();
+  }
+  settle(payer, owner, amount, choice) {
+    const P = this.g.players[payer], O = this.g.players[owner]; const you = this.you(payer); let msg;
+    if (choice === 'block' && this.takeCard(payer, 'nilo')) { msg = you ? '¡Ni loco! No pagás nada' : `${P.name} gritó ¡Ni loco! y no paga nada`; this.addCharge(payer, 10); }
+    else if (choice === 'nego') {
+      const ok = Math.random() < 0.6; const pay = ok ? Math.max(1, Math.round(amount / 2)) : amount;
+      this.pay(payer, owner, pay); this.addCharge(payer, 20); this.addCharge(owner, 25);
+      msg = ok ? (you ? `Negociaste: pagás solo ${M(pay)}` : `${P.name} negoció y pagó ${M(pay)}`) : (you ? `La negociación falló: pagás ${M(pay)}` : `${P.name} no pudo negociar: pagó ${M(pay)}`);
+    } else if (choice === 'counter') {
+      if (Math.random() < 0.4) { this.pay(owner, payer, amount); this.addCharge(payer, 25); msg = you ? `¡Contraataque! ${O.name} te paga ${M(amount)}` : `¡Contraataque! ${P.name} le saca ${M(amount)} a ${this.you(owner) ? 'vos' : O.name}`; }
+      else { this.pay(payer, owner, amount * 2); this.addCharge(payer, 20); this.addCharge(owner, 25); msg = you ? `El contraataque falló: pagás ${M(amount * 2)}` : `El contraataque de ${P.name} falló: paga ${M(amount * 2)}`; }
+    } else { this.pay(payer, owner, amount); this.addCharge(payer, 20); this.addCharge(owner, 25); msg = you ? `Pagaste ${M(amount)} a ${O.name}` : `${P.name} le pagó ${M(amount)} a ${this.you(owner) ? 'vos' : O.name}`; }
+    this.log(msg); return msg;
+  }
+  resolve(choice) {
+    const g = this.g; const d = g.def; if (!d || d.done) return;
+    clearInterval(this.defInt); this.defInt = null; d.done = true;
+    d.result = this.settle(d.payer, d.owner, d.amount, choice === 'timeout' ? 'accept' : choice);
+    if (choice === 'timeout') d.result = 'Se acabó el tiempo. ' + d.result;
+    this.refresh();
+    this.later(() => { g.def = null; if (this.broke()) return; const c = this.cont; this.cont = null; this.refresh(); if (c) c(); }, 1800);
+  }
+  broke() { if (this.g.players.some((p) => p.money < 0)) { this.end(true); return true; } return false; }
+  next() {
+    const g = this.g; if (g.screen !== 'game') return;
+    if (g.commission) { g.commission.turns -= 1; if (g.commission.turns <= 0) g.commission = null; }
+    ['boost', 'shield'].forEach((key) => { if (g[key]) { g[key].turns -= 1; if (g[key].turns <= 0) g[key] = null; } });
+    const cut = this.trimHand(g.turn); if (cut.length) { const m = `${this.nm(g.turn)} descartó ${cut.length} (máx. ${RULES.handMax} en mano): ${cut.join(' · ')}`; this.log(m); if (!g.players[g.turn].bot) this.toast(m); }
+    if (g.aura) { g.aura.turns -= 1; if (g.aura.turns <= 0) g.aura = null; }
+    g.turn = (g.turn + 1) % g.players.length; g.bought = false;
+    if (g.turn === 0) {
+      g.round += 1; const max = this.maxRounds();
+      if (g.round > max + 1) return this.end(false);
+      if (g.round === max + 1 && !g.overtime) { g.overtime = true; g.cine = true; this.log('¡Tiempo Extra!'); this.refresh(); this.later(() => { g.cine = false; this.beginTurn(); }, 2600); return; }
+    }
+    this.beginTurn();
+  }
+  beginTurn() {
+    const g = this.g; const p = g.players[g.turn];
+    g.focus = p.pos; g.plays = 0; const n = p.hand.length ? RULES.draw : RULES.drawEmpty;
+    if (!p.bot) { g.phase = 'draw'; g.drawN = n; this.lookPile(); this.toast(`Tu turno: tocá el mazo de Tratos y robá ${n} cartas`, g.turn); this.refresh(); }
+    else { g.phase = 'bot'; this.flyDraw(g.turn, n, () => { this.followOn(); this.refresh(); this.later(() => this.botTurn(), 500); }); }
+  }
+  lookPile() { this.g.look = PILE; this.cam.follow = false; this.cam.px = 0; this.cam.py = 0; this.cam.s = this.mob() ? 0.62 : 1; }
+  flyDraw(pi, n, after) {
+    const g = this.g; this.lookPile(); this.give(pi, n); const p = g.players[pi];
+        g.fly = p.hand.slice(-n).map((c, k) => ({ k: c.uid, name: c.name, ic: c.ic || '', color: c.color || '#C99022', fg: c.fg || '#14110F', d: (k * 0.28).toFixed(2), pi }));
+    g.catching = false; this.refresh();
+    const T = 1250 + n * 280;
+    this.later(() => { g.catching = true; this.refresh(); }, T - 250);
+    this.later(() => { g.fly = []; g.look = null; g.catching = false; this.refresh(); if (after) after(); }, T + 250);
+  }
+  drawNow(pi = 0) {
+    const g = this.g; if (g.phase !== 'draw' || g.turn !== pi) return; const n = g.drawN || RULES.draw;
+    g.phase = 'drawing';
+    this.flyDraw(pi, n, () => { const p = g.players[pi]; this.toast(`Robaste: ${p.hand.slice(-n).map((c) => c.name).join(' · ')}`, pi); g.phase = 'roll'; this.followOn(); this.refresh(); });
+  }
+  botTurn() { const g = this.g; const pi = g.turn; const p = g.players[pi]; const go = () => this.rollDice(pi, (s) => this.move(pi, s, () => this.land(pi))); if (p.charge >= 100) this.domain(pi, () => this.later(go, 400)); else go(); }
+  botCards(pi) { for (let t = 0; t < RULES.plays; t++) if (Math.random() < 0.6 && !this.botCard(pi)) break; }
+  botCard(pi) { const p = this.g.players[pi]; if (this.playsLeft(pi) <= 0 || Math.random() > 0.75) return false; const opts = p.hand.map((c, k) => k).filter((k) => { const c = p.hand[k]; return !c.passive && this.canPlay(pi, c) && (c.type !== 'money' || p.money < 6); }); const idx = opts.length ? opts[rnd(opts.length)] : -1; if (idx >= 0) { const c = p.hand[idx]; const msg = this.playCard(pi, idx); if (msg) { this.toast(`${p.name} jugó «${c.name}»: ${msg}`); return true; } } return false; }
+  botMarket(pi) { const g = this.g; const p = g.players[pi]; if (Math.random() > 0.4 || p.hand.length >= RULES.handMax) return; const k = g.market.findIndex((c) => p.money - c.cost > 5); if (k >= 0) this.buyMarket(pi, k); }
+  buyMarket(pi, k) { const g = this.g; const p = g.players[pi]; const c = g.market[k]; this.pay(pi, null, c.cost); p.hand.push(c); this.log(`${p.name} compró «${c.name}» en el Mercado`); g.market[k] = this.drawDeal(g.market.map((x) => x.id)); if (pi === g.turn) { g.bought = true; g.plays = (g.plays || 0) + 1; } return c; }
+  rivalsOf(pi) { return this.g.players.map((o, k) => k).filter((k) => k !== pi); }
+  bestLoose(pi) { const c = []; this.rivalsOf(pi).forEach((k) => this.loose(k).forEach((i) => c.push({ k, i }))); c.sort((a, b) => TILES[b.i].p - TILES[a.i].p); return c[0]; }
+  bestSet(pi) { const c = []; this.rivalsOf(pi).forEach((k) => GROUPS.forEach((gr) => { if (this.complete(k, gr)) c.push({ k, gr, v: groupIdx(gr).reduce((s, i) => s + TILES[i].p, 0) }); })); c.sort((a, b) => b.v - a.v); return c[0]; }
+  bestRent(pi, groups) { const c = this.owned(pi).filter((i) => !groups || groups.includes(TILES[i].g)).map((i) => ({ i, r: this.rentFor(i, pi) })).sort((a, b) => b.r - a.r); return c[0]; }
+  canPlay(pi, c) {
+    if (c.passive) return false;
+    if (c.id === 'sucio') return !!this.bestLoose(pi);
+    if (c.id === 'forzado') return !!this.bestLoose(pi) && this.owned(pi).length > 0;
+    if (c.id === 'rompe') return !!this.bestSet(pi);
+    if (c.id === 'paso') return true;
+    if (c.type === 'rent') return !!this.bestRent(pi, c.groups);
+    if (c.id === 'casa') return GROUPS.some((gr) => { const t = this.buildTarget(pi, gr); return t !== null && this.lvl(t) < 4; });
+    if (c.id === 'hotel') return this.owned(pi).some((i) => this.lvl(i) === 4);
+    if (c.id === 'embargo') return this.rivalsOf(pi).some((k) => this.g.players[k].hand.length > 0);
+    return true;
+  }
+  playCard(pi, idx) {
+    const g = this.g; const p = g.players[pi]; const c = p.hand[idx];
+    if (!c || !this.canPlay(pi, c) || this.playsLeft(pi) <= 0) return '';
+    p.hand.splice(idx, 1); g.plays = (g.plays || 0) + 1; this.toDiscard(c); let msg = '';
+    if (c.type === 'money') { p.money += c.amt; msg = `deposita ${M(c.amt)}`; }
+    if (c.type === 'rent') {
+      const b = this.bestRent(pi, c.groups); let amt = b.r; if (this.takeCard(pi, 'doble')) amt *= 2;
+      const targets = c.single ? [this.rivalsOf(pi).sort((x, y) => g.players[y].money - g.players[x].money)[0]] : this.rivalsOf(pi);
+      msg = targets.map((k) => (this.nilo(k, pi) ? `${this.nm(k)} se niega` : (this.pay(k, pi, amt, false), `${this.nm(k)} paga ${M(amt)}`))).join(' · ') + ` (${TILES[b.i].n})`;
+      this.addCharge(pi, 25);
+    }
+    if (c.id === 'casa') { const gr = GROUPS.find((x) => { const t = this.buildTarget(pi, x); return t !== null && this.lvl(t) < 4; }); const t = this.buildTarget(pi, gr); g.houses[t] = this.lvl(t) + 1; msg = `casa gratis en ${TILES[t].n}`; }
+    if (c.id === 'hotel') { const t = this.owned(pi).find((i) => this.lvl(i) === 4); g.houses[t] = 5; msg = `hotel en ${TILES[t].n}`; }
+    if (c.id === 'embargo') { const t = this.rivalsOf(pi).sort((x, y) => g.players[y].hand.length - g.players[x].hand.length)[0]; if (this.nilo(t, pi)) msg = 'cancelado'; else { const o = g.players[t]; let n = 0; while (n < 2 && o.hand.length) { this.toDiscard(o.hand.splice(rnd(o.hand.length), 1)[0]); n += 1; } msg = `${this.nm(t)} pierde ${n} cartas`; } }
+    if (c.id === 'apagon') { msg = this.rivalsOf(pi).map((k) => (this.nilo(k, pi) ? `${this.nm(k)} se niega` : ((g.players[k].charge = Math.max(0, g.players[k].charge - 30)), `${this.nm(k)} −30%`))).join(' · '); }
+    if (c.id === 'subsidio') { p.money += 2; msg = '+$2M'; }
+    if (c.id === 'foco') { this.addCharge(pi, 40); msg = 'dominio +40%'; }
+    if (c.id === 'paso' && g.players[pi].bot) msg = `roba ${this.give(pi, 2)} cartas`;
+    if (c.id === 'paso' && !g.players[pi].bot) { const ph = g.phase; this.flyDraw(pi, 2, () => { this.followOn(); this.refresh(); }); g.phase = ph; msg = 'roba 2 cartas del mazo'; }
+    if (c.id === 'cobrador') { const t = this.rivalsOf(pi).sort((a, b) => g.players[b].money - g.players[a].money)[0]; if (this.nilo(t, pi)) msg = 'cancelado'; else { this.pay(t, pi, 3, false); msg = `${this.nm(t)} paga $3M`; } }
+    if (c.id === 'fiesta') msg = this.rivalsOf(pi).map((k) => (this.nilo(k, pi) ? `${this.nm(k)} se niega` : (this.pay(k, pi, 2, false), `${this.nm(k)} paga $2M`))).join(' · ');
+    if (c.id === 'sucio') { const b = this.bestLoose(pi); if (this.nilo(b.k, pi)) msg = 'cancelado'; else { g.owners[b.i] = pi; msg = `se queda con ${TILES[b.i].n} de ${this.nm(b.k)}`; } }
+    if (c.id === 'forzado') { const b = this.bestLoose(pi); const mine = this.owned(pi).sort((x, y) => TILES[x].p - TILES[y].p)[0]; if (this.nilo(b.k, pi)) msg = 'cancelado'; else { g.owners[b.i] = pi; g.owners[mine] = b.k; msg = `cambia ${TILES[mine].n} por ${TILES[b.i].n}`; } }
+    if (c.id === 'rompe') { const s = this.bestSet(pi); if (this.nilo(s.k, pi)) msg = 'cancelado'; else { groupIdx(s.gr).forEach((i) => { g.owners[i] = pi; }); msg = `se queda con todo ${GR[s.gr].name} de ${this.nm(s.k)}`; } }
+    this.log(`${p.name} jugó «${c.name}»`); this.refresh(); return msg;
+  }
+  worth(pi) { return this.g.players[pi].money + this.owned(pi).reduce((s, k) => s + TILES[k].p, 0); }
+  domain(pi, cont) {
+    const g = this.g; const p = g.players[pi]; const r = this.role(p);
+    p.charge = 0; this.ui.sheet = null;
+    const GL = { alejandro: '⚔☀⚔✶', freud: '◎∞?☾', gengis: '↟⇢↟✦', isabel: '♛✚♛❀', leonardo: '⚙△⚙✎', napoleon: '★⚔✶★', newton: '●↓∴◐', tesla: 'ϟ⚡ϟ◉', mozart: '♪♫♩♬', juana: '✟☀⚜✧', ramses: '☥△☥◬' }[r.id];
+    g.dom = { id: PAT[r.id] || r.id, kicker: this.you(pi) ? 'Activaste tu dominio' : `${p.name} activó su dominio`, title: r.dom, desc: r.domDesc, color: r.color, fg: r.fg, img: IMG[r.id], result: '', glyphs: Array.from({ length: 16 }, (_, k) => ({ c: GL[k % GL.length], x: Math.round(Math.random() * 96), s: 26 + Math.round(Math.random() * 46), d: (1.6 + Math.random() * 5).toFixed(2), t: (5 + Math.random() * 4).toFixed(2) })), trapped: this.rivalsOf(pi).map((k, n) => { const rr = this.role(g.players[k]); return { name: g.players[k].name, img: IMG[rr.id], color: rr.color, d: (2.3 + n * 0.25).toFixed(2) }; }) };
+    g.aura = { id: PAT[r.id] || r.id, color: r.color, fg: r.fg, name: r.dom, turns: g.players.length };
+    this.refresh();
+    this.later(() => { g.dom.result = this.domainEffect(pi, r.id); this.log(`${p.name} activó ${r.dom}`); this.refresh(); this.later(() => { g.dom = null; if (this.broke()) return; this.refresh(); if (cont) cont(); }, 3600); }, 3000);
+  }
+  domainEffect(pi, id) {
+    const g = this.g; const p = g.players[pi]; const rv = this.rivalsOf(pi);
+    const who = (k) => (this.you(k) ? 'Vos' : this.nm(k));
+    const n = g.players.length;
+    const cheap = (k) => this.owned(k).sort((a, b) => TILES[a].p - TILES[b].p)[0];
+    if (id === 'alejandro') return rv.map((k) => { const t = cheap(k); if (t !== undefined) { g.owners[t] = pi; delete g.houses[t]; return `${who(k)} pierde ${TILES[t].n}`; } this.pay(k, pi, 2, false); return `${who(k)} paga $2M`; }).join(' · ');
+    if (id === 'freud') return rv.map((k) => { const o = g.players[k]; if (!o.hand.length) { this.pay(k, pi, 1, false); return `${who(k)} sin cartas: paga $1M`; } o.hand.sort((a, b) => (b.cost || 0) - (a.cost || 0)); const c = o.hand.shift(); p.hand.push(c); return `${who(k)} entrega «${c.name}»`; }).join(' · ');
+    if (id === 'gengis') return rv.map((k) => { const amt = Math.min(5, Math.max(1, Math.floor(g.players[k].money * 0.2))); this.pay(k, pi, amt, false); return `${who(k)} entrega ${M(amt)}`; }).join(' · ');
+    if (id === 'isabel') { g.commission = { pi, turns: n, pct: 0.3 }; return 'Durante la próxima vuelta, cada pago de un rival deja un 30% de tributo a la Corona.'; }
+    if (id === 'leonardo') {
+      const out = []; if (g.market.length) { let bi = 0; g.market.forEach((c, k) => { if ((c.cost || 0) > (g.market[bi].cost || 0)) bi = k; }); const c = g.market[bi]; p.hand.push(c); g.market[bi] = this.drawDeal(g.market.map((x) => x.id)); out.push(`se lleva «${c.name}» del Mercado`); }
+      GROUPS.forEach((gr) => { const t = this.buildTarget(pi, gr); if (t !== null) { g.houses[t] = this.lvl(t) + 1; out.push(`construye gratis en ${TILES[t].n}`); } });
+      return out.length ? out.join(' · ') : 'El taller no encontró nada que mejorar.';
+    }
+    if (id === 'napoleon') return rv.map((k) => { const a = 1 + rnd(6), b = 1 + rnd(6); if (a > b) { const t = cheap(k); if (t !== undefined) { g.owners[t] = pi; delete g.houses[t]; return `${a} contra ${b}: gana ${TILES[t].n} de ${who(k)}`; } this.pay(k, pi, 2, false); return `${a} contra ${b}: ${who(k)} paga $2M`; } this.pay(pi, k, 1, false); return `${a} contra ${b}: paga $1M a ${who(k)}`; }).join(' · ');
+    if (id === 'newton') {
+      const best = this.owned(pi).sort((a, b) => TILES[b].p - TILES[a].p)[0];
+      if (best === undefined) { rv.forEach((k) => this.pay(k, pi, 1, false)); return 'Sin lugares propios: cada rival paga $1M.'; }
+      const rent = this.rentFor(best, pi); rv.forEach((k) => { g.players[k].pos = best; this.pay(k, pi, rent, false); }); g.focus = best; this.followOn();
+      return `Todos cayeron en ${TILES[best].n} y pagaron ${M(rent)} cada uno.`;
+    }
+    if (id === 'tesla') { g.boost = { pi, turns: n, mult: 2 }; rv.forEach((k) => { g.players[k].charge = Math.floor((g.players[k].charge || 0) / 2); }); return 'Durante una vuelta sus alquileres valen el doble. Los rivales pierden la mitad de su carga.'; }
+    if (id === 'mozart') return rv.map((k) => { const amt = Math.min(5, Math.max(1, g.players[k].hand.length)); this.pay(k, pi, amt, false); return `${who(k)} paga ${M(amt)}`; }).join(' · ');
+    if (id === 'juana') { g.shield = { pi, turns: n }; rv.forEach((k) => this.pay(k, pi, 1, false)); return 'Durante una vuelta no paga alquiler. Cada rival le paga $1M.'; }
+    if (id === 'ramses') { g.boost = { pi, turns: n * 2, mult: 1.5 }; return 'Durante dos vueltas sus lugares cobran un 50% más.'; }
+    return '';
+  }
+  end(broke) { const g = this.g; this.clearAll(); clearInterval(this.voteInt); g.vote = null; g.screen = 'end'; g.broke = broke; g.def = null; g.modal = null; g.dom = null; g.act = null; g.cine = false; this.ui.sheet = null; this.refresh(); }
+
+  propCard(i) {
+    const t = TILES[i]; const gr = GR[t.g]; const L = this.lvl(i); const o = this.g.owners[i]; const full = o !== undefined && this.complete(o, t.g);
+    const H = (n) => Array.from({ length: n }, () => ({ c: '' }));
+    const rows = [
+      { l: 'Alquiler', v: M(gr.base), hs: [], cls: L === 0 && !full && o !== undefined ? 'cur' : '' },
+      { l: 'Época completa', v: M(gr.base * 2), hs: [], cls: L === 0 && full ? 'cur' : '' },
+      ...gr.houses.map((v, k) => ({ l: `${k + 1} casa${k ? 's' : ''}`, v: M(v), hs: H(k + 1), cls: L === k + 1 ? 'cur' : '' })),
+      { l: 'Hotel', v: M(gr.hotel), hs: [{ c: 'h' }], cls: L === 5 ? 'cur' : '' }
+    ];
+    return { name: t.n, barrio: gr.name, color: gr.color, fg: gr.fg, img: pic(t.img), price: M(t.p), hc: M(gr.hc), flav: t.f, rows };
+  }
+  dealCard(c, kind) { const k = c.type === 'money' ? 'Dinero' : c.type === 'rent' ? 'Renta' : c.type === 'build' ? 'Construcción' : c.passive ? 'Reacción' : 'Acción'; return { ...c, kind: kind ? `${kind} · ${k}` : k, val: M(c.cost) }; }
+
+  startMP(list) {
+    this.clearAll();
+    const g = this.fresh(); g.mp = true; g.hostSeat = 0;
+    g.players = list.map((x) => ({ name: x.name, roleId: x.roleId, bot: !!x.bot, money: this.props.startMoney ?? 15, pos: 0, hand: [], charge: 0 }));
+    this.g = g;
+    g.players.forEach((p, k) => { if (p.bot) this.give(k, RULES.start); });
+    g.market = []; for (let k = 0; k < 3; k++) g.market.push(this.drawDeal(g.market.map((c) => c.id)));
+    g.screen = 'game'; g.phase = 'idle';
+    this.cam = { s: this.mob() ? 0.3 : 0.6, px: 0, py: 0, follow: false, drag: null };
+    this.log('Bienvenidos a YAJUGÁ Leyendas'); this.refresh();
+    this.later(() => this.beginTurn(), 900);
+  }
+  act(name, ...args) {
+    if (this.net && !this.net.host) { this.net.send(name, args); return; }
+    this.doAct(this.seat, name, args);
+  }
+  doAct(pi, name, args) {
+    const g = this.g; if (g.screen !== 'game') return; const p = g.players[pi]; if (!p) return;
+    const mine = g.turn === pi; const busy = !!(g.dom || g.def || g.act || g.cine || g.modal);
+    if (name === 'roll' && mine && g.phase === 'roll' && !busy) { this.rollDice(pi, (s) => this.move(pi, s, () => this.land(pi))); }
+    else if (name === 'end' && mine && g.phase === 'action' && !busy) { g.phase = 'idle'; this.next(); }
+    else if (name === 'draw' && mine) this.drawNow(pi);
+    else if (name === 'play' && mine && (g.phase === 'roll' || g.phase === 'action') && !busy) { const c = p.hand[args[0]]; const msg = c ? this.playCard(pi, args[0]) : ''; if (msg) this.toast(`${this.you(pi) ? '' : p.name + ' jugó '}«${c.name}»: ${msg}`); else this.refresh(); }
+    else if (name === 'buyM' && mine && g.phase === 'action' && !busy && !g.bought && this.playsLeft(pi) > 0) { const c = g.market[args[0]]; if (c && p.money >= c.cost) { this.buyMarket(pi, args[0]); this.refresh(); } }
+    else if (name === 'build' && mine && g.phase === 'action' && !busy) this.build(pi, args[0]);
+    else if (name === 'dom' && mine && p.charge >= 100 && (g.phase === 'roll' || g.phase === 'action') && !busy) this.domain(pi, null);
+    else if ((name === 'buy' || name === 'pass') && mine && g.modal && g.phase === 'buy') { const mm = g.modal; g.modal = null; if (name === 'buy') this.buyTile(pi, mm.i); else this.log(`${p.name} pasó de comprar ${TILES[mm.i].n}`); this.afterLand(pi); }
+    else if (name === 'actOk' && mine && g.act) { const a = g.act; g.act = null; const msg = this.applyNews(pi, a.c); this.log(`Noticia «${a.c.name}»: ${msg}`); if (this.broke()) return; this.afterLand(pi); }
+    else if (name === 'def' && g.def && g.def.payer === pi) this.resolve(args[0]);
+    else if (name === 'voteStart' && g.mp && !g.vote && pi === (g.hostSeat || 0)) { g.vote = { by: pi, yes: { [pi]: true }, t: 30 }; this.log(`${p.name} propone terminar la partida`); this.voteTick(); this.voteCheck(); }
+    else if (name === 'vote' && g.vote && this.voters().includes(pi)) { if (args[0]) { g.vote.yes[pi] = true; this.voteCheck(); } else { this.log(`${p.name} votó seguir jugando: la partida continúa`); this.toast(`${p.name} quiere seguir: la partida continúa`); g.vote = null; this.refresh(); } }
+  }
+  voters() { return this.g.players.map((p, k) => k).filter((k) => !this.g.players[k].bot); }
+  voteCheck() {
+    const g = this.g; if (!g.vote) return;
+    if (this.voters().every((k) => g.vote.yes[k])) { g.vote = null; g.byVote = true; this.log('Todos votaron terminar la partida'); this.end(false); return; }
+    this.refresh();
+  }
+  voteTick() {
+    clearInterval(this.voteInt);
+    this.voteInt = setInterval(() => { const g = this.g; if (!g.vote) { clearInterval(this.voteInt); return; } g.vote.t -= 1; if (g.vote.t <= 0) { clearInterval(this.voteInt); g.vote = null; this.toast('No votaron todos a tiempo: la partida sigue'); } this.refresh(); }, 1000);
+  }
+  takeover(pi) {
+    const g = this.g; const p = g.players[pi]; if (!p || p.bot || g.screen !== 'game') return;
+    p.bot = true; p.away = true; this.log(`${p.name} salió: la compu juega por ${p.name} hasta que vuelva`);
+    if (g.turn !== pi) { this.refresh(); return; }
+    if (g.phase === 'draw' || g.phase === 'roll') { g.phase = 'bot'; this.refresh(); this.botTurn(); }
+    else if (g.phase === 'action') { g.phase = 'idle'; this.next(); }
+    else if (g.phase === 'buy' && g.modal) { g.modal = null; this.afterLand(pi); }
+    else if (g.act) { this.doAct(pi, 'actOk', []); }
+    else this.refresh();
+  }
+  comeback(pi) {
+    const g = this.g; const p = g.players[pi]; if (!p || !p.away) return;
+    p.bot = false; p.away = false; this.log(`${p.name} volvió a la partida`);
+    if (g.turn === pi && g.phase === 'roll') this.refresh(); else this.refresh();
+  }
+  resume() {
+    const g = this.g; if (g.screen !== 'game') { this.refresh(); return; }
+    this.clearAll(); g.fly = []; g.look = null; g.catching = false; g.cine = false;
+    if (g.dom) { g.dom = null; }
+    if (g.vote) this.voteTick();
+    const pi = g.turn; const p = g.players[pi];
+    if (g.def) { const d = g.def; g.def = null; if (!d.done) this.settle(d.payer, d.owner, d.amount, 'accept'); if (this.broke()) return; this.afterLand(pi); return; }
+    if (p.bot) { g.modal = null; g.act = null; if (['draw', 'roll', 'bot', 'idle', 'drawing'].includes(g.phase)) { g.phase = 'bot'; this.refresh(); this.later(() => this.botTurn(), 700); } else { g.phase = 'bot'; this.afterLand(pi); } return; }
+    if (g.phase === 'drawing') g.phase = 'roll';
+    else if (g.phase === 'rolling' || g.phase === 'moving' || g.phase === 'idle' || g.phase === 'bot') g.phase = 'action';
+    else if (g.phase === 'card' && g.act) g.act.flip = true;
+    this.refresh();
+  }
+  renderVals() {
+    const g = this.g; const S = this.seat || 0; const me = g.players[S]; const cur = g.players[g.turn];
+    const human = !!cur && g.turn === S && !cur.bot;
+    const busy = !!(g.dom || g.def || g.act || g.cine || g.modal);
+    const cam = this.cam;
+    const L = this.lobby; const taken = L ? L.players.filter((x) => x.id !== L.me && x.role).map((x) => x.role) : [];
+    const roles = ROLES.map((r) => ({ ...r, img: IMG[r.id], pick: () => { if (L) { if (!taken.includes(r.id)) window.YJNet.pickRole(this, r.id); } else this.start(r.id); }, pcls: L ? (taken.includes(r.id) ? 'taken' : L.players.some((x) => x.id === L.me && x.role === r.id) ? 'mine' : '') : '' }));
+    const pv = (p, k) => { const r = this.role(p); return { name: p.name + (p.away ? ' · fuera' : ''), role: r.name, img: IMG[r.id], color: r.color, money: M(p.money), charge: p.charge, props: this.owned(k).length, cls: k === g.turn ? 'on' : '' }; };
+    const meV = me ? { ...pv(me, S), ring: Math.round(151 * (1 - me.charge / 100)) } : { color: '#C13B1F', ring: 151, charge: 0 };
+    const rivIdx = g.players.map((p, k) => k).filter((k) => k !== S);
+    const rivals = rivIdx.map((k) => g.players[k]).map((p, n) => ({ ...pv(p, rivIdx[n]), ring: Math.round(126 * (1 - p.charge / 100)) }));
+    const tiles = TILES.map((t, i) => {
+      const [row, col] = cell(i); const o = g.owners[i]; const isProp = t.k === 'prop';
+      const gr = isProp ? GR[t.g] : null;
+      const orl = o !== undefined ? this.role(g.players[o]) : null;
+      return { row, col, rot: rotOf(i), isProp, isCorner: t.k === 'corner', isNews: t.k === 'news', name: t.n, sub: t.sub || '', img: t.img ? pic(t.img) : '', color: gr ? gr.color : '', fg: gr ? gr.fg : '', barrio: gr ? gr.name : '', price: t.p ? M(t.p) : '', owned: o !== undefined, ownColor: orl ? orl.color : '', ownFg: orl ? orl.fg : '', ownInit: o === 0 ? 'Vos' : o !== undefined ? 'R' + o : '', hs: isProp ? (this.lvl(i) === 5 ? [{ cls: 'hotel' }] : Array.from({ length: this.lvl(i) }, () => ({ cls: '' }))) : [], popC: gr ? (gr.color === '#2E3D6E' ? '#2E3D6E' : gr.color) : '#8A6213', popK: gr ? gr.name : 'Esquina', popRL: o === undefined ? 'Alquiler base' : 'Alquiler actual', popRV: isProp ? M(o === undefined ? GR[t.g].base : this.rentFor(i, o)) : '', popTxt: isProp ? (o === undefined ? `Libre · ${M(t.p)} · alquiler ${M(GR[t.g].base)}` : `Alquiler actual ${M(this.rentFor(i, o))}`) : (t.sub || ''), rentTxt: isProp ? (o === undefined ? `Libre · alquiler ${M(GR[t.g].base)}` : `Alquiler actual ${M(this.rentFor(i, o))}`) : '', peek: () => { if (this.dragMoved || !isProp) return; this.ui.peek = i; this.refresh(); }, cls: (t.k === 'corner' ? 'cor ' : t.k === 'news' ? 'news ' : '') + (col === 1 || col === 7 ? (t.k === 'corner' ? '' : 'side ') : '') + (row === 1 ? 'pdown ' : '') + (g.screen === 'game' && i === g.focus ? 'here' : '') };
+    });
+    const toks = [];
+    g.players.forEach((p, k) => { const [x, y] = center(p.pos); const same = g.players.filter((q, j) => q.pos === p.pos && j < k).length; toks.push({ x: Math.round(x - 22 + same * 26), y: Math.round(y + 20 - same * 10), color: this.role(p).color, cls: k === 0 ? 'me' : '' }); });
+    const [cx, cy] = g.look ? g.look : cam.follow ? center(g.focus) : [560, 560];
+    let status = 'Esperá';
+    if (g.phase === 'drawing') status = 'Robando…'; else if (g.phase === 'rolling') status = 'Rodando…'; else if (g.phase === 'moving') status = `${cur ? cur.name : ''} avanza`; else if (g.phase === 'bot') status = `${cur ? cur.name : ''} juega`; else if (busy) status = 'Decidí';
+    const myRole = me ? this.role(me) : ROLES[0];
+    const canDom = !!me && me.charge >= 100 && human && (g.phase === 'roll' || g.phase === 'action') && !busy;
+    const canPlayNow = human && (g.phase === 'roll' || g.phase === 'action') && !busy;
+    const canBuyM = human && g.phase === 'action' && !busy && !g.bought && !!me && this.playsLeft(S) > 0;
+    const sh = this.ui.sheet;
+    let deals = [];
+    if (sh === 'hand') deals = (me ? me.hand : []).map((c, idx) => { const noPlays = this.playsLeft(S) <= 0; const ok = canPlayNow && !noPlays && this.canPlay(S, c); return { ...this.dealCard(c), off: c.passive || !ok, btn: c.passive ? 'Se activa sola' : canPlayNow && noPlays ? 'Sin acciones este turno' : !ok ? 'No disponible ahora' : c.type === 'money' ? `Depositar ${M(c.amt)}` : 'Jugar carta', btnCls: ok ? 'b-rust' : '', act: () => { if (ok) { this.ui.sheet = null; this.act('play', idx); } } }; });
+    if (sh === 'market') deals = g.market.map((c, k) => ({ ...this.dealCard(c, 'Mercado'), off: !(canBuyM && me.money >= c.cost), btn: `Comprar · ${M(c.cost)}`, btnCls: 'b-rust', act: () => { if (canBuyM && me.money >= c.cost) this.act('buyM', k); } }));
+    const canBuildNow = human && g.phase === 'action' && !busy && this.playsLeft(S) > 0;
+    const estate = me ? GROUPS.map((gr) => { const mine = this.owned(S).filter((i) => TILES[i].g === gr); if (!mine.length) return null; const tgt = this.buildTarget(S, gr); const ok = canBuildNow && tgt !== null && me.money >= GR[gr].hc; return { title: GR[gr].name, c2: GR[gr].color === '#2E3D6E' ? '#8FA2DA' : GR[gr].color, count: `${mine.length}/3`, cards: mine.map((i) => this.propCard(i)), btn: !this.complete(S, gr) ? 'Completá la época para construir' : tgt === null ? 'Barrio al máximo' : `Construir ${this.lvl(tgt) === 4 ? 'hotel' : 'casa'} · ${M(GR[gr].hc)}`, btnCls: ok ? 'b-rust' : '', off: !ok, build: () => { if (ok) this.act('build', gr); } }; }).filter(Boolean) : [];
+    const sheets = {
+      hand: ['Tu mano', `Acciones este turno: ${g.turn === S ? this.playsLeft(S) : 0} de ${RULES.plays} (jugar, comprar o construir) · máximo ${RULES.handMax} cartas al terminar el turno.`, deals.length === 0, `No tenés cartas. Si empezás tu turno sin cartas, robás ${RULES.drawEmpty}.`],
+      rules: ['Reglas de YAJUGÁ Leyendas', 'Monopoly + Monopoly Deal con figuras de la historia y sus dominios.', false, ''],
+      market: ['Mercado de tratos', g.bought ? 'Ya compraste este turno.' : this.playsLeft(S) <= 0 ? 'No te quedan acciones este turno.' : 'Una compra por turno, después de tirar. Gasta 1 acción.', false, ''],
+      estate: ['Tus épocas', 'Completá una época para duplicar el alquiler y construir casas y hoteles. Tocá cualquier casilla del tablero para ver su título.', estate.length === 0, 'Todavía no tenés lugares. Caé en uno libre para comprarlo.']
+    };
+    const SH = sh ? sheets[sh] : ['', '', false, ''];
+    const m = g.modal; const d = g.def;
+    const ranking = g.players.map((p, k) => ({ p, k, w: this.worth(k) })).sort((a, b) => b.w - a.w).map((x, i) => ({ pos: i + 1, name: x.p.name, img: IMG[x.p.roleId], worth: M(x.w), detail: `${this.role(x.p).name} · efectivo ${M(x.p.money)}` }));
+    const win = ranking[0] || { name: '', img: '' };
+    const dom = g.dom || { id: '', color: '#C13B1F', fg: '#EFE6D2', img: '', kicker: '', title: '', desc: '', result: '', glyphs: [], trapped: [] };
+    const [x1, y1] = FACE[g.dice[0]], [x2, y2] = FACE[1]; const sp = g.rolls * 720;
+    const openS = (k) => () => { this.ui.sheet = this.ui.sheet === k ? null : k; this.refresh(); };
+    return {
+      isPick: g.screen === 'pick', isGame: g.screen === 'game', isEnd: g.screen === 'end',
+      roles, me: meV, rivals, tiles, toks, cars: CARS, overtime: g.overtime, feed: g.log,
+      roundTxt: `Ronda ${Math.min(g.round, this.maxRounds())} de ${this.maxRounds()}`,
+      camX: Math.round(cam.px), camY: Math.round(cam.py), camS: cam.s.toFixed(3), fx: -Math.round(cx), fy: -Math.round(cy),
+      dragCls: cam.drag && cam.drag.moved ? 'dragging' : '', followCls: cam.follow ? 'on' : '',
+      pDown: (e) => { if (e.target && e.target.closest && e.target.closest('button,a')) return; this.cam.drag = { x: e.clientX, y: e.clientY, px: this.cam.px, py: this.cam.py, moved: false }; },
+      pMove: (e) => { const dr = this.cam.drag; if (!dr) return; const dx = e.clientX - dr.x, dy = e.clientY - dr.y; if (!dr.moved && Math.abs(dx) + Math.abs(dy) < 4) return; dr.moved = true; this.cam.follow = false; this.cam.px = dr.px + dx; this.cam.py = dr.py + dy; this.refresh(); },
+      pUp: () => { if (this.cam.drag) { this.dragMoved = this.cam.drag.moved; this.cam.drag = null; this.refresh(); this.later(() => { this.dragMoved = false; }, 50); } },
+      wheel: (e) => { const f = e.deltaY > 0 ? 0.9 : 1.1; this.cam.s = Math.max(0.35, Math.min(1.8, this.cam.s * f)); this.refresh(); },
+      zoomIn: () => { this.cam.s = Math.min(1.8, this.cam.s * 1.2); this.refresh(); },
+      zoomOut: () => { this.cam.s = Math.max(0.22, this.cam.s / 1.2); this.refresh(); },
+      followMe: () => { this.followOn(); this.refresh(); },
+      overview: () => { this.cam = { s: 0.6, px: 0, py: 0, follow: false, drag: null }; this.refresh(); },
+      d1: `rotateX(${x1 + sp}deg) rotateY(${y1 + sp}deg)`, d2: `rotateX(${x2 + sp + 360}deg) rotateY(${y2 + sp}deg)`,
+      toss: g.rolls % 2 ? 'tossA' : 'tossB', diceOp: g.diceShow ? 1 : 0, diceLabel: `Dado: ${g.dice[0]}`,
+      status,
+      canDraw: human && g.phase === 'draw' && !busy, drawNow: () => { if (human && g.phase === 'draw') this.act('draw'); }, drawN: g.drawN || 2, fly: (g.fly || []).map((x) => ({ ...x, cls: x.pi === S ? 'me' : 'r' + (rivIdx.indexOf(x.pi) + 1) + ' back' })), handCls: g.catching ? 'catch' : '', pileCls: human && g.phase === 'draw' && !busy ? 'can' : '', canRoll: human && g.phase === 'roll' && !busy, canAct: human && g.phase === 'action' && !busy,
+      waiting: !(human && (g.phase === 'roll' || g.phase === 'action' || g.phase === 'draw') && !busy),
+      roll: () => { if (!human || g.phase !== 'roll') return; this.ui.sheet = null; this.act('roll'); },
+      endTurn: () => { if (!human || g.phase !== 'action') return; this.ui.sheet = null; this.act('end'); },
+      domName: myRole.dom, domLbl: canDom ? '¡Activar dominio!' : `Dominio ${me ? me.charge : 0}%`, domReady: canDom ? 'ready' : '', domMini: Math.round(57 * (1 - (me ? me.charge : 0) / 100)),
+      useDom: () => { if (canDom) { this.ui.sheet = null; this.act('dom'); } else this.toast(me && me.charge >= 100 ? 'Activalo en tu turno' : `${myRole.dom} al ${me ? me.charge : 0}%: se carga cobrando, pagando, comprando y pasando por la Puerta.`); },
+      handCount: me ? me.hand.length : 0,
+      openHand: openS('hand'), openMarket: openS('market'), openEstate: openS('estate'),
+      closeSheet: () => { this.ui.sheet = null; this.refresh(); },
+      sheetOpen: !!sh && !busy, isDeals: sh === 'hand' || sh === 'market', isEstate: sh === 'estate', isRules: sh === 'rules', rulesList: RULES_TXT, openRules: openS('rules'), playsTxt: g.turn === S ? `Acciones ${RULES.plays - (g.plays || 0)}/${RULES.plays}` : 'Turno rival', deckTxt: `Mazo ${(g.deck || []).length} · Descarte ${(g.discard || []).length}`,
+      sheetTitle: SH[0], sheetSub: SH[1], sheetEmpty: SH[2], sheetEmptyTxt: SH[3],
+      deals, estate,
+      showPeek: this.ui.peek !== undefined && this.ui.peek !== null && !busy, peek: this.ui.peek !== undefined && this.ui.peek !== null ? this.propCard(this.ui.peek) : { rows: [] }, peekOwner: (() => { const i = this.ui.peek; if (i === undefined || i === null) return ''; const o = g.owners[i]; return o === undefined ? 'Lugar libre' : `Dueño: ${this.nm(o)}`; })(), closePeek: () => { this.ui.peek = null; this.refresh(); },
+      showBuy: !!m && g.phase === 'buy' && g.turn === S, buy: m ? this.propCard(m.i) : { rows: [] }, buyOff: !m || !me || me.money < TILES[m.i].p,
+      doBuy: () => this.act('buy'),
+      doPass: () => this.act('pass'),
+      showAct: !!g.act && g.turn === S, act: g.act ? g.act.c : { ic: '', name: '', desc: '' }, actFlip: g.act && g.act.flip ? 'on' : '',
+      actOk: () => this.act('actOk'),
+      showDef: !!d && d.payer === S, defAmount: d ? M(d.amount) : '',
+      defText: d ? `Caíste en ${TILES[d.i].n}, de ${this.nm(d.owner)}. Tenés unos segundos para decidir.` : '',
+      defSecs: d ? Math.max(0, d.secs) : 0, defOffset: d ? Math.round(207 * (1 - Math.max(0, d.secs) / 8)) : 0,
+      defChoosing: !!d && !d.done, defDone: !!d && d.done, defResult: d ? d.result : '',
+      blockOff: !(me && me.hand.some((c) => c.id === 'nilo')), blockTxt: me && me.hand.some((c) => c.id === 'nilo') ? 'Usás tu carta ¡Ni loco! y no pagás nada.' : 'Necesitás una carta ¡Ni loco! en la mano.',
+      defBlock: () => this.act('def', 'block'), defNego: () => this.act('def', 'nego'), defCounter: () => this.act('def', 'counter'),
+      showAura: !!g.aura && !g.dom, aura: g.aura ? { ...g.aura, left: g.aura.turns === 1 ? 'último turno' : `${g.aura.turns} turnos` } : { id: '', color: '', fg: '', name: '', left: '' }, showDom: !!g.dom, dom: { ...dom, hasResult: !!dom.result }, showCine: !!g.cine,
+      showToast: !!g.toast && (g.toastTo === null || g.toastTo === undefined || g.toastTo === S), toast: g.toast || '',
+      ranking, winName: win.name, winVerb: me && win.name === me.name ? 'dominás la ciudad' : 'domina la ciudad', winImg: win.img,
+      endKicker: g.broke ? 'Alguien quedó en bancarrota' : g.byVote ? 'Terminaron la partida por votación' : 'Fin de la partida',
+      canVoteStart: !!g.mp && g.screen === 'game' && !g.vote && S === (g.hostSeat || 0),
+      voteStart: () => this.act('voteStart'),
+      showVote: !!g.vote && g.screen === 'game',
+      voteMine: !!g.vote && !g.vote.yes[S] && this.voters().includes(S),
+      voteWait: !!g.vote && !!g.vote.yes[S],
+      voteTxt: g.vote ? `${this.nm(g.vote.by)} propone terminar la partida ahora. Gana quien tenga más patrimonio (efectivo + lugares).` : '',
+      voteTally: g.vote ? `${this.voters().filter((k) => g.vote.yes[k]).length} de ${this.voters().length} votaron que sí · ${Math.max(0, g.vote.t)} s` : '',
+      voteYes: () => this.act('vote', true), voteNo: () => this.act('vote', false),
+      restart: () => { if (this.net && window.YJNet) window.YJNet.leave(this, true); this.clearAll(); this.g = this.fresh(); this.lobby = null; this.seat = 0; this.refresh(); },
+      netOk: typeof window !== 'undefined' && !!window.YJNet && !L, hasLast: !L && typeof window !== 'undefined' && !!window.YJNet && !!window.YJNet.last(), lastCode: (typeof window !== 'undefined' && window.YJNet && window.YJNet.last()) ? window.YJNet.last().code : '', rejoin: () => { const l = window.YJNet.last(); if (l) window.YJNet.join(this, l.code, l.name || this.form.name || 'Jugador'); }, isLobby: !!L && g.screen === 'pick', notLobby: !L,
+      fName: this.form.name, fCode: this.form.code,
+      onName: (e) => { this.form.name = e.target.value.slice(0, 16); },
+      onCode: (e) => { this.form.code = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 5); this.refresh(); },
+      mkRoom: () => window.YJNet.create(this, this.form.name || 'Anfitrión'),
+      joinRoom: () => { if (this.form.code.length >= 4) window.YJNet.join(this, this.form.code, this.form.name || 'Jugador'); },
+      lob: L ? { code: L.code, link: L.link, host: !!L.host, err: L.err || '', msg: L.msg || '', canStart: !!L.host && L.players.length >= 2 && L.players.every((x) => x.role), startOff: !(L.host && L.players.length >= 2 && L.players.every((x) => x.role)), count: `${L.players.length}/4 jugadores`, startTxt: L.players.length < 2 ? 'Esperando amigos…' : L.players.every((x) => x.role) ? (L.players.length < 3 ? 'Empezar (se suma 1 compu)' : 'Empezar partida') : 'Todos deben elegir rol' } : { code: '', link: '', host: false, err: '', msg: '', canStart: false, count: '', startTxt: '' },
+      lobPlayers: L ? L.players.map((x) => { const r = ROLES.find((q) => q.id === x.role); return { name: x.name + (x.id === L.me ? ' (vos)' : ''), host: x.host ? 'Anfitrión' : '', role: r ? r.name : 'Eligiendo rol…', img: r ? IMG[r.id] : '', color: r ? r.color : '#3E3731', hasImg: !!r }; }) : [],
+      copyLink: () => { try { navigator.clipboard.writeText(L.link); L.msg = '¡Link copiado! Mandáselo a tus amigos.'; } catch (e) { L.msg = L.link; } this.refresh(); },
+      startRoom: () => { if (L && L.host) window.YJNet.start(this); },
+      leaveRoom: () => { window.YJNet.leave(this, true); this.lobby = null; this.refresh(); }
+    };
+  }
+}
+
+var __c=DCBoot(Component,'tpl'); if(window.__salaCode){__c.form.code=window.__salaCode; __c.refresh();}
+</script>
+</body>
+</html>

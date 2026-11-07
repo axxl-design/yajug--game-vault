@@ -611,7 +611,7 @@ const P = {
   p13: '1350e5c21924291b52ebe6fb49f4f9eb', p14: '5a9de5c8a639873c28e64e8d058b350f', p15: '4f060304395aa5840f4cce22461477c4', p16: '6ee715c4a9ac689accd6bbea6f4c2599',
   p17: '1ea30880d625568a0350a73fa6ae0d64', p18: '2b32016e8a7dd638bde98fafc4b28053'
 };
-const pic = (k) => '/assets/pl/' + k + '.webp';
+const pic = (k) => (k[0] === 'L' ? '/assets/lpl/' : '/assets/pl/') + k + '.webp';
 const ROLES = [
   { id: 'banquero', name: 'El Banquero', color: '#C99022', fg: '#14110F', dom: 'Bóveda Central', domDesc: 'Encierra a todos en su bóveda: durante una vuelta completa, cada pago que haga un rival le deja un 25% extra de comisión.' },
   { id: 'estafador', name: 'El Estafador', color: '#2E3D6E', fg: '#EFE6D2', dom: 'Casino de las Sombras', domDesc: 'Arrastra a todos a su mesa. Cada rival tira un dado: del 1 al 4 le paga $3M; con 5 o 6, el Estafador le paga $1M.' },
