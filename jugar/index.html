@@ -7,6 +7,12 @@
 <meta name="description" content="YAJUGÁ Games Vault: juegos de mesa online. Jugá YAJUGÁ Dominio con tus amigos.">
 <meta name="theme-color" content="#14110F">
 <link rel="icon" href="/assets/fav.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/assets/fav.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="YAJUGÁ">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
@@ -301,6 +307,8 @@ a{color:#E0A33A}
 @keyframes flyr3{0%{left:50%;top:50%;transform:scale(.55) rotate(6deg)}35%{left:50%;top:44%;transform:scale(.9) rotate(-6deg)}100%{left:calc(100% - 130px);top:200px;transform:scale(.2) rotate(18deg);opacity:.5}}
 .vote{position:absolute;left:50%;top:50%;z-index:65;transform:translate(-50%,-50%);width:min(440px,92%);padding:26px;border-radius:26px;background:#1E1915;border:1px solid rgba(239,230,210,.2);box-shadow:0 30px 70px rgba(0,0,0,.6);animation:toast .4s cubic-bezier(.2,.9,.3,1.3)}
 @media (hover:none){.tphoto{display:none}}
+@media (min-width:701px){.mob-only{display:none !important}}
+.liftbtn.on{background:#E0A33A;color:#14110F}
 @media (max-width:700px){
 .top{padding:calc(10px + env(safe-area-inset-top, 0px)) 10px 0;gap:8px}
 .top .iconbtn{width:40px;height:40px}.top .iconbtn img{height:24px !important}
@@ -315,9 +323,9 @@ a{color:#E0A33A}
 .dz-call{font-size:15vw}.dz-title{font-size:13vw}.dz-por{width:120px}.dz-res{font-size:15px}.aurap{font-size:9px !important}
 .feed{top:72px;max-width:94%}.fi{font-size:11px;padding:6px 12px;white-space:normal;text-align:center}
 .toast{top:118px;font-size:13px;padding:12px 18px;border-radius:18px;max-width:92%}
-.camctl{flex-direction:row;top:auto;right:auto;left:50%;bottom:calc(112px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);gap:8px}
+.camctl{flex-direction:row;top:auto;right:auto;left:50%;bottom:calc(112px + env(safe-area-inset-bottom, 0px) + var(--lift, 0px));transform:translateX(-50%);gap:8px}
 .camctl .iconbtn{width:40px;height:40px;font-size:17px}
-.dock{left:10px;right:10px;bottom:calc(12px + env(safe-area-inset-bottom, 0px));transform:none;justify-content:space-between;gap:0;padding:6px}
+.dock{left:10px;right:10px;bottom:calc(12px + env(safe-area-inset-bottom, 0px) + var(--lift, 0px));transform:none;justify-content:space-between;gap:0;padding:6px}
 .nb{padding:0 12px;min-height:44px}
 .roll{width:82px;height:82px;margin:-30px 4px 0;font-size:15px}.roll small{font-size:8px;letter-spacing:.1em}
 .buyrow{width:100%}.buyrow .btn{min-width:0 !important;flex:1;padding:0 16px}
@@ -326,13 +334,13 @@ a{color:#E0A33A}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none !important;transition:none !important}}
 </style>
 
-<style>html,body{margin:0;padding:0}html,body{height:100%;overflow:hidden;background:#14110F;overscroll-behavior:none}#root{position:fixed;inset:0;height:100vh;height:100dvh}#root>*{height:100%}</style>
+<style>html,body{margin:0;padding:0}html,body{height:100%;overflow:hidden;background:#14110F;overscroll-behavior:none}#root{position:fixed;left:0;right:0;top:0;height:100vh;height:100dvh;height:var(--vvh,100dvh)}#root>*{height:100%}#root .g{height:100% !important;min-height:0 !important}</style>
 </head>
 <body>
 <div id="root"></div>
 <script type="text/x-tpl" id="tpl">
 
-<div class="g">
+<div class="g" style="--lift: {{liftPx}}">
 
 <!-- PICK -->
 <sc-if value="{{isPick}}" hint-placeholder-val="{{ true }}">
@@ -440,6 +448,7 @@ a{color:#E0A33A}
 
 <div class="camctl">
 <sc-if value="{{canVoteStart}}" hint-placeholder-val="{{ false }}"><button class="iconbtn" type="button" onClick="{{voteStart}}" aria-label="Proponer terminar la partida"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4h11l-2 4 2 4H5"></path></svg></button></sc-if>
+<button class="iconbtn mob-only liftbtn {{liftCls}}" type="button" onClick="{{liftBar}}" aria-label="Mover la barra de abajo" title="{{liftTip}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M7 8l5-5 5 5M7 16l5 5 5-5"></path></svg></button>
 <button class="iconbtn" type="button" onClick="{{openRules}}" aria-label="Reglas del juego" style="font: 800 18px 'Bricolage Grotesque'">?</button>
 <button class="iconbtn" type="button" onClick="{{zoomIn}}" aria-label="Acercar">+</button>
 <button class="iconbtn" type="button" onClick="{{zoomOut}}" aria-label="Alejar">−</button>
@@ -593,6 +602,7 @@ a{color:#E0A33A}
 </script>
 <script src="https://cdn.jsdelivr.net/npm/morphdom@2.7.4/dist/morphdom-umd.min.js"></script>
 <script src="/dc.js"></script>
+<script>(function(){var v=window.visualViewport;function f(){var h=v?v.height:innerHeight;document.documentElement.style.setProperty('--vvh',h+'px')}f();(v||window).addEventListener('resize',f);addEventListener('orientationchange',function(){setTimeout(f,300)})})()</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/net.js"></script>
 <script>
@@ -1132,7 +1142,10 @@ class Component extends DCLogic {
     const dom = g.dom || { id: '', color: '#C13B1F', fg: '#EFE6D2', img: '', kicker: '', title: '', desc: '', result: '', glyphs: [], trapped: [] };
     const [x1, y1] = FACE[g.dice[0]], [x2, y2] = FACE[1]; const sp = g.rolls * 720;
     const openS = (k) => () => { this.ui.sheet = this.ui.sheet === k ? null : k; this.refresh(); };
+    const LIFTS = [0, 60, 120]; if (this.lift == null) { try { this.lift = +(localStorage.getItem('yj-lift') || 0) % 3; } catch (e) { this.lift = 0; } }
+    const liftBar = () => { this.lift = (this.lift + 1) % 3; try { localStorage.setItem('yj-lift', String(this.lift)); } catch (e) {} this.toast && this.toast(['Barra abajo', 'Barra un poco más arriba', 'Barra bien arriba'][this.lift]); this.refresh(); };
     return {
+      liftPx: LIFTS[this.lift] + 'px', liftBar, liftCls: this.lift ? 'on' : '', liftTip: 'Subir o bajar la barra',
       isPick: g.screen === 'pick', isGame: g.screen === 'game', isEnd: g.screen === 'end',
       roles, me: meV, rivals, tiles, toks, cars: CARS, overtime: g.overtime, feed: g.log,
       roundTxt: `Ronda ${Math.min(g.round, this.maxRounds())} de ${this.maxRounds()}`,
