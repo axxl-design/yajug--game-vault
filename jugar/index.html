@@ -410,7 +410,6 @@ a{color:#E0A33A}
 </div>
 <div class="dice" aria-label="{{diceLabel}}" role="img" style="opacity: {{diceOp}}">
 <div class="dw {{toss}}"><div class="die" style="transform: {{d1}}"><div class="fc f1"></div><div class="fc f2"></div><div class="fc f3"></div><div class="fc f4"></div><div class="fc f5"></div><div class="fc f6"></div></div></div>
-<div class="dw {{toss}}"><div class="die" style="transform: {{d2}}"><div class="fc f1"></div><div class="fc f2"></div><div class="fc f3"></div><div class="fc f4"></div><div class="fc f5"></div><div class="fc f6"></div></div></div>
 </div>
 </div>
 
@@ -450,7 +449,7 @@ a{color:#E0A33A}
 <button class="nb hand {{handCls}}" type="button" onClick="{{openHand}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="10" height="15" rx="2" transform="rotate(-10 8 12)"></rect><rect x="10" y="4" width="10" height="15" rx="2"></rect></svg><span class="lbl">Mano</span><sc-if value="{{handCount}}" hint-placeholder-val="{{ false }}"><b class="badge">{{handCount}}</b></sc-if></button>
 <button class="nb" type="button" onClick="{{openMarket}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l2-5h14l2 5M3 9h18v3a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0zM5 14v6h14v-6"></path></svg><span class="lbl">Mercado</span></button>
 <sc-if value="{{canDraw}}" hint-placeholder-val="{{ false }}"><button class="roll go" type="button" onClick="{{drawNow}}" aria-label="Robar cartas"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="11" height="15" rx="2"></rect><rect x="9" y="6" width="11" height="15" rx="2"></rect></svg>Robar<small>{{drawN}} cartas</small></button></sc-if>
-<sc-if value="{{canRoll}}" hint-placeholder-val="{{ true }}"><button class="roll go" type="button" onClick="{{roll}}" aria-label="Tirar los dados"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"></circle><circle cx="15.5" cy="15.5" r="1.5" fill="currentColor"></circle><circle cx="12" cy="12" r="1.5" fill="currentColor"></circle></svg>Tirar<small>los dados</small></button></sc-if>
+<sc-if value="{{canRoll}}" hint-placeholder-val="{{ true }}"><button class="roll go" type="button" onClick="{{roll}}" aria-label="Tirar el dado"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"></circle><circle cx="15.5" cy="15.5" r="1.5" fill="currentColor"></circle><circle cx="12" cy="12" r="1.5" fill="currentColor"></circle></svg>Tirar<small>el dado</small></button></sc-if>
 <sc-if value="{{canAct}}" hint-placeholder-val="{{ false }}"><button class="roll end" type="button" onClick="{{endTurn}}" aria-label="Terminar turno">Fin<small>de turno</small></button></sc-if>
 <sc-if value="{{waiting}}" hint-placeholder-val="{{ false }}"><div class="roll wait" role="status">{{status}}</div></sc-if>
 <button class="nb" type="button" onClick="{{openEstate}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M3 21V10l6-5 6 5v11zM15 21V8h6v13zM1 21h22"></path></svg><span class="lbl">Barrios</span></button>
@@ -721,7 +720,7 @@ class Component extends DCLogic {
   later(fn, ms) { const id = setTimeout(fn, ms); this.timers.push(id); return id; }
   refresh() { this.setState({ v: Date.now() + Math.random() }); if (this.net && this.net.host && this.g.screen !== 'pick') this.net.push(this.g); }
   you(k) { return !this.g.mp && k === 0; }
-  fresh() { return { fly: [], look: null, catching: false, drawN: 0, screen: 'pick', players: [], turn: 0, round: 1, owners: {}, houses: {}, phase: 'idle', dice: [1, 1], rolls: 0, log: [], market: [], bought: false, modal: null, def: null, dom: null, aura: null, act: null, cine: false, overtime: false, toast: null, focus: 0, deck: [], discard: [], plays: 0, commission: null, diceShow: false }; }
+  fresh() { return { fly: [], look: null, catching: false, drawN: 0, screen: 'pick', players: [], turn: 0, round: 1, owners: {}, houses: {}, phase: 'idle', dice: [1], rolls: 0, log: [], market: [], bought: false, modal: null, def: null, dom: null, aura: null, act: null, cine: false, overtime: false, toast: null, focus: 0, deck: [], discard: [], plays: 0, commission: null, diceShow: false }; }
   maxRounds() { return this.props.rounds ?? 8; }
   log(t) { this.g.log.unshift({ t }); this.g.log = this.g.log.slice(0, 2); }
   toast(t, to) { this.g.toastTo = to === undefined ? null : to; this.g.toast = t; this.refresh(); clearTimeout(this.toastT); this.toastT = this.later(() => { this.g.toast = null; this.refresh(); }, 2800); }
@@ -773,9 +772,9 @@ class Component extends DCLogic {
   botBuild(pi) { GROUPS.forEach((gr) => { let n = 0; while (n < 2 && this.buildTarget(pi, gr) !== null && this.g.players[pi].money - GR[gr].hc >= 6 && Math.random() < 0.7) { this.build(pi, gr); n += 1; } }); }
 
   rollDice(pi, cb) {
-    const g = this.g; g.diceBag = g.diceBag || {}; let bag = g.diceBag[pi]; if (!bag || !bag.length) { bag = []; for (let x = 1; x <= 6; x++) for (let y = 1; y <= 6; y++) bag.push([x, y]); bag = spread(shuf(bag), (d) => d[0] + d[1]); g.diceBag[pi] = bag; } const [a, b] = bag.pop();
-    g.dice = [a, b]; g.rolls += 1; g.phase = 'rolling'; g.diceShow = true; this.followOn(); this.refresh();
-    this.later(() => { this.log(`${this.nm(pi)} sacó ${a + b}`); cb(a + b); }, 1150);
+    const g = this.g; g.diceBag = g.diceBag || {}; let bag = g.diceBag[pi]; if (!bag || !bag.length) { bag = []; for (let x = 1; x <= 6; x++) { bag.push(x); bag.push(x); } bag = spread(shuf(bag), (d) => d); g.diceBag[pi] = bag; } const a = bag.pop(); const b = 0;
+    g.dice = [a]; g.rolls += 1; g.phase = 'rolling'; g.diceShow = true; this.followOn(); this.refresh();
+    this.later(() => { this.log(`${this.nm(pi)} sacó ${a}`); cb(a); }, 1150);
     this.later(() => { g.diceShow = false; this.refresh(); }, 2600);
   }
   move(pi, n, done) {
@@ -1088,7 +1087,7 @@ class Component extends DCLogic {
     const ranking = g.players.map((p, k) => ({ p, k, w: this.worth(k) })).sort((a, b) => b.w - a.w).map((x, i) => ({ pos: i + 1, name: x.p.name, img: IMG[x.p.roleId], worth: M(x.w), detail: `${this.role(x.p).name} · efectivo ${M(x.p.money)}` }));
     const win = ranking[0] || { name: '', img: '' };
     const dom = g.dom || { id: '', color: '#C13B1F', fg: '#EFE6D2', img: '', kicker: '', title: '', desc: '', result: '', glyphs: [], trapped: [] };
-    const [x1, y1] = FACE[g.dice[0]], [x2, y2] = FACE[g.dice[1]]; const sp = g.rolls * 720;
+    const [x1, y1] = FACE[g.dice[0]], [x2, y2] = FACE[1]; const sp = g.rolls * 720;
     const openS = (k) => () => { this.ui.sheet = this.ui.sheet === k ? null : k; this.refresh(); };
     return {
       isPick: g.screen === 'pick', isGame: g.screen === 'game', isEnd: g.screen === 'end',
@@ -1105,7 +1104,7 @@ class Component extends DCLogic {
       followMe: () => { this.followOn(); this.refresh(); },
       overview: () => { this.cam = { s: 0.6, px: 0, py: 0, follow: false, drag: null }; this.refresh(); },
       d1: `rotateX(${x1 + sp}deg) rotateY(${y1 + sp}deg)`, d2: `rotateX(${x2 + sp + 360}deg) rotateY(${y2 + sp}deg)`,
-      toss: g.rolls % 2 ? 'tossA' : 'tossB', diceOp: g.diceShow ? 1 : 0, diceLabel: `Dados: ${g.dice[0]} y ${g.dice[1]}`,
+      toss: g.rolls % 2 ? 'tossA' : 'tossB', diceOp: g.diceShow ? 1 : 0, diceLabel: `Dado: ${g.dice[0]}`,
       status,
       canDraw: human && g.phase === 'draw' && !busy, drawNow: () => { if (human && g.phase === 'draw') this.act('draw'); }, drawN: g.drawN || 2, fly: (g.fly || []).map((x) => ({ ...x, cls: x.pi === S ? 'me' : 'r' + (rivIdx.indexOf(x.pi) + 1) + ' back' })), handCls: g.catching ? 'catch' : '', pileCls: human && g.phase === 'draw' && !busy ? 'can' : '', canRoll: human && g.phase === 'roll' && !busy, canAct: human && g.phase === 'action' && !busy,
       waiting: !(human && (g.phase === 'roll' || g.phase === 'action' || g.phase === 'draw') && !busy),

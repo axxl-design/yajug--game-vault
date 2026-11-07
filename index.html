@@ -114,7 +114,7 @@ html{scroll-behavior:smooth}
 @keyframes tokB{0%,15%{transform:translate3d(0,0,0)}25%{transform:translate3d(0,-29px,40px)}35%{transform:translate3d(0,-58px,0)}45%{transform:translate3d(0,-87px,40px)}55%,100%{transform:translate3d(0,-116px,0)}}
 .dice{position:absolute;left:50%;top:34%;width:0;height:0;perspective:900px}
 .die{position:absolute;width:56px;height:56px;transform-style:preserve-3d}
-.die1{left:-74px;animation:roll1 5s cubic-bezier(.3,.7,.4,1) infinite}
+.die1{left:-28px;animation:roll1 5s cubic-bezier(.3,.7,.4,1) infinite}
 .die2{left:16px;animation:roll2 5s cubic-bezier(.3,.7,.4,1) infinite}
 .fc{position:absolute;inset:0;background-color:#EFE6D2;border:2px solid #14110F;border-radius:12px;background-repeat:no-repeat}
 .f1{transform:translateZ(28px);background-image:radial-gradient(circle at 50% 50%,#C13B1F 6px,transparent 7px)}
@@ -282,7 +282,7 @@ html{scroll-behavior:smooth}
 <svg class="ribbon ribA par-slow" viewBox="0 0 1400 320" preserveAspectRatio="none" style="top: 720px; height: 320px; z-index: 1" aria-hidden="true">
 <defs><path id="ribA" d="M-120,250 C200,70 460,60 720,170 S1160,300 1540,60"></path></defs>
 <use href="#ribA" stroke="#C13B1F" stroke-width="58" fill="none"></use>
-<text font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="26" fill="#EFE6D2" letter-spacing="1" dy="9" textLength="4800" lengthAdjust="spacing"><textPath href="#ribA" startOffset="0">YAJUGÁ · GAMES VAULT · TIRÁ LOS DADOS · YAJUGÁ · GAMES VAULT · TIRÁ LOS DADOS · YAJUGÁ · GAMES VAULT · TIRÁ LOS DADOS · YAJUGÁ · GAMES VAULT · TIRÁ LOS DADOS · YAJUGÁ · GAMES VAULT · TIRÁ LOS DADOS · YAJUGÁ · GAMES VAULT · TIRÁ LOS DADOS · YAJUGÁ · GAMES VAULT · TIRÁ LOS DADOS · YAJUGÁ · GAMES VAULT · TIRÁ LOS DADOS · <animate attributeName="startOffset" from="0" to="-1200" dur="24s" repeatCount="indefinite"></animate></textPath></text>
+<text font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="26" fill="#EFE6D2" letter-spacing="1" dy="9" textLength="4800" lengthAdjust="spacing"><textPath href="#ribA" startOffset="0">YAJUGÁ · GAMES VAULT · TIRÁ EL DADO · YAJUGÁ · GAMES VAULT · TIRÁ EL DADO · YAJUGÁ · GAMES VAULT · TIRÁ EL DADO · YAJUGÁ · GAMES VAULT · TIRÁ EL DADO · YAJUGÁ · GAMES VAULT · TIRÁ EL DADO · YAJUGÁ · GAMES VAULT · TIRÁ EL DADO · YAJUGÁ · GAMES VAULT · TIRÁ EL DADO · YAJUGÁ · GAMES VAULT · TIRÁ EL DADO · <animate attributeName="startOffset" from="0" to="-1200" dur="24s" repeatCount="indefinite"></animate></textPath></text>
 </svg>
 
 <div class="chip hide-sm" aria-hidden="true" style="left: 8%; top: 250px; width: 64px; height: 64px; animation-delay: -2s">
@@ -353,7 +353,7 @@ YAJUGÁ Dominio ya se puede jugar →
 <div class="featbox" style="display: flex; flex-wrap: wrap; gap: 56px 72px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 36px; padding: clamp(36px, 5.5vw, 80px)">
 <div class="rv-l featcol" style="flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column">
 <img src="/assets/dominio.png" alt="YAJUGÁ Dominio" style="width: 100%; max-width: 440px; height: auto">
-<p class="muted" style="margin: 40px 0 0; font-size: 18px; line-height: 1.75; max-width: 46ch">Tirá los dados, recorré el tablero y levantá tu imperio. Comprá ciudades, empresas y temáticas, robá cartas de acción, armá tu mano en el Mercado y cobrale a quien caiga en tus casillas.</p>
+<p class="muted" style="margin: 40px 0 0; font-size: 18px; line-height: 1.75; max-width: 46ch">Tirá el dado, recorré el tablero y levantá tu imperio. Comprá ciudades, empresas y temáticas, robá cartas de acción, armá tu mano en el Mercado y cobrale a quien caiga en tus casillas.</p>
 <div class="tagrow" style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 32px">
 <span class="tag" style="background: #C99022; color: #14110F">Ciudades</span>
 <span class="tag" style="background: #2A6E70">Empresas</span>
@@ -366,7 +366,7 @@ YAJUGÁ Dominio ya se puede jugar →
 </div>
 </div>
 <div class="rv-r" style="flex: 1 1 480px; min-width: 0; position: relative">
-<div class="iso" role="img" aria-label="Tablero isométrico de YAJUGÁ Dominio con edificios, dados lanzándose y fichas avanzando">
+<div class="iso" role="img" aria-label="Tablero isométrico de YAJUGÁ Dominio con edificios, un dado lanzándose y fichas avanzando">
 <div class="board">
 <div class="tl cor"></div>
 <div class="tl" style="--c: #C13B1F"><i></i><div class="fig"><svg viewBox="0 0 30 36"><rect x="2" y="12" width="11" height="24" fill="#C13B1F" stroke="#14110F" stroke-width="2"></rect><rect x="14" y="3" width="13" height="33" fill="#C13B1F" stroke="#14110F" stroke-width="2"></rect><rect x="18" y="8" width="5" height="3" fill="#EFE6D2"></rect><rect x="18" y="16" width="5" height="3" fill="#EFE6D2"></rect></svg></div></div>
@@ -397,10 +397,8 @@ YAJUGÁ Dominio ya se puede jugar →
 <div class="tok tokB"><b style="background: #2A6E70"></b></div>
 </div>
 <div class="dice">
-<div class="dshadow" style="left: -76px"></div>
-<div class="dshadow" style="left: 14px; animation-delay: .1s"></div>
+<div class="dshadow" style="left: -30px"></div>
 <div class="die die1"><div class="fc f1"></div><div class="fc f2"></div><div class="fc f3"></div><div class="fc f4"></div><div class="fc f5"></div><div class="fc f6"></div></div>
-<div class="die die2"><div class="fc f1"></div><div class="fc f2"></div><div class="fc f3"></div><div class="fc f4"></div><div class="fc f5"></div><div class="fc f6"></div></div>
 </div>
 <div class="mini hide-sm" aria-hidden="true" style="left: 0; bottom: 30px; background: #F6EEDC; color: #14110F; animation-delay: -2s; border: 1.5px solid #14110F">
 <img src="/assets/pl/p02.webp" alt="" style="display: block; width: 100%; height: 96px; object-fit: cover">
