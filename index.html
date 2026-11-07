@@ -227,6 +227,38 @@ html{scroll-behavior:smooth}
  .fan{bottom:-80px}
  .iso{height:420px;transform:scale(.72)}
 }
+.ley{position:relative;overflow:hidden;background:#141B33;color:#EFE6D2;background-image:radial-gradient(circle at 15% 10%,rgba(224,163,58,.18),transparent 45%),radial-gradient(circle at 90% 80%,rgba(193,59,31,.2),transparent 50%)}
+.ley-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:40px;align-items:start}
+.ley-feat{--c-l:color-mix(in srgb,var(--c) 55%,#F6EEDC);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:0;border-radius:32px;overflow:hidden;background:#0E1326;border:1px solid rgba(239,230,210,.14);box-shadow:0 40px 80px -30px rgba(0,0,0,.8)}
+.ley-por{position:relative;aspect-ratio:1;overflow:hidden;background:var(--c)}
+.ley-por img{width:100%;height:100%;object-fit:cover;display:block}
+.ley-num{position:absolute;left:18px;top:14px;font:800 15px 'Bricolage Grotesque';background:#14110F;color:#F6EEDC;padding:6px 12px;border-radius:999px}
+.ley-txt{padding:clamp(24px,3vw,40px);display:flex;flex-direction:column;justify-content:center;border-top:6px solid var(--c)}
+.ley-dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--c);margin-right:10px;vertical-align:1px;box-shadow:0 0 0 3px rgba(239,230,210,.2)}
+.ley-name{margin:14px 0 0;font-size:clamp(34px,3.6vw,54px);line-height:1}
+.ley-bio{margin:16px 0 0;font-size:16px;line-height:1.65;color:rgba(239,230,210,.82)}
+.ley-dom{margin-top:24px;padding:18px 20px;border-radius:20px;background:var(--c);color:#F6EEDC}
+.lk0 .ley-por img,.lk1 .ley-por img{animation:leyimg .7s cubic-bezier(.2,.8,.2,1)}
+.lk0 .ley-txt,.lk1 .ley-txt{animation:leytxt .6s cubic-bezier(.2,.8,.2,1)}
+.lk1 .ley-por img{animation-name:leyimg2}.lk1 .ley-txt{animation-name:leytxt2}
+@keyframes leyimg{from{transform:scale(1.15);filter:saturate(0)}}
+@keyframes leyimg2{from{transform:scale(1.15);filter:saturate(0)}}
+@keyframes leytxt{from{opacity:0;transform:translateY(16px)}}
+@keyframes leytxt2{from{opacity:0;transform:translateY(16px)}}
+.ley-thumbs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.ley-th{position:relative;padding:0;border:2px solid transparent;border-radius:18px;overflow:hidden;background:#0E1326;cursor:pointer;aspect-ratio:1;transition:transform .35s cubic-bezier(.2,.9,.3,1.3),border-color .25s}
+.ley-th img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.55) brightness(.8);transition:filter .3s}
+.ley-th span{position:absolute;left:0;right:0;bottom:0;padding:18px 8px 8px;font:700 12px/1.15 'DM Sans';color:#F6EEDC;text-align:center;background:linear-gradient(transparent,rgba(10,10,20,.9))}
+.ley-th:hover{transform:translateY(-4px)}
+.ley-th:hover img,.ley-th.on img{filter:none}
+.ley-th.on{border-color:var(--c);box-shadow:0 0 0 3px rgba(239,230,210,.25)}
+.ley-th:focus-visible{outline:3px solid #E0A33A;outline-offset:3px}
+.ley-epochs{margin-top:clamp(56px,6vw,88px);text-align:center}
+.ley-ep-row{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:20px}
+.ley-ep{display:flex;align-items:center;gap:10px;padding:10px 18px 10px 10px;border-radius:999px;background:var(--c);color:#F6EEDC;font:700 15px 'DM Sans'}
+.ley-ep b{font:800 12px 'Bricolage Grotesque';background:rgba(20,17,15,.35);padding:5px 9px;border-radius:999px}
+@media (max-width:1000px){.ley-grid{grid-template-columns:1fr}.ley-thumbs{grid-template-columns:repeat(6,minmax(0,1fr))}}
+@media (max-width:700px){.ley-feat{grid-template-columns:1fr}.ley-thumbs{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.ley-th span{font-size:10px;padding:14px 4px 6px}.ley-ep{font-size:13px}}
 @media (max-width:700px){
  .hero{min-height:960px !important;padding-top:130px !important}
  .heroh{font-size:10.6vw !important;letter-spacing:-.045em;margin-top:36px !important}
@@ -278,6 +310,7 @@ html{scroll-behavior:smooth}
 <a class="nav-a" href="#juegos">Juegos</a>
 <a class="nav-a" href="#dominio">Dominio</a>
 <a class="nav-a" href="#roles">Roles</a>
+<a class="nav-a" href="#leyendas">Leyendas</a>
 <a class="nav-a" href="#pronto">Próximamente</a>
 </div>
 <div class="nav-right" style="display: flex; align-items: center; gap: 10px">
@@ -606,7 +639,38 @@ YAJUGÁ Dominio ya se puede jugar →
 </section>
 
 <!-- COMING SOON -->
-<section id="pronto" class="sec" style="padding-top: 0">
+<!-- LEYENDAS -->
+<section id="leyendas" class="sec ley">
+<div class="wrap">
+<div class="sec-head rv">
+<div>
+<div class="eyebrow" style="color: #E0A33A">Juego 02 · Muy pronto</div>
+<h2 class="hd h2">YAJUGÁ <span class="serif" style="color: #E0A33A">Leyendas</span></h2>
+</div>
+<p class="lead" style="color: rgba(239,230,210,.78)">Once figuras que cambiaron la historia se sientan a la misma mesa. Comprá maravillas de cada época, armá tu imperio y activá el dominio de tu leyenda.</p>
+</div>
+<div class="ley-grid">
+<div class="ley-feat {{leyKey}}" style="--c: {{ley.c}}">
+<div class="ley-por"><img src="{{ley.img}}" alt="Retrato de {{ley.name}}"><span class="ley-num">{{leyN}}</span></div>
+<div class="ley-txt">
+<div class="eyebrow" style="color: var(--c-l)"><span class="ley-dot"></span>{{ley.ep}} · {{ley.yrs}}</div>
+<h3 class="hd ley-name">{{ley.name}}</h3>
+<p class="ley-bio">{{ley.bio}}</p>
+<div class="ley-dom"><div class="eyebrow" style="font-size: 11px; opacity: .75">Dominio</div><div class="hd" style="font-size: 26px; margin-top: 6px">{{ley.dom}}</div><p style="margin: 8px 0 0; font-size: 15px; line-height: 1.55; opacity: .85">{{ley.fx}}</p></div>
+</div>
+</div>
+<div class="ley-thumbs" role="list">
+<sc-for list="{{leyThumbs}}" as="t" hint-placeholder-count="11"><button class="ley-th {{t.cls}}" type="button" onClick="{{t.pick}}" style="--c: {{t.c}}" aria-label="Ver a {{t.name}}"><img src="{{t.img}}" alt=""><span>{{t.name}}</span></button></sc-for>
+</div>
+</div>
+<div class="ley-epochs rv">
+<div class="eyebrow" style="opacity: .7">El tablero viaja por seis épocas</div>
+<div class="ley-ep-row"><sc-for list="{{epocas}}" as="e" hint-placeholder-count="6"><div class="ley-ep" style="--c: {{e.c}}"><b>{{e.k}}</b>{{e.n}}</div></sc-for></div>
+</div>
+</div>
+</section>
+
+<section id="pronto" class="sec">
 <div class="wrap">
 <div class="sec-head rv">
 <div>
@@ -619,7 +683,7 @@ YAJUGÁ Dominio ya se puede jugar →
 <div class="lock lift rv-l" style="position: relative; overflow: hidden; background: #2E3D6E; border: 1px solid var(--line); border-radius: 28px; padding: 44px; min-height: 380px; display: flex; flex-direction: column; justify-content: space-between">
 <svg class="slowspin" aria-hidden="true" width="260" height="260" viewBox="0 0 100 100" style="position: absolute; right: -70px; top: -70px; opacity: .14"><circle cx="50" cy="50" r="44" fill="none" stroke="#EFE6D2" stroke-width="4"></circle><circle cx="50" cy="50" r="20" fill="none" stroke="#EFE6D2" stroke-width="4"></circle><path d="M50 6v24M50 70v24M6 50h24M70 50h24" stroke="#EFE6D2" stroke-width="4"></path></svg>
 <div class="shake" style="width: 56px; height: 56px; border-radius: 16px; background: #EFE6D2; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#14110F" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg></div>
-<div><div class="eyebrow" style="opacity: .8">Juego 02</div><h3 class="hd" style="margin: 14px 0 0; font-size: 40px">[Nombre del juego]</h3><p style="margin: 14px 0 0; font-size: 16px; line-height: 1.6; opacity: .8">[Una línea sobre el juego]</p></div>
+<div><div class="eyebrow" style="opacity: .8">Juego 02 · En camino</div><h3 class="hd" style="margin: 14px 0 0; font-size: 40px">YAJUGÁ Leyendas</h3><p style="margin: 14px 0 0; font-size: 16px; line-height: 1.6; opacity: .8">Once figuras de la historia, seis épocas y un dominio para cada leyenda.</p></div>
 </div>
 <div class="lock lift rv" style="position: relative; overflow: hidden; background: #2A6E70; border: 1px solid var(--line); border-radius: 28px; padding: 44px; min-height: 380px; display: flex; flex-direction: column; justify-content: space-between">
 <svg class="slowspin" aria-hidden="true" width="260" height="260" viewBox="0 0 100 100" style="position: absolute; right: -70px; top: -70px; opacity: .14"><circle cx="50" cy="50" r="44" fill="none" stroke="#EFE6D2" stroke-width="4"></circle><circle cx="50" cy="50" r="20" fill="none" stroke="#EFE6D2" stroke-width="4"></circle><path d="M50 6v24M50 70v24M6 50h24M70 50h24" stroke="#EFE6D2" stroke-width="4"></path></svg>
@@ -690,19 +754,37 @@ const RS = [
 ];
 const LABELS = ['Economía', 'Ataque', 'Defensa', 'Control'];
 
+const LEY = [
+  { id: 'alejandro', name: 'Alejandro Magno', yrs: '356–323 a.C.', ep: 'Mundo Clásico', c: '#2A6E70', img: '/assets/ley/alejandro.webp', bio: 'Rey de Macedonia y alumno de Aristóteles. En unos diez años conquistó desde Grecia hasta la India sin perder una batalla importante y fundó Alejandría.', dom: 'Falange Eterna', fx: 'Un muro de escudos rodea a los rivales: le conquistás a cada uno su lugar más barato.' },
+  { id: 'freud', name: 'Sigmund Freud', yrs: '1856–1939', ep: 'Era Moderna', c: '#2E3D6E', img: '/assets/ley/freud.webp', bio: 'Neurólogo austríaco y padre del psicoanálisis. Propuso que el inconsciente guía buena parte de lo que hacemos. Vivió en Viena y murió exiliado en Londres.', dom: 'Diván del Inconsciente', fx: 'Todo se vuelve un sueño: cada rival muestra su mano y le sacás una carta.' },
+  { id: 'gengis', name: 'Gengis Kan', yrs: 'c. 1162–1227', ep: 'Edad Media', c: '#6B7340', img: '/assets/ley/gengis.webp', bio: 'Unificó a las tribus mongolas y fundó el Imperio mongol, que llegó a ser el imperio continuo más grande de la historia.', dom: 'Estepa sin Fin', fx: 'La horda galopa por el tablero: cada rival te entrega el 20% de su efectivo.' },
+  { id: 'isabel', name: 'Isabel I', yrs: '1533–1603', ep: 'Era Imperial', c: '#C13B1F', img: '/assets/ley/isabel.webp', bio: 'Reina de Inglaterra por 44 años. En su reinado su país venció a la Armada Invencible y vivió una edad de oro del teatro y la exploración.', dom: 'Corte Dorada', fx: 'Todos se inclinan: durante una vuelta cada compra rival te paga tributo.' },
+  { id: 'leonardo', name: 'Leonardo da Vinci', yrs: '1452–1519', ep: 'Renacimiento', c: '#C8748A', img: '/assets/ley/leonardo.webp', bio: 'Pintor de La Gioconda y La última cena, e inventor que dibujó máquinas voladoras siglos antes de su tiempo.', dom: 'Taller de los Inventos', fx: 'Engranajes gigantes: te llevás una carta del Mercado y construís gratis.' },
+  { id: 'napoleon', name: 'Napoleón Bonaparte', yrs: '1769–1821', ep: 'Era Imperial', c: '#C13B1F', img: '/assets/ley/napoleon.webp', bio: 'Militar que llegó a emperador de Francia. Ganó batallas como Austerlitz, creó el Código Civil y terminó exiliado en Santa Elena.', dom: 'Sol de Austerlitz', fx: 'Duelo de dados contra cada rival: el que pierde entrega un lugar.' },
+  { id: 'newton', name: 'Isaac Newton', yrs: '1643–1727', ep: 'Era Moderna', c: '#2E3D6E', img: '/assets/ley/newton.webp', bio: 'Físico y matemático inglés. Formuló las leyes del movimiento y la gravitación universal, desarrolló el cálculo y estudió la luz.', dom: 'Gravedad Absoluta', fx: 'Todos caen como manzanas en tu lugar más caro y te pagan el alquiler.' },
+  { id: 'tesla', name: 'Nikola Tesla', yrs: '1856–1943', ep: 'Era Moderna', c: '#2E3D6E', img: '/assets/ley/tesla.webp', bio: 'Inventor pionero de la corriente alterna, que hoy alimenta casi toda la electricidad del mundo. Soñó con energía sin cables.', dom: 'Tormenta Eléctrica', fx: 'Rayos en el tablero: tus alquileres se duplican y los rivales pierden carga.' },
+  { id: 'mozart', name: 'W. A. Mozart', yrs: '1756–1791', ep: 'Era Imperial', c: '#C13B1F', img: '/assets/ley/mozart.webp', bio: 'Niño prodigio de Salzburgo que daba conciertos a los 6 años. Escribió más de 600 obras, como La flauta mágica.', dom: 'Gran Sinfonía', fx: 'Todos bailan a tu ritmo: cada rival paga $1M por carta en su mano.' },
+  { id: 'juana', name: 'Juana de Arco', yrs: 'c. 1412–1431', ep: 'Edad Media', c: '#6B7340', img: '/assets/ley/juana.webp', bio: 'Joven campesina que lideró al ejército francés y levantó el sitio de Orleans en 1429, en la Guerra de los Cien Años.', dom: 'Estandarte de Orleans', fx: 'Escudo de luz: durante una vuelta no pagás alquiler.' },
+  { id: 'ramses', name: 'Ramsés II', yrs: 'c. 1303–1213 a.C.', ep: 'Antiguo Egipto', c: '#C99022', img: '/assets/ley/ramses.webp', bio: 'Faraón que reinó 66 años. Levantó templos colosales como Abu Simbel y firmó uno de los primeros tratados de paz conocidos.', dom: 'Eternidad del Nilo', fx: 'El Nilo cruza la ciudad: tus lugares cobran un 50% más por dos vueltas.' }
+];
+const EPOCAS = [['Antiguo Egipto', '#C99022'], ['Mundo Clásico', '#2A6E70'], ['Edad Media', '#6B7340'], ['Renacimiento', '#C8748A'], ['Era Imperial', '#C13B1F'], ['Era Moderna', '#2E3D6E']];
 class Component extends DCLogic {
   constructor(props) {
     super(props);
     let t = 'dark';
     try { t = localStorage.getItem('yj-theme') || (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'); } catch (e) {}
-    this.state = { sel: 1, n: 0, theme: t };
+    this.state = { sel: 1, n: 0, theme: t, lsel: 0, ln: 0 };
   }
   go(i) { this.setState((s) => ({ sel: (i + RS.length) % RS.length, n: s.n + 1 })); }
   renderVals() {
     const r = RS[this.state.sel];
     const sel = { ...r, img: RIMG[r.id], stats: r.st.map((v, k) => ({ label: LABELS[k], v, w: (v / 5) * 100 + '%' })) };
+    const L = LEY[this.state.lsel || 0];
     return {
       sel,
+      ley: L, leyKey: 'lk' + ((this.state.ln || 0) % 2), leyN: String((this.state.lsel || 0) + 1).padStart(2, '0'),
+      leyThumbs: LEY.map((x, k) => ({ ...x, cls: k === (this.state.lsel || 0) ? 'on' : '', pick: () => this.setState({ lsel: k, ln: (this.state.ln || 0) + 1 }) })),
+      epocas: EPOCAS.map(([n, c], k) => ({ n, c, k: String(k + 1).padStart(2, '0') })),
       themeCls: this.state.theme === 'light' ? 'light' : '',
       isDark: this.state.theme !== 'light', isLight: this.state.theme === 'light',
       themeLabel: this.state.theme === 'light' ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro',
