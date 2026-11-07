@@ -410,8 +410,11 @@ a{color:#E0A33A}
 .dice{z-index:90 !important}
 @media (max-width:700px){.pav{width:46px}.pav-a{width:40px;height:40px}.pav-a svg{width:40px;height:40px}.pav-a img{inset:4px;width:32px;height:32px}.pstrip{min-height:48px;padding-right:8px;gap:2px}.hlogo{width:40px;height:40px}.hbtn{width:40px;height:40px}.rinfo{padding:5px 10px;min-height:40px}.note{top:calc(80px + env(safe-area-inset-top, 0px))}.hright{gap:4px}}
 @media (max-width:700px){.rinfo,.pchev{display:none !important}.rchip{padding:5px 12px;font-size:10px;letter-spacing:.12em}}
+@media (max-width:700px){.pstrip:has(.pav:nth-child(4)) .pav{width:41px}.pstrip:has(.pav:nth-child(4)) .pav-a{width:36px;height:36px}.pstrip:has(.pav:nth-child(4)) .pav-a svg{width:36px;height:36px}.pstrip:has(.pav:nth-child(4)) .pav-a img{inset:4px;width:28px;height:28px}.pstrip:has(.pav:nth-child(4)) .pav b{font-size:9.5px;padding:1px 4px}.pstrip:has(.pav:nth-child(5)) .pav{width:38px}}
 @media (max-width:360px){.hlogo{display:none}}
 .yj-coin{position:fixed;z-index:9999;width:24px;height:24px;margin:0;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#FFE7A6,#E0A33A 55%,#9C6A16);color:#5A3A08;font:800 12px/1 'Bricolage Grotesque',sans-serif;box-shadow:0 4px 10px rgba(0,0,0,.45),inset 0 0 0 2px rgba(255,240,200,.5);pointer-events:none}.yj-delta{position:fixed;z-index:9999;padding:3px 9px;border-radius:999px;font:800 14px 'Bricolage Grotesque',sans-serif;pointer-events:none;box-shadow:0 6px 14px rgba(0,0,0,.4);white-space:nowrap}.yj-delta.pos{background:#2F6B3A;color:#EFE6D2}.yj-delta.neg{background:#C13B1F;color:#EFE6D2}
+.solosel{display:flex;align-items:center;justify-content:center;gap:8px;margin:0 0 28px;flex-wrap:wrap}.solosel span{font-size:13px;opacity:.75;margin-right:6px}.solosel button{width:46px;height:46px;border-radius:50%;border:1px solid rgba(239,230,210,.25);background:transparent;color:#EFE6D2;font:800 17px "Bricolage Grotesque",sans-serif;cursor:pointer}.solosel button.on{background:#E0A33A;color:#14110F;border-color:#E0A33A}
+.botrow{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 16px;border-radius:18px;background:rgba(239,230,210,.06);border:1px dashed rgba(239,230,210,.22)}.botrow b{display:block;font-size:15px}.botrow span{font-size:12px;opacity:.65}.botctl{display:flex;align-items:center;gap:10px}.botctl b{min-width:22px;text-align:center;font:800 22px "Bricolage Grotesque",sans-serif}.botctl .iconbtn{width:44px;height:44px;font-size:20px}.botctl .iconbtn[disabled]{opacity:.3;pointer-events:none}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none !important;transition:none !important}}
 </style>
 
@@ -435,18 +438,20 @@ a{color:#E0A33A}
 </div>
 <sc-if value="{{netOk}}" hint-placeholder-val="{{ false }}">
 <div class="online">
-<div><div class="eyebrow" style="color: #E0A33A">Jugar con amigos</div><div class="hd" style="font-size: 28px; margin-top: 10px">Armá una sala online</div><p class="muted" style="margin: 10px 0 0; font-size: 15px; line-height: 1.6">De 2 a 4 jugadores. Si son 2, se suma la computadora.</p></div>
+<div><div class="eyebrow" style="color: #E0A33A">Jugar con amigos</div><div class="hd" style="font-size: 28px; margin-top: 10px">Armá una sala online</div><p class="muted" style="margin: 10px 0 0; font-size: 15px; line-height: 1.6">De 2 a 4 personas. Además podés sumar jugadores de la compu, hasta 5 en la mesa.</p></div>
 <label class="fld"><span>Tu nombre</span><input type="text" maxlength="16" placeholder="Ej: Axel" value="{{fName}}" onInput="{{onName}}"></label>
 <sc-if value="{{hasLast}}" hint-placeholder-val="{{ false }}"><button class="btn b-rust" type="button" onClick="{{rejoin}}">Volver a tu partida · {{lastCode}}</button></sc-if>
 <div class="onrow"><button class="btn b-rust" type="button" onClick="{{mkRoom}}">Crear sala</button></div>
 <div class="onrow"><label class="fld" style="flex: 1"><span>Código de sala</span><input type="text" maxlength="5" placeholder="ABCDE" value="{{fCode}}" onInput="{{onCode}}" style="text-transform: uppercase; letter-spacing: .2em"></label><button class="btn" type="button" onClick="{{joinRoom}}">Unirme</button></div>
 </div>
-<div class="eyebrow" style="text-align: center; margin: 0 0 24px; opacity: .7">O jugá solo contra la computadora: elegí tu rol</div>
+<div class="eyebrow" style="text-align: center; margin: 0 0 14px; opacity: .7">O jugá solo contra la computadora: elegí tu rol</div>
+<div class="solosel"><span>Rivales de la compu</span><sc-for list="{{soloOpts}}" as="o" hint-placeholder-count="4"><button class="{{o.cls}}" type="button" onClick="{{o.go}}" aria-label="{{o.n}} rivales">{{o.n}}</button></sc-for></div>
 </sc-if>
 <sc-if value="{{isLobby}}" hint-placeholder-val="{{ false }}">
 <div class="online lobby">
 <div style="text-align: center"><div class="eyebrow" style="color: #E0A33A">Sala · {{lob.count}}</div><div class="hd code">{{lob.code}}</div><button class="btn" type="button" onClick="{{copyLink}}">Copiar link de invitación</button><div class="muted" style="margin-top: 10px; font-size: 14px; word-break: break-all">{{lob.msg}}</div><div style="margin-top: 8px; color: #E8705A; font-weight: 700">{{lob.err}}</div></div>
 <div class="lplayers"><sc-for list="{{lobPlayers}}" as="lp" hint-placeholder-count="2"><div class="lp" style="--c: {{lp.color}}"><sc-if value="{{lp.hasImg}}" hint-placeholder-val="{{ false }}"><img src="{{lp.img}}" alt=""></sc-if><div><b>{{lp.name}}</b><span>{{lp.role}} <em>{{lp.host}}</em></span></div></div></sc-for></div>
+<div class="botrow"><div><b>Jugadores de la compu</b><span>{{lob.botTxt}}</span></div><div class="botctl"><sc-if value="{{lob.host}}" hint-placeholder-val="{{ false }}"><button class="iconbtn" type="button" onClick="{{botMinus}}" disabled="{{lob.minOff}}" aria-label="Quitar uno">−</button></sc-if><b>{{lob.bots}}</b><sc-if value="{{lob.host}}" hint-placeholder-val="{{ false }}"><button class="iconbtn" type="button" onClick="{{botPlus}}" disabled="{{lob.plusOff}}" aria-label="Sumar uno">+</button></sc-if></div></div>
 <div class="onrow" style="justify-content: center"><sc-if value="{{lob.host}}" hint-placeholder-val="{{ false }}"><button class="btn b-rust" type="button" onClick="{{startRoom}}" disabled="{{lob.startOff}}">{{lob.startTxt}}</button></sc-if><button class="btn" type="button" onClick="{{leaveRoom}}">Salir de la sala</button></div>
 <div class="eyebrow" style="text-align: center; opacity: .7">Elegí tu leyenda abajo · cada una solo una vez</div>
 </div>
@@ -923,9 +928,9 @@ class Component extends DCLogic {
   start(roleId) {
     this.clearAll();
     const g = this.fresh();
-    const others = ROLES.filter((r) => r.id !== roleId).map((r) => r.id).sort(() => Math.random() - 0.5).slice(0, 2);
+    const nR = Math.max(1, Math.min(4, this.ui.solo || 2)); const others = ROLES.filter((r) => r.id !== roleId).map((r) => r.id).sort(() => Math.random() - 0.5).slice(0, nR);
     const mk = (name, rid, bot) => ({ name, roleId: rid, bot, money: this.props.startMoney ?? 15, pos: 0, hand: [], charge: 0 });
-    g.players = [mk('Vos', roleId, false), mk('Rival 1', others[0], true), mk('Rival 2', others[1], true)];
+    g.players = [mk('Vos', roleId, false)].concat(others.map((rid, k) => mk(`Rival ${k + 1}`, rid, true)));
     this.g = g;
     g.players.forEach((p, k) => { if (k > 0) this.give(k, RULES.start); });
     g.market = []; for (let k = 0; k < 3; k++) g.market.push(this.drawDeal(g.market.map((c) => c.id)));
@@ -1122,7 +1127,7 @@ class Component extends DCLogic {
     if (c.id === 'hotel') { const t = this.owned(pi).find((i) => this.lvl(i) === 4); g.houses[t] = 5; msg = `maravilla en ${TILES[t].n}`; }
     if (c.id === 'embargo') { const t = this.rivalsOf(pi).sort((x, y) => g.players[y].hand.length - g.players[x].hand.length)[0]; if (this.nilo(t, pi)) msg = 'cancelado'; else { const o = g.players[t]; let n = 0; while (n < 2 && o.hand.length) { this.toDiscard(o.hand.splice(rnd(o.hand.length), 1)[0]); n += 1; } msg = `${this.nm(t)} pierde ${n} cartas`; } }
     if (c.id === 'apagon') { msg = this.rivalsOf(pi).map((k) => (this.nilo(k, pi) ? `${this.nm(k)} se niega` : ((g.players[k].charge = Math.max(0, g.players[k].charge - 30)), `${this.nm(k)} −30%`))).join(' · '); }
-    if (c.id === 'subsidio') { p.money += 2; msg = '+2 oro'; }
+    if (c.id === 'subsidio') { p.money += 2; this.emit({ k: 'pay', from: null, to: pi, amt: 2 }); this.txn.push({ from: null, to: pi, amt: 2 }); msg = '+2 oro'; }
     if (c.id === 'foco') { this.addCharge(pi, 40); msg = 'dominio +40%'; }
     if (c.id === 'paso' && g.players[pi].bot) msg = `roba ${this.give(pi, 2)} cartas`;
     if (c.id === 'paso' && !g.players[pi].bot) { const ph = g.phase; this.flyDraw(pi, 2, () => { this.followOn(); this.refresh(); }); g.phase = ph; msg = 'roba 2 cartas del mazo'; }
@@ -1395,8 +1400,10 @@ class Component extends DCLogic {
       onCode: (e) => { this.form.code = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 5); this.refresh(); },
       mkRoom: () => window.YJNet.create(this, this.form.name || 'Anfitrión'),
       joinRoom: () => { if (this.form.code.length >= 4) window.YJNet.join(this, this.form.code, this.form.name || 'Jugador'); },
-      lob: L ? { code: L.code, link: L.link, host: !!L.host, err: L.err || '', msg: L.msg || '', canStart: !!L.host && L.players.length >= 2 && L.players.every((x) => x.role), startOff: !(L.host && L.players.length >= 2 && L.players.every((x) => x.role)), count: `${L.players.length}/4 jugadores`, startTxt: L.players.length < 2 ? 'Esperando amigos…' : L.players.every((x) => x.role) ? (L.players.length < 3 ? 'Empezar (se suma 1 compu)' : 'Empezar partida') : 'Todos deben elegir rol' } : { code: '', link: '', host: false, err: '', msg: '', canStart: false, count: '', startTxt: '' },
-      lobPlayers: L ? L.players.map((x) => { const r = ROLES.find((q) => q.id === x.role); return { name: x.name + (x.id === L.me ? ' (vos)' : ''), host: x.host ? 'Anfitrión' : '', role: r ? r.name : 'Eligiendo rol…', img: r ? IMG[r.id] : '', color: r ? r.color : '#3E3731', hasImg: !!r }; }) : [],
+      lob: L ? (() => { const hu = L.players.length; const bots = L.bots == null ? Math.max(0, 3 - hu) : L.bots; const tot = hu + bots; const ok = !!L.host && hu >= 1 && tot >= 2 && L.players.every((x) => x.role); return { code: L.code, link: L.link, host: !!L.host, err: L.err || '', msg: L.msg || '', canStart: ok, startOff: !ok, count: `${hu} ${hu === 1 ? 'persona' : 'personas'} · ${bots} compu`, bots: String(bots), botTxt: `En la mesa: ${tot} de 5`, minOff: bots <= Math.max(0, 2 - hu), plusOff: tot >= 5, startTxt: !L.players.every((x) => x.role) ? 'Todos deben elegir rol' : tot < 2 ? 'Sumá un jugador' : `Empezar · ${tot} jugadores` }; })() : { code: '', link: '', host: false, err: '', msg: '', canStart: false, count: '', startTxt: '', bots: '0', botTxt: '' },
+      botPlus: () => { window.YJNet.setBots(this, 1); }, botMinus: () => { window.YJNet.setBots(this, -1); },
+      soloOpts: [1, 2, 3, 4].map((n) => ({ n, cls: (this.ui.solo || 2) === n ? 'on' : '', go: () => { this.ui.solo = n; this.refresh(); } })),
+      lobPlayers: L ? L.players.map((x) => { const r = ROLES.find((q) => q.id === x.role); return { name: x.name + (x.id === L.me ? ' (vos)' : ''), host: x.host ? 'Anfitrión' : '', role: r ? r.name : 'Eligiendo rol…', img: r ? IMG[r.id] : '', color: r ? r.color : '#3E3731', hasImg: !!r }; }).concat(Array.from({ length: L.bots == null ? Math.max(0, 3 - L.players.length) : L.bots }, (_, k) => ({ name: `Compu ${k + 1}`, host: 'IA', role: 'Rol al azar', img: '', color: '#3E3731', hasImg: false }))) : [],
       copyLink: () => { try { navigator.clipboard.writeText(L.link); L.msg = '¡Link copiado! Mandáselo a tus amigos.'; } catch (e) { L.msg = L.link; } this.refresh(); },
       startRoom: () => { if (L && L.host) window.YJNet.start(this); },
       leaveRoom: () => { window.YJNet.leave(this, true); this.lobby = null; this.refresh(); }

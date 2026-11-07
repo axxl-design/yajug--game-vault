@@ -41,8 +41,9 @@
 
     function lobbyOut() {
       var players = net.roster.map(function (x) { return { id: x.id, name: x.name, host: x.id === leaderLobby(), role: net.roles[x.id] || '' }; });
-      comp.lobby.players = players; comp.lobby.host = net.host;
-      ch.send({ type: 'broadcast', event: 'lobby', payload: { players: players } });
+      var hu = players.length; if (net.bots == null) net.bots = Math.max(0, 3 - hu); net.bots = Math.max(Math.max(0, 2 - hu), Math.min(5 - hu, net.bots));
+      comp.lobby.players = players; comp.lobby.host = net.host; comp.lobby.bots = net.bots;
+      ch.send({ type: 'broadcast', event: 'lobby', payload: { players: players, bots: net.bots } });
       comp.refresh();
     }
     net.lobbyOut = lobbyOut;
@@ -87,7 +88,7 @@
     });
     ch.on('broadcast', { event: 'lobby' }, function (m) {
       if (net.host || !comp.lobby || net.inGame) return;
-      comp.lobby.players = m.payload.players; comp.lobby.host = false;
+      comp.lobby.players = m.payload.players; comp.lobby.host = false; if (m.payload.bots != null) comp.lobby.bots = m.payload.bots;
       comp.lobby.msg = m.payload.players.some(function (p) { return p.id === myId; }) ? 'Ya estás en la sala. Elegí tu rol y esperá a que empiece.' : 'La sala está llena (máximo 4).';
       comp.refresh();
     });
@@ -107,7 +108,7 @@
       if (net.host || comp.seat === null || comp.seat === undefined || !comp.lobby) return;
       var ng = m.payload.g; if ((ng.ver || 0) < (comp.g.ver || 0) && comp.g.screen === 'game') return;
       var prev = comp.g; comp.g = ng;
-      if (prev.phase !== ng.phase && ['rolling', 'moving', 'draw', 'drawing', 'bot'].indexOf(ng.phase) >= 0) { comp.cam.follow = true; comp.cam.px = 0; comp.cam.py = 0; if (comp.cam.s < 0.5) comp.cam.s = comp.mob() ? 0.62 : 1; }
+      if (prev.phase !== ng.phase && ['rolling', 'moving', 'draw', 'drawing', 'bot'].indexOf(ng.phase) >= 0) { if (!comp.cam.free) { comp.cam.follow = true; comp.cam.px = 0; comp.cam.py = 0; if (!comp.cam.zoomed && comp.cam.s < 0.5) comp.cam.s = comp.mob() ? 0.62 : 1; } }
       comp.refresh();
     });
     ch.on('broadcast', { event: 'act' }, function (m) {
@@ -155,12 +156,15 @@
       var net = comp.net; if (!net || !net.host) return;
       var used = [], list = [], seats = {};
       net.roster.forEach(function (x, k) { var r = net.roles[x.id]; used.push(r); seats[x.id] = k; list.push({ name: x.name, roleId: r }); });
-      var ids = ['banquero', 'estafador', 'abogado', 'corredor', 'coleccionista', 'arquitecto'].filter(function (r) { return used.indexOf(r) < 0; });
-      while (list.length < 3) list.push({ name: 'Compu ' + list.length, roleId: ids.shift(), bot: true });
+      var all = (typeof ROLES !== 'undefined' ? ROLES : []).map(function (r) { return r.id; });
+      var ids = all.filter(function (r) { return used.indexOf(r) < 0; }).sort(function () { return Math.random() - 0.5; });
+      var nb = net.bots == null ? Math.max(0, 3 - list.length) : net.bots; nb = Math.min(nb, 5 - list.length, ids.length);
+      for (var b = 0; b < nb; b++) list.push({ name: 'Compu ' + (b + 1), roleId: ids.shift(), bot: true });
       net.seats = seats; net.inGame = true; comp.seat = 0;
       net.ch.send({ type: 'broadcast', event: 'start', payload: { seats: seats } });
       comp.startMP(list);
     },
+    setBots: function (comp, d) { var net = comp.net; if (!net || !net.host || net.inGame) return; net.bots = (net.bots == null ? 1 : net.bots) + d; net.lobbyOut(); },
     leave: leave
   };
   try {
