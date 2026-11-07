@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>¿Quién soy? · YAJUGÁ</title>
+<meta name="description" content="YAJUGÁ Games Vault: juegos de mesa online. Jugá YAJUGÁ Dominio con tus amigos.">
+<meta name="theme-color" content="#14110F">
+<link rel="icon" href="/assets/fav.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&amp;family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&amp;family=Instrument+Serif:ital@0;1&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#14110F}
+.q{position:relative;min-height:100%;height:100%;overflow:auto;background:#14110F;color:#EFE6D2;font-family:'DM Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;background-image:radial-gradient(circle at 12% 8%,rgba(224,163,58,.14),transparent 40%),radial-gradient(circle at 90% 90%,rgba(42,110,112,.18),transparent 45%)}
+.hd{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;letter-spacing:-.03em}
+.serif{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;letter-spacing:-.01em}
+.eyebrow{font-weight:700;font-size:12px;letter-spacing:.2em;text-transform:uppercase}
+.wrap{max-width:1080px;margin:0 auto;padding:clamp(20px,4vw,48px) clamp(16px,3vw,32px) 64px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.home{display:flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:50%;background:#1E1915;border:1px solid rgba(239,230,210,.16)}
+.home img{height:26px}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;background:#1E1915;border:1px solid rgba(239,230,210,.16);font:700 14px 'DM Sans';white-space:nowrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 26px;border-radius:999px;border:1.5px solid rgba(239,230,210,.3);background:transparent;color:#EFE6D2;font:700 16px 'DM Sans';cursor:pointer;white-space:nowrap;transition:transform .3s cubic-bezier(.2,.9,.3,1.4),background .2s}
+.btn:hover{transform:translateY(-2px)}
+.btn.rust{background:#C13B1F;border-color:#C13B1F;box-shadow:0 6px 0 #7E2412}
+.btn.gold{background:#E0A33A;border-color:#E0A33A;color:#14110F;box-shadow:0 6px 0 #8A6213}
+.btn:focus-visible,.cat:focus-visible,.opt:focus-visible{outline:3px solid #E0A33A;outline-offset:3px}
+.title{margin:clamp(36px,6vw,72px) 0 0;text-align:center;font-size:clamp(48px,9vw,120px);line-height:.95}
+.sub{margin:18px auto 0;max-width:560px;text-align:center;font-size:18px;line-height:1.6;color:rgba(239,230,210,.75)}
+.cats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:48px}
+.cat{position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:flex-start;gap:14px;padding:24px;min-height:190px;border-radius:26px;border:0;background:var(--c);color:var(--fg);text-align:left;font:inherit;cursor:pointer;transition:transform .45s cubic-bezier(.2,.9,.3,1.3),box-shadow .3s;box-shadow:0 20px 40px -24px rgba(0,0,0,.8)}
+.cat:hover{transform:translateY(-6px) rotate(-1deg);box-shadow:0 30px 50px -20px rgba(0,0,0,.9)}
+.cat .ic{width:52px;height:52px;border-radius:16px;background:rgba(20,17,15,.22);display:flex;align-items:center;justify-content:center}
+.cat b{font:800 28px/1 'Bricolage Grotesque';letter-spacing:-.02em;margin-top:auto}
+.cat span{font-size:14px;opacity:.85}
+.cat .big{position:absolute;right:-14px;bottom:-34px;font:800 130px/1 'Bricolage Grotesque';opacity:.12}
+.how{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:40px}
+.how div{padding:20px;border-radius:20px;background:#1E1915;border:1px solid rgba(239,230,210,.12);font-size:15px;line-height:1.55;color:rgba(239,230,210,.8)}
+.how b{display:block;margin-bottom:6px;color:#E0A33A;font:800 16px 'Bricolage Grotesque'}
+.bar{height:10px;border-radius:99px;background:rgba(239,230,210,.12);overflow:hidden;margin-top:18px}
+.bar i{display:block;height:100%;background:#E0A33A;border-radius:99px;transition:width .6s cubic-bezier(.2,.9,.3,1.2)}
+.stage{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:28px;margin-top:28px;align-items:start}
+.who{position:relative;padding:28px;border-radius:30px;background:var(--c);color:var(--fg);overflow:hidden;min-height:420px;box-shadow:0 30px 60px -30px rgba(0,0,0,.9)}
+.who .qm{position:absolute;right:-20px;top:-60px;font:800 280px/1 'Bricolage Grotesque';opacity:.12;pointer-events:none}
+.who h2{margin:10px 0 0;font-size:clamp(34px,4.4vw,56px);line-height:1}
+.clues{display:flex;flex-direction:column;gap:12px;margin-top:24px;position:relative}
+.clue{display:flex;gap:14px;align-items:flex-start;padding:16px 18px;border-radius:18px;background:#F6EEDC;color:#14110F;font-size:17px;line-height:1.5;box-shadow:0 6px 0 rgba(20,17,15,.25);animation:deal .6s cubic-bezier(.2,.9,.3,1.3) both}
+.clue em{flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:#14110F;color:#F6EEDC;font:800 14px 'Bricolage Grotesque';font-style:normal}
+.clue.locked{background:rgba(20,17,15,.22);color:inherit;box-shadow:none;border:2px dashed rgba(20,17,15,.3);animation:none;opacity:.8}
+.clue.locked em{background:rgba(20,17,15,.3)}
+@keyframes deal{from{opacity:0;transform:translateY(-30px) rotateX(60deg) scale(.9)}}
+.pts{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:22px}
+.pts strong{font:800 40px/1 'Bricolage Grotesque'}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.opt{min-height:64px;padding:12px 16px;border-radius:18px;border:1.5px solid rgba(239,230,210,.22);background:#1E1915;color:#EFE6D2;font:700 16px/1.25 'DM Sans';text-align:center;cursor:pointer;transition:transform .3s cubic-bezier(.2,.9,.3,1.4),background .2s,border-color .2s}
+.opt:hover{transform:translateY(-3px);border-color:#E0A33A}
+.opt.bad{background:#3A1A14;border-color:#C13B1F;color:rgba(239,230,210,.5);text-decoration:line-through;pointer-events:none;animation:shake .4s}
+.opt.good{background:#2A6E70;border-color:#7FD1C7;color:#F6EEDC;animation:pop .5s cubic-bezier(.2,.9,.3,1.6)}
+.opt.off{opacity:.35;pointer-events:none}
+@keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+@keyframes pop{50%{transform:scale(1.08)}}
+.side{display:flex;flex-direction:column;gap:16px}
+.reveal{padding:24px;border-radius:24px;background:#1E1915;border:2px solid var(--rc);animation:deal .6s cubic-bezier(.2,.9,.3,1.3)}
+.reveal .hd{font-size:34px;margin-top:8px;line-height:1.05}
+.stamp{display:inline-block;padding:6px 14px;border-radius:999px;background:var(--rc);color:#F6EEDC;font:800 13px 'Bricolage Grotesque';letter-spacing:.06em;text-transform:uppercase}
+.conf{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.conf i{position:absolute;top:-20px;width:10px;height:16px;border-radius:3px;animation:fall 1.6s cubic-bezier(.3,.6,.4,1) forwards}
+@keyframes fall{to{transform:translateY(560px) rotate(540deg);opacity:0}}
+.end{text-align:center;margin-top:clamp(36px,6vw,72px)}
+.end .score{font:800 clamp(90px,16vw,180px)/1 'Bricolage Grotesque';color:#E0A33A;letter-spacing:-.05em}
+.rows{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:36px;text-align:left}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-radius:16px;background:#1E1915;border:1px solid rgba(239,230,210,.12);font-weight:700;font-size:15px}
+.row span{font:800 14px 'Bricolage Grotesque';color:var(--rc)}
+.fade{animation:fadeup .6s cubic-bezier(.2,.8,.2,1) both}
+@keyframes fadeup{from{opacity:0;transform:translateY(24px)}}
+@media (max-width:820px){.stage{grid-template-columns:1fr}.who{min-height:0}.opts{grid-template-columns:1fr 1fr}.opt{min-height:56px;font-size:15px}}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
+</style>
+
+<style>html,body{margin:0;padding:0}html,body{background:#14110F}</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/x-tpl" id="tpl">
+
+<div class="q">
+<div class="wrap">
+<div class="top">
+<a class="home" href="Main.dc.html" aria-label="Volver a YAJUGÁ"><img src="/assets/iso.png" alt=""></a>
+<sc-if value="{{isPlay}}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end"><span class="pill">{{roundTxt}}</span><span class="pill" style="color: #E0A33A">{{score}} pts</span><sc-if value="{{hasStreak}}" hint-placeholder-val="{{ false }}"><span class="pill" style="background: #C13B1F; border-color: #C13B1F">Racha x{{streak}}</span></sc-if></div></sc-if>
+<sc-if value="{{notPlay}}" hint-placeholder-val="{{ true }}"><span class="pill">YAJUGÁ · Juego 03</span></sc-if>
+</div>
+
+<!-- HOME -->
+<sc-if value="{{isHome}}" hint-placeholder-val="{{ true }}">
+<div class="fade">
+<div class="eyebrow" style="text-align: center; color: #E0A33A; margin-top: 48px">10 rondas · 4 pistas · 6 opciones</div>
+<h1 class="hd title">¿Quién <span class="serif" style="color: #E0A33A">soy?</span></h1>
+<p class="sub">Las pistas aparecen de la más difícil a la más fácil. Cuanto antes adivines, más puntos. Elegí una categoría.</p>
+<div class="cats">
+<sc-for list="{{cats}}" as="c" hint-placeholder-count="7">
+<button class="cat" type="button" onClick="{{c.go}}" style="--c: {{c.color}}; --fg: {{c.fg}}"><span class="ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{c.icon}}"></path></svg></span><b>{{c.name}}</b><span>{{c.desc}}</span><i class="big" aria-hidden="true">?</i></button>
+</sc-for>
+</div>
+<div class="how">
+<div><b>1. Leé la pista</b>Arrancás con la más difícil. Si la sabés, arriesgá enseguida: vale 100 puntos.</div>
+<div><b>2. Pedí otra si dudás</b>Cada pista nueva baja el premio: 100, 75, 50 y 25 puntos.</div>
+<div><b>3. Cuidado con errar</b>Si elegís mal, se tacha esa opción y se revela la siguiente pista.</div>
+<div><b>4. Hacé racha</b>Acertar seguido suma 10 puntos extra por cada acierto de la racha.</div>
+</div>
+</div>
+</sc-if>
+
+<!-- PLAY -->
+<sc-if value="{{isPlay}}" hint-placeholder-val="{{ false }}">
+<div class="bar"><i style="width: {{progress}}"></i></div>
+<div class="stage">
+<div class="who" style="--c: {{cur.color}}; --fg: {{cur.fg}}">
+<div class="qm" aria-hidden="true">?</div>
+<div class="eyebrow" style="opacity: .8">{{cur.cat}}</div>
+<h2 class="hd">{{cur.prompt}}</h2>
+<div class="clues {{dealKey}}">
+<sc-for list="{{clues}}" as="k" hint-placeholder-count="4">
+<div class="clue {{k.cls}}"><em>{{k.n}}</em><span>{{k.t}}</span></div>
+</sc-for>
+</div>
+<div class="pts"><div><div class="eyebrow" style="opacity: .75">Premio si acertás ahora</div><strong>{{potTxt}}</strong></div>
+<sc-if value="{{canMore}}" hint-placeholder-val="{{ true }}"><button class="btn" type="button" onClick="{{more}}" style="border-color: currentColor; color: inherit">Otra pista</button></sc-if>
+</div>
+<sc-if value="{{showConf}}" hint-placeholder-val="{{ false }}"><div class="conf" aria-hidden="true"><sc-for list="{{conf}}" as="f" hint-placeholder-count="0"><i style="left: {{f.x}}%; background: {{f.c}}; animation-delay: {{f.d}}s"></i></sc-for></div></sc-if>
+</div>
+<div class="side">
+<div class="eyebrow" style="opacity: .7">{{askTxt}}</div>
+<div class="opts">
+<sc-for list="{{opts}}" as="o" hint-placeholder-count="6">
+<button class="opt {{o.cls}}" type="button" onClick="{{o.pick}}">{{o.t}}</button>
+</sc-for>
+</div>
+<sc-if value="{{done}}" hint-placeholder-val="{{ false }}">
+<div class="reveal" style="--rc: {{rv.c}}">
+<span class="stamp">{{rv.stamp}}</span>
+<div class="hd">{{rv.name}}</div>
+<p style="margin: 10px 0 0; font-size: 15px; line-height: 1.6; color: rgba(239,230,210,.8)">{{rv.txt}}</p>
+<button class="btn gold" type="button" onClick="{{next}}" style="margin-top: 18px; width: 100%">{{nextTxt}}</button>
+</div>
+</sc-if>
+</div>
+</div>
+</sc-if>
+
+<!-- END -->
+<sc-if value="{{isEnd}}" hint-placeholder-val="{{ false }}">
+<div class="end fade">
+<div class="eyebrow" style="color: #E0A33A">{{endCat}} · {{hits}} de 10 aciertos</div>
+<div class="score">{{score}}</div>
+<div class="hd" style="font-size: clamp(30px, 5vw, 52px); margin-top: 6px">{{rank}}</div>
+<p class="sub">{{rankTxt}}</p>
+<div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 28px">
+<button class="btn rust" type="button" onClick="{{again}}">Jugar otra vez</button>
+<button class="btn" type="button" onClick="{{share}}">{{shareTxt}}</button>
+<button class="btn" type="button" onClick="{{toHome}}">Cambiar categoría</button>
+</div>
+<div class="rows">
+<sc-for list="{{log}}" as="r" hint-placeholder-count="10">
+<div class="row" style="--rc: {{r.c}}">{{r.name}}<span>{{r.pts}}</span></div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+</div>
+</div>
+</script>
+<script src="https://cdn.jsdelivr.net/npm/morphdom@2.7.4/dist/morphdom-umd.min.js"></script>
+<script src="/dc.js"></script>
+
+<script>
+
+const CATS = [
+  { id: 'historia', name: 'Historia', desc: 'Reyes, líderes y revolucionarios', color: '#C13B1F', fg: '#F6EEDC', icon: 'M4 21h16M6 21V10M10 21V10M14 21V10M18 21V10M3 10l9-6 9 6' },
+  { id: 'naturaleza', name: 'Naturaleza', desc: 'Animales y plantas del planeta', color: '#6B7340', fg: '#F6EEDC', icon: 'M5 21c0-9 5-15 15-16-1 10-7 15-15 16zM5 21l8-8' },
+  { id: 'pop', name: 'Cultura pop', desc: 'Personajes de cine, series y juegos', color: '#C8748A', fg: '#14110F', icon: 'M7 4v16l13-8z' },
+  { id: 'deportes', name: 'Deportes', desc: 'Leyendas de la cancha y la pista', color: '#2A6E70', fg: '#F6EEDC', icon: 'M12 3a9 9 0 100 18 9 9 0 000-18zM3.5 9h17M3.5 15h17M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18' },
+  { id: 'ciencia', name: 'Ciencia', desc: 'Mentes que cambiaron el mundo', color: '#2E3D6E', fg: '#F6EEDC', icon: 'M9 3h6M10 3v6l-5 9a2 2 0 002 3h10a2 2 0 002-3l-5-9V3' },
+  { id: 'geo', name: 'Geografía', desc: 'Lugares, ríos y maravillas', color: '#C99022', fg: '#14110F', icon: 'M12 21s-7-6.5-7-12a7 7 0 0114 0c0 5.5-7 12-7 12zM12 11a2 2 0 100-4 2 2 0 000 4' },
+  { id: 'mix', name: 'Mezcla', desc: 'Un poco de todo, como una previa', color: '#E0A33A', fg: '#14110F', icon: 'M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5' }
+];
+const Q = {
+  historia: [
+    ['Cleopatra', 'Hablaba varios idiomas y fui la primera de mi dinastía en aprender egipcio.', 'Tuve hijos con dos de los romanos más poderosos de mi época.', 'Fui la última reina del Egipto ptolemaico.', 'Cuenta la leyenda que morí por la mordedura de un áspid.'],
+    ['Cristóbal Colón', 'Pasé años pidiendo apoyo en distintas cortes para mi viaje.', 'Navegaba buscando una ruta a Asia por el oeste.', 'Mis barcos fueron la Niña, la Pinta y la Santa María.', 'En 1492 llegué a América.'],
+    ['Simón Bolívar', 'Nací en Caracas en 1783.', 'Crucé los Andes con mi ejército para sorprender a los realistas.', 'Un país de Sudamérica lleva mi nombre.', 'Me llaman El Libertador.'],
+    ['Mahatma Gandhi', 'Estudié derecho en Londres y trabajé como abogado en Sudáfrica.', 'Encabecé una larga marcha para hacer sal del mar.', 'Defendí la resistencia sin violencia.', 'Lideré la independencia de la India.'],
+    ['Nelson Mandela', 'Mi nombre de clan era Madiba.', 'Pasé 27 años en prisión.', 'Recibí el Premio Nobel de la Paz en 1993.', 'Fui el primer presidente negro de Sudáfrica.'],
+    ['Julio César', 'Fui secuestrado por piratas cuando era joven.', 'Crucé el río Rubicón con mis tropas.', 'Un mes del calendario lleva mi nombre.', 'Me asesinaron en los idus de marzo, en Roma.'],
+    ['Francisco Solano López', 'Fui ministro de Guerra antes de gobernar.', 'Me nombraron general cuando tenía apenas 18 años.', 'Morí en Cerro Corá en 1870.', 'Fui el presidente de Paraguay en la Guerra de la Triple Alianza.'],
+    ['Martin Luther King', 'Fui pastor bautista en Alabama.', 'Lideré el boicot a los autobuses de Montgomery.', 'Recibí el Nobel de la Paz en 1964.', 'Mi discurso más famoso empieza con "Tengo un sueño".']
+  ],
+  naturaleza: [
+    ['Ballena azul', 'Mi corazón puede pesar tanto como un auto pequeño.', 'Me alimento casi solo de kril.', 'Vivo en todos los océanos.', 'Soy el animal más grande que existió.'],
+    ['Guepardo', 'No puedo rugir: maúllo y ronroneo.', 'Tengo manchas negras como lágrimas bajo los ojos.', 'Vivo sobre todo en las sabanas de África.', 'Soy el animal terrestre más rápido.'],
+    ['Pulpo', 'Tengo tres corazones y sangre azul.', 'Puedo cambiar de color y de textura para esconderme.', 'Lanzo tinta para escapar.', 'Tengo ocho brazos con ventosas.'],
+    ['Panda gigante', 'Tengo una especie de pulgar extra en las patas delanteras.', 'Paso hasta 14 horas al día comiendo.', 'Vivo en las montañas de China.', 'Soy blanco y negro y como bambú.'],
+    ['Colibrí', 'Mi corazón puede latir más de mil veces por minuto.', 'Soy la única ave que vuela hacia atrás.', 'Bato las alas tan rápido que zumban.', 'Soy un pájaro diminuto que toma néctar de las flores.'],
+    ['Yaguareté', 'Tengo la mordida más fuerte de los felinos de América.', 'A diferencia de otros felinos, me encanta nadar.', 'Mis manchas tienen un punto en el centro.', 'Soy el felino más grande de América, también llamado jaguar.'],
+    ['Abeja', 'Me comunico con mis compañeras bailando.', 'Vivo en una colonia con una sola reina.', 'Gracias a mí se polinizan muchísimos cultivos.', 'Fabrico miel y cera.'],
+    ['Camaleón', 'Mi lengua puede medir más que mi cuerpo.', 'Puedo mover cada ojo por separado.', 'Cambio de color según la temperatura y el ánimo.', 'Soy un reptil famoso por camuflarme.']
+  ],
+  pop: [
+    ['Harry Potter', 'Viví años en una alacena debajo de la escalera.', 'Mi mejor amigo tiene muchos hermanos pelirrojos.', 'Juego de buscador en un deporte sobre escobas.', 'Soy un mago con una cicatriz en forma de rayo.'],
+    ['Pikachu', 'Mi nombre junta el sonido de una chispa y el chillido de un ratón.', 'Viajo fuera de mi esfera, al hombro de mi entrenador.', 'Soy de tipo eléctrico.', 'Soy un ratón amarillo con mejillas rojas.'],
+    ['Mario', 'Al principio mi oficio era carpintero.', 'Tengo un hermano más alto vestido de verde.', 'Los hongos me hacen crecer.', 'Soy un plomero con gorra roja y una M.'],
+    ['Spider-Man', 'Trabajé sacando fotos para un diario.', 'Mi tía me crió en Queens.', 'Una picadura me dio mis poderes.', 'Lanzo telarañas y me balanceo entre edificios.'],
+    ['Shrek', 'Tengo un cartel en mi pantano para que nadie se acerque.', 'Mi mejor amigo es un burro que no para de hablar.', 'Me casé con una princesa.', 'Soy un ogro verde.'],
+    ['Bob Esponja', 'Mi jefe es un cangrejo muy tacaño.', 'Mi vecino toca el clarinete y no me soporta.', 'Vivo en una piña bajo el mar.', 'Soy una esponja amarilla y cuadrada.'],
+    ['Darth Vader', 'De chico fui esclavo y corría carreras de vainas.', 'Perdí una pelea en un planeta de lava.', 'Respiro con un sonido muy reconocible.', 'Le dije a un joven Skywalker que yo era su padre.'],
+    ['Goku', 'Me crió un anciano que me encontró en el bosque.', 'De chico tenía cola de mono.', 'Mi técnica favorita se carga juntando las manos.', 'Soy un saiyajin que busca las esferas del dragón.']
+  ],
+  deportes: [
+    ['Lionel Messi', 'De chico tuve un tratamiento por un problema de crecimiento.', 'Me fui a vivir a España a los 13 años.', 'Gané más Balones de Oro que nadie.', 'Fui campeón del mundo con Argentina en 2022.'],
+    ['Pelé', 'Mi nombre real era Edson.', 'Debuté en un Mundial con apenas 17 años.', 'Gané tres Copas del Mundo.', 'Me llamaban O Rei del fútbol brasileño.'],
+    ['Diego Maradona', 'Crecí en Villa Fiorito.', 'Fui ídolo absoluto del Napoli.', 'Hice "el gol del siglo" contra Inglaterra.', 'Fui campeón del mundo con Argentina en 1986.'],
+    ['Usain Bolt', 'Soy de Jamaica.', 'Mi festejo es apuntar al cielo como un rayo.', 'Gané ocho medallas de oro olímpicas.', 'Soy el hombre más rápido de la historia en 100 metros.'],
+    ['Serena Williams', 'Mi hermana también fue número uno del mundo.', 'Gané un Grand Slam estando embarazada.', 'Sumé 23 títulos de Grand Slam en individuales.', 'Soy una de las mejores tenistas de la historia.'],
+    ['Michael Jordan', 'En la secundaria no quedé en el equipo principal de mi escuela.', 'Me retiré un tiempo para jugar al béisbol.', 'Gané seis anillos con los Chicago Bulls.', 'Mi silueta saltando es el logo de unas zapatillas.'],
+    ['Rafael Nadal', 'Soy diestro, pero juego con la izquierda.', 'Me crié en Mallorca.', 'Gané Roland Garros 14 veces.', 'Me llaman el rey de la arcilla.'],
+    ['Cristiano Ronaldo', 'Nací en la isla de Madeira.', 'Brillé en el Manchester United y el Real Madrid.', 'Soy el máximo goleador de la historia de las selecciones.', 'Mi festejo es un salto con un grito de "¡Siu!".']
+  ],
+  ciencia: [
+    ['Albert Einstein', 'Trabajé en una oficina de patentes en Suiza.', 'Gané el Nobel por el efecto fotoeléctrico.', 'Soy famoso por la fórmula E = mc².', 'Creé la teoría de la relatividad.'],
+    ['Marie Curie', 'Nací en Varsovia y estudié en París.', 'Descubrí dos elementos, uno con el nombre de mi país.', 'Fui la primera persona en ganar dos Premios Nobel.', 'Investigué la radiactividad junto a mi esposo Pierre.'],
+    ['Charles Darwin', 'Viajé cinco años en el barco HMS Beagle.', 'Me fascinaron los pinzones y las tortugas de Galápagos.', 'Escribí El origen de las especies.', 'Propuse la evolución por selección natural.'],
+    ['Galileo Galilei', 'Estudié el movimiento de los péndulos.', 'Descubrí cuatro lunas de Júpiter.', 'Me juzgaron por defender que la Tierra gira alrededor del Sol.', 'Mejoré el telescopio para observar el cielo.'],
+    ['Ada Lovelace', 'Mi padre fue un poeta muy famoso.', 'Trabajé con Charles Babbage en su máquina analítica.', 'Imaginé que las máquinas podrían hacer más que calcular.', 'Me consideran la primera programadora de la historia.'],
+    ['Stephen Hawking', 'Nací justo 300 años después de la muerte de Galileo.', 'Hablaba con una voz sintetizada por computadora.', 'Estudié los agujeros negros.', 'Escribí Breve historia del tiempo.'],
+    ['Louis Pasteur', 'Fui químico francés del siglo XIX.', 'Demostré que los microbios no aparecen de la nada.', 'Creé la vacuna contra la rabia.', 'Un proceso para conservar la leche lleva mi nombre.'],
+    ['Nicolás Copérnico', 'Fui astrónomo y canónigo en Polonia.', 'Mi gran libro se publicó el año de mi muerte, en 1543.', 'Puse al Sol en el centro del universo conocido.', 'Propuse el modelo heliocéntrico.']
+  ],
+  geo: [
+    ['Monte Everest', 'Los sherpas me llaman Chomolungma.', 'Estoy en la frontera entre Nepal y China.', 'La primera vez que me escalaron fue en 1953.', 'Soy la montaña más alta del mundo.'],
+    ['Río Amazonas', 'Nazco en los Andes del Perú.', 'Cruzo casi todo Brasil hasta el Atlántico.', 'Llevo más agua que cualquier otro río.', 'Atravieso la selva tropical más grande del mundo.'],
+    ['Cataratas del Iguazú', 'Mi nombre en guaraní significa "agua grande".', 'Tengo cerca de 275 saltos.', 'Mi salto más famoso es la Garganta del Diablo.', 'Estoy en la frontera entre Argentina y Brasil.'],
+    ['Desierto del Sahara', 'Hace miles de años fui verde y tuve lagos.', 'Ocupo partes de más de diez países.', 'Mis dunas pueden medir cientos de metros.', 'Soy el desierto cálido más grande del mundo.'],
+    ['Antártida', 'No tengo población permanente.', 'Ahí se midió la temperatura más baja de la Tierra.', 'Guardo la mayor parte del hielo del planeta.', 'Soy el continente del Polo Sur.'],
+    ['Japón', 'Estoy formado por miles de islas.', 'Tengo un tren bala desde 1964.', 'Mi montaña más famosa es el monte Fuji.', 'Me llaman el país del sol naciente.'],
+    ['Australia', 'Soy a la vez un país y un continente.', 'Tengo el arrecife de coral más grande del mundo.', 'En mi territorio viven canguros y koalas.', 'Mi ciudad más famosa tiene una ópera con forma de velas.'],
+    ['Lago Titicaca', 'Ahí viven pueblos en islas flotantes de totora.', 'Estoy a más de 3800 metros de altura.', 'Me comparten Perú y Bolivia.', 'Soy el lago navegable más alto del mundo.']
+  ]
+};
+const PTS = [100, 75, 50, 25];
+const PROMPT = { historia: '¿Quién soy?', naturaleza: '¿Qué soy?', pop: '¿Quién soy?', deportes: '¿Quién soy?', ciencia: '¿Quién soy?', geo: '¿Qué lugar soy?' };
+function shuf(a) { a = a.slice(); for (let k = a.length - 1; k > 0; k--) { const j = Math.floor(Math.random() * (k + 1)); [a[k], a[j]] = [a[j], a[k]]; } return a; }
+class Component extends DCLogic {
+  constructor(props) { super(props); this.g = { screen: 'home' }; this.state = { v: 0 }; }
+  refresh() { this.setState({ v: Date.now() + Math.random() }); }
+  start(cid) {
+    const pool = cid === 'mix' ? Object.keys(Q).flatMap((k) => Q[k].map((e) => ({ e, k }))) : Q[cid].map((e) => ({ e, k: cid }));
+    const deck = shuf(pool).slice(0, 10);
+    this.g = { screen: 'play', cid, deck, i: 0, score: 0, streak: 0, hits: 0, log: [], shared: false };
+    this.round();
+  }
+  round() {
+    const g = this.g; const { e, k } = g.deck[g.i];
+    const others = shuf(Q[k].filter((x) => x[0] !== e[0]).map((x) => x[0])).slice(0, 5);
+    g.r = { e, k, shown: 1, opts: shuf([e[0], ...others]), bad: [], done: false, won: false, pts: 0, deal: 0 };
+    this.refresh();
+  }
+  more() { const r = this.g.r; if (r.done || r.shown >= 4) return; r.shown += 1; r.deal += 1; this.refresh(); }
+  pick(t) {
+    const g = this.g; const r = g.r; if (r.done || r.bad.includes(t)) return;
+    if (t === r.e[0]) {
+      r.done = true; r.won = true; g.streak += 1; g.hits += 1;
+      r.pts = PTS[r.shown - 1] + (g.streak > 1 ? (g.streak - 1) * 10 : 0); g.score += r.pts;
+    } else {
+      r.bad.push(t); g.streak = 0;
+      if (r.shown < 4) { r.shown += 1; r.deal += 1; } else { r.done = true; r.won = false; }
+    }
+    if (r.done) g.log.push({ name: r.e[0], pts: r.won ? '+' + r.pts : '0', c: r.won ? '#7FD1C7' : '#E8705A' });
+    this.refresh();
+  }
+  next() { const g = this.g; if (g.i >= 9) { g.screen = 'end'; this.refresh(); return; } g.i += 1; this.round(); }
+  renderVals() {
+    const g = this.g; const r = g.r; const cat = CATS.find((c) => c.id === (r ? r.k : g.cid)) || CATS[0];
+    const base = {
+      isHome: g.screen === 'home', isPlay: g.screen === 'play', isEnd: g.screen === 'end', notPlay: g.screen !== 'play',
+      cats: CATS.map((c) => ({ ...c, go: () => this.start(c.id) })),
+      score: g.score || 0, streak: g.streak || 0, hasStreak: (g.streak || 0) > 1
+    };
+    if (g.screen === 'play' && r) {
+      const clues = r.e.slice(1).map((t, k) => ({ n: k + 1, t: k < r.shown ? t : 'Pista bloqueada', cls: k < r.shown ? '' : 'locked' }));
+      Object.assign(base, {
+        roundTxt: `Ronda ${g.i + 1}/10`, progress: (g.i / 10) * 100 + '%',
+        cur: { color: cat.color, fg: cat.fg, cat: cat.name, prompt: PROMPT[r.k] },
+        clues, dealKey: 'd' + r.deal,
+        potTxt: r.done ? (r.won ? `+${r.pts}` : '0') : `${PTS[r.shown - 1]} pts`,
+        canMore: !r.done && r.shown < 4, more: () => this.more(),
+        askTxt: r.done ? 'La respuesta era' : 'Elegí tu respuesta',
+        opts: r.opts.map((t) => ({ t, cls: r.done ? (t === r.e[0] ? 'good' : 'off') : r.bad.includes(t) ? 'bad' : '', pick: () => this.pick(t) })),
+        done: r.done,
+        rv: { c: r.won ? '#2A6E70' : '#C13B1F', stamp: r.won ? (r.shown === 1 ? '¡Con la primera pista!' : '¡Correcto!') : 'Esta vez no', name: r.e[0], txt: r.e[4] },
+        next: () => this.next(), nextTxt: g.i >= 9 ? 'Ver resultado' : 'Siguiente',
+        showConf: r.done && r.won,
+        conf: r.done && r.won ? Array.from({ length: 26 }, (_, k) => ({ x: Math.round(Math.random() * 100), c: ['#E0A33A', '#F6EEDC', '#C13B1F', '#7FD1C7'][k % 4], d: (Math.random() * 0.4).toFixed(2) })) : []
+      });
+    }
+    if (g.screen === 'end') {
+      const s = g.score;
+      const [rank, rankTxt] = s >= 900 ? ['Mente legendaria', 'Adivinaste casi todo con muy pocas pistas. Nadie te gana en una previa.'] : s >= 650 ? ['Erudito', 'Sabés un montón. Un par de pistas menos y llegás a la cima.'] : s >= 400 ? ['Curioso de primera', 'Buen nivel. Probá otra categoría o volvé a jugar esta.'] : ['Aprendiz', 'Todos empiezan por algún lado. Cada ronda trae personajes distintos.'];
+      Object.assign(base, {
+        endCat: (CATS.find((c) => c.id === g.cid) || {}).name || '', hits: g.hits, rank, rankTxt, log: g.log,
+        again: () => this.start(g.cid), toHome: () => { this.g = { screen: 'home' }; this.refresh(); },
+        shareTxt: g.shared ? '¡Copiado!' : 'Copiar resultado',
+        share: () => { const t = `Hice ${s} puntos (${g.hits}/10) en ¿Quién soy? de YAJUGÁ, categoría ${(CATS.find((c) => c.id === g.cid) || {}).name}. ¿Me superás? https://yajuga.vercel.app/adivina`; try { navigator.clipboard.writeText(t); } catch (e) {} g.shared = true; this.refresh(); }
+      });
+    }
+    return base;
+  }
+}
+
+DCBoot(Component,'tpl');
+</script>
+</body>
+</html>
