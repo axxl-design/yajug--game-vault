@@ -229,16 +229,6 @@ html{scroll-behavior:smooth}
 @keyframes domp{from{opacity:1}to{opacity:0}}
 @media (max-width:900px){
  .nav-links,.hide-sm{display:none !important}
- .fan-c{width:158px;left:-79px}
- .fan{bottom:90px}
- .fan-c:nth-child(1),.fan-c:nth-child(4){display:none}
- .fan-c:nth-child(2){transform:translateX(-112px) translateY(14px) rotate(-10deg) !important}
- .fan-c:nth-child(3){transform:translateX(112px) translateY(14px) rotate(10deg) !important}
- .fan-c:nth-child(5){transform:translateY(-24px) scale(1.1) !important}
- .fan-c .gc-head{font-size:10px;padding:6px 9px 4px}.fan-c .gc-head img{height:12px}
- .fan-c .gc-art{margin:0 5px}
- .fan-c .gc-name{font-size:13px;margin:-12px 8px 0;padding:5px 6px;line-height:1.1}
- .fan-c .gc-foot{padding:6px 8px 10px}.fan-c .gc-foot .k{font-size:7px}.fan-c .gc-foot .v{font-size:12px}
  .rv-l,.rv-r{animation-name:rv}
  .iso{height:420px;transform:scale(.72)}
 }
@@ -302,7 +292,7 @@ html{scroll-behavior:smooth}
 @media (max-width:900px){.pgrid{grid-template-columns:1fr;gap:24px}.pcard-wrap{min-height:360px}.pstats{grid-template-columns:1fr 1fr}}
 @media (max-width:700px){.nw{font-size:12vw !important}.ptabs{width:100%}.ptab{flex:1;justify-content:center;padding:0 10px}}
 @media (max-width:700px){
- .hero{min-height:1040px !important;padding-top:130px !important}
+ .hero{min-height:880px !important;padding-top:130px !important}
  .heroh{font-size:10.6vw !important;letter-spacing:-.045em;margin-top:36px !important}
  .herop{font-size:16px !important;line-height:1.6 !important;margin-top:22px !important;max-width:340px !important}
  .navbar{display:grid !important;grid-template-columns:1fr auto 1fr;align-items:center}
@@ -310,16 +300,10 @@ html{scroll-behavior:smooth}
  .logo-link{grid-column:2;grid-row:1;justify-self:center}
  .theme-btn{grid-column:1;grid-row:1;justify-self:start}
  .nav-right .btn{grid-column:3;grid-row:1;justify-self:end;white-space:nowrap;padding:0 16px !important;min-height:44px !important;font-size:14px !important}
- .fan-c:nth-child(1),.fan-c:nth-child(4){display:none !important}
- .fan-c:nth-child(2){transform:translateX(-100px) translateY(18px) rotate(-9deg) !important}
- .fan-c:nth-child(3){transform:translateX(100px) translateY(18px) rotate(9deg) !important}
- .fan-c:nth-child(5){transform:translateY(-20px) scale(1.1) !important}
- .fan-c{width:140px !important;left:-70px !important}
- .fan{bottom:70px !important}.fan.par{animation:none !important}
- .ribB{display:none}
- .ribbon{animation:none !important;width:1400px;left:50%;margin-left:-700px;transform-origin:50% 50%}
- .ribA{top:600px !important;transform:scale(.58)}
- .ribB{top:740px !important;transform:scale(.62)}
+ .fan{bottom:6px !important;transform:scale(.6) !important;transform-origin:0 0;animation:none !important}
+ .ribbon{top:auto !important;width:1400px;left:50%;margin-left:-700px;transform-origin:50% 100%;transform:scale(.6) !important;animation:none !important}
+ .ribA{bottom:150px}
+ .ribB{display:block !important;bottom:22px}
  .h2{font-size:12vw !important;line-height:1.02}
  .bigh{font-size:13.5vw !important}
  .lead{font-size:16px;max-width:none}
@@ -355,7 +339,7 @@ html{scroll-behavior:smooth}
 <div class="nav-right" style="display: flex; align-items: center; gap: 10px">
 <button class="icon-btn theme-btn" type="button" onClick="{{toggleTheme}}" aria-label="{{themeLabel}}"><sc-if value="{{isDark}}" hint-placeholder-val="{{ true }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5"></circle><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"></path></svg></sc-if><sc-if value="{{isLight}}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"></path></svg></sc-if></button>
 <button class="icon-btn hide-sm" type="button" aria-label="Buscar juegos"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg></button>
-<a class="btn btn-rust" href="Jugar.dc.html" style="min-height: 48px; padding: 0 24px; font-size: 15px">Jugar ahora</a>
+<a class="btn btn-rust" href="#juegos" style="min-height: 48px; padding: 0 24px; font-size: 15px">Jugar ahora</a>
 </div>
 </nav>
 </header>

@@ -1,3 +1,4 @@
+function RW(v){return v.replace(/^Main\.dc\.html/, '/').replace(/^Jugar\.dc\.html/, '/jugar').replace(/^Adivina\.dc\.html/, '/adivina').replace(/^Leyendas\.dc\.html/, '/leyendas');}
 /* YAJUGÁ mini runtime: renders the Design Component templates as a normal web page. */
 (function () {
   var HOLE = /\{\{([^}]+)\}\}/g;
@@ -40,13 +41,13 @@
         if (one) { var fn = look(scope, one[1]); if (typeof fn === 'function') o2 += ' data-on-' + name.slice(2).toLowerCase() + '="' + (H.push(fn) - 1) + '"'; }
         continue;
       }
-      if (name === 'href') val = val.replace(/^Main\.dc\.html/, '/').replace(/^Jugar\.dc\.html/, '/jugar').replace(/^Adivina\.dc\.html/, '/adivina').replace(/^Leyendas\.dc\.html/, '/leyendas');
       if (one) {
         var v = look(scope, one[1]);
         if (v === false || v == null) { if (BOOL[name]) continue; v = ''; }
         if (v === true) { o2 += ' ' + name; continue; }
+        if (name === 'href') v = RW(String(v));
         o2 += ' ' + name + '="' + esc(v) + '"';
-      } else o2 += ' ' + name + '="' + interp(val, scope) + '"';
+      } else o2 += ' ' + name + '="' + (name === 'href' ? RW(interp(val, scope)) : interp(val, scope)) + '"';
     }
     o2 += '>';
     if (VOID[tag]) return o2;

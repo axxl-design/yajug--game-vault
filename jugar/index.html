@@ -32,6 +32,8 @@ a{color:#E0A33A}
 .b-rust{background:#C13B1F;border-color:#C13B1F;box-shadow:0 2px 0 #7A2412,0 18px 30px -16px rgba(193,59,31,.8)}
 .b-rust:hover{background:#C13B1F;color:#EFE6D2;box-shadow:0 6px 0 #7A2412}
 /* ===== STAGE / CAMERA (2D) ===== */
+.g,.g *{touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+.stage,.stage *{touch-action:none}
 .stage{position:absolute;inset:0;overflow:hidden;cursor:grab;touch-action:none;background:#D9C9AA;background-image:radial-gradient(circle at 50% 50%,rgba(255,248,234,.5),transparent 60%),linear-gradient(rgba(20,17,15,.06) 2px,transparent 2px),linear-gradient(90deg,rgba(20,17,15,.06) 2px,transparent 2px);background-size:auto,120px 120px,120px 120px}
 .stage::after{content:'';position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 220px rgba(20,17,15,.55)}
 .stage.dragging{cursor:grabbing}
@@ -331,6 +333,85 @@ a{color:#E0A33A}
 .buyrow{width:100%}.buyrow .btn{min-width:0 !important;flex:1;padding:0 16px}
 .sheet{padding:22px 16px !important}
 }
+
+/* --- HUD compacto --- */
+.hud2{flex-direction:column;align-items:stretch;gap:8px}
+.hrow{display:flex;align-items:center;gap:8px;pointer-events:auto}
+.hlogo{width:44px;height:44px;flex:none}
+.pstrip{pointer-events:auto;display:flex;align-items:center;gap:4px;padding:4px 10px 4px 4px;cursor:pointer;color:#EFE6D2;font:inherit;min-height:52px}
+.pav{position:relative;display:flex;flex-direction:column;align-items:center;width:52px}
+.pav-a{position:relative;width:44px;height:44px;transition:transform .35s cubic-bezier(.2,.9,.3,1.4)}
+.pav-a svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.pav-a img{position:absolute;inset:5px;width:34px;height:34px;border-radius:50%;object-fit:cover}
+.pav b{margin-top:-6px;position:relative;z-index:1;padding:1px 6px;border-radius:999px;background:#14110F;border:1px solid rgba(239,230,210,.2);font:800 11px 'Bricolage Grotesque',sans-serif;white-space:nowrap}
+.pav.turn .pav-a{transform:scale(1.08)}
+.pav.turn .pav-a::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:2px solid #E0A33A;animation:turnp 1.6s ease-in-out infinite}
+.pav.me b{background:var(--c);color:#14110F;border-color:transparent}
+.pav.away{opacity:.45}
+@keyframes turnp{50%{transform:scale(1.12);opacity:.4}}
+.pchev{display:flex;opacity:.6;margin-left:2px}
+.hright{margin-left:auto;display:flex;align-items:center;gap:6px}
+.rinfo{flex-direction:column;align-items:center;gap:0;padding:6px 12px;color:#EFE6D2;font:inherit;cursor:pointer;min-height:44px;justify-content:center}
+.rinfo b{font:800 14px 'Bricolage Grotesque',sans-serif;line-height:1}
+.rinfo span{font-size:10px;letter-spacing:.1em;opacity:.75;margin-top:3px;font-weight:700}
+.hbtn{position:relative;width:44px;height:44px}
+.hbadge{position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:#C13B1F;color:#EFE6D2;font:800 10px/18px 'DM Sans',sans-serif;font-style:normal}
+.hchips{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;pointer-events:none}
+.hpanel{pointer-events:auto;align-self:flex-start;width:min(420px,100%);padding:14px;border-radius:24px;background:rgba(20,17,15,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(239,230,210,.16);box-shadow:0 30px 60px -20px rgba(0,0,0,.8);animation:hpin .35s cubic-bezier(.2,.9,.3,1.2) both;transform-origin:30% 0}
+@keyframes hpin{from{opacity:0;transform:translateY(-10px) scale(.96)}}
+.hp-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:2px 4px 10px;border-bottom:1px solid rgba(239,230,210,.1);margin-bottom:6px}
+.hp-head b{font:800 16px 'Bricolage Grotesque',sans-serif}.hp-head span{font-size:11px;opacity:.7;text-align:right}
+.hp-row{display:flex;align-items:center;gap:12px;padding:10px 6px;border-radius:16px}
+.hp-row.turn{background:rgba(224,163,58,.12)}
+.hp-row img{width:44px;height:44px;border-radius:50%;object-fit:cover;border:3px solid var(--c);flex:none}
+.hp-id{flex:1;min-width:0}.hp-id b{display:block;font-size:15px}.hp-id span{font-size:12px;opacity:.65}
+.hp-bar{margin-top:6px;height:5px;border-radius:3px;background:rgba(239,230,210,.12);overflow:hidden}.hp-bar i{display:block;height:100%;background:var(--c);border-radius:3px}
+.hp-num{text-align:right}.hp-num b{display:block;font:800 18px 'Bricolage Grotesque',sans-serif}.hp-num span{display:block;font-size:11px;opacity:.65;white-space:nowrap}
+.hp-close{width:100%;margin-top:8px;min-height:44px}
+.unclean{position:absolute;top:calc(12px + env(safe-area-inset-top, 0px));right:12px;z-index:30;width:46px;height:46px}
+.g.clean .camctl{display:none}
+/* --- avisos --- */
+.note{position:absolute;left:50%;top:calc(96px + env(safe-area-inset-top, 0px));z-index:72;width:min(440px,calc(100% - 24px));transform:translateX(-50%);padding:14px 16px 16px;border-radius:22px;background:#EFE6D2;color:#14110F;box-shadow:0 24px 50px -14px rgba(0,0,0,.6);overflow:hidden;cursor:pointer;animation:ntin .45s cubic-bezier(.2,.9,.3,1.25) both;transition:opacity .25s}
+.note.mine{box-shadow:0 0 0 3px #E0A33A,0 24px 50px -14px rgba(0,0,0,.6)}
+.note.hush{opacity:0;pointer-events:none}
+.g.clean .note{top:calc(70px + env(safe-area-inset-top, 0px))}
+@keyframes ntin{from{opacity:0;transform:translate(-50%,-16px) scale(.94)}}
+.nt-head{display:flex;align-items:center;gap:12px}
+.nt-ic{width:40px;height:40px;flex:none;border-radius:12px;display:grid;place-items:center;background:#14110F;color:#E0A33A;font:800 18px 'Bricolage Grotesque',sans-serif}
+.nt-head small{display:block;font-size:11px;font-weight:700;letter-spacing:.06em;opacity:.65}
+.nt-head b{display:block;font:800 17px/1.15 'Bricolage Grotesque',sans-serif}
+.nt-gain{margin-left:auto;padding:6px 12px;border-radius:999px;font:800 16px 'Bricolage Grotesque',sans-serif;white-space:nowrap;animation:gainp .7s .25s cubic-bezier(.2,.9,.3,1.6) both}
+.nt-gain.pos{background:#2F6B3A;color:#EFE6D2}.nt-gain.neg{background:#C13B1F;color:#EFE6D2}
+@keyframes gainp{from{transform:scale(.3);opacity:0}}
+.nt-rows{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.nt-row{display:flex;align-items:center;gap:10px;padding:6px 10px 6px 6px;border-radius:14px;background:rgba(20,17,15,.07);animation:rowin .4s cubic-bezier(.2,.9,.3,1.2) both}
+.nt-row:nth-child(2){animation-delay:.12s}.nt-row:nth-child(3){animation-delay:.24s}.nt-row:nth-child(4){animation-delay:.36s}
+@keyframes rowin{from{opacity:0;transform:translateX(-14px)}}
+.nt-row img{width:30px;height:30px;border-radius:50%;object-fit:cover;border:2px solid var(--c)}
+.nt-row span{flex:1;font-weight:700;font-size:14px}
+.nt-row em{font-style:normal;font:800 14px 'Bricolage Grotesque',sans-serif;padding:3px 10px;border-radius:999px;white-space:nowrap}
+.nt-row.paid em{background:#C13B1F;color:#EFE6D2}.nt-row.got em{background:#2F6B3A;color:#EFE6D2}.nt-row.no em{background:#14110F;color:#E0A33A}.nt-row.zero em{background:rgba(20,17,15,.12)}
+.nt-text{margin:10px 0 0;font-size:13px;line-height:1.45;opacity:.75}
+.nt-toast{margin:0;font-weight:700;font-size:15px;line-height:1.4;text-align:center;padding:2px 4px}
+.nt-bar{position:absolute;left:0;bottom:0;height:4px;width:100%;background:#E0A33A;transform-origin:0 50%;animation:ntbar linear both}
+@keyframes ntbar{from{transform:scaleX(1)}to{transform:scaleX(0)}}
+/* --- historial --- */
+.hist-bg{position:absolute;inset:0;z-index:74;background:rgba(10,8,7,.45);animation:fade .3s both}
+.hist{position:absolute;top:0;right:0;bottom:0;z-index:75;width:min(400px,88%);display:flex;flex-direction:column;background:#1A1512;border-left:1px solid rgba(239,230,210,.14);box-shadow:-30px 0 60px rgba(0,0,0,.5);padding-top:env(safe-area-inset-top, 0px);animation:histin .4s cubic-bezier(.2,.9,.3,1) both}
+@keyframes histin{from{transform:translateX(100%)}}
+@keyframes fade{from{opacity:0}}
+.hist-h{display:flex;justify-content:space-between;align-items:center;padding:18px 18px 12px;border-bottom:1px solid rgba(239,230,210,.1)}.hist-h b{font-size:22px}
+.hist-l{flex:1;overflow-y:auto;padding:10px 12px calc(20px + env(safe-area-inset-bottom, 0px));-webkit-overflow-scrolling:touch}
+.hx{display:flex;gap:10px;align-items:flex-start;padding:10px 8px;border-bottom:1px solid rgba(239,230,210,.06)}
+.hx-r{flex:none;font-size:10px;font-weight:800;letter-spacing:.08em;opacity:.45;padding-top:4px;width:24px}
+.hx-ic{flex:none;width:28px;height:28px;overflow:hidden;font-size:11px !important;border-radius:9px;display:grid;place-items:center;background:rgba(239,230,210,.08);color:#E0A33A;font:800 13px 'Bricolage Grotesque',sans-serif}
+.hx b{display:block;font-size:13px;font-weight:600;line-height:1.4}.hx span{display:block;font-size:12px;opacity:.65;margin-top:2px;line-height:1.4}
+.hx.mine .hx-ic{background:#E0A33A;color:#14110F}
+.dice{z-index:90 !important}
+@media (max-width:700px){.pav{width:46px}.pav-a{width:40px;height:40px}.pav-a svg{width:40px;height:40px}.pav-a img{inset:4px;width:32px;height:32px}.pstrip{min-height:48px;padding-right:8px;gap:2px}.hlogo{width:40px;height:40px}.hbtn{width:40px;height:40px}.rinfo{padding:5px 10px;min-height:40px}.note{top:calc(80px + env(safe-area-inset-top, 0px))}.hright{gap:4px}}
+@media (max-width:700px){.rinfo,.pchev{display:none !important}.rchip{padding:5px 12px;font-size:10px;letter-spacing:.12em}}
+@media (max-width:360px){.hlogo{display:none}}
+.yj-coin{position:fixed;z-index:9999;width:24px;height:24px;margin:0;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#FFE7A6,#E0A33A 55%,#9C6A16);color:#5A3A08;font:800 12px/1 'Bricolage Grotesque',sans-serif;box-shadow:0 4px 10px rgba(0,0,0,.45),inset 0 0 0 2px rgba(255,240,200,.5);pointer-events:none}.yj-delta{position:fixed;z-index:9999;padding:3px 9px;border-radius:999px;font:800 14px 'Bricolage Grotesque',sans-serif;pointer-events:none;box-shadow:0 6px 14px rgba(0,0,0,.4);white-space:nowrap}.yj-delta.pos{background:#2F6B3A;color:#EFE6D2}.yj-delta.neg{background:#C13B1F;color:#EFE6D2}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none !important;transition:none !important}}
 </style>
 
@@ -340,7 +421,7 @@ a{color:#E0A33A}
 <div id="root"></div>
 <script type="text/x-tpl" id="tpl">
 
-<div class="g" style="--lift: {{liftPx}}">
+<div class="g {{gCls}}" style="--lift: {{liftPx}}">
 
 <!-- PICK -->
 <sc-if value="{{isPick}}" hint-placeholder-val="{{ true }}">
@@ -384,7 +465,7 @@ a{color:#E0A33A}
 
 <!-- GAME -->
 <sc-if value="{{isGame}}" hint-placeholder-val="{{ false }}">
-<div class="stage {{dragCls}}" onPointerDown="{{pDown}}" onPointerMove="{{pMove}}" onPointerUp="{{pUp}}" onPointerLeave="{{pUp}}" onWheel="{{wheel}}">
+<div class="stage {{dragCls}}" onPointerDown="{{pDown}}" onPointerMove="{{pMove}}" onPointerUp="{{pUp}}" onPointerLeave="{{pUp}}" onPointerCancel="{{pUp}}" onWheel="{{wheel}}">
 <sc-if value="{{showAura}}" hint-placeholder-val="{{ false }}"><div class="aura dz-{{aura.id}}" style="--dc: {{aura.color}}" aria-hidden="true"><div class="dz-pat"></div></div></sc-if>
 <div class="cam">
 <div class="world {{dragCls}}" style="transform: translate({{camX}}px, {{camY}}px) scale({{camS}}) translate({{fx}}px, {{fy}}px)">
@@ -423,28 +504,60 @@ a{color:#E0A33A}
 </div>
 </div>
 
-<div class="top">
-<div style="display: flex; gap: 10px; align-items: center">
-<a href="Main.dc.html" class="iconbtn" aria-label="Salir al inicio"><img src="/assets/iso.png" alt="" style="height: 32px"></a>
-<div class="cap mecap" style="padding: 5px 22px 5px 5px">
-<div class="av"><svg width="54" height="54" viewBox="0 0 54 54" aria-hidden="true"><circle cx="27" cy="27" r="24" fill="none" stroke="rgba(239,230,210,.14)" stroke-width="4"></circle><circle class="ringp" cx="27" cy="27" r="24" fill="none" stroke="{{me.color}}" stroke-width="4" stroke-linecap="round" stroke-dasharray="151" style="stroke-dashoffset: {{me.ring}}"></circle></svg><img src="{{me.img}}" alt="{{me.role}}"></div>
-<div><div class="hd" style="font-size: 26px">{{me.money}}</div><div class="eyebrow muted mysub" style="margin-top: 4px; font-size: 10px">Dominio {{me.charge}}% · {{me.props}} lugares</div></div>
+<sc-if value="{{showHud}}" hint-placeholder-val="{{ true }}">
+<div class="top hud2">
+<div class="hrow">
+<a href="Main.dc.html" class="iconbtn hlogo" aria-label="Salir al inicio"><img src="/assets/iso.png" alt="" style="height: 26px"></a>
+<button class="cap pstrip" type="button" onClick="{{hudToggle}}" aria-label="Ver jugadores" aria-expanded="{{hudOpenTxt}}">
+<sc-for list="{{strip}}" as="p" hint-placeholder-count="3"><span class="pav {{p.cls}}" data-pi="{{p.pi}}" style="--c: {{p.color}}"><span class="pav-a"><svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="19" fill="none" stroke="rgba(239,230,210,.16)" stroke-width="3"></circle><circle class="ringp" cx="22" cy="22" r="19" fill="none" stroke="{{p.color}}" stroke-width="3" stroke-linecap="round" stroke-dasharray="119" style="stroke-dashoffset: {{p.ring}}"></circle></svg><img src="{{p.img}}" alt="{{p.role}}"></span><b>{{p.money}}</b></span></sc-for>
+<span class="pchev" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg></span>
+</button>
+<div class="hright">
+<button class="cap rinfo" type="button" onClick="{{hudToggle}}"><b>{{roundShort}}</b><span>{{playsShort}}</span></button>
+<button class="iconbtn hbtn" type="button" onClick="{{histToggle}}" aria-label="Historial de la partida"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"></path></svg><sc-if value="{{hasUnread}}" hint-placeholder-val="{{ false }}"><i class="hbadge">{{unread}}</i></sc-if></button>
+<button class="iconbtn hbtn" type="button" onClick="{{cleanToggle}}" aria-label="Limpiar pantalla"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l18 18M10.6 5.1A10 10 0 0 1 12 5c5 0 9 4.5 10 7a13 13 0 0 1-3 4M6.6 6.6C4.3 8 2.7 10.2 2 12c1 2.5 5 7 10 7a10 10 0 0 0 5.4-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2"></path></svg></button>
 </div>
 </div>
-<div style="display: flex; flex-direction: column; align-items: center; gap: 8px">
-<div class="cap hd roundp" style="padding: 12px 22px; font-size: 16px">{{roundTxt}}</div>
-<sc-if value="{{showAura}}" hint-placeholder-val="{{ false }}"><div class="cap eyebrow aurap" style="padding: 7px 14px; font-size: 10px; background: {{aura.color}}; color: {{aura.fg}}">Dominio activo · {{aura.name}} · {{aura.left}}</div></sc-if>
-<div class="cap eyebrow pills" style="padding: 7px 14px; font-size: 10px; opacity: .85"><span>{{playsTxt}}</span><span class="dk">· {{deckTxt}}</span></div>
-<sc-if value="{{overtime}}" hint-placeholder-val="{{ false }}"><div class="cap eyebrow" style="padding: 8px 16px; background: #C13B1F">Tiempo extra · alquiler x2</div></sc-if>
+<div class="hchips">
+<div class="cap eyebrow mob-only rchip">{{roundShort}} · {{playsShort}}</div>
+<sc-if value="{{showAura}}" hint-placeholder-val="{{ false }}"><div class="cap eyebrow aurap" style="padding: 6px 12px; font-size: 10px; background: {{aura.color}}; color: {{aura.fg}}">Dominio activo · {{aura.name}} · {{aura.left}}</div></sc-if>
+<sc-if value="{{overtime}}" hint-placeholder-val="{{ false }}"><div class="cap eyebrow" style="padding: 6px 12px; font-size: 10px; background: #C13B1F">Tiempo extra · cobros x2</div></sc-if>
 </div>
-<div class="rivals" style="display: flex; flex-direction: column; gap: 10px; align-items: flex-end">
-<sc-for list="{{rivals}}" as="p" hint-placeholder-count="2">
-<div class="cap rb {{p.cls}}"><div class="av" style="width: 46px; height: 46px"><svg width="46" height="46" viewBox="0 0 46 46" aria-hidden="true"><circle class="ringp" cx="23" cy="23" r="20" fill="none" stroke="{{p.color}}" stroke-width="4" stroke-linecap="round" stroke-dasharray="126" style="stroke-dashoffset: {{p.ring}}"></circle></svg><img src="{{p.img}}" alt="{{p.role}}" style="inset: 5px; width: 36px; height: 36px"></div><div><div style="font-weight: 700; font-size: 13px">{{p.name}}</div><div class="hd" style="font-size: 17px">{{p.money}}</div></div><span style="width: 14px; height: 14px; border-radius: 50%; background: {{p.color}}; border: 2px solid #EFE6D2"></span></div>
+<sc-if value="{{hudOpen}}" hint-placeholder-val="{{ false }}">
+<div class="hpanel">
+<div class="hp-head"><b>{{roundTxt}}</b><span>{{playsTxt}} · {{deckTxt}}</span></div>
+<sc-for list="{{panel}}" as="p" hint-placeholder-count="3">
+<div class="hp-row {{p.cls}}" style="--c: {{p.color}}"><img src="{{p.img}}" alt=""><div class="hp-id"><b>{{p.name}}</b><span>{{p.role}}</span><div class="hp-bar"><i style="width: {{p.charge}}%"></i></div></div><div class="hp-num"><b>{{p.money}}</b><span>{{p.props}} lugares · {{p.cards}} cartas</span><span>Dominio {{p.charge}}%</span></div></div>
 </sc-for>
+<button class="btn hp-close" type="button" onClick="{{hudToggle}}">Cerrar</button>
 </div>
+</sc-if>
 </div>
+</sc-if>
+<sc-if value="{{isClean}}" hint-placeholder-val="{{ false }}"><button class="iconbtn unclean" type="button" onClick="{{cleanToggle}}" aria-label="Mostrar todo"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12c1-2.5 5-7 10-7s9 4.5 10 7c-1 2.5-5 7-10 7S3 14.5 2 12z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></sc-if>
 
-<div class="feed" aria-live="polite"><sc-for list="{{feed}}" as="l" hint-placeholder-count="2"><span class="fi">{{l.t}}</span></sc-for></div>
+<sc-if value="{{hasNote}}" hint-placeholder-val="{{ false }}">
+<div class="note {{note.cls}}" role="status" aria-live="polite" onClick="{{noteClose}}">
+<sc-if value="{{note.isRes}}" hint-placeholder-val="{{ false }}">
+<div class="nt-head"><span class="nt-ic">{{note.ic}}</span><div><small>{{note.kicker}}</small><b>{{note.card}}</b></div><sc-if value="{{note.hasGain}}" hint-placeholder-val="{{ false }}"><span class="nt-gain {{note.gainCls}}">{{note.gainTxt}}</span></sc-if></div>
+<sc-if value="{{note.hasRows}}" hint-placeholder-val="{{ false }}"><div class="nt-rows"><sc-for list="{{note.rows}}" as="r" hint-placeholder-count="2"><div class="nt-row {{r.cls}}" style="--c: {{r.color}}"><img src="{{r.img}}" alt=""><span>{{r.name}}</span><em>{{r.tag}}</em></div></sc-for></div></sc-if>
+<sc-if value="{{note.hasText}}" hint-placeholder-val="{{ false }}"><p class="nt-text">{{note.text}}</p></sc-if>
+</sc-if>
+<sc-if value="{{note.isToast}}" hint-placeholder-val="{{ false }}"><p class="nt-toast">{{note.t}}</p></sc-if>
+<i class="nt-bar" style="animation-duration: {{note.dur}}ms"></i>
+</div>
+</sc-if>
+
+<sc-if value="{{histOpen}}" hint-placeholder-val="{{ false }}">
+<div class="hist-bg" onClick="{{histToggle}}"></div>
+<aside class="hist" aria-label="Historial">
+<div class="hist-h"><div><div class="eyebrow" style="color: #E0A33A">Historial</div><b class="hd">Lo que pasó</b></div><button class="iconbtn" type="button" onClick="{{histToggle}}" aria-label="Cerrar historial">✕</button></div>
+<div class="hist-l">
+<sc-for list="{{hist}}" as="h" hint-placeholder-count="4"><div class="hx {{h.cls}}"><span class="hx-r">R{{h.r}}</span><span class="hx-ic">{{h.ic}}</span><div><b>{{h.t}}</b><sc-if value="{{h.hasSub}}" hint-placeholder-val="{{ false }}"><span>{{h.sub}}</span></sc-if></div></div></sc-for>
+<sc-if value="{{histEmpty}}" hint-placeholder-val="{{ false }}"><p class="muted" style="padding: 20px; text-align: center">Todavía no pasó nada.</p></sc-if>
+</div>
+</aside>
+</sc-if>
 
 <div class="camctl">
 <sc-if value="{{canVoteStart}}" hint-placeholder-val="{{ false }}"><button class="iconbtn" type="button" onClick="{{voteStart}}" aria-label="Proponer terminar la partida"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4h11l-2 4 2 4H5"></path></svg></button></sc-if>
@@ -597,12 +710,12 @@ a{color:#E0A33A}
 <sc-if value="{{voteWait}}" hint-placeholder-val="{{ false }}"><div class="muted" style="margin-top: 16px; font-size: 14px">Votaste que sí. Esperando al resto…</div></sc-if>
 </div>
 </sc-if>
-<sc-if value="{{showToast}}" hint-placeholder-val="{{ false }}"><div class="toast" role="status">{{toast}}</div></sc-if>
 </div>
 </script>
 <script src="https://cdn.jsdelivr.net/npm/morphdom@2.7.4/dist/morphdom-umd.min.js"></script>
 <script src="/dc.js"></script>
 <script>(function(){var v=window.visualViewport;function f(){var h=v?v.height:innerHeight;document.documentElement.style.setProperty('--vvh',h+'px')}f();(v||window).addEventListener('resize',f);addEventListener('orientationchange',function(){setTimeout(f,300)})})()</script>
+<script>(function(){var m=document.querySelector('meta[name=viewport]');if(m)m.setAttribute('content','width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover');['gesturestart','gesturechange','gestureend'].forEach(function(t){document.addEventListener(t,function(e){e.preventDefault()},{passive:false})});document.addEventListener('dblclick',function(e){e.preventDefault()},{passive:false});document.addEventListener('touchmove',function(e){if(e.touches&&e.touches.length>1)e.preventDefault()},{passive:false})})()</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/net.js"></script>
 <script>
@@ -745,9 +858,40 @@ class Component extends DCLogic {
   you(k) { return !this.g.mp && k === 0; }
   fresh() { return { fly: [], look: null, catching: false, drawN: 0, screen: 'pick', players: [], turn: 0, round: 1, owners: {}, houses: {}, phase: 'idle', dice: [1], rolls: 0, log: [], market: [], bought: false, modal: null, def: null, dom: null, aura: null, act: null, cine: false, overtime: false, toast: null, focus: 0, deck: [], discard: [], plays: 0, commission: null, diceShow: false }; }
   maxRounds() { return this.props.rounds ?? 8; }
-  log(t) { this.g.log.unshift({ t }); this.g.log = this.g.log.slice(0, 2); }
-  toast(t, to) { this.g.toastTo = to === undefined ? null : to; this.g.toast = t; this.refresh(); clearTimeout(this.toastT); this.toastT = this.later(() => { this.g.toast = null; this.refresh(); }, 2800); }
+  log(t) { this.g.log.unshift({ t }); this.g.log = this.g.log.slice(0, 2); this.emit({ k: 'log', t }); }
+  emit(e) { const g = this.g; g.evN = (g.evN || 0) + 1; e.id = g.evN; e.r = g.round; g.ev = (g.ev || []).concat([e]).slice(-70); }
+  toast(t, to) { this.emit({ k: 'toast', t, to: to === undefined ? null : to }); this.refresh(); }
+  coinFx(e) {
+    if (typeof document === 'undefined' || !document.body || !document.body.animate) return;
+    const q = (k) => (k === null || k === undefined ? null : document.querySelector(`.pav[data-pi="${k}"] .pav-a`));
+    const a = q(e.from), b = q(e.to);
+    const ra = a ? a.getBoundingClientRect() : null, rb = b ? b.getBoundingClientRect() : null;
+    const W = window.innerWidth, H = window.innerHeight;
+    const pop = (r, txt, cls) => { if (!r) return; const d = document.createElement('div'); d.className = 'yj-delta ' + cls; d.textContent = txt; d.style.left = (r.left + r.width / 2) + 'px'; d.style.top = (r.bottom + 4) + 'px'; document.body.appendChild(d); d.animate([{ transform: 'translate(-50%,-6px) scale(.5)', opacity: 0 }, { transform: 'translate(-50%,4px) scale(1.2)', opacity: 1, offset: 0.2 }, { transform: 'translate(-50%,30px) scale(1)', opacity: 0 }], { duration: 1800, easing: 'ease-out' }).onfinish = () => d.remove(); };
+    const bump = (el) => { if (el) el.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.28)' }, { transform: 'scale(1)' }], { duration: 460, easing: 'cubic-bezier(.2,.9,.3,1.4)' }); };
+    const amt = Math.round(e.amt);
+    if (ra) { pop(ra, '−' + amt, 'neg'); bump(a); }
+    const x0 = ra ? ra.left + ra.width / 2 : W / 2, y0 = ra ? ra.top + ra.height / 2 : H * 0.45;
+    const x1 = rb ? rb.left + rb.width / 2 : W / 2, y1 = rb ? rb.top + rb.height / 2 : H * 0.45;
+    const n = Math.min(7, Math.max(2, amt));
+    for (let k = 0; k < n; k++) {
+      const c = document.createElement('div'); c.className = 'yj-coin'; c.textContent = '$'; c.style.left = x0 + 'px'; c.style.top = y0 + 'px'; document.body.appendChild(c);
+      const dx = x1 - x0, dy = y1 - y0, sag = Math.max(70, Math.abs(dx) * 0.4) * (rb && ra ? 1 : -0.4), jit = (k - n / 2) * 6;
+      const an = c.animate([{ transform: 'translate(-50%,-50%) scale(.3)', opacity: 0 }, { transform: `translate(calc(-50% + ${dx / 2 + jit}px), calc(-50% + ${dy / 2 + sag}px)) scale(1.15) rotate(180deg)`, opacity: 1, offset: 0.55 }, { transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(${rb ? 0.7 : 0.2}) rotate(360deg)`, opacity: rb ? 1 : 0 }], { duration: 950, delay: k * 85, easing: 'cubic-bezier(.45,.05,.3,1)', fill: 'backwards' });
+      an.onfinish = () => { c.remove(); if (k === n - 1 && rb) { pop(rb, '+' + amt, 'pos'); bump(b); } };
+    }
+  }
+  pumpNote() {
+    if (this.noteT || this.cur) return; const g = this.g;
+    if (g.diceShow || g.dom || g.cine) { this.noteT = setTimeout(() => { this.noteT = null; this.pumpNote(); }, 500); return; }
+    const e = (this.nq || []).shift(); if (!e) return;
+    const lag = (this.nq || []).length; const base = e.k === 'res' ? 5200 : 3200; const dur = Math.max(e.k === 'res' ? 2600 : 1600, Math.round(base / (1 + lag * 0.45)));
+    this.cur = { e, dur }; this.refresh();
+    this.noteT = setTimeout(() => { this.noteT = null; this.cur = null; this.refresh(); setTimeout(() => this.pumpNote(), 260); }, dur);
+  }
   role(p) { return ROLES.find((r) => r.id === p.roleId); }
+  txOpen() { this.txn = []; this.txnNo = []; }
+  txClose(who, head, extra) { const t = this.txn || [], no = this.txnNo || []; this.txn = null; this.txnNo = null; const net = {}; t.forEach((x) => { net[x.from] = (net[x.from] || 0) - x.amt; if (x.to !== null && x.to !== undefined) net[x.to] = (net[x.to] || 0) + x.amt; }); const ks = []; t.forEach((x) => { [x.from, x.to].forEach((k) => { if (k !== null && k !== undefined && k !== who && !ks.includes(k)) ks.push(k); }); }); no.forEach((k) => { if (k !== who && !ks.includes(k)) ks.push(k); }); const rows = ks.map((k) => ({ pi: k, net: net[k] || 0, no: no.includes(k) })); this.emit({ k: 'res', who, rows, gain: net[who] || 0, ...head, ...(extra || {}) }); }
   nm(k) { return this.g.players[k].name; }
   card(c) { this.uid += 1; return { ...c, uid: this.uid }; }
   shuffle(a) { return spread(shuf(a), (c) => c.id); }
@@ -762,9 +906,11 @@ class Component extends DCLogic {
   loose(pi) { return this.owned(pi).filter((i) => !this.complete(pi, TILES[i].g)); }
   give(pi, n) { const p = this.g.players[pi]; for (let k = 0; k < n; k++) p.hand.push(this.drawDeal()); return n; }
   takeCard(pi, id) { const p = this.g.players[pi]; const k = p.hand.findIndex((c) => c.id === id); if (k < 0) return false; this.toDiscard(p.hand.splice(k, 1)[0]); return true; }
-  nilo(target, by) { if (this.takeCard(target, 'nilo')) { const m = `${this.nm(target)} jugó ¡Ni loco! y canceló el trato de ${this.nm(by)}`; this.log(m); this.toast(m); return true; } return false; }
+  nilo(target, by) { if (this.takeCard(target, 'nilo')) { const m = `${this.nm(target)} jugó ¡Ni loco! y canceló el trato de ${this.nm(by)}`; this.log(m); if (this.txnNo) this.txnNo.push(target); return true; } return false; }
   mob() { return typeof window !== 'undefined' && window.innerWidth < 700; }
-  followOn() { this.cam.follow = true; this.cam.px = 0; this.cam.py = 0; const z = this.mob() ? 0.7 : 1.05; if (this.cam.s < z - 0.1) this.cam.s = z; }
+  followOn(force) { const c = this.cam; if (c.free && !force) return; c.free = false; c.follow = true; c.px = 0; c.py = 0; const z = this.mob() ? 0.7 : 1.05; if (!c.zoomed && c.s < z - 0.1) c.s = z; }
+  freeCam() { const c = this.cam; if (c.free) return; const g = this.g; const cen = this.camCenter(); c.free = true; c.follow = false; c.c = cen; }
+  camCenter() { const c = this.cam, g = this.g; if (c.free && c.c) return c.c; return g.look ? g.look : c.follow ? this.centerOf(g.focus) : [560, 560]; }
 
   start(roleId) {
     this.clearAll();
@@ -785,6 +931,7 @@ class Component extends DCLogic {
   pay(from, to, amt, comm = true) {
     const g = this.g; const P = g.players[from];
     P.money -= amt; if (to !== null) g.players[to].money += amt;
+    if (amt) { this.emit({ k: 'pay', from, to, amt }); if (this.txn) this.txn.push({ from, to, amt }); }
     const c = g.commission;
     if (comm && c && c.turns > 0 && c.pi !== from && amt > 0) { const extra = Math.max(1, Math.round(amt * 0.25)); P.money -= extra; g.players[c.pi].money += extra; this.log(`Bóveda Central: ${P.name} paga ${M(extra)} de comisión`); }
   }
@@ -858,7 +1005,7 @@ class Component extends DCLogic {
     else { g.phase = 'action'; this.refresh(); }
   }
   chargeRent(payer, owner, i, cont) {
-    const g = this.g; const P = g.players[payer];
+    const g = this.g; const P = g.players[payer]; this.rentTile = i;
     let amount = this.rentFor(i, owner);
     if (this.takeCard(owner, 'doble')) { amount *= 2; this.log(`${this.nm(owner)} jugó Doble Alquiler`); }
     if (!P.bot) {
@@ -869,12 +1016,12 @@ class Component extends DCLogic {
     const r = Math.random();
     const choice = P.hand.some((c) => c.id === 'nilo') ? 'block' : r < 0.5 ? 'nego' : r < 0.75 ? 'counter' : 'accept';
     const msg = this.settle(payer, owner, amount, choice);
-    if (!g.players[owner].bot) this.toast(msg, owner);
     if (this.broke()) return; this.refresh(); cont();
   }
   settle(payer, owner, amount, choice) {
+    this.txOpen(); const ti = this.g.def ? this.g.def.i : this.rentTile; let blocked = false;
     const P = this.g.players[payer], O = this.g.players[owner]; const you = this.you(payer); let msg;
-    if (choice === 'block' && this.takeCard(payer, 'nilo')) { msg = you ? '¡Ni loco! No pagás nada' : `${P.name} gritó ¡Ni loco! y no paga nada`; this.addCharge(payer, 10); }
+    if (choice === 'block' && this.takeCard(payer, 'nilo')) { blocked = true; msg = you ? '¡Ni loco! No pagás nada' : `${P.name} gritó ¡Ni loco! y no paga nada`; this.addCharge(payer, 10); }
     else if (choice === 'nego') {
       const ok = Math.random() < 0.6; const pay = ok ? Math.max(1, Math.round(amount / 2)) : amount;
       this.pay(payer, owner, pay); this.addCharge(payer, 20); this.addCharge(owner, 25);
@@ -883,7 +1030,8 @@ class Component extends DCLogic {
       if (Math.random() < 0.4) { this.pay(owner, payer, amount); this.addCharge(payer, 25); msg = you ? `¡Contraataque! ${O.name} te paga ${M(amount)}` : `¡Contraataque! ${P.name} le saca ${M(amount)} a ${this.you(owner) ? 'vos' : O.name}`; }
       else { this.pay(payer, owner, amount * 2); this.addCharge(payer, 20); this.addCharge(owner, 25); msg = you ? `El contraataque falló: pagás ${M(amount * 2)}` : `El contraataque de ${P.name} falló: paga ${M(amount * 2)}`; }
     } else { this.pay(payer, owner, amount); this.addCharge(payer, 20); this.addCharge(owner, 25); msg = you ? `Pagaste ${M(amount)} a ${O.name}` : `${P.name} le pagó ${M(amount)} a ${this.you(owner) ? 'vos' : O.name}`; }
-    this.log(msg); return msg;
+    if (blocked && this.txnNo) this.txnNo.push(payer); this.txClose(owner, { card: `Alquiler · ${TILES[ti] ? TILES[ti].n : ''}`, ic: '⌂', ct: 'rent', text: msg, land: true });
+    return msg;
   }
   resolve(choice) {
     const g = this.g; const d = g.def; if (!d || d.done) return;
@@ -913,7 +1061,7 @@ class Component extends DCLogic {
     if (!p.bot) { g.phase = 'draw'; g.drawN = n; this.lookPile(); this.toast(`Tu turno: tocá el mazo de Tratos y robá ${n} cartas`, g.turn); this.refresh(); }
     else { g.phase = 'bot'; this.flyDraw(g.turn, n, () => { this.followOn(); this.refresh(); this.later(() => this.botTurn(), 500); }); }
   }
-  lookPile() { this.g.look = PILE; this.cam.follow = false; this.cam.px = 0; this.cam.py = 0; this.cam.s = this.mob() ? 0.62 : 1; }
+  lookPile() { this.g.look = PILE; if (this.cam.free) return; this.cam.follow = false; this.cam.px = 0; this.cam.py = 0; if (!this.cam.zoomed) this.cam.s = this.mob() ? 0.62 : 1; }
   flyDraw(pi, n, after) {
     const g = this.g; this.lookPile(); this.give(pi, n); const p = g.players[pi];
         g.fly = p.hand.slice(-n).map((c, k) => ({ k: c.uid, name: c.name, ic: c.ic || '', color: c.color || '#C99022', fg: c.fg || '#14110F', d: (k * 0.28).toFixed(2), pi }));
@@ -929,7 +1077,7 @@ class Component extends DCLogic {
   }
   botTurn() { const g = this.g; const pi = g.turn; const p = g.players[pi]; const go = () => this.rollDice(pi, (s) => this.move(pi, s, () => this.land(pi))); if (p.charge >= 100) this.domain(pi, () => this.later(go, 400)); else go(); }
   botCards(pi) { for (let t = 0; t < RULES.plays; t++) if (Math.random() < 0.6 && !this.botCard(pi)) break; }
-  botCard(pi) { const p = this.g.players[pi]; if (this.playsLeft(pi) <= 0 || Math.random() > 0.75) return false; const opts = p.hand.map((c, k) => k).filter((k) => { const c = p.hand[k]; return !c.passive && this.canPlay(pi, c) && (c.type !== 'money' || p.money < 6); }); const idx = opts.length ? opts[rnd(opts.length)] : -1; if (idx >= 0) { const c = p.hand[idx]; const msg = this.playCard(pi, idx); if (msg) { this.toast(`${p.name} jugó «${c.name}»: ${msg}`); return true; } } return false; }
+  botCard(pi) { const p = this.g.players[pi]; if (this.playsLeft(pi) <= 0 || Math.random() > 0.75) return false; const opts = p.hand.map((c, k) => k).filter((k) => { const c = p.hand[k]; return !c.passive && this.canPlay(pi, c) && (c.type !== 'money' || p.money < 6); }); const idx = opts.length ? opts[rnd(opts.length)] : -1; if (idx >= 0) { const c = p.hand[idx]; const msg = this.playCard(pi, idx); if (msg) return true; } return false; }
   botMarket(pi) { const g = this.g; const p = g.players[pi]; if (Math.random() > 0.4 || p.hand.length >= RULES.handMax) return; const k = g.market.findIndex((c) => p.money - c.cost > 5); if (k >= 0) this.buyMarket(pi, k); }
   buyMarket(pi, k) { const g = this.g; const p = g.players[pi]; const c = g.market[k]; this.pay(pi, null, c.cost); p.hand.push(c); this.log(`${p.name} compró «${c.name}» en el Mercado`); g.market[k] = this.drawDeal(g.market.map((x) => x.id)); if (pi === g.turn) { g.bought = true; g.plays = (g.plays || 0) + 1; } return c; }
   rivalsOf(pi) { return this.g.players.map((o, k) => k).filter((k) => k !== pi); }
@@ -951,8 +1099,8 @@ class Component extends DCLogic {
   playCard(pi, idx) {
     const g = this.g; const p = g.players[pi]; const c = p.hand[idx];
     if (!c || !this.canPlay(pi, c) || this.playsLeft(pi) <= 0) return '';
-    p.hand.splice(idx, 1); g.plays = (g.plays || 0) + 1; this.toDiscard(c); let msg = '';
-    if (c.type === 'money') { p.money += c.amt; msg = `deposita ${M(c.amt)}`; }
+    p.hand.splice(idx, 1); g.plays = (g.plays || 0) + 1; this.toDiscard(c); let msg = ''; this.txOpen();
+    if (c.type === 'money') { p.money += c.amt; this.emit({ k: 'pay', from: null, to: pi, amt: c.amt }); msg = `deposita ${M(c.amt)}`; }
     if (c.type === 'rent') {
       const b = this.bestRent(pi, c.groups); let amt = b.r; if (this.takeCard(pi, 'doble')) amt *= 2;
       const targets = c.single ? [this.rivalsOf(pi).sort((x, y) => g.players[y].money - g.players[x].money)[0]] : this.rivalsOf(pi);
@@ -972,7 +1120,7 @@ class Component extends DCLogic {
     if (c.id === 'sucio') { const b = this.bestLoose(pi); if (this.nilo(b.k, pi)) msg = 'cancelado'; else { g.owners[b.i] = pi; msg = `se queda con ${TILES[b.i].n} de ${this.nm(b.k)}`; } }
     if (c.id === 'forzado') { const b = this.bestLoose(pi); const mine = this.owned(pi).sort((x, y) => TILES[x].p - TILES[y].p)[0]; if (this.nilo(b.k, pi)) msg = 'cancelado'; else { g.owners[b.i] = pi; g.owners[mine] = b.k; msg = `cambia ${TILES[mine].n} por ${TILES[b.i].n}`; } }
     if (c.id === 'rompe') { const s = this.bestSet(pi); if (this.nilo(s.k, pi)) msg = 'cancelado'; else { groupIdx(s.gr).forEach((i) => { g.owners[i] = pi; }); msg = `se queda con todo ${GR[s.gr].name} de ${this.nm(s.k)}`; } }
-    this.log(`${p.name} jugó «${c.name}»`); this.refresh(); return msg;
+    this.txClose(pi, { card: c.name, ic: c.ic || '', ct: c.type, text: msg }, c.type === 'money' ? { gain: c.amt, bank: true } : null); this.refresh(); return msg;
   }
   worth(pi) { return this.g.players[pi].money + this.owned(pi).reduce((s, k) => s + TILES[k].p, 0); }
   domain(pi, cont) {
@@ -1049,7 +1197,7 @@ class Component extends DCLogic {
     if (name === 'roll' && mine && g.phase === 'roll' && !busy) { this.rollDice(pi, (s) => this.move(pi, s, () => this.land(pi))); }
     else if (name === 'end' && mine && g.phase === 'action' && !busy) { g.phase = 'idle'; this.next(); }
     else if (name === 'draw' && mine) this.drawNow(pi);
-    else if (name === 'play' && mine && (g.phase === 'roll' || g.phase === 'action') && !busy) { const c = p.hand[args[0]]; const msg = c ? this.playCard(pi, args[0]) : ''; if (msg) this.toast(`${this.you(pi) ? '' : p.name + ' jugó '}«${c.name}»: ${msg}`); else this.refresh(); }
+    else if (name === 'play' && mine && (g.phase === 'roll' || g.phase === 'action') && !busy) { const c = p.hand[args[0]]; if (c) this.playCard(pi, args[0]); this.refresh(); }
     else if (name === 'buyM' && mine && g.phase === 'action' && !busy && !g.bought && this.playsLeft(pi) > 0) { const c = g.market[args[0]]; if (c && p.money >= c.cost) { this.buyMarket(pi, args[0]); this.refresh(); } }
     else if (name === 'build' && mine && g.phase === 'action' && !busy) this.build(pi, args[0]);
     else if (name === 'dom' && mine && p.charge >= 100 && (g.phase === 'roll' || g.phase === 'action') && !busy) this.domain(pi, null);
@@ -1116,7 +1264,7 @@ class Component extends DCLogic {
     });
     const toks = [];
     g.players.forEach((p, k) => { const [x, y] = center(p.pos); const same = g.players.filter((q, j) => q.pos === p.pos && j < k).length; toks.push({ x: Math.round(x - 22 + same * 26), y: Math.round(y + 20 - same * 10), color: this.role(p).color, cls: k === 0 ? 'me' : '' }); });
-    const [cx, cy] = g.look ? g.look : cam.follow ? center(g.focus) : [560, 560];
+    this.centerOf = center; const [cx, cy] = this.camCenter();
     let status = 'Esperá';
     if (g.phase === 'drawing') status = 'Robando…'; else if (g.phase === 'rolling') status = 'Rodando…'; else if (g.phase === 'moving') status = `${cur ? cur.name : ''} avanza`; else if (g.phase === 'bot') status = `${cur ? cur.name : ''} juega`; else if (busy) status = 'Decidí';
     const myRole = me ? this.role(me) : ROLES[0];
@@ -1144,21 +1292,53 @@ class Component extends DCLogic {
     const openS = (k) => () => { this.ui.sheet = this.ui.sheet === k ? null : k; this.refresh(); };
     const LIFTS = [0, 60, 120]; if (this.lift == null) { try { this.lift = +(localStorage.getItem('yj-lift') || 0) % 3; } catch (e) { this.lift = 0; } }
     const liftBar = () => { this.lift = (this.lift + 1) % 3; try { localStorage.setItem('yj-lift', String(this.lift)); } catch (e) {} this.toast && this.toast(['Barra abajo', 'Barra un poco más arriba', 'Barra bien arriba'][this.lift]); this.refresh(); };
+    const evs = g.ev || []; const lastId = evs.length ? evs[evs.length - 1].id : 0;
+    if (this.evSeen == null || lastId < this.evSeen) this.evSeen = this.evSeen == null ? lastId : 0;
+    this.nq = this.nq || []; this.unread = this.unread || 0; const fresh = [];
+    evs.forEach((e) => { if (e.id <= this.evSeen) return; this.evSeen = e.id; if (e.to !== null && e.to !== undefined && e.to !== S) return; fresh.push(e); });
+    fresh.forEach((e) => {
+      if (e.k === 'pay') { if (typeof setTimeout !== 'undefined') setTimeout(() => this.coinFx(e), 60); return; }
+      if (e.k === 'res' || e.k === 'toast') { const prev = this.nq[this.nq.length - 1]; if (!(prev && prev.k === 'toast' && e.k === 'toast' && prev.t === e.t)) this.nq.push(e); if (this.nq.length > 6) { const k = this.nq.findIndex((x) => x.k === 'toast'); this.nq.splice(k >= 0 ? k : 0, 1); } }
+      if ((e.k === 'res' || e.k === 'log' || (e.k === 'toast' && (e.to === null || e.to === undefined))) && !this.ui.hist) this.unread += 1;
+    });
+    if (fresh.length && typeof setTimeout !== 'undefined') setTimeout(() => this.pumpNote(), 0);
+    const who = (k) => (k === S && !g.mp ? 'Vos' : k === S ? `${g.players[k].name} (vos)` : g.players[k] ? g.players[k].name : '');
+    const pInfo = (k) => { const p = g.players[k]; const r = p ? this.role(p) : null; return { name: k === S ? 'Vos' : p ? p.name : '', img: r ? IMG[r.id] : '', color: r ? r.color : '#E0A33A' }; };
+    const resRows = (e) => e.rows.map((x) => { const pi = pInfo(x.pi); const t = x.no ? '✋ Se negó' : x.net < 0 ? `pagó ${M(-x.net)}` : x.net > 0 ? `recibió ${M(x.net)}` : 'sin cambios'; return { ...pi, tag: t, cls: x.no ? 'no' : x.net < 0 ? 'paid' : x.net > 0 ? 'got' : 'zero' }; });
+    let note = null;
+    if (this.cur) {
+      const e = this.cur.e; const mine = e.k === 'res' && (e.who === S || e.rows.some((x) => x.pi === S));
+      if (e.k === 'res') { const gain = e.gain || 0; const rows = resRows(e); note = { isRes: true, isToast: false, ic: e.ic || '★', kicker: e.land ? `${who(e.rows[0] ? e.rows[0].pi : e.who)} cayó en un lugar de ${who(e.who)}` : `${who(e.who)} jugó`, card: e.card, rows, hasRows: rows.length > 0, text: e.text, hasText: !!e.text && (!rows.length || e.rows.every((x) => !x.net)), hasGain: gain !== 0, gainTxt: (gain > 0 ? '+' : '−') + M(Math.abs(gain)).replace(/^[-−]/, '') + (e.who === S ? '' : ` · ${who(e.who)}`), gainCls: gain > 0 ? 'pos' : 'neg', dur: this.cur.dur, cls: (mine ? 'mine ' : '') + (g.diceShow || this.ui.hud || this.ui.hist ? 'hush' : '') }; }
+      else note = { isRes: false, isToast: true, t: e.t, dur: this.cur.dur, cls: (e.to === S ? 'mine ' : '') + (g.diceShow || this.ui.hud || this.ui.hist ? 'hush' : '') };
+    }
+    const order = [S, ...g.players.map((p, k) => k).filter((k) => k !== S)].filter((k) => g.players[k]);
+    const strip = order.map((k) => { const p = g.players[k]; const r = this.role(p); return { pi: k, img: IMG[r.id], role: r.name, color: r.color, money: M(p.money), ring: Math.round(119 * (1 - Math.min(100, p.charge) / 100)), cls: (k === S ? 'me ' : '') + (k === g.turn ? 'turn ' : '') + (p.away ? 'away' : '') }; });
+    const panel = order.map((k) => { const p = g.players[k]; const r = this.role(p); return { name: (k === S && p.name !== 'Vos' ? 'Vos · ' : '') + p.name + (p.away ? ' · fuera' : ''), role: r.name, img: IMG[r.id], color: r.color, money: M(p.money), props: this.owned(k).length, cards: p.hand.length, charge: Math.min(100, Math.round(p.charge)), cls: k === g.turn ? 'turn' : '' }; });
+    const hist = evs.filter((e) => (e.k === 'res' || e.k === 'log' || (e.k === 'toast' && (e.to === null || e.to === undefined)))).slice(-50).reverse().map((e) => {
+      if (e.k === 'res') { const sub = e.rows.map((x) => { const pi = pInfo(x.pi); return `${pi.name} ${x.no ? '✋' : x.net < 0 ? '−' + M(-x.net).replace(/^[-−]/, '') : x.net > 0 ? '+' + M(x.net) : '·'}`; }).join(' · '); return { r: e.r, ic: e.ic || '★', t: `${e.land ? '' : who(e.who) + ' · '}${e.card}${e.gain ? ` (${e.gain > 0 ? '+' : '−'}${M(Math.abs(e.gain)).replace(/^[-−]/, '')})` : ''}`, sub: sub || e.text || '', hasSub: !!(sub || e.text), cls: e.who === S || e.rows.some((x) => x.pi === S) ? 'mine' : '' }; }
+      return { r: e.r, ic: '•', t: e.t, sub: '', hasSub: false, cls: '' };
+    });
     return {
-      liftPx: LIFTS[this.lift] + 'px', liftBar, liftCls: this.lift ? 'on' : '', liftTip: 'Subir o bajar la barra',
+      showHud: !this.ui.clean, isClean: !!this.ui.clean, strip, panel, hudOpen: !!this.ui.hud && !this.ui.clean, hudOpenTxt: this.ui.hud ? 'true' : 'false',
+      roundShort: `R${Math.min(g.round, this.maxRounds())}/${this.maxRounds()}`, playsShort: g.turn === S ? `${RULES.plays - (g.plays || 0)}/${RULES.plays} acc.` : 'rival',
+      hudToggle: () => { this.ui.hud = !this.ui.hud; this.refresh(); }, cleanToggle: () => { this.ui.clean = !this.ui.clean; this.ui.hud = false; this.refresh(); },
+      histOpen: !!this.ui.hist, hist, histEmpty: !hist.length, hasUnread: this.unread > 0 && !this.ui.hist, unread: this.unread > 9 ? '9+' : String(this.unread),
+      histToggle: () => { this.ui.hist = !this.ui.hist; this.unread = 0; this.refresh(); },
+      hasNote: !!note, note: note || { cls: '', rows: [], dur: 0 }, noteClose: () => { clearTimeout(this.noteT); this.noteT = null; this.cur = null; this.refresh(); setTimeout(() => this.pumpNote(), 200); },
+      gCls: this.ui.clean ? 'clean' : '', liftPx: LIFTS[this.lift] + 'px', liftBar, liftCls: this.lift ? 'on' : '', liftTip: 'Subir o bajar la barra',
       isPick: g.screen === 'pick', isGame: g.screen === 'game', isEnd: g.screen === 'end',
       roles, me: meV, rivals, tiles, toks, cars: CARS, overtime: g.overtime, feed: g.log,
       roundTxt: `Ronda ${Math.min(g.round, this.maxRounds())} de ${this.maxRounds()}`,
       camX: Math.round(cam.px), camY: Math.round(cam.py), camS: cam.s.toFixed(3), fx: -Math.round(cx), fy: -Math.round(cy),
       dragCls: cam.drag && cam.drag.moved ? 'dragging' : '', followCls: cam.follow ? 'on' : '',
-      pDown: (e) => { if (e.target && e.target.closest && e.target.closest('button,a')) return; this.cam.drag = { x: e.clientX, y: e.clientY, px: this.cam.px, py: this.cam.py, moved: false }; },
-      pMove: (e) => { const dr = this.cam.drag; if (!dr) return; const dx = e.clientX - dr.x, dy = e.clientY - dr.y; if (!dr.moved && Math.abs(dx) + Math.abs(dy) < 4) return; dr.moved = true; this.cam.follow = false; this.cam.px = dr.px + dx; this.cam.py = dr.py + dy; this.refresh(); },
-      pUp: () => { if (this.cam.drag) { this.dragMoved = this.cam.drag.moved; this.cam.drag = null; this.refresh(); this.later(() => { this.dragMoved = false; }, 50); } },
-      wheel: (e) => { const f = e.deltaY > 0 ? 0.9 : 1.1; this.cam.s = Math.max(0.35, Math.min(1.8, this.cam.s * f)); this.refresh(); },
-      zoomIn: () => { this.cam.s = Math.min(1.8, this.cam.s * 1.2); this.refresh(); },
-      zoomOut: () => { this.cam.s = Math.max(0.22, this.cam.s / 1.2); this.refresh(); },
-      followMe: () => { this.followOn(); this.refresh(); },
-      overview: () => { this.cam = { s: 0.6, px: 0, py: 0, follow: false, drag: null }; this.refresh(); },
+      pDown: (e) => { if (e.target && e.target.closest && e.target.closest('button,a')) return; const P = this.ptrs || (this.ptrs = {}); P[e.pointerId] = [e.clientX, e.clientY]; const ids = Object.keys(P); if (ids.length === 2) { const [a, b] = ids.map((k) => P[k]); this.pinch = { d: Math.hypot(a[0] - b[0], a[1] - b[1]) || 1, s: this.cam.s }; this.cam.drag = null; return; } this.cam.drag = { x: e.clientX, y: e.clientY, px: this.cam.px, py: this.cam.py, moved: false }; },
+      pMove: (e) => { const P = this.ptrs; if (P && P[e.pointerId]) P[e.pointerId] = [e.clientX, e.clientY]; if (this.pinch && P && Object.keys(P).length === 2) { const [a, b] = Object.keys(P).map((k) => P[k]); const d = Math.hypot(a[0] - b[0], a[1] - b[1]); this.cam.zoomed = true; this.cam.s = Math.max(0.22, Math.min(1.8, this.pinch.s * d / this.pinch.d)); this.refresh(); return; } const dr = this.cam.drag; if (!dr) return; const dx = e.clientX - dr.x, dy = e.clientY - dr.y; if (!dr.moved && Math.abs(dx) + Math.abs(dy) < 4) return; if (!dr.moved) this.freeCam(); dr.moved = true; this.cam.px = dr.px + dx; this.cam.py = dr.py + dy; this.refresh(); },
+      pUp: (e) => { if (this.ptrs && e && e.pointerId != null) { delete this.ptrs[e.pointerId]; if (Object.keys(this.ptrs).length < 2) this.pinch = null; } if (this.cam.drag) { this.dragMoved = this.cam.drag.moved; this.cam.drag = null; this.refresh(); this.later(() => { this.dragMoved = false; }, 50); } },
+      wheel: (e) => { const f = e.deltaY > 0 ? 0.9 : 1.1; this.cam.zoomed = true; this.cam.s = Math.max(0.35, Math.min(1.8, this.cam.s * f)); this.refresh(); },
+      zoomIn: () => { this.cam.zoomed = true; this.cam.s = Math.min(1.8, this.cam.s * 1.2); this.refresh(); },
+      zoomOut: () => { this.cam.zoomed = true; this.cam.s = Math.max(0.22, this.cam.s / 1.2); this.refresh(); },
+      followMe: () => { this.cam.zoomed = false; this.followOn(true); this.refresh(); },
+      overview: () => { this.cam = { s: this.mob() ? 0.3 : 0.6, px: 0, py: 0, follow: false, drag: null, free: true, c: [560, 560] }; this.refresh(); },
       d1: `rotateX(${x1 + sp}deg) rotateY(${y1 + sp}deg)`, d2: `rotateX(${x2 + sp + 360}deg) rotateY(${y2 + sp}deg)`,
       toss: g.rolls % 2 ? 'tossA' : 'tossB', diceOp: g.diceShow ? 1 : 0, diceLabel: `Dado: ${g.dice[0]}`,
       status,
