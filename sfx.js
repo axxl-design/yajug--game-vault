@@ -7,9 +7,10 @@
   function init() {
     if (S.ctx || !AC) return S.ctx;
     var c = new AC(); S.ctx = c;
-    S.master = c.createGain(); S.master.gain.value = S.on ? 1 : 0; S.master.connect(c.destination);
+    S.master = c.createGain(); S.master.gain.value = S.on ? 1 : 0; var lim = c.createDynamicsCompressor(); lim.threshold.value = -4; lim.knee.value = 2; lim.ratio.value = 20; lim.attack.value = 0.002; lim.release.value = 0.15; S.master.connect(lim); lim.connect(c.destination);
+    S.smp = c.createGain(); S.smp.gain.value = 0.9; S.smp.connect(S.master);
     var comp = c.createDynamicsCompressor(); comp.threshold.value = -20; comp.ratio.value = 4; comp.knee.value = 10; var mk = c.createGain(); mk.gain.value = 2.6; comp.connect(mk); mk.connect(S.master);
-    S.mus = c.createGain(); S.mus.gain.value = 0.5; S.mus.connect(comp);
+    S.mus = c.createGain(); S.mus.gain.value = 0.0001; S.mus.connect(S.master);
     S.fx = c.createGain(); S.fx.gain.value = 1; S.fx.connect(comp);
     // reverb suave para la música
     var len = c.sampleRate * 1.8, buf = c.createBuffer(2, len, c.sampleRate);
@@ -26,11 +27,17 @@
     var c = init(); if (!c) return;
     if (c.state !== 'running') { try { c.resume(); } catch (e) {} }
     try { var b = c.createBuffer(1, 1, 22050), src = c.createBufferSource(); src.buffer = b; src.connect(c.destination); src.start(0); } catch (e) {}
-    if (S.theme && !S.timer && S.on) startLoop();
+    preload(); if (S.theme && !S.src && S.on) startLoop();
   }
   ['touchend', 'click', 'pointerup', 'keydown'].forEach(function (t) { window.addEventListener(t, unlock, { passive: true, capture: true }); document.addEventListener(t, unlock, { passive: true, capture: true }); });
   document.addEventListener('visibilitychange', function () { if (!S.ctx) return; if (document.hidden) { S.ctx.suspend(); if (S.tag) try { S.tag.pause(); } catch (e) {} } else if (S.on) { S.ctx.resume(); } });
 
+  var BUF = {};
+  function load(url) { if (BUF[url]) return BUF[url]; BUF[url] = fetch(url).then(function (r) { return r.arrayBuffer(); }).then(function (ab) { return new Promise(function (res, rej) { S.ctx.decodeAudioData(ab, res, rej); }); }).catch(function () { BUF[url] = null; return null; }); return BUF[url]; }
+  function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+  function sample(name, vol, rate, delay) { var url = '/audio/sfx/' + name + '.mp3'; var c = S.ctx; load(url).then(function (b) { if (!b || !S.on) return; var src = c.createBufferSource(); src.buffer = b; src.playbackRate.value = rate || (0.96 + Math.random() * 0.08); var g = c.createGain(); g.gain.value = vol || 0.6; src.connect(g); g.connect(S.smp); src.start(c.currentTime + (delay || 0)); }); }
+  var SFXN = ['card-slide-1', 'card-slide-2', 'card-slide-3', 'card-slide-4', 'card-place-1', 'card-place-2', 'card-place-3', 'card-shuffle', 'card-fan-1', 'chips-collide-1', 'chips-collide-2', 'chip-lay-1', 'chip-lay-2', 'chips-handle-1', 'chips-stack-1', 'chips-stack-2', 'dice-shake-1', 'die-throw-1', 'die-throw-2'];
+  function preload() { if (S.pre) return; S.pre = true; SFXN.forEach(function (n) { load('/audio/sfx/' + n + '.mp3'); }); }
   var mtof = function (m) { return 440 * Math.pow(2, (m - 69) / 12); };
   function env(g, t, a, peak, dec, sus) { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(Math.max(0.0001, sus || 0.0001), t + a + dec); }
   function tone(o) { // {f, t, d, type, vol, a, out, cut, q, glide, verb}
@@ -53,14 +60,21 @@
   // ---------- efectos ----------
   var FX = {
     tap: function () { tone({ f: 880, d: 0.05, type: 'triangle', vol: 0.12 }); },
-    dice: function () { var c = S.ctx, t = c.currentTime; for (var i = 0; i < 9; i++) { var tt = t + i * 0.07 + Math.random() * 0.03; noise({ t: tt, d: 0.04, vol: 0.35 - i * 0.025, f: 1800 + Math.random() * 1800, q: 4 }); tone({ t: tt, f: 300 + Math.random() * 200, d: 0.03, type: 'square', vol: 0.04, cut: 1500 }); } },
+    dice: function () { sample('dice-shake-1', 0.55); sample(pick(['die-throw-1', 'die-throw-2']), 0.7, 0, 0.55); },
+    diceSynth: function () { var c = S.ctx, t = c.currentTime; for (var i = 0; i < 9; i++) { var tt = t + i * 0.07 + Math.random() * 0.03; noise({ t: tt, d: 0.04, vol: 0.35 - i * 0.025, f: 1800 + Math.random() * 1800, q: 4 }); tone({ t: tt, f: 300 + Math.random() * 200, d: 0.03, type: 'square', vol: 0.04, cut: 1500 }); } },
     diceLand: function () { noise({ d: 0.08, vol: 0.4, f: 900, q: 2 }); tone({ f: 140, d: 0.12, vol: 0.3, glide: 70 }); },
-    step: function () { tone({ f: 660 + Math.random() * 60, d: 0.05, type: 'triangle', vol: 0.1 }); noise({ d: 0.03, vol: 0.08, f: 4000, q: 2 }); },
-    card: function () { noise({ d: 0.16, vol: 0.22, f: 2600, q: 0.6, type: 'highpass' }); tone({ f: 520, glide: 900, d: 0.12, type: 'sine', vol: 0.06 }); },
-    play: function () { noise({ d: 0.12, vol: 0.2, f: 2000, q: 0.7 }); var t = S.ctx.currentTime; tone({ t: t + 0.06, f: 392, d: 0.18, type: 'triangle', vol: 0.18 }); tone({ t: t + 0.12, f: 587, d: 0.25, type: 'triangle', vol: 0.16 }); },
-    coin: function () { var t = S.ctx.currentTime; tone({ t: t, f: 1568, d: 0.08, type: 'square', vol: 0.06, cut: 5000 }); tone({ t: t + 0.07, f: 2093, d: 0.25, type: 'square', vol: 0.06, cut: 5000 }); },
-    pay: function () { var t = S.ctx.currentTime; tone({ t: t, f: 700, glide: 380, d: 0.22, type: 'triangle', vol: 0.14 }); },
-    buy: function () { var t = S.ctx.currentTime; noise({ t: t, d: 0.06, vol: 0.25, f: 5000, q: 3 }); [784, 988, 1175].forEach(function (f, i) { tone({ t: t + 0.05 + i * 0.07, f: f, d: 0.22, type: 'triangle', vol: 0.15 }); }); },
+    step: function () { noise({ d: 0.035, vol: 0.18, f: 1400, q: 3 }); tone({ f: 330 + Math.random() * 40, d: 0.05, type: 'triangle', vol: 0.05 }); },
+    card: function () { sample(pick(['card-slide-1', 'card-slide-2', 'card-slide-3', 'card-slide-4']), 0.7); },
+    shuffle: function () { sample('card-shuffle', 0.6); },
+    fan: function () { sample('card-fan-1', 0.6); },
+    cardSynth: function () { noise({ d: 0.16, vol: 0.22, f: 2600, q: 0.6, type: 'highpass' }); tone({ f: 520, glide: 900, d: 0.12, type: 'sine', vol: 0.06 }); },
+    play: function () { sample(pick(['card-place-1', 'card-place-2', 'card-place-3']), 0.75); },
+    playSynth: function () { noise({ d: 0.12, vol: 0.2, f: 2000, q: 0.7 }); var t = S.ctx.currentTime; tone({ t: t + 0.06, f: 392, d: 0.18, type: 'triangle', vol: 0.18 }); tone({ t: t + 0.12, f: 587, d: 0.25, type: 'triangle', vol: 0.16 }); },
+    coin: function () { sample(pick(['chip-lay-1', 'chip-lay-2', 'chips-collide-1', 'chips-collide-2']), 0.55); },
+    coinSynth: function () { var t = S.ctx.currentTime; tone({ t: t, f: 1568, d: 0.08, type: 'square', vol: 0.06, cut: 5000 }); tone({ t: t + 0.07, f: 2093, d: 0.25, type: 'square', vol: 0.06, cut: 5000 }); },
+    pay: function () { sample('chips-handle-1', 0.5); },
+    paySynth: function () { var t = S.ctx.currentTime; tone({ t: t, f: 700, glide: 380, d: 0.22, type: 'triangle', vol: 0.14 }); },
+    buy: function () { sample(pick(['chips-stack-1', 'chips-stack-2']), 0.6); var t = S.ctx.currentTime + 0.25; noise({ t: t, d: 0.06, vol: 0.25, f: 5000, q: 3 }); [784, 988, 1175].forEach(function (f, i) { tone({ t: t + 0.05 + i * 0.07, f: f, d: 0.22, type: 'triangle', vol: 0.15 }); }); },
     build: function () { var t = S.ctx.currentTime; [0, 0.12, 0.24].forEach(function (d) { noise({ t: t + d, d: 0.06, vol: 0.3, f: 1200, q: 3 }); tone({ t: t + d, f: 220, d: 0.08, type: 'square', vol: 0.05, cut: 900 }); }); tone({ t: t + 0.36, f: 523, d: 0.3, type: 'triangle', vol: 0.15 }); },
     turn: function () { var t = S.ctx.currentTime; tone({ t: t, f: 659, d: 0.25, vol: 0.12, verb: 1 }); tone({ t: t + 0.12, f: 880, d: 0.4, vol: 0.12, verb: 1 }); },
     myTurn: function () { var t = S.ctx.currentTime; [523, 659, 784, 1047].forEach(function (f, i) { tone({ t: t + i * 0.09, f: f, d: 0.35, type: 'triangle', vol: 0.15, verb: 1 }); }); },
@@ -79,70 +93,27 @@
     out: function () { var t = S.ctx.currentTime; [392, 370, 349, 262].forEach(function (f, i) { tone({ t: t + i * 0.22, f: f, d: 0.35, type: 'triangle', vol: 0.14 }); }); }
   };
 
-  // ---------- música: secuenciador simple ----------
-  // Cada tema: bpm, pasos por compás (16), y función voice(step, t, bar) que agenda notas.
-  function pad(f, t, d, v) { [0, -7, 7].forEach(function (det) { tone({ t: t, f: f, d: d, type: 'triangle', vol: v, a: 0.25, det: det, out: S.mus, verb: 1, cut: 1800 }); }); }
-  function ep(f, t, d, v) { tone({ t: t, f: f, d: d, type: 'sine', vol: v, a: 0.01, out: S.mus, verb: 1 }); tone({ t: t, f: f * 2, d: d * 0.5, type: 'sine', vol: v * 0.25, a: 0.005, out: S.mus }); }
-  function hat(t, v) { noise({ t: t, d: 0.05, vol: v, f: 8000, q: 1, type: 'highpass', out: S.mus }); }
-  function kick(t, v) { tone({ t: t, f: 120, glide: 45, d: 0.25, type: 'sine', vol: v, out: S.mus }); }
-  function drum(t, v, f) { tone({ t: t, f: f || 90, glide: (f || 90) * 0.6, d: 0.35, type: 'sine', vol: v, out: S.mus }); noise({ t: t, d: 0.08, vol: v * 0.4, f: 600, q: 1, out: S.mus }); }
-  function tak(t, v) { noise({ t: t, d: 0.05, vol: v, f: 2500, q: 3, out: S.mus }); }
-  function pluck(f, t, v, cut) { tone({ t: t, f: f, d: 0.5, type: 'sawtooth', vol: v, cut: cut || 2600, cutEnd: 300, out: S.mus, verb: 1 }); }
-  function bass(f, t, d, v) { tone({ t: t, f: f, d: d, type: 'triangle', vol: v, a: 0.01, out: S.mus, cut: 700 }); }
-
-  var THEMES = {
-    // Dominio: lounge de jazz (ii–V–I–VI), swing suave
-    dominio: { bpm: 92, swing: 0.16, bars: 4, voice: function (st, t, bar, spb) {
-      var CH = [[50, [62, 65, 69, 72]], [43, [59, 62, 65, 69]], [48, [60, 64, 67, 71]], [45, [61, 64, 67, 70]]];
-      var ch = CH[bar % 4];
-      if (st === 0) ch[1].forEach(function (m, i) { ep(mtof(m), t + i * 0.012, spb * 7, 0.05); });
-      if (st === 10) ch[1].slice(1).forEach(function (m) { ep(mtof(m), t, spb * 3, 0.03); });
-      if (st % 4 === 0) { var walk = [0, 3, 5, 7]; bass(mtof(ch[0] + walk[st / 4]), t, spb * 3.2, 0.2); }
-      if (st % 2 === 0) hat(t, st % 4 === 2 ? 0.05 : 0.025);
-      if (st === 0 || st === 8) kick(t, 0.12);
-      if (bar % 2 === 1 && st === 12) { tone({ t: t, f: mtof(ch[1][3] + 12), d: spb * 3, type: 'sine', vol: 0.035, out: S.mus, verb: 1 }); }
-    } },
-    // Leyendas: épica antigua (re dórico), tambores de marco y laúd
-    leyendas: { bpm: 84, swing: 0, bars: 4, voice: function (st, t, bar, spb) {
-      var ROOT = [50, 48, 46, 48][bar % 4], SC = [0, 2, 3, 5, 7, 9, 10, 12];
-      if (st === 0) { pad(mtof(ROOT - 12), t, spb * 15, 0.03); pad(mtof(ROOT - 5), t, spb * 15, 0.02); }
-      if ([0, 6, 8, 14].indexOf(st) >= 0) drum(t, st === 0 ? 0.22 : 0.13, st === 0 ? 70 : 95);
-      if ([3, 11].indexOf(st) >= 0) tak(t, 0.08);
-      if (st % 2 === 0) { var pat = [0, 4, 7, 4, 2, 4, 7, 9]; var m = ROOT + 12 + SC[pat[(st / 2 + bar) % 8] % 8]; pluck(mtof(m), t, 0.045, 2200); }
-      if (bar % 4 === 3 && st === 8) tone({ t: t, f: mtof(ROOT + 24), d: spb * 7, type: 'sawtooth', vol: 0.025, a: 0.4, out: S.mus, verb: 1, cut: 1400 });
-    } },
-    // ¿Quién soy?: concurso alegre (I–vi–IV–V)
-    quien: { bpm: 118, swing: 0, bars: 4, voice: function (st, t, bar, spb) {
-      var CH = [[48, [60, 64, 67]], [45, [57, 60, 64]], [41, [57, 60, 65]], [43, [59, 62, 67]]][bar % 4];
-      if (st % 2 === 0) { var arp = CH[1][(st / 2) % 3] + 12; tone({ t: t, f: mtof(arp), d: spb * 0.8, type: 'square', vol: 0.025, cut: 2400, out: S.mus }); }
-      if (st % 4 === 0) bass(mtof(CH[0]), t, spb * 1.5, 0.18);
-      if (st === 4 || st === 12) { noise({ t: t, d: 0.09, vol: 0.09, f: 1500, q: 0.8, out: S.mus }); }
-      if (st === 0 || st === 8) kick(t, 0.13);
-      if (st % 2 === 1) hat(t, 0.025);
-      if (st === 0) CH[1].forEach(function (m) { tone({ t: t, f: mtof(m), d: spb * 14, type: 'triangle', vol: 0.02, a: 0.2, out: S.mus, verb: 1 }); });
-    } }
-  };
+  // ---------- música: temas CC0 de OpenGameArt, en bucle ----------
+  var MUSIC = { dominio: '/audio/music/jazz.mp3', leyendas: '/audio/music/bard.mp3', quien: '/audio/music/cozy.mp3' };
+  var MVOL = { dominio: 1.4, leyendas: 0.95, quien: 0.9 };
   function startLoop() {
-    var c = S.ctx; if (!c || !S.theme || S.timer) return;
-    var th = THEMES[S.theme]; var spb = 60 / th.bpm / 4; S.nextT = c.currentTime + 0.1; S.step = 0;
-    S.mus.gain.cancelScheduledValues(c.currentTime); S.mus.gain.setValueAtTime(0.0001, c.currentTime); S.mus.gain.exponentialRampToValueAtTime(0.5, c.currentTime + 1.5);
-    S.timer = setInterval(function () {
-      if (!S.ctx || S.ctx.state !== 'running') return;
-      while (S.nextT < S.ctx.currentTime + 0.25) {
-        var st = S.step % 16, bar = Math.floor(S.step / 16);
-        var t = S.nextT + (st % 2 === 1 ? th.swing * spb * 2 : 0);
-        try { th.voice(st, t, bar, spb); } catch (e) {}
-        S.nextT += spb; S.step += 1;
-      }
-    }, 60);
+    var c = S.ctx; if (!c || !S.theme || S.src || S.loading === S.theme) return;
+    var th = S.theme; S.loading = th;
+    load(MUSIC[th]).then(function (b) {
+      S.loading = null; if (!b || S.src || S.theme !== th || !S.on) return;
+      var src = c.createBufferSource(); src.buffer = b; src.loop = true; src.connect(S.mus);
+      S.mus.gain.cancelScheduledValues(c.currentTime); S.mus.gain.setValueAtTime(0.0001, c.currentTime); S.mus.gain.exponentialRampToValueAtTime(MVOL[th] || 0.5, c.currentTime + 2.5);
+      src.start(); S.src = src;
+    });
   }
-  function stopLoop() { clearInterval(S.timer); S.timer = null; }
+  function stopLoop() { if (S.src) { try { S.src.stop(); } catch (e) {} S.src = null; } S.loading = null; }
+  S.timer = null;
 
   window.YJS = { _s: S,
     play: function (n) { if (!S.on) return; var c = init(); if (!c || !FX[n]) return; if (c.state !== 'running') { try { c.resume(); } catch (e) {} return; } try { FX[n](); } catch (e) {} },
     music: function (theme) { if (S.theme === theme) return; stopLoop(); S.theme = theme; if (S.on && S.ctx && S.ctx.state === 'running') startLoop(); },
     stopMusic: function () { stopLoop(); S.theme = null; },
     isOn: function () { return S.on; },
-    toggle: function () { S.on = !S.on; try { localStorage.setItem('yj-sound', S.on ? 'on' : 'off'); } catch (e) {} var c = init(); if (c) { S.master.gain.setTargetAtTime(S.on ? 1 : 0, c.currentTime, 0.05); if (S.on) { c.resume(); if (S.theme && !S.timer) startLoop(); } } if (S.tag) { try { if (S.on) S.tag.play().catch(function () {}); else S.tag.pause(); } catch (e) {} } if (S.on) { var me = this; setTimeout(function () { me.play('ok'); }, 120); } return S.on; }
+    toggle: function () { S.on = !S.on; try { localStorage.setItem('yj-sound', S.on ? 'on' : 'off'); } catch (e) {} var c = init(); if (c) { S.master.gain.setTargetAtTime(S.on ? 1 : 0, c.currentTime, 0.05); if (S.on) { c.resume(); if (S.theme && !S.src) startLoop(); } } if (S.tag) { try { if (S.on) S.tag.play().catch(function () {}); else S.tag.pause(); } catch (e) {} } if (!S.on) stopLoop(); if (S.on) { var me = this; setTimeout(function () { me.play('ok'); }, 120); } return S.on; }
   };
 })();

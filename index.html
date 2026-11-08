@@ -228,6 +228,7 @@ html{scroll-behavior:smooth}
 @keyframes domc{from{clip-path:circle(5% at 50% 50%)}to{clip-path:circle(80% at 50% 50%)}}
 @keyframes domt{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:none}}
 @keyframes domp{from{opacity:1}to{opacity:0}}
+.sitehdr::before{content:"";position:absolute;left:0;right:0;top:0;height:env(safe-area-inset-top, 0px);background:#14110F;z-index:-1}
 @media (max-width:900px){
  .nav-links,.hide-sm{display:none !important}
  .rv-l,.rv-r{animation-name:rv}
@@ -328,7 +329,7 @@ html{scroll-behavior:smooth}
 <div class="yj {{themeCls}}" style="min-height: 100vh">
 
 <!-- HEADER -->
-<header style="position: sticky; top: 0; z-index: 50; padding: 16px clamp(20px, 3vw, 40px) 0">
+<header class="sitehdr" style="position: sticky; top: 0; z-index: 50; padding: calc(16px + env(safe-area-inset-top, 0px)) clamp(20px, 3vw, 40px) 0">
 <nav class="navbar" aria-label="Principal">
 <a class="logo-link" href="#inicio" aria-label="YAJUGÁ Games Vault, inicio"><img src="/assets/iso.png" alt="" style="height: 36px; width: auto; display: block"></a>
 <div class="nav-links">

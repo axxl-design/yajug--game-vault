@@ -440,6 +440,31 @@ a{color:#E0A33A}
 .cfg-opts button{min-height:40px;font-size:13px}.cfg-opts button.on{background:#E0A33A;color:#14110F;border-color:#E0A33A}
 .cfg-help{margin:12px auto 0;max-width:460px;font-size:13px;line-height:1.5;opacity:.75}
 .pav.out{opacity:.3;filter:grayscale(1)}.hp-row.out{opacity:.45}
+
+/* --- dominio: efecto en los bordes, el centro queda libre --- */
+.dfx{position:absolute;inset:0;z-index:70;pointer-events:none;overflow:hidden}
+.dfx-glow{position:absolute;inset:0;box-shadow:inset 0 0 0 3px var(--dc),inset 0 0 70px 14px color-mix(in srgb,var(--dc) 70%,transparent),inset 0 0 200px 40px color-mix(in srgb,var(--dc) 26%,transparent);animation:dfxin 1.1s ease-out both,dfxpulse 2.6s 1.1s ease-in-out infinite}
+@keyframes dfxin{from{opacity:0;transform:scale(1.04)}}
+@keyframes dfxpulse{50%{opacity:.62}}
+.dfx-edges span{position:absolute;color:var(--dc);text-shadow:0 0 10px color-mix(in srgb,var(--dc) 80%,#fff),0 0 22px var(--dc);font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:800;opacity:0;animation-name:dfxfl;animation-timing-function:ease-in-out;animation-iteration-count:infinite}
+.dfx-edges .l{left:8px;top:var(--p)}.dfx-edges .r{right:8px;top:var(--p)}.dfx-edges .t{top:calc(66px + env(safe-area-inset-top, 0px));left:var(--p)}.dfx-edges .b{bottom:calc(110px + env(safe-area-inset-bottom, 0px));left:var(--p)}
+@keyframes dfxfl{0%{opacity:0;transform:translateY(14px) scale(.6) rotate(-8deg)}25%{opacity:1}70%{opacity:.85}100%{opacity:0;transform:translateY(-26px) scale(1.05) rotate(8deg)}}
+.dfx-bolts{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.dfx-bolts path{fill:none;stroke:#DDF3FF;stroke-width:.45;stroke-linejoin:round;vector-effect:non-scaling-stroke;filter:drop-shadow(0 0 4px #6FC3FF) drop-shadow(0 0 10px #2E8BFF);opacity:0;animation:bolt 2.8s steps(1) infinite}
+.dfx-bolts path{stroke-width:3px}
+.dfx-bolts .b2{animation-delay:.5s}.dfx-bolts .b3{animation-delay:1.1s}.dfx-bolts .b4{animation-delay:1.6s}.dfx-bolts .b5{animation-delay:2.1s}.dfx-bolts .b6{animation-delay:.8s}
+@keyframes bolt{0%{opacity:1}4%{opacity:.2}7%{opacity:1}12%{opacity:0}100%{opacity:0}}
+.dz-tesla .dfx-glow{box-shadow:inset 0 0 0 2px #8FD3FF,inset 0 0 60px 10px rgba(79,163,255,.75),inset 0 0 180px 40px rgba(46,139,255,.28)}
+.dz-tesla .dfx-edges span{color:#BFE6FF;text-shadow:0 0 10px #6FC3FF,0 0 24px #2E8BFF}
+.dfx-badge{position:absolute;left:50%;top:calc(72px + env(safe-area-inset-top, 0px));display:flex;align-items:center;gap:12px;padding:8px 20px 8px 8px;border-radius:999px;background:#14110F;color:#EFE6D2;box-shadow:0 0 0 3px var(--dc),0 0 40px -4px var(--dc),0 20px 40px -14px rgba(0,0,0,.7);white-space:nowrap;animation:dfxbadge 5.4s cubic-bezier(.2,.9,.3,1) both}
+.dfx-badge img{width:46px;height:46px;border-radius:50%;object-fit:cover;border:3px solid var(--dc)}
+.dfx-badge small{display:block;font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--dc)}
+.dfx-badge b{display:block;font:800 18px/1.1 'Bricolage Grotesque',sans-serif}
+.dfx-badge span{display:block;font-size:11px;opacity:.7;margin-top:2px}
+@keyframes dfxbadge{0%{opacity:0;transform:translate(-50%,-20px) scale(.8)}10%{opacity:1;transform:translate(-50%,0) scale(1.04)}16%{transform:translate(-50%,0) scale(1)}86%{opacity:1;transform:translate(-50%,0) scale(1)}100%{opacity:0;transform:translate(-50%,-10px) scale(.96)}}
+/* aura que queda mientras dura el dominio: solo un borde suave */
+.aura{box-shadow:inset 0 0 0 2px var(--dc),inset 0 0 50px 6px color-mix(in srgb,var(--dc) 45%,transparent) !important;background:none !important}
+.aura .dz-pat{display:none !important}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none !important;transition:none !important}}
 </style>
 
@@ -709,19 +734,11 @@ a{color:#E0A33A}
 
 <!-- DOMAIN -->
 <sc-if value="{{showDom}}" hint-placeholder-val="{{ false }}">
-<div class="dom dz-{{dom.id}}" role="status" style="--dc: {{dom.color}}; --df: {{dom.fg}}">
-<div class="dz-bg"></div><div class="dz-pat"></div><div class="dz-bars"></div>
-<div class="dz-glyphs" aria-hidden="true"><sc-for list="{{dom.glyphs}}" as="gl" hint-placeholder-count="0"><span style="left: {{gl.x}}%; font-size: {{gl.s}}px; animation-delay: {{gl.d}}s; animation-duration: {{gl.t}}s">{{gl.c}}</span></sc-for></div>
-<div class="dz-vig"></div><div class="dz-flash"></div>
-<div class="dz-call" aria-hidden="true"><span>Dominio</span><span>activado</span></div>
-<div class="dz-main">
-<div class="dz-por"><img src="{{dom.img}}" alt=""></div>
-<div class="dz-kick">{{dom.kicker}}</div>
-<div class="dz-title">{{dom.title}}</div>
-<div class="dz-desc">{{dom.desc}}</div>
-<div class="dz-trap"><b>Atrapados</b><sc-for list="{{dom.trapped}}" as="tp" hint-placeholder-count="0"><span class="dz-tp" style="--tc: {{tp.color}}; animation-delay: {{tp.d}}s"><img src="{{tp.img}}" alt="">{{tp.name}}</span></sc-for></div>
-<sc-if value="{{dom.hasResult}}" hint-placeholder-val="{{ false }}"><div class="dz-res">{{dom.result}}</div></sc-if>
-</div>
+<div class="dfx dz-{{dom.id}}" role="status" style="--dc: {{dom.color}}; --df: {{dom.fg}}">
+<div class="dfx-glow"></div>
+<div class="dfx-edges" aria-hidden="true"><sc-for list="{{dom.glyphs}}" as="gl" hint-placeholder-count="0"><span class="{{gl.side}}" style="--p: {{gl.x}}%; font-size: {{gl.s}}px; animation-delay: {{gl.d}}s; animation-duration: {{gl.t}}s">{{gl.c}}</span></sc-for></div>
+<sc-if value="{{dom.bolts}}" hint-placeholder-val="{{ false }}"><svg class="dfx-bolts" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path class="b1" d="M0 8 L4 13 L1.5 15 L6 22 L3 24 L8 33"/><path class="b2" d="M100 30 L95.5 35 L98 37 L93 45 L96 47 L91 56"/><path class="b3" d="M22 0 L26 4 L24 5.5 L30 9 L28 10.5 L35 15"/><path class="b4" d="M70 100 L74 95.5 L72 94 L78 90 L76 88.5 L83 84"/><path class="b5" d="M0 70 L5 73 L2.5 76 L8 80 L4.5 83 L10 90"/><path class="b6" d="M100 82 L95 86 L97.5 88 L92 93 L95 95 L89 100"/></svg></sc-if>
+<div class="dfx-badge"><img src="{{dom.img}}" alt=""><div><small>Dominio activado</small><b>{{dom.title}}</b><span>{{dom.kicker}}</span></div></div>
 </div>
 </sc-if>
 
@@ -911,6 +928,7 @@ class Component extends DCLogic {
     const P = this.sndPrev; const pos = (g.players || []).map((p) => p.pos); const own = Object.keys(g.owners || {}).length; const hs = Object.values(g.houses || {}).reduce((a, b) => a + b, 0); const fly = (g.fly || []).length;
     const now = { dice: !!g.diceShow, dom: g.dom ? g.dom.title : null, pos, own, hs, fly, screen: g.screen, out: (g.players || []).map((p) => !!p.out) };
     this.sndPrev = now; if (!P) return; this.sndReady = true;
+    if (now.screen === 'game' && P.screen !== 'game') this.snd('shuffle');
     if (now.dice && !P.dice) this.snd('dice');
     if (now.dom && now.dom !== P.dom) this.snd('domain');
     if (pos.some((x, k) => P.pos[k] !== undefined && x !== P.pos[k])) this.snd('step');
@@ -1219,7 +1237,7 @@ class Component extends DCLogic {
     const g = this.g; const p = g.players[pi]; const r = this.role(p);
     p.charge = 0; this.ui.sheet = null;
     const GL = { banquero: '$◎$¢', estafador: '♠♥♦♣', abogado: '§⚖§¶', corredor: '$%↑↓', coleccionista: '◆✦◇✧', arquitecto: '△▢⌂┼' }[r.id];
-    g.dom = { id: r.id, kicker: this.you(pi) ? 'Activaste tu dominio' : `${p.name} activó su dominio`, title: r.dom, desc: r.domDesc, color: r.color, fg: r.fg, img: IMG[r.id], result: '', glyphs: Array.from({ length: 16 }, (_, k) => ({ c: GL[k % GL.length], x: Math.round(Math.random() * 96), s: 26 + Math.round(Math.random() * 46), d: (1.6 + Math.random() * 5).toFixed(2), t: (5 + Math.random() * 4).toFixed(2) })), trapped: this.rivalsOf(pi).map((k, n) => { const rr = this.role(g.players[k]); return { name: g.players[k].name, img: IMG[rr.id], color: rr.color, d: (2.3 + n * 0.25).toFixed(2) }; }) };
+    g.dom = { id: r.id, kicker: this.you(pi) ? 'Activaste tu dominio' : `${p.name} activó su dominio`, title: r.dom, desc: r.domDesc, color: r.color, fg: r.fg, img: IMG[r.id], result: '', glyphs: Array.from({ length: 20 }, (_, k) => ({ c: GL[k % GL.length], side: ['l', 'r', 't', 'b'][k % 4], x: 12 + Math.round(Math.random() * 74), s: 16 + Math.round(Math.random() * 16), d: (Math.random() * 2.4).toFixed(2), t: (2.4 + Math.random() * 2.2).toFixed(2) })), bolts: r.id === 'tesla', trapped: this.rivalsOf(pi).map((k, n) => { const rr = this.role(g.players[k]); return { name: g.players[k].name, img: IMG[rr.id], color: rr.color, d: (2.3 + n * 0.25).toFixed(2) }; }) };
     g.aura = { id: r.id, color: r.color, fg: r.fg, name: r.dom, turns: g.players.length };
     this.refresh();
     this.later(() => { this.txOpen(); g.dom.result = this.domainEffect(pi, r.id); this.txClose(pi, { card: r.dom, ic: '★', ct: 'dom', text: r.domDesc + (g.dom.result ? ' · ' + g.dom.result : '') }); this.log(`${p.name} activó ${r.dom}`); this.refresh(); this.later(() => { g.dom = null; if (this.broke()) return; this.refresh(); if (cont) cont(); }, 6500); }, 3400);
