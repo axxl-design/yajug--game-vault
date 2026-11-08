@@ -113,6 +113,7 @@ body{margin:0;background:#14110F}
 .podium{display:flex;justify-content:center;align-items:flex-end;gap:14px;margin-top:36px}
 .pod{width:150px;border-radius:20px 20px 0 0;padding:16px 10px;text-align:center;color:#14110F;font:800 16px 'Bricolage Grotesque';animation:deal .8s cubic-bezier(.2,.9,.3,1.3) both}
 .pod b{display:block;font-size:34px}
+button.pill{cursor:pointer;font:inherit;color:inherit}.sndb{min-height:40px}
 @media (max-width:820px){.online{grid-template-columns:1fr}.pod{width:104px;font-size:14px}}
 @media (max-width:820px){.stage{grid-template-columns:1fr}.who{min-height:0}.opts{grid-template-columns:1fr 1fr}.opt{min-height:56px;font-size:15px}}
 @media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
@@ -129,7 +130,7 @@ body{margin:0;background:#14110F}
 <div class="top">
 <a class="home" href="Main.dc.html" aria-label="Volver a YAJUGÁ"><img src="/assets/iso.png" alt=""></a>
 <sc-if value="{{isPlay}}" hint-placeholder-val="{{ false }}"><div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end"><span class="pill">{{roundTxt}}</span><span class="pill" style="color: #E0A33A">{{score}} pts</span><sc-if value="{{hasStreak}}" hint-placeholder-val="{{ false }}"><span class="pill" style="background: #C13B1F; border-color: #C13B1F">Racha x{{streak}}</span></sc-if></div></sc-if>
-<sc-if value="{{notPlay}}" hint-placeholder-val="{{ true }}"><span class="pill">{{topTxt}}</span></sc-if>
+<div style="display: flex; gap: 8px; align-items: center"><sc-if value="{{notPlay}}" hint-placeholder-val="{{ true }}"><span class="pill">{{topTxt}}</span></sc-if><button class="pill sndb" type="button" onClick="{{sndToggle}}" aria-label="Música y sonido">{{sndTxt}}</button></div>
 </div>
 
 <!-- HOME -->
@@ -294,6 +295,7 @@ body{margin:0;background:#14110F}
 <script src="/dc.js"></script>
 <script>(function(){var v=window.visualViewport;function f(){var h=v?v.height:innerHeight;document.documentElement.style.setProperty('--vvh',h+'px')}f();(v||window).addEventListener('resize',f);addEventListener('orientationchange',function(){setTimeout(f,300)})})()</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/sfx.js"></script>
 <script>
 
 const CATS = [
@@ -500,30 +502,46 @@ class Component extends DCLogic {
     g.r = { e, k, shown: 1, opts: shuf([e[0], ...others]), bad: [], done: false, won: false, pts: 0, deal: 0 };
     this.refresh();
   }
-  more() { const r = this.g.r; if (r.done || r.shown >= 4) return; r.shown += 1; r.deal += 1; this.refresh(); }
+  snd(n) { if (typeof window !== 'undefined' && window.YJS) window.YJS.play(n); }
+  more() { const r = this.g.r; if (r.done || r.shown >= 4) return; r.shown += 1; r.deal += 1; this.snd('clue'); this.refresh(); }
   pick(t) {
     const g = this.g; const r = g.r; if (r.done || r.bad.includes(t)) return;
     if (t === r.e[0]) {
-      r.done = true; r.won = true; g.streak += 1; g.hits += 1;
+      r.done = true; r.won = true; g.streak += 1; g.hits += 1; this.snd('ok');
       r.pts = PTS[r.shown - 1] + (g.streak > 1 ? (g.streak - 1) * 10 : 0); g.score += r.pts;
     } else {
-      r.bad.push(t); g.streak = 0;
+      r.bad.push(t); g.streak = 0; this.snd('bad');
       if (r.shown < 4) { r.shown += 1; r.deal += 1; } else { r.done = true; r.won = false; }
     }
     if (r.done) g.log.push({ name: r.e[0], pts: r.won ? '+' + r.pts : '0', c: r.won ? '#7FD1C7' : '#E8705A' });
     this.refresh();
   }
   next() { const g = this.g; if (g.i >= 9) { g.screen = 'end'; this.refresh(); return; } g.i += 1; this.round(); }
+  sndVals() { const on = typeof window === 'undefined' || !window.YJS || window.YJS.isOn(); return { sndTxt: on ? '♪ Sonido' : '♪ Sin sonido', sndToggle: () => { if (window.YJS) window.YJS.toggle(); this.refresh(); } }; }
+  sndDiff() {
+    if (typeof window === 'undefined' || !window.YJS) return; window.YJS.music('quien');
+    const m = this.m; const rs = m ? m.rs : null; const me = this.myId;
+    const now = rs ? { ph: rs.phase, i: rs.i, sh: rs.shown, left: rs.left, mine: rs.answers && rs.answers[me] ? rs.answers[me].ok : null } : { ph: this.g.screen };
+    const P = this.sPrev; this.sPrev = now; if (!P) return;
+    if (rs) {
+      if (now.ph === 'clue' && (P.ph !== 'clue' || now.sh !== P.sh || now.i !== P.i)) this.snd('clue');
+      if (now.ph === 'clue' && now.left !== P.left && now.left <= 3 && now.left > 0) this.snd('tick');
+      if (now.ph === 'reveal' && P.ph !== 'reveal') this.snd(now.mine ? 'ok' : now.mine === false ? 'bad' : 'diceLand');
+      if (now.ph === 'choose' && P.ph !== 'choose') this.snd('turn');
+      if (now.ph === 'end' && P.ph !== 'end') this.snd('win');
+    } else if (now.ph === 'end' && P.ph !== 'end') this.snd('win');
+  }
   renderVals() {
+    this.sndDiff();
     const g = this.g; const r = g.r; const cat = CATS.find((c) => c.id === (r ? r.k : g.cid)) || CATS[0];
     const M_ = this.m; const ph = M_ ? M_.rs.phase : null;
     if (M_) {
       return { isHome: false, isPlay: false, isEnd: false, notPlay: true, topTxt: 'Sala ' + M_.code, cats: [], score: 0, streak: 0, hasStreak: false, netOk: false,
-        isLobby: ph === 'lobby', isChoose: ph === 'choose', isMp: ph === 'clue' || ph === 'reveal', isMpEnd: ph === 'end', mErr: this.mErr, ...this.mpVals() };
+        ...this.sndVals(), isLobby: ph === 'lobby', isChoose: ph === 'choose', isMp: ph === 'clue' || ph === 'reveal', isMpEnd: ph === 'end', mErr: this.mErr, ...this.mpVals() };
     }
     const netOk = typeof window !== 'undefined' && !!window.supabase;
     const base = {
-      isLobby: false, isChoose: false, isMp: false, isMpEnd: false, topTxt: 'YAJUGÁ · Juego 03', netOk, noNet: !netOk,
+      ...this.sndVals(), isLobby: false, isChoose: false, isMp: false, isMpEnd: false, topTxt: 'YAJUGÁ · Juego 03', netOk, noNet: !netOk,
       tabSolo: this.tab === 'solo' ? 'on' : '', tabFriends: this.tab === 'friends' ? 'on' : '', showSolo: this.tab === 'solo', showFriends: this.tab === 'friends',
       goSolo: () => { this.tab = 'solo'; this.refresh(); }, goFriends: () => { this.tab = 'friends'; this.refresh(); }, mErr: this.mErr, fName: this.form.name, fCode: this.form.code,
       onName: (e) => { this.form.name = e.target.value.slice(0, 16); },
@@ -565,7 +583,7 @@ class Component extends DCLogic {
   }
 }
 
-DCBoot(Component,'tpl');
+window.__comp=DCBoot(Component,'tpl');
 </script>
 </body>
 </html>

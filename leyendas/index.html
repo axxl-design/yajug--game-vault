@@ -545,7 +545,7 @@ a{color:#E0A33A}
 </button>
 <div class="hright">
 <button class="cap rinfo" type="button" onClick="{{hudToggle}}"><b>{{roundShort}}</b><span>{{playsShort}}</span></button>
-<button class="iconbtn hbtn" type="button" onClick="{{histToggle}}" aria-label="Historial de la partida"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"></path></svg><sc-if value="{{hasUnread}}" hint-placeholder-val="{{ false }}"><i class="hbadge">{{unread}}</i></sc-if></button>
+<button class="iconbtn hbtn" type="button" onClick="{{sndToggle}}" aria-label="{{sndLbl}}"><sc-if value="{{sndOn}}" hint-placeholder-val="{{ true }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"></path></svg></sc-if><sc-if value="{{sndOff}}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H2v6h4l5 4V5z"></path><path d="M22 9l-6 6M16 9l6 6"></path></svg></sc-if></button>
 <button class="iconbtn hbtn" type="button" onClick="{{cleanToggle}}" aria-label="Limpiar pantalla"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l18 18M10.6 5.1A10 10 0 0 1 12 5c5 0 9 4.5 10 7a13 13 0 0 1-3 4M6.6 6.6C4.3 8 2.7 10.2 2 12c1 2.5 5 7 10 7a10 10 0 0 0 5.4-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2"></path></svg></button>
 </div>
 </div>
@@ -586,16 +586,6 @@ a{color:#E0A33A}
 </div>
 </sc-if>
 
-<sc-if value="{{histOpen}}" hint-placeholder-val="{{ false }}">
-<div class="hist-bg" onClick="{{histToggle}}"></div>
-<aside class="hist" aria-label="Historial">
-<div class="hist-h"><div><div class="eyebrow" style="color: #E0A33A">Historial</div><b class="hd">Lo que pasó</b></div><button class="iconbtn" type="button" onClick="{{histToggle}}" aria-label="Cerrar historial">✕</button></div>
-<div class="hist-l">
-<sc-for list="{{hist}}" as="h" hint-placeholder-count="4"><div class="hx {{h.cls}}"><span class="hx-r">R{{h.r}}</span><span class="hx-ic">{{h.ic}}</span><div><b>{{h.t}}</b><sc-if value="{{h.hasSub}}" hint-placeholder-val="{{ false }}"><span>{{h.sub}}</span></sc-if></div></div></sc-for>
-<sc-if value="{{histEmpty}}" hint-placeholder-val="{{ false }}"><p class="muted" style="padding: 20px; text-align: center">Todavía no pasó nada.</p></sc-if>
-</div>
-</aside>
-</sc-if>
 
 <div class="camctl">
 <sc-if value="{{canVoteStart}}" hint-placeholder-val="{{ false }}"><button class="iconbtn" type="button" onClick="{{voteStart}}" aria-label="Proponer terminar la partida"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4h11l-2 4 2 4H5"></path></svg></button></sc-if>
@@ -757,6 +747,7 @@ a{color:#E0A33A}
 <script>window.YJ_GAME='leyendas'</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/net.js"></script>
+<script src="/sfx.js"></script>
 <script>
 
 const ISO = '/assets/iso.png';
@@ -921,6 +912,20 @@ class Component extends DCLogic {
   log(t) { this.g.log.unshift({ t }); this.g.log = this.g.log.slice(0, 2); this.emit({ k: 'log', t }); }
   emit(e) { const g = this.g; g.evN = (g.evN || 0) + 1; e.id = g.evN; e.r = g.round; g.ev = (g.ev || []).concat([e]).slice(-70); }
   toast(t, to) { this.emit({ k: 'toast', t, to: to === undefined ? null : to }); this.refresh(); }
+  snd(n) { if (typeof window !== 'undefined' && window.YJS && this.sndReady) window.YJS.play(n); }
+  sndDiff(g, S) {
+    if (typeof window === 'undefined' || !window.YJS) return; window.YJS.music('leyendas');
+    const P = this.sndPrev; const pos = (g.players || []).map((p) => p.pos); const own = Object.keys(g.owners || {}).length; const hs = Object.values(g.houses || {}).reduce((a, b) => a + b, 0); const fly = (g.fly || []).length;
+    const now = { dice: !!g.diceShow, dom: g.dom ? g.dom.title : null, pos, own, hs, fly, screen: g.screen, out: (g.players || []).map((p) => !!p.out) };
+    this.sndPrev = now; if (!P) return; this.sndReady = true;
+    if (now.dice && !P.dice) this.snd('dice');
+    if (now.dom && now.dom !== P.dom) this.snd('domain');
+    if (pos.some((x, k) => P.pos[k] !== undefined && x !== P.pos[k])) this.snd('step');
+    if (fly > P.fly) this.snd('card');
+    if (own > P.own) this.snd('buy'); if (hs > P.hs) this.snd('build');
+    if (now.out.some((x, k) => x && !P.out[k])) this.snd('out');
+    if (now.screen === 'end' && P.screen !== 'end') this.snd('win');
+  }
   chgFx(e) {
     if (typeof document === 'undefined' || !document.body || !document.body.animate) return;
     const a = document.querySelector(`.pav[data-pi="${e.pi}"] .pav-a`); if (!a) return; const r = a.getBoundingClientRect();
@@ -1227,7 +1232,7 @@ class Component extends DCLogic {
     g.dom = { id: PAT[r.id] || r.id, kicker: this.you(pi) ? 'Activaste tu dominio' : `${p.name} activó su dominio`, title: r.dom, desc: r.domDesc, color: r.color, fg: r.fg, img: IMG[r.id], result: '', glyphs: Array.from({ length: 16 }, (_, k) => ({ c: GL[k % GL.length], x: Math.round(Math.random() * 96), s: 26 + Math.round(Math.random() * 46), d: (1.6 + Math.random() * 5).toFixed(2), t: (5 + Math.random() * 4).toFixed(2) })), trapped: this.rivalsOf(pi).map((k, n) => { const rr = this.role(g.players[k]); return { name: g.players[k].name, img: IMG[rr.id], color: rr.color, d: (2.3 + n * 0.25).toFixed(2) }; }) };
     g.aura = { id: PAT[r.id] || r.id, color: r.color, fg: r.fg, name: r.dom, turns: g.players.length };
     this.refresh();
-    this.later(() => { g.dom.result = this.domainEffect(pi, r.id); this.log(`${p.name} activó ${r.dom}`); this.refresh(); this.later(() => { g.dom = null; if (this.broke()) return; this.refresh(); if (cont) cont(); }, 3600); }, 3000);
+    this.later(() => { this.txOpen(); g.dom.result = this.domainEffect(pi, r.id); this.txClose(pi, { card: r.dom, ic: '★', ct: 'dom', text: r.domDesc + (g.dom.result ? ' · ' + g.dom.result : '') }); this.log(`${p.name} activó ${r.dom}`); this.refresh(); this.later(() => { g.dom = null; if (this.broke()) return; this.refresh(); if (cont) cont(); }, 6500); }, 3400);
   }
   domainEffect(pi, id) {
     const g = this.g; const p = g.players[pi]; const rv = this.rivalsOf(pi);
@@ -1404,14 +1409,18 @@ class Component extends DCLogic {
     const openS = (k) => () => { this.ui.sheet = this.ui.sheet === k ? null : k; this.refresh(); };
     const LIFTS = [0, 60, 120]; if (this.lift == null) { try { this.lift = +(localStorage.getItem('yj-lift') || 0) % 3; } catch (e) { this.lift = 0; } }
     const liftBar = () => { this.lift = (this.lift + 1) % 3; try { localStorage.setItem('yj-lift', String(this.lift)); } catch (e) {} this.toast && this.toast(['Barra abajo', 'Barra un poco más arriba', 'Barra bien arriba'][this.lift]); this.refresh(); };
+    this.sndDiff(g, S);
     const evs = g.ev || []; const lastId = evs.length ? evs[evs.length - 1].id : 0;
     if (this.evSeen == null || lastId < this.evSeen) this.evSeen = this.evSeen == null ? lastId : 0;
     if (g.cfg && g.cfg.mode === 'time' && g.screen === 'game' && typeof setTimeout !== 'undefined') { clearTimeout(this.clockT); this.clockT = setTimeout(() => this.setState({ v: Date.now() }), 1000); }
     this.notes = this.notes || []; this.unread = this.unread || 0; const fresh = [];
     evs.forEach((e) => { if (e.id <= this.evSeen) return; this.evSeen = e.id; if (e.to !== null && e.to !== undefined && e.to !== S) return; fresh.push(e); });
     fresh.forEach((e) => {
-      if (e.k === 'pay') { if (typeof setTimeout !== 'undefined') setTimeout(() => this.coinFx(e), 60); return; }
+      if (e.k === 'pay') { this.snd(e.to === S ? 'coin' : e.from === S ? 'pay' : 'coin'); if (typeof setTimeout !== 'undefined') setTimeout(() => this.coinFx(e), 60); return; }
+      if (e.k === 'chg' && e.pi === S) this.snd(e.full ? 'ready' : 'charge');
       if (e.k === 'chg') { if (typeof setTimeout !== 'undefined') setTimeout(() => this.chgFx(e), 1100); return; }
+      if (e.k === 'res' && e.ct !== 'dom') this.snd('play');
+      if (e.k === 'turn') { this.snd(e.pi === S ? 'myTurn' : 'turn'); }
       if (e.k === 'turn') { this.banner = e; if (typeof setTimeout !== 'undefined') { clearTimeout(this.bannerT); this.bannerT = setTimeout(() => { this.banner = null; this.setState({ v: Date.now() }); }, 2200); } return; }
       if (e.k === 'res' || e.k === 'toast') this.addNote(e);
       if ((e.k === 'res' || e.k === 'log' || (e.k === 'toast' && (e.to === null || e.to === undefined))) && !this.ui.hist) this.unread += 1;
@@ -1421,7 +1430,7 @@ class Component extends DCLogic {
     const resRows = (e) => e.rows.map((x) => { const pi = pInfo(x.pi); const t = x.no ? '✋ Se negó' : x.net < 0 ? `pagó ${M(-x.net)}` : x.net > 0 ? `recibió ${M(x.net)}` : 'sin cambios'; return { ...pi, tag: t, cls: x.no ? 'no' : x.net < 0 ? 'paid' : x.net > 0 ? 'got' : 'zero' }; });
     const mkNote = (e, k) => {
       const close = () => this.dropNote(e.id);
-      if (e.k === 'res') { const mine = e.who === S || e.rows.some((x) => x.pi === S); const gain = e.gain || 0; const rows = resRows(e); return { isRes: true, isToast: false, ic: e.ic || '★', kicker: e.land ? `${who(e.rows[0] ? e.rows[0].pi : e.who)} cayó en un lugar de ${who(e.who)}` : `${who(e.who)} jugó`, card: e.card, rows, hasRows: rows.length > 0, text: e.text, hasText: !!e.text && (!rows.length || e.rows.every((x) => !x.net)), hasGain: gain !== 0, gainTxt: (gain > 0 ? '+' : '−') + M(Math.abs(gain)).replace(/^[-−]/, '') + (e.who === S ? '' : ` · ${who(e.who)}`), gainCls: gain > 0 ? 'pos' : 'neg', cls: (mine ? 'mine ' : '') + (k ? 'old' : ''), close }; }
+      if (e.k === 'res') { const mine = e.who === S || e.rows.some((x) => x.pi === S); const gain = e.gain || 0; const rows = resRows(e); return { isRes: true, isToast: false, ic: e.ic || '★', kicker: e.ct === 'dom' ? `${who(e.who)} activó su dominio` : e.land ? `${who(e.rows[0] ? e.rows[0].pi : e.who)} cayó en un lugar de ${who(e.who)}` : `${who(e.who)} jugó`, card: e.card, rows, hasRows: rows.length > 0, text: e.text, hasText: !!e.text && (e.ct === 'dom' || !rows.length || e.rows.every((x) => !x.net)), hasGain: gain !== 0, gainTxt: (gain > 0 ? '+' : '−') + M(Math.abs(gain)).replace(/^[-−]/, '') + (e.who === S ? '' : ` · ${who(e.who)}`), gainCls: gain > 0 ? 'pos' : 'neg', cls: (mine ? 'mine ' : '') + (k ? 'old' : ''), close }; }
       return { isRes: false, isToast: true, t: e.t, cls: (e.to === S ? 'mine ' : '') + (k ? 'old' : ''), close };
     };
     const notes = this.notes.map((n, k) => mkNote(n.e, k));
@@ -1439,6 +1448,7 @@ class Component extends DCLogic {
       histOpen: !!this.ui.hist, hist, histEmpty: !hist.length, hasUnread: this.unread > 0 && !this.ui.hist, unread: this.unread > 9 ? '9+' : String(this.unread),
       histToggle: () => { this.ui.hist = !this.ui.hist; this.unread = 0; this.refresh(); },
       hasBanner: !!this.banner && !!g.players[this.banner.pi], banner: this.banner && g.players[this.banner.pi] ? (() => { const k = this.banner.pi; const p = g.players[k]; const r = this.role(p); return { name: k === S ? '¡Te toca!' : p.name, kick: k === S ? 'Tu turno' : `Turno de ${r.name}`, img: IMG[r.id], color: r.color, cls: k === S ? 'me' : '' }; })() : { name: '', kick: '', img: '', color: '', cls: '' },
+      sndOn: typeof window === 'undefined' || !window.YJS || window.YJS.isOn(), sndOff: !!(typeof window !== 'undefined' && window.YJS && !window.YJS.isOn()), sndLbl: 'Música y sonido', sndToggle: () => { if (window.YJS) window.YJS.toggle(); this.refresh(); },
       gameRule: this.cfgText(g.cfg || this.cfgNow()),
       hasNotes: notes.length > 0, notes, manyNotes: notes.length > 1, nstackCls: g.diceShow || g.dom || this.ui.hud || this.ui.hist ? 'hush' : '', closeNotes: () => { this.notes = []; this.refresh(); },
       gCls: (this.ui.clean ? 'clean ' : '') + (this.net && this.net.pend ? 'pend' : ''), liftPx: LIFTS[this.lift] + 'px', liftBar, liftCls: this.lift ? 'on' : '', liftTip: 'Subir o bajar la barra',
