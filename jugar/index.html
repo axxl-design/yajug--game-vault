@@ -423,13 +423,22 @@ a{color:#E0A33A}
 .hx b{display:block;font-size:13px;font-weight:600;line-height:1.4}.hx span{display:block;font-size:12px;opacity:.65;margin-top:2px;line-height:1.4}
 .hx.mine .hx-ic{background:#E0A33A;color:#14110F}
 .dice{z-index:90 !important}
-@media (max-width:700px){.pav{width:46px}.pav-a{width:40px;height:40px}.pav-a svg{width:40px;height:40px}.pav-a img{inset:4px;width:32px;height:32px}.pstrip{min-height:48px;padding-right:8px;gap:2px}.hlogo{width:40px;height:40px}.hbtn{width:40px;height:40px}.rinfo{padding:5px 10px;min-height:40px}.nstack{top:calc(80px + env(safe-area-inset-top, 0px));max-height:calc(100% - 260px)}.hright{gap:4px}}
+@media (max-width:700px){.pav{width:46px}.pav-a{width:40px;height:40px}.pav-a svg{width:40px;height:40px}.pav-a img{inset:4px;width:32px;height:32px}.pstrip{min-height:48px;padding-right:8px;gap:2px}.hlogo{width:40px;height:40px}.hbtn{width:40px;height:40px}.rinfo{padding:5px 10px;min-height:40px}.nstack{top:calc(108px + env(safe-area-inset-top, 0px));max-height:calc(100% - 290px)}.hright{gap:4px}}
 @media (max-width:700px){.rinfo,.pchev{display:none !important}.rchip{padding:5px 12px;font-size:10px;letter-spacing:.12em}}
 @media (max-width:700px){.pstrip:has(.pav:nth-child(4)) .pav{width:41px}.pstrip:has(.pav:nth-child(4)) .pav-a{width:36px;height:36px}.pstrip:has(.pav:nth-child(4)) .pav-a svg{width:36px;height:36px}.pstrip:has(.pav:nth-child(4)) .pav-a img{inset:4px;width:28px;height:28px}.pstrip:has(.pav:nth-child(4)) .pav b{font-size:9.5px;padding:1px 4px}.pstrip:has(.pav:nth-child(5)) .pav{width:38px}}
 @media (max-width:360px){.hlogo{display:none}}
 .yj-coin{position:fixed;z-index:9999;width:24px;height:24px;margin:0;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#FFE7A6,#E0A33A 55%,#9C6A16);color:#5A3A08;font:800 12px/1 'Bricolage Grotesque',sans-serif;box-shadow:0 4px 10px rgba(0,0,0,.45),inset 0 0 0 2px rgba(255,240,200,.5);pointer-events:none}.yj-delta{position:fixed;z-index:9999;padding:3px 9px;border-radius:999px;font:800 14px 'Bricolage Grotesque',sans-serif;pointer-events:none;box-shadow:0 6px 14px rgba(0,0,0,.4);white-space:nowrap}.yj-delta.pos{background:#2F6B3A;color:#EFE6D2}.yj-delta.chg{background:#E0A33A;color:#14110F;font-size:12px}.yj-delta.chg.full{background:#14110F;color:#E0A33A;box-shadow:0 0 0 2px #E0A33A,0 8px 20px rgba(0,0,0,.5);font-size:14px}.yj-delta.neg{background:#C13B1F;color:#EFE6D2}
 .solosel{display:flex;align-items:center;justify-content:center;gap:8px;margin:0 0 28px;flex-wrap:wrap}.solosel span{font-size:13px;opacity:.75;margin-right:6px}.solosel button{width:46px;height:46px;border-radius:50%;border:1px solid rgba(239,230,210,.25);background:transparent;color:#EFE6D2;font:800 17px "Bricolage Grotesque",sans-serif;cursor:pointer}.solosel button.on{background:#E0A33A;color:#14110F;border-color:#E0A33A}
 .botrow{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 16px;border-radius:18px;background:rgba(239,230,210,.06);border:1px dashed rgba(239,230,210,.22)}.botrow b{display:block;font-size:15px}.botrow span{font-size:12px;opacity:.65}.botctl{display:flex;align-items:center;gap:10px}.botctl b{min-width:22px;text-align:center;font:800 22px "Bricolage Grotesque",sans-serif}.botctl .iconbtn{width:44px;height:44px;font-size:20px}.botctl .iconbtn[disabled]{opacity:.3;pointer-events:none}
+.cfgbox{max-width:560px;margin:0 auto 26px;padding:16px;border-radius:22px;background:rgba(239,230,210,.06);border:1px solid rgba(239,230,210,.14);text-align:center}
+.cfg-l{display:block;font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#E0A33A;margin-bottom:10px}
+.cfg-tabs{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.cfg-tabs button,.cfg-opts button{min-height:44px;padding:0 16px;border-radius:999px;border:1px solid rgba(239,230,210,.22);background:transparent;color:#EFE6D2;font:700 14px 'DM Sans',sans-serif;cursor:pointer}
+.cfg-tabs button.on{background:#EFE6D2;color:#14110F;border-color:#EFE6D2}
+.cfg-opts{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+.cfg-opts button{min-height:40px;font-size:13px}.cfg-opts button.on{background:#E0A33A;color:#14110F;border-color:#E0A33A}
+.cfg-help{margin:12px auto 0;max-width:460px;font-size:13px;line-height:1.5;opacity:.75}
+.pav.out{opacity:.3;filter:grayscale(1)}.hp-row.out{opacity:.45}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none !important;transition:none !important}}
 </style>
 
@@ -460,12 +469,14 @@ a{color:#E0A33A}
 <div class="onrow"><label class="fld" style="flex: 1"><span>Código de sala</span><input type="text" maxlength="5" placeholder="ABCDE" value="{{fCode}}" onInput="{{onCode}}" style="text-transform: uppercase; letter-spacing: .2em"></label><button class="btn" type="button" onClick="{{joinRoom}}">Unirme</button></div>
 </div>
 <div class="eyebrow" style="text-align: center; margin: 0 0 14px; opacity: .7">O jugá solo contra la computadora: elegí tu rol</div>
+<div class="cfgbox"><span class="cfg-l">¿Cómo termina la partida?</span><div class="cfg-tabs"><sc-for list="{{cfgModes}}" as="o" hint-placeholder-count="3"><button class="{{o.cls}}" type="button" onClick="{{o.go}}">{{o.label}}</button></sc-for></div><div class="cfg-opts"><sc-for list="{{cfgOpts}}" as="o" hint-placeholder-count="3"><button class="{{o.cls}}" type="button" onClick="{{o.go}}">{{o.label}}</button></sc-for></div><p class="cfg-help">{{cfgHelp}}</p></div>
 <div class="solosel"><span>Rivales de la compu</span><sc-for list="{{soloOpts}}" as="o" hint-placeholder-count="4"><button class="{{o.cls}}" type="button" onClick="{{o.go}}" aria-label="{{o.n}} rivales">{{o.n}}</button></sc-for></div>
 </sc-if>
 <sc-if value="{{isLobby}}" hint-placeholder-val="{{ false }}">
 <div class="online lobby">
 <div style="text-align: center"><div class="eyebrow" style="color: #E0A33A">Sala · {{lob.count}}</div><div class="hd code">{{lob.code}}</div><button class="btn" type="button" onClick="{{copyLink}}">Copiar link de invitación</button><div class="muted" style="margin-top: 10px; font-size: 14px; word-break: break-all">{{lob.msg}}</div><div style="margin-top: 8px; color: #E8705A; font-weight: 700">{{lob.err}}</div></div>
 <div class="lplayers"><sc-for list="{{lobPlayers}}" as="lp" hint-placeholder-count="2"><div class="lp" style="--c: {{lp.color}}"><sc-if value="{{lp.hasImg}}" hint-placeholder-val="{{ false }}"><img src="{{lp.img}}" alt=""></sc-if><div><b>{{lp.name}}</b><span>{{lp.role}} <em>{{lp.host}}</em></span></div></div></sc-for></div>
+<sc-if value="{{lob.host}}" hint-placeholder-val="{{ false }}"><div class="cfgbox"><span class="cfg-l">¿Cómo termina la partida?</span><div class="cfg-tabs"><sc-for list="{{cfgModes}}" as="o" hint-placeholder-count="3"><button class="{{o.cls}}" type="button" onClick="{{o.go}}">{{o.label}}</button></sc-for></div><div class="cfg-opts"><sc-for list="{{cfgOpts}}" as="o" hint-placeholder-count="3"><button class="{{o.cls}}" type="button" onClick="{{o.go}}">{{o.label}}</button></sc-for></div><p class="cfg-help">{{cfgHelp}}</p></div></sc-if><sc-if value="{{lob.guest}}" hint-placeholder-val="{{ false }}"><p class="cfg-help" style="text-align: center">{{lob.cfgTxt}}</p></sc-if>
 <div class="botrow"><div><b>Jugadores de la compu</b><span>{{lob.botTxt}}</span></div><div class="botctl"><sc-if value="{{lob.host}}" hint-placeholder-val="{{ false }}"><button class="iconbtn" type="button" onClick="{{botMinus}}" disabled="{{lob.minOff}}" aria-label="Quitar uno">−</button></sc-if><b>{{lob.bots}}</b><sc-if value="{{lob.host}}" hint-placeholder-val="{{ false }}"><button class="iconbtn" type="button" onClick="{{botPlus}}" disabled="{{lob.plusOff}}" aria-label="Sumar uno">+</button></sc-if></div></div>
 <div class="onrow" style="justify-content: center"><sc-if value="{{lob.host}}" hint-placeholder-val="{{ false }}"><button class="btn b-rust" type="button" onClick="{{startRoom}}" disabled="{{lob.startOff}}">{{lob.startTxt}}</button></sc-if><button class="btn" type="button" onClick="{{leaveRoom}}">Salir de la sala</button></div>
 <div class="eyebrow" style="text-align: center; opacity: .7">Elegí tu rol abajo · cada rol solo una vez</div>
@@ -546,6 +557,7 @@ a{color:#E0A33A}
 <sc-if value="{{hudOpen}}" hint-placeholder-val="{{ false }}">
 <div class="hpanel">
 <div class="hp-head"><b>{{roundTxt}}</b><span>{{playsTxt}} · {{deckTxt}}</span></div>
+<p class="cfg-help" style="margin: 0 4px 8px; text-align: left; font-size: 12px">{{gameRule}}</p>
 <sc-for list="{{panel}}" as="p" hint-placeholder-count="3">
 <div class="hp-row {{p.cls}}" style="--c: {{p.color}}"><img src="{{p.img}}" alt=""><div class="hp-id"><b>{{p.name}}</b><span>{{p.role}}</span><div class="hp-bar"><i style="width: {{p.charge}}%"></i></div></div><div class="hp-num"><b>{{p.money}}</b><span>{{p.props}} lugares · {{p.cards}} cartas</span><span>Dominio {{p.charge}}%</span></div></div>
 </sc-for>
@@ -883,7 +895,21 @@ class Component extends DCLogic {
   refresh() { this.setState({ v: Date.now() + Math.random() }); if (this.net && this.net.host && this.g.screen !== 'pick') { this.g.ver = (this.g.ver || 0) + 1; this.net.push(this.g); } }
   you(k) { return !this.g.mp && k === 0; }
   fresh() { return { fly: [], look: null, catching: false, drawN: 0, screen: 'pick', players: [], turn: 0, round: 1, owners: {}, houses: {}, phase: 'idle', dice: [1], rolls: 0, log: [], market: [], bought: false, modal: null, def: null, dom: null, aura: null, act: null, cine: false, overtime: false, toast: null, focus: 0, deck: [], discard: [], plays: 0, commission: null, diceShow: false }; }
-  maxRounds() { return this.props.rounds ?? 8; }
+  maxRounds() { const cf = this.g && this.g.cfg; if (cf && cf.mode === 'rounds') return cf.val; if (cf && cf.mode) return 99; return this.props.rounds ?? 12; }
+  cfgNow() { const c = this.ui.cfg || { mode: 'rounds', val: 12 }; return { mode: c.mode, val: c.val }; }
+  applyCfg(g) { const cf = this.cfgNow(); g.cfg = cf; if (cf.mode === 'time') g.deadline = Date.now() + cf.val * 60000; }
+  setsOf(k) { return GROUPS.filter((gr) => this.complete(k, gr)).length; }
+  goalCheck() {
+    const g = this.g; const cf = g.cfg || {}; if (cf.mode !== 'goal' || g.screen !== 'game') return false;
+    const hit = g.players.map((p, k) => k).filter((k) => !g.players[k].out && (String(cf.val).startsWith('sets') ? this.setsOf(k) >= +String(cf.val).slice(4) : g.players[k].money >= +String(cf.val).slice(5)));
+    if (!hit.length) return false; hit.sort((a, b) => this.worth(b) - this.worth(a)); g.winner = hit[0]; g.why = 'goal'; this.log(`${g.players[hit[0]].name} cumplió la meta`); this.end(false); return true;
+  }
+  rescue(k) {
+    const g = this.g; const p = g.players[k]; const mine = this.owned(k).sort((a, b) => TILES[a].p - TILES[b].p); const sold = [];
+    while (p.money < 0 && mine.length) { const i = mine.shift(); const L = this.lvl(i); const gr = GR[TILES[i].g]; const v = Math.max(1, Math.ceil((TILES[i].p + L * gr.hc) / 2)); delete g.owners[i]; if (g.houses) delete g.houses[i]; p.money += v; sold.push(TILES[i].n); }
+    if (sold.length) { const m = `${p.name} no tenía para pagar y le vendió al banco: ${sold.join(', ')}`; this.log(m); this.toast(m); }
+    if (p.money < 0) { p.out = true; p.money = 0; this.owned(k).forEach((i) => { delete g.owners[i]; if (g.houses) delete g.houses[i]; }); p.hand = []; p.charge = 0; const m = `${p.name} quebró y queda fuera de la partida`; this.log(m); this.toast(m); if (g.turn === k) this.later(() => this.next(), 1600); }
+  }
   log(t) { this.g.log.unshift({ t }); this.g.log = this.g.log.slice(0, 2); this.emit({ k: 'log', t }); }
   emit(e) { const g = this.g; g.evN = (g.evN || 0) + 1; e.id = g.evN; e.r = g.round; g.ev = (g.ev || []).concat([e]).slice(-70); }
   toast(t, to) { this.emit({ k: 'toast', t, to: to === undefined ? null : to }); this.refresh(); }
@@ -950,7 +976,7 @@ class Component extends DCLogic {
     const nR = Math.max(1, Math.min(4, this.ui.solo || 2)); const others = ROLES.filter((r) => r.id !== roleId).map((r) => r.id).sort(() => Math.random() - 0.5).slice(0, nR);
     const mk = (name, rid, bot) => ({ name, roleId: rid, bot, money: this.props.startMoney ?? 15, pos: 0, hand: [], charge: 0 });
     g.players = [mk('Vos', roleId, false)].concat(others.map((rid, k) => mk(`Rival ${k + 1}`, rid, true)));
-    this.g = g;
+    this.g = g; this.applyCfg(g);
     g.players.forEach((p, k) => { if (k > 0) this.give(k, RULES.start); });
     g.market = []; for (let k = 0; k < 3; k++) g.market.push(this.drawDeal(g.market.map((c) => c.id)));
     g.screen = 'game'; g.phase = 'idle';
@@ -961,6 +987,7 @@ class Component extends DCLogic {
   }
 
   pay(from, to, amt, comm = true) {
+    if (from !== null && from !== undefined && this.g.players[from] && this.g.players[from].out) return;
     const g = this.g; const P = g.players[from];
     P.money -= amt; if (to !== null) g.players[to].money += amt;
     if (amt) { this.emit({ k: 'pay', from, to, amt }); if (this.txn) this.txn.push({ from, to, amt }); }
@@ -1073,7 +1100,13 @@ class Component extends DCLogic {
     this.refresh();
     this.later(() => { g.def = null; if (this.broke()) return; const c = this.cont; this.cont = null; this.refresh(); if (c) c(); }, 1800);
   }
-  broke() { if (this.g.players.some((p) => p.money < 0)) { this.end(true); return true; } return false; }
+  broke() {
+    const g = this.g; let changed = false;
+    g.players.forEach((p, k) => { if (p.out || p.money >= 0) return; changed = true; this.rescue(k); });
+    const alive = g.players.filter((p) => !p.out);
+    if (alive.length <= 1) { g.why = 'broke'; g.winner = alive.length ? g.players.indexOf(alive[0]) : null; this.end(true); return true; }
+    if (changed) this.refresh(); return false;
+  }
   next() {
     const g = this.g; if (g.screen !== 'game' || this.inNext) return; this.inNext = true; try { this.nextIn(); } finally { this.inNext = false; }
   }
@@ -1082,10 +1115,15 @@ class Component extends DCLogic {
     if (g.commission) { g.commission.turns -= 1; if (g.commission.turns <= 0) g.commission = null; }
     const cut = this.trimHand(g.turn); if (cut.length) { const m = `${this.nm(g.turn)} descartó ${cut.length} (máx. ${RULES.handMax} en mano): ${cut.join(' · ')}`; this.log(m); if (!g.players[g.turn].bot) this.toast(m); }
     if (g.aura) { g.aura.turns -= 1; if (g.aura.turns <= 0) g.aura = null; }
-    g.turn = (g.turn + 1) % g.players.length; g.bought = false;
-    if (g.turn === 0) {
-      g.round += 1; const max = this.maxRounds();
-      if (g.round > max + 1) return this.end(false);
+    const nP = g.players.length; let t = g.turn, wrapped = false;
+    for (let k = 0; k < nP; k++) { t = (t + 1) % nP; if (t === 0) wrapped = true; if (!g.players[t].out) break; }
+    g.turn = t; g.bought = false;
+    if (this.goalCheck()) return;
+    if (wrapped) {
+      g.round += 1; const max = this.maxRounds(); const cf = g.cfg || {};
+      if (cf.mode === 'time' && g.deadline && Date.now() >= g.deadline) { g.why = 'time'; return this.end(false); }
+      if (cf.mode === 'goal' && g.round > 30) { g.why = 'rounds'; return this.end(false); }
+      if (g.round > max + 1) { g.why = 'rounds'; return this.end(false); }
       if (g.round === max + 1 && !g.overtime) { g.overtime = true; g.cine = true; this.log('¡Tiempo Extra!'); this.refresh(); this.later(() => { g.cine = false; this.beginTurn(); }, 2600); return; }
     }
     this.beginTurn();
@@ -1128,7 +1166,7 @@ class Component extends DCLogic {
   botCard(pi) { const p = this.g.players[pi]; if (this.playsLeft(pi) <= 0 || Math.random() > 0.75) return false; const opts = p.hand.map((c, k) => k).filter((k) => { const c = p.hand[k]; return !c.passive && this.canPlay(pi, c) && (c.type !== 'money' || p.money < 6); }); const idx = opts.length ? opts[rnd(opts.length)] : -1; if (idx >= 0) { const c = p.hand[idx]; const msg = this.playCard(pi, idx); if (msg) return true; } return false; }
   botMarket(pi) { const g = this.g; const p = g.players[pi]; if (Math.random() > 0.4 || p.hand.length >= RULES.handMax) return; const k = g.market.findIndex((c) => p.money - c.cost > 5); if (k >= 0) this.buyMarket(pi, k); }
   buyMarket(pi, k) { const g = this.g; const p = g.players[pi]; const c = g.market[k]; this.pay(pi, null, c.cost); p.hand.push(c); this.log(`${p.name} compró «${c.name}» en el Mercado`); g.market[k] = this.drawDeal(g.market.map((x) => x.id)); if (pi === g.turn) { g.bought = true; g.plays = (g.plays || 0) + 1; } return c; }
-  rivalsOf(pi) { return this.g.players.map((o, k) => k).filter((k) => k !== pi); }
+  rivalsOf(pi) { return this.g.players.map((o, k) => k).filter((k) => k !== pi && !this.g.players[k].out); }
   bestLoose(pi) { const c = []; this.rivalsOf(pi).forEach((k) => this.loose(k).forEach((i) => c.push({ k, i }))); c.sort((a, b) => TILES[b.i].p - TILES[a.i].p); return c[0]; }
   bestSet(pi) { const c = []; this.rivalsOf(pi).forEach((k) => GROUPS.forEach((gr) => { if (this.complete(k, gr)) c.push({ k, gr, v: groupIdx(gr).reduce((s, i) => s + TILES[i].p, 0) }); })); c.sort((a, b) => b.v - a.v); return c[0]; }
   bestRent(pi, groups) { const c = this.owned(pi).filter((i) => !groups || groups.includes(TILES[i].g)).map((i) => ({ i, r: this.rentFor(i, pi) })).sort((a, b) => b.r - a.r); return c[0]; }
@@ -1170,7 +1208,7 @@ class Component extends DCLogic {
     if (c.id === 'rompe') { const s = this.bestSet(pi); if (this.nilo(s.k, pi)) msg = 'cancelado'; else { groupIdx(s.gr).forEach((i) => { g.owners[i] = pi; }); msg = `se queda con todo ${GR[s.gr].name} de ${this.nm(s.k)}`; } }
     this.txClose(pi, { card: c.name, ic: c.ic || '', ct: c.type, text: msg }, c.type === 'money' ? { gain: c.amt, bank: true } : null); this.refresh(); return msg;
   }
-  worth(pi) { return this.g.players[pi].money + this.owned(pi).reduce((s, k) => s + TILES[k].p, 0); }
+  worth(pi) { return this.g.players[pi].money + this.owned(pi).reduce((s, k) => s + TILES[k].p + this.lvl(k) * GR[TILES[k].g].hc, 0); }
   domain(pi, cont) {
     const g = this.g; const p = g.players[pi]; const r = this.role(p);
     p.charge = 0; this.ui.sheet = null;
@@ -1227,7 +1265,7 @@ class Component extends DCLogic {
     this.clearAll();
     const g = this.fresh(); g.mp = true; g.hostSeat = 0;
     g.players = list.map((x) => ({ name: x.name, roleId: x.roleId, bot: !!x.bot, money: this.props.startMoney ?? 15, pos: 0, hand: [], charge: 0 }));
-    this.g = g;
+    this.g = g; this.applyCfg(g);
     g.players.forEach((p, k) => { if (p.bot) this.give(k, RULES.start); });
     g.market = []; for (let k = 0; k < 3; k++) g.market.push(this.drawDeal(g.market.map((c) => c.id)));
     g.screen = 'game'; g.phase = 'idle';
@@ -1293,6 +1331,22 @@ class Component extends DCLogic {
     else if (g.phase === 'card' && g.act) g.act.flip = true;
     this.refresh();
   }
+  cfgVals() {
+    const cf = this.cfgNow(); const set = (m, v) => { this.ui.cfg = { mode: m, val: v }; if (this.net && this.net.lobbyOut && this.net.host && !this.net.inGame) this.net.lobbyOut(); else this.refresh(); };
+    const OPT = { rounds: [[8, '8 rondas'], [12, '12 rondas'], [16, '16 rondas'], [20, '20 rondas']], time: [[15, '15 min'], [25, '25 min'], [40, '40 min'], [60, '1 hora']], goal: [['sets2', '2 barrios completos'], ['sets3', '3 barrios completos'], ['money50', 'Juntar ' + M(50)]] };
+    const DEF = { rounds: 12, time: 25, goal: 'sets3' };
+    return {
+      cfgModes: [['rounds', 'Por rondas'], ['time', 'Por tiempo'], ['goal', 'Por objetivo']].map(([m, l]) => ({ label: l, cls: cf.mode === m ? 'on' : '', go: () => set(m, DEF[m]) })),
+      cfgOpts: OPT[cf.mode].map(([v, l]) => ({ label: l, cls: cf.val === v ? 'on' : '', go: () => set(cf.mode, v) })),
+      cfgHelp: this.cfgText(cf),
+    };
+  }
+  cfgText(cf) {
+    const tail = ' Si alguien se queda sin plata, le vende lugares al banco; si igual no le alcanza, queda fuera.';
+    if (cf.mode === 'time') return `Se juega durante ${cf.val} minutos y se termina la ronda en curso. Gana el más rico: plata + lugares + casas.` + tail;
+    if (cf.mode === 'goal') return (String(cf.val).startsWith('sets') ? `Gana el primero que complete ${String(cf.val).slice(4)} barrios enteros (todos sus lugares).` : `Gana el primero que junte ${M(+String(cf.val).slice(5))} en efectivo.`) + ' Se revisa al terminar cada turno.' + tail;
+    return `Se juegan ${cf.val} rondas (en cada ronda todos tiran una vez) y una ronda extra al final. Gana el más rico: plata + lugares + casas.` + tail;
+  }
   renderVals() {
     const g = this.g; const S = this.seat || 0; const me = g.players[S]; const cur = g.players[g.turn];
     const human = !!cur && g.turn === S && !cur.bot;
@@ -1333,7 +1387,7 @@ class Component extends DCLogic {
     };
     const SH = sh ? sheets[sh] : ['', '', false, ''];
     const m = g.modal; const d = g.def;
-    const ranking = g.players.map((p, k) => ({ p, k, w: this.worth(k) })).sort((a, b) => b.w - a.w).map((x, i) => ({ pos: i + 1, name: x.p.name, img: IMG[x.p.roleId], worth: M(x.w), detail: `${this.role(x.p).name} · efectivo ${M(x.p.money)}` }));
+    const ranking = g.players.map((p, k) => ({ p, k, w: this.worth(k) })).sort((a, b) => (b.k === g.winner) - (a.k === g.winner) || (a.p.out ? 1 : 0) - (b.p.out ? 1 : 0) || b.w - a.w).map((x, i) => ({ pos: i + 1, name: x.p.name, img: IMG[x.p.roleId], worth: M(x.w), detail: `${this.role(x.p).name} · efectivo ${M(x.p.money)}` }));
     const win = ranking[0] || { name: '', img: '' };
     const dom = g.dom || { id: '', color: '#C13B1F', fg: '#EFE6D2', img: '', kicker: '', title: '', desc: '', result: '', glyphs: [], trapped: [] };
     const [x1, y1] = FACE[g.dice[0]], [x2, y2] = FACE[1]; const sp = g.rolls * 720;
@@ -1342,6 +1396,7 @@ class Component extends DCLogic {
     const liftBar = () => { this.lift = (this.lift + 1) % 3; try { localStorage.setItem('yj-lift', String(this.lift)); } catch (e) {} this.toast && this.toast(['Barra abajo', 'Barra un poco más arriba', 'Barra bien arriba'][this.lift]); this.refresh(); };
     const evs = g.ev || []; const lastId = evs.length ? evs[evs.length - 1].id : 0;
     if (this.evSeen == null || lastId < this.evSeen) this.evSeen = this.evSeen == null ? lastId : 0;
+    if (g.cfg && g.cfg.mode === 'time' && g.screen === 'game' && typeof setTimeout !== 'undefined') { clearTimeout(this.clockT); this.clockT = setTimeout(() => this.setState({ v: Date.now() }), 1000); }
     this.notes = this.notes || []; this.unread = this.unread || 0; const fresh = [];
     evs.forEach((e) => { if (e.id <= this.evSeen) return; this.evSeen = e.id; if (e.to !== null && e.to !== undefined && e.to !== S) return; fresh.push(e); });
     fresh.forEach((e) => {
@@ -1361,19 +1416,20 @@ class Component extends DCLogic {
     };
     const notes = this.notes.map((n, k) => mkNote(n.e, k));
     const order = [S, ...g.players.map((p, k) => k).filter((k) => k !== S)].filter((k) => g.players[k]);
-    const strip = order.map((k) => { const p = g.players[k]; const r = this.role(p); return { pi: k, img: IMG[r.id], role: r.name, color: r.color, money: M(p.money), ring: Math.round(119 * (1 - Math.min(100, p.charge) / 100)), cls: (k === S ? 'me ' : '') + (k === g.turn ? 'turn ' : '') + (p.away ? 'away' : '') }; });
-    const panel = order.map((k) => { const p = g.players[k]; const r = this.role(p); return { name: (k === S && p.name !== 'Vos' ? 'Vos · ' : '') + p.name + (p.away ? ' · fuera' : ''), role: r.name, img: IMG[r.id], color: r.color, money: M(p.money), props: this.owned(k).length, cards: p.hand.length, charge: Math.min(100, Math.round(p.charge)), cls: k === g.turn ? 'turn' : '' }; });
+    const strip = order.map((k) => { const p = g.players[k]; const r = this.role(p); return { pi: k, img: IMG[r.id], role: r.name, color: r.color, money: M(p.money), ring: Math.round(119 * (1 - Math.min(100, p.charge) / 100)), cls: (k === S ? 'me ' : '') + (k === g.turn ? 'turn ' : '') + (p.away ? 'away ' : '') + (p.out ? 'out' : '') }; });
+    const panel = order.map((k) => { const p = g.players[k]; const r = this.role(p); return { name: (k === S && p.name !== 'Vos' ? 'Vos · ' : '') + p.name + (p.away ? ' · fuera' : ''), role: r.name, img: IMG[r.id], color: r.color, money: M(p.money), props: this.owned(k).length + (g.cfg && g.cfg.mode === 'goal' && String(g.cfg.val).startsWith('sets') ? ` (${this.setsOf(k)} barrios)` : ''), cards: p.hand.length, charge: Math.min(100, Math.round(p.charge)), cls: (k === g.turn ? 'turn ' : '') + (p.out ? 'out' : '') }; });
     const hist = evs.filter((e) => (e.k === 'res' || e.k === 'log' || (e.k === 'toast' && (e.to === null || e.to === undefined)))).slice(-50).reverse().map((e) => {
       if (e.k === 'res') { const sub = e.rows.map((x) => { const pi = pInfo(x.pi); return `${pi.name} ${x.no ? '✋' : x.net < 0 ? '−' + M(-x.net).replace(/^[-−]/, '') : x.net > 0 ? '+' + M(x.net) : '·'}`; }).join(' · '); return { r: e.r, ic: e.ic || '★', t: `${e.land ? '' : who(e.who) + ' · '}${e.card}${e.gain ? ` (${e.gain > 0 ? '+' : '−'}${M(Math.abs(e.gain)).replace(/^[-−]/, '')})` : ''}`, sub: sub || e.text || '', hasSub: !!(sub || e.text), cls: e.who === S || e.rows.some((x) => x.pi === S) ? 'mine' : '' }; }
       return { r: e.r, ic: '•', t: e.t, sub: '', hasSub: false, cls: '' };
     });
     return {
       showHud: !this.ui.clean, isClean: !!this.ui.clean, strip, panel, hudOpen: !!this.ui.hud && !this.ui.clean, hudOpenTxt: this.ui.hud ? 'true' : 'false',
-      roundShort: `R${Math.min(g.round, this.maxRounds())}/${this.maxRounds()}`, playsShort: g.turn === S ? `${RULES.plays - (g.plays || 0)}/${RULES.plays} acc.` : 'rival',
+      roundShort: (() => { const cf = g.cfg || {}; if (cf.mode === 'time' && g.deadline) { const ms = Math.max(0, g.deadline - Date.now()); const mm = Math.floor(ms / 60000), ss = Math.floor(ms / 1000) % 60; return ms ? `⏱ ${mm}:${String(ss).padStart(2, '0')}` : 'Última ronda'; } if (cf.mode === 'goal') return `R${g.round} · meta`; return `R${Math.min(g.round, this.maxRounds())}/${this.maxRounds()}`; })(), playsShort: g.turn === S ? `${RULES.plays - (g.plays || 0)}/${RULES.plays} acc.` : 'rival',
       hudToggle: () => { this.ui.hud = !this.ui.hud; this.refresh(); }, cleanToggle: () => { this.ui.clean = !this.ui.clean; this.ui.hud = false; this.refresh(); },
       histOpen: !!this.ui.hist, hist, histEmpty: !hist.length, hasUnread: this.unread > 0 && !this.ui.hist, unread: this.unread > 9 ? '9+' : String(this.unread),
       histToggle: () => { this.ui.hist = !this.ui.hist; this.unread = 0; this.refresh(); },
       hasBanner: !!this.banner && !!g.players[this.banner.pi], banner: this.banner && g.players[this.banner.pi] ? (() => { const k = this.banner.pi; const p = g.players[k]; const r = this.role(p); return { name: k === S ? '¡Te toca!' : p.name, kick: k === S ? 'Tu turno' : `Turno de ${r.name}`, img: IMG[r.id], color: r.color, cls: k === S ? 'me' : '' }; })() : { name: '', kick: '', img: '', color: '', cls: '' },
+      gameRule: this.cfgText(g.cfg || this.cfgNow()),
       hasNotes: notes.length > 0, notes, manyNotes: notes.length > 1, nstackCls: g.diceShow || g.dom || this.ui.hud || this.ui.hist ? 'hush' : '', closeNotes: () => { this.notes = []; this.refresh(); },
       gCls: (this.ui.clean ? 'clean ' : '') + (this.net && this.net.pend ? 'pend' : ''), liftPx: LIFTS[this.lift] + 'px', liftBar, liftCls: this.lift ? 'on' : '', liftTip: 'Subir o bajar la barra',
       isPick: g.screen === 'pick', isGame: g.screen === 'game', isEnd: g.screen === 'end',
@@ -1419,7 +1475,7 @@ class Component extends DCLogic {
       showAura: !!g.aura && !g.dom, aura: g.aura ? { ...g.aura, left: g.aura.turns === 1 ? 'último turno' : `${g.aura.turns} turnos` } : { id: '', color: '', fg: '', name: '', left: '' }, showDom: !!g.dom, dom: { ...dom, hasResult: !!dom.result }, showCine: !!g.cine,
       showToast: !!g.toast && (g.toastTo === null || g.toastTo === undefined || g.toastTo === S), toast: g.toast || '',
       ranking, winName: win.name, winVerb: me && win.name === me.name ? 'dominás la ciudad' : 'domina la ciudad', winImg: win.img,
-      endKicker: g.broke ? 'Alguien quedó en bancarrota' : g.byVote ? 'Terminaron la partida por votación' : 'Fin de la partida',
+      endKicker: g.byVote ? 'Terminaron la partida por votación' : g.why === 'goal' ? 'Cumplió la meta' : g.why === 'time' ? 'Se terminó el tiempo' : g.why === 'broke' ? 'Todos los demás quebraron' : g.why === 'rounds' ? 'Se jugaron todas las rondas' : 'Fin de la partida',
       canVoteStart: !!g.mp && g.screen === 'game' && !g.vote && S === (g.hostSeat || 0),
       voteStart: () => this.act('voteStart'),
       showVote: !!g.vote && g.screen === 'game',
@@ -1435,8 +1491,9 @@ class Component extends DCLogic {
       onCode: (e) => { this.form.code = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 5); this.refresh(); },
       mkRoom: () => window.YJNet.create(this, this.form.name || 'Anfitrión'),
       joinRoom: () => { if (this.form.code.length >= 4) window.YJNet.join(this, this.form.code, this.form.name || 'Jugador'); },
-      lob: L ? (() => { const hu = L.players.length; const bots = L.bots == null ? Math.max(0, 3 - hu) : L.bots; const tot = hu + bots; const ok = !!L.host && hu >= 1 && tot >= 2 && L.players.every((x) => x.role); return { code: L.code, link: L.link, host: !!L.host, err: L.err || '', msg: L.msg || '', canStart: ok, startOff: !ok, count: `${hu} ${hu === 1 ? 'persona' : 'personas'} · ${bots} compu`, bots: String(bots), botTxt: `En la mesa: ${tot} de 5`, minOff: bots <= Math.max(0, 2 - hu), plusOff: tot >= 5, startTxt: !L.players.every((x) => x.role) ? 'Todos deben elegir rol' : tot < 2 ? 'Sumá un jugador' : `Empezar · ${tot} jugadores` }; })() : { code: '', link: '', host: false, err: '', msg: '', canStart: false, count: '', startTxt: '', bots: '0', botTxt: '' },
+      lob: L ? (() => { const hu = L.players.length; const bots = L.bots == null ? Math.max(0, 3 - hu) : L.bots; const tot = hu + bots; const ok = !!L.host && hu >= 1 && tot >= 2 && L.players.every((x) => x.role); return { guest: !L.host, cfgTxt: L.cfg ? this.cfgText(L.cfg) : 'El anfitrión elige cómo termina la partida.', code: L.code, link: L.link, host: !!L.host, err: L.err || '', msg: L.msg || '', canStart: ok, startOff: !ok, count: `${hu} ${hu === 1 ? 'persona' : 'personas'} · ${bots} compu`, bots: String(bots), botTxt: `En la mesa: ${tot} de 5`, minOff: bots <= Math.max(0, 2 - hu), plusOff: tot >= 5, startTxt: !L.players.every((x) => x.role) ? 'Todos deben elegir rol' : tot < 2 ? 'Sumá un jugador' : `Empezar · ${tot} jugadores` }; })() : { code: '', link: '', host: false, err: '', msg: '', canStart: false, count: '', startTxt: '', bots: '0', botTxt: '' },
       botPlus: () => { window.YJNet.setBots(this, 1); }, botMinus: () => { window.YJNet.setBots(this, -1); },
+      ...this.cfgVals(),
       soloOpts: [1, 2, 3, 4].map((n) => ({ n, cls: (this.ui.solo || 2) === n ? 'on' : '', go: () => { this.ui.solo = n; this.refresh(); } })),
       lobPlayers: L ? L.players.map((x) => { const r = ROLES.find((q) => q.id === x.role); return { name: x.name + (x.id === L.me ? ' (vos)' : ''), host: x.host ? 'Anfitrión' : '', role: r ? r.name : 'Eligiendo rol…', img: r ? IMG[r.id] : '', color: r ? r.color : '#3E3731', hasImg: !!r }; }).concat(Array.from({ length: L.bots == null ? Math.max(0, 3 - L.players.length) : L.bots }, (_, k) => ({ name: `Compu ${k + 1}`, host: 'IA', role: 'Rol al azar', img: '', color: '#3E3731', hasImg: false }))) : [],
       copyLink: () => { try { navigator.clipboard.writeText(L.link); L.msg = '¡Link copiado! Mandáselo a tus amigos.'; } catch (e) { L.msg = L.link; } this.refresh(); },

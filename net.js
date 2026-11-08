@@ -56,7 +56,8 @@
       var players = net.roster.map(function (x) { return { id: x.id, name: x.name, host: x.id === leaderLobby(), role: net.roles[x.id] || '' }; });
       var hu = players.length; if (net.bots == null) net.bots = Math.max(0, 3 - hu); net.bots = Math.max(Math.max(0, 2 - hu), Math.min(5 - hu, net.bots));
       comp.lobby.players = players; comp.lobby.host = net.host; comp.lobby.bots = net.bots;
-      ch.send({ type: 'broadcast', event: 'lobby', payload: { players: players, bots: net.bots } });
+      var cfg = comp.cfgNow ? comp.cfgNow() : null; comp.lobby.cfg = cfg;
+      ch.send({ type: 'broadcast', event: 'lobby', payload: { players: players, bots: net.bots, cfg: cfg } });
       comp.refresh();
     }
     net.lobbyOut = lobbyOut;
@@ -155,7 +156,7 @@
     });
     ch.on('broadcast', { event: 'lobby' }, function (m) {
       if (net.host || !comp.lobby || net.inGame) return;
-      comp.lobby.players = m.payload.players; comp.lobby.host = false; if (m.payload.bots != null) comp.lobby.bots = m.payload.bots;
+      comp.lobby.players = m.payload.players; comp.lobby.host = false; if (m.payload.bots != null) comp.lobby.bots = m.payload.bots; if (m.payload.cfg) comp.lobby.cfg = m.payload.cfg;
       comp.lobby.msg = m.payload.players.some(function (p) { return p.id === myId; }) ? 'Ya estás en la sala. Elegí tu rol y esperá a que empiece.' : 'La sala está llena (máximo 4).';
       comp.refresh();
     });
