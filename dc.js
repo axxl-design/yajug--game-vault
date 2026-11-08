@@ -1,4 +1,4 @@
-function RW(v){return v.replace(/^Main\.dc\.html/, '/').replace(/^Jugar\.dc\.html/, '/jugar').replace(/^Adivina\.dc\.html/, '/adivina').replace(/^Leyendas\.dc\.html/, '/leyendas');}
+function RW(v){return v.replace(/^Main\.dc\.html/, '/').replace(/^Jugar\.dc\.html/, '/jugar').replace(/^Adivina\.dc\.html/, '/adivina').replace(/^Leyendas\.dc\.html/, '/leyendas').replace(/^QueHarias\.dc\.html/, '/queharias');}
 /* YAJUGÁ mini runtime: renders the Design Component templates as a normal web page. */
 (function () {
   var HOLE = /\{\{([^}]+)\}\}/g;
