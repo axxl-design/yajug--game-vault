@@ -371,11 +371,26 @@ a{color:#E0A33A}
 .unclean{position:absolute;top:calc(12px + env(safe-area-inset-top, 0px));right:12px;z-index:30;width:46px;height:46px}
 .g.clean .camctl{display:none}
 /* --- avisos --- */
-.note{position:absolute;left:50%;top:calc(96px + env(safe-area-inset-top, 0px));z-index:72;width:min(440px,calc(100% - 24px));transform:translateX(-50%);padding:14px 16px 16px;border-radius:22px;background:#EFE6D2;color:#14110F;box-shadow:0 24px 50px -14px rgba(0,0,0,.6);overflow:hidden;cursor:pointer;animation:ntin .45s cubic-bezier(.2,.9,.3,1.25) both;transition:opacity .25s}
+.g.pend::after{content:'Enviando tu jugada…';position:absolute;left:50%;bottom:calc(150px + env(safe-area-inset-bottom, 0px) + var(--lift, 0px));transform:translateX(-50%);z-index:95;padding:9px 16px;border-radius:999px;background:#14110F;color:#E0A33A;font:700 13px 'DM Sans',sans-serif;box-shadow:0 10px 24px rgba(0,0,0,.5);pointer-events:none;animation:fade .3s .25s both}
+.tban{position:absolute;left:50%;top:42%;z-index:88;display:flex;align-items:center;gap:14px;padding:12px 26px 12px 12px;border-radius:999px;background:#14110F;color:#EFE6D2;box-shadow:0 0 0 3px var(--c),0 30px 60px -10px rgba(0,0,0,.7);pointer-events:none;white-space:nowrap;animation:tban 2.2s cubic-bezier(.2,.9,.3,1) both}
+.tban img{width:58px;height:58px;border-radius:50%;object-fit:cover;border:3px solid var(--c)}
+.tban small{display:block;font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--c)}
+.tban b{display:block;font:800 26px/1.05 'Bricolage Grotesque',sans-serif}
+.tban.me{background:var(--c);color:#14110F;box-shadow:0 0 0 3px #14110F,0 30px 60px -10px rgba(0,0,0,.7)}.tban.me small{color:#14110F}.tban.me img{border-color:#14110F}
+@keyframes tban{0%{opacity:0;transform:translate(-50%,-50%) scale(.6)}14%{opacity:1;transform:translate(-50%,-50%) scale(1.06)}22%{transform:translate(-50%,-50%) scale(1)}82%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-60%) scale(.96)}}
+.nstack{position:absolute;left:50%;top:calc(96px + env(safe-area-inset-top, 0px));z-index:72;width:min(440px,calc(100% - 24px));transform:translateX(-50%);display:flex;flex-direction:column;gap:8px;max-height:calc(100% - 300px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:4px 2px 10px}
+.nstack.hush{opacity:0;pointer-events:none}
+.g.clean .nstack{top:calc(70px + env(safe-area-inset-top, 0px))}
+.note{position:relative;flex:none;padding:14px 16px 16px;border-radius:22px;background:#EFE6D2;color:#14110F;box-shadow:0 24px 50px -14px rgba(0,0,0,.6);overflow:hidden;animation:ntin .5s cubic-bezier(.2,.9,.3,1.2) both}
 .note.mine{box-shadow:0 0 0 3px #E0A33A,0 24px 50px -14px rgba(0,0,0,.6)}
 .note.hush{opacity:0;pointer-events:none}
-.g.clean .note{top:calc(70px + env(safe-area-inset-top, 0px))}
-@keyframes ntin{from{opacity:0;transform:translate(-50%,-16px) scale(.94)}}
+
+@keyframes ntin{from{opacity:0;transform:translateY(-14px) scale(.95)}}
+.nt-x{position:absolute;top:8px;right:8px;width:34px;height:34px;border-radius:50%;border:0;background:rgba(20,17,15,.08);color:#14110F;font:800 14px 'DM Sans',sans-serif;cursor:pointer;z-index:2}
+.nt-x:active{transform:scale(.9)}
+.note .nt-head{padding-right:34px}.note .nt-toast{padding:2px 36px 2px 6px;text-align:left}
+.note.old{opacity:1}
+.nt-all{align-self:center;padding:9px 18px;border-radius:999px;border:0;background:#14110F;color:#EFE6D2;font:700 13px 'DM Sans',sans-serif;cursor:pointer;box-shadow:0 10px 24px -8px rgba(0,0,0,.6)}
 .nt-head{display:flex;align-items:center;gap:12px}
 .nt-ic{width:40px;height:40px;flex:none;border-radius:12px;display:grid;place-items:center;background:#14110F;color:#E0A33A;font:800 18px 'Bricolage Grotesque',sans-serif}
 .nt-head small{display:block;font-size:11px;font-weight:700;letter-spacing:.06em;opacity:.65}
@@ -408,11 +423,11 @@ a{color:#E0A33A}
 .hx b{display:block;font-size:13px;font-weight:600;line-height:1.4}.hx span{display:block;font-size:12px;opacity:.65;margin-top:2px;line-height:1.4}
 .hx.mine .hx-ic{background:#E0A33A;color:#14110F}
 .dice{z-index:90 !important}
-@media (max-width:700px){.pav{width:46px}.pav-a{width:40px;height:40px}.pav-a svg{width:40px;height:40px}.pav-a img{inset:4px;width:32px;height:32px}.pstrip{min-height:48px;padding-right:8px;gap:2px}.hlogo{width:40px;height:40px}.hbtn{width:40px;height:40px}.rinfo{padding:5px 10px;min-height:40px}.note{top:calc(80px + env(safe-area-inset-top, 0px))}.hright{gap:4px}}
+@media (max-width:700px){.pav{width:46px}.pav-a{width:40px;height:40px}.pav-a svg{width:40px;height:40px}.pav-a img{inset:4px;width:32px;height:32px}.pstrip{min-height:48px;padding-right:8px;gap:2px}.hlogo{width:40px;height:40px}.hbtn{width:40px;height:40px}.rinfo{padding:5px 10px;min-height:40px}.nstack{top:calc(80px + env(safe-area-inset-top, 0px));max-height:calc(100% - 260px)}.hright{gap:4px}}
 @media (max-width:700px){.rinfo,.pchev{display:none !important}.rchip{padding:5px 12px;font-size:10px;letter-spacing:.12em}}
 @media (max-width:700px){.pstrip:has(.pav:nth-child(4)) .pav{width:41px}.pstrip:has(.pav:nth-child(4)) .pav-a{width:36px;height:36px}.pstrip:has(.pav:nth-child(4)) .pav-a svg{width:36px;height:36px}.pstrip:has(.pav:nth-child(4)) .pav-a img{inset:4px;width:28px;height:28px}.pstrip:has(.pav:nth-child(4)) .pav b{font-size:9.5px;padding:1px 4px}.pstrip:has(.pav:nth-child(5)) .pav{width:38px}}
 @media (max-width:360px){.hlogo{display:none}}
-.yj-coin{position:fixed;z-index:9999;width:24px;height:24px;margin:0;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#FFE7A6,#E0A33A 55%,#9C6A16);color:#5A3A08;font:800 12px/1 'Bricolage Grotesque',sans-serif;box-shadow:0 4px 10px rgba(0,0,0,.45),inset 0 0 0 2px rgba(255,240,200,.5);pointer-events:none}.yj-delta{position:fixed;z-index:9999;padding:3px 9px;border-radius:999px;font:800 14px 'Bricolage Grotesque',sans-serif;pointer-events:none;box-shadow:0 6px 14px rgba(0,0,0,.4);white-space:nowrap}.yj-delta.pos{background:#2F6B3A;color:#EFE6D2}.yj-delta.neg{background:#C13B1F;color:#EFE6D2}
+.yj-coin{position:fixed;z-index:9999;width:24px;height:24px;margin:0;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#FFE7A6,#E0A33A 55%,#9C6A16);color:#5A3A08;font:800 12px/1 'Bricolage Grotesque',sans-serif;box-shadow:0 4px 10px rgba(0,0,0,.45),inset 0 0 0 2px rgba(255,240,200,.5);pointer-events:none}.yj-delta{position:fixed;z-index:9999;padding:3px 9px;border-radius:999px;font:800 14px 'Bricolage Grotesque',sans-serif;pointer-events:none;box-shadow:0 6px 14px rgba(0,0,0,.4);white-space:nowrap}.yj-delta.pos{background:#2F6B3A;color:#EFE6D2}.yj-delta.chg{background:#E0A33A;color:#14110F;font-size:12px}.yj-delta.chg.full{background:#14110F;color:#E0A33A;box-shadow:0 0 0 2px #E0A33A,0 8px 20px rgba(0,0,0,.5);font-size:14px}.yj-delta.neg{background:#C13B1F;color:#EFE6D2}
 .solosel{display:flex;align-items:center;justify-content:center;gap:8px;margin:0 0 28px;flex-wrap:wrap}.solosel span{font-size:13px;opacity:.75;margin-right:6px}.solosel button{width:46px;height:46px;border-radius:50%;border:1px solid rgba(239,230,210,.25);background:transparent;color:#EFE6D2;font:800 17px "Bricolage Grotesque",sans-serif;cursor:pointer}.solosel button.on{background:#E0A33A;color:#14110F;border-color:#E0A33A}
 .botrow{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 16px;border-radius:18px;background:rgba(239,230,210,.06);border:1px dashed rgba(239,230,210,.22)}.botrow b{display:block;font-size:15px}.botrow span{font-size:12px;opacity:.65}.botctl{display:flex;align-items:center;gap:10px}.botctl b{min-width:22px;text-align:center;font:800 22px "Bricolage Grotesque",sans-serif}.botctl .iconbtn{width:44px;height:44px;font-size:20px}.botctl .iconbtn[disabled]{opacity:.3;pointer-events:none}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none !important;transition:none !important}}
@@ -541,15 +556,21 @@ a{color:#E0A33A}
 </sc-if>
 <sc-if value="{{isClean}}" hint-placeholder-val="{{ false }}"><button class="iconbtn unclean" type="button" onClick="{{cleanToggle}}" aria-label="Mostrar todo"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12c1-2.5 5-7 10-7s9 4.5 10 7c-1 2.5-5 7-10 7S3 14.5 2 12z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></sc-if>
 
-<sc-if value="{{hasNote}}" hint-placeholder-val="{{ false }}">
-<div class="note {{note.cls}}" role="status" aria-live="polite" onClick="{{noteClose}}">
+<sc-if value="{{hasBanner}}" hint-placeholder-val="{{ false }}"><div class="tban {{banner.cls}}" style="--c: {{banner.color}}" aria-live="polite"><img src="{{banner.img}}" alt=""><div><small>{{banner.kick}}</small><b>{{banner.name}}</b></div></div></sc-if>
+<sc-if value="{{hasNotes}}" hint-placeholder-val="{{ false }}">
+<div class="nstack {{nstackCls}}" role="status" aria-live="polite">
+<sc-for list="{{notes}}" as="note" hint-placeholder-count="2">
+<div class="note {{note.cls}}">
+<button class="nt-x" type="button" onClick="{{note.close}}" aria-label="Cerrar aviso">✕</button>
 <sc-if value="{{note.isRes}}" hint-placeholder-val="{{ false }}">
 <div class="nt-head"><span class="nt-ic">{{note.ic}}</span><div><small>{{note.kicker}}</small><b>{{note.card}}</b></div><sc-if value="{{note.hasGain}}" hint-placeholder-val="{{ false }}"><span class="nt-gain {{note.gainCls}}">{{note.gainTxt}}</span></sc-if></div>
 <sc-if value="{{note.hasRows}}" hint-placeholder-val="{{ false }}"><div class="nt-rows"><sc-for list="{{note.rows}}" as="r" hint-placeholder-count="2"><div class="nt-row {{r.cls}}" style="--c: {{r.color}}"><img src="{{r.img}}" alt=""><span>{{r.name}}</span><em>{{r.tag}}</em></div></sc-for></div></sc-if>
 <sc-if value="{{note.hasText}}" hint-placeholder-val="{{ false }}"><p class="nt-text">{{note.text}}</p></sc-if>
 </sc-if>
 <sc-if value="{{note.isToast}}" hint-placeholder-val="{{ false }}"><p class="nt-toast">{{note.t}}</p></sc-if>
-<i class="nt-bar" style="animation-duration: {{note.dur}}ms"></i>
+</div>
+</sc-for>
+<sc-if value="{{manyNotes}}" hint-placeholder-val="{{ false }}"><button class="nt-all" type="button" onClick="{{closeNotes}}">Cerrar todos</button></sc-if>
 </div>
 </sc-if>
 
@@ -858,7 +879,7 @@ class Component extends DCLogic {
   }
   componentWillUnmount() { this.clearAll(); }
   clearAll() { this.timers.forEach(clearTimeout); this.timers = []; clearInterval(this.voteInt); if (this.defInt) clearInterval(this.defInt); this.defInt = null; }
-  later(fn, ms) { const id = setTimeout(fn, ms); this.timers.push(id); return id; }
+  later(fn, ms) { const g0 = this.g; const tid = g0 ? g0.tid || 0 : 0; const id = setTimeout(() => { this.timers = this.timers.filter((x) => x !== id); if (this.g !== g0 || (g0 && (g0.tid || 0) !== tid)) return; fn(); }, ms); this.timers.push(id); return id; }
   refresh() { this.setState({ v: Date.now() + Math.random() }); if (this.net && this.net.host && this.g.screen !== 'pick') { this.g.ver = (this.g.ver || 0) + 1; this.net.push(this.g); } }
   you(k) { return !this.g.mp && k === 0; }
   fresh() { return { fly: [], look: null, catching: false, drawN: 0, screen: 'pick', players: [], turn: 0, round: 1, owners: {}, houses: {}, phase: 'idle', dice: [1], rolls: 0, log: [], market: [], bought: false, modal: null, def: null, dom: null, aura: null, act: null, cine: false, overtime: false, toast: null, focus: 0, deck: [], discard: [], plays: 0, commission: null, diceShow: false }; }
@@ -866,6 +887,13 @@ class Component extends DCLogic {
   log(t) { this.g.log.unshift({ t }); this.g.log = this.g.log.slice(0, 2); this.emit({ k: 'log', t }); }
   emit(e) { const g = this.g; g.evN = (g.evN || 0) + 1; e.id = g.evN; e.r = g.round; g.ev = (g.ev || []).concat([e]).slice(-70); }
   toast(t, to) { this.emit({ k: 'toast', t, to: to === undefined ? null : to }); this.refresh(); }
+  chgFx(e) {
+    if (typeof document === 'undefined' || !document.body || !document.body.animate) return;
+    const a = document.querySelector(`.pav[data-pi="${e.pi}"] .pav-a`); if (!a) return; const r = a.getBoundingClientRect();
+    const d = document.createElement('div'); d.className = 'yj-delta chg' + (e.full ? ' full' : ''); d.textContent = e.full ? '¡Dominio listo!' : `+${e.n}% dominio`; d.style.left = (r.left + r.width / 2) + 'px'; d.style.top = (r.bottom + 4) + 'px'; document.body.appendChild(d);
+    d.animate([{ transform: 'translate(-50%,-6px) scale(.5)', opacity: 0 }, { transform: 'translate(-50%,6px) scale(1.1)', opacity: 1, offset: 0.2 }, { transform: 'translate(-50%,6px) scale(1)', opacity: 1, offset: 0.75 }, { transform: 'translate(-50%,24px) scale(1)', opacity: 0 }], { duration: e.full ? 3200 : 2200, easing: 'ease-out' }).onfinish = () => d.remove();
+    a.animate([{ filter: 'brightness(1)' }, { filter: 'brightness(1.6) drop-shadow(0 0 8px #E0A33A)' }, { filter: 'brightness(1)' }], { duration: 900 });
+  }
   coinFx(e) {
     if (typeof document === 'undefined' || !document.body || !document.body.animate) return;
     const q = (k) => (k === null || k === undefined ? null : document.querySelector(`.pav[data-pi="${k}"] .pav-a`));
@@ -886,14 +914,13 @@ class Component extends DCLogic {
       an.onfinish = () => { c.remove(); if (k === n - 1 && rb) { pop(rb, '+' + amt, 'pos'); bump(b); } };
     }
   }
-  pumpNote() {
-    if (this.noteT || this.cur) return; const g = this.g;
-    if (g.diceShow || g.dom || g.cine) { this.noteT = setTimeout(() => { this.noteT = null; this.pumpNote(); }, 500); return; }
-    const e = (this.nq || []).shift(); if (!e) return;
-    const lag = (this.nq || []).length; const base = e.k === 'res' ? 5200 : 3200; const dur = Math.max(e.k === 'res' ? 2600 : 1600, Math.round(base / (1 + lag * 0.45)));
-    this.cur = { e, dur }; this.refresh();
-    this.noteT = setTimeout(() => { this.noteT = null; this.cur = null; this.refresh(); setTimeout(() => this.pumpNote(), 260); }, dur);
+  addNote(e) {
+    this.notes = this.notes || []; const last = this.notes[0];
+    if (last && last.e.k === 'toast' && e.k === 'toast' && last.e.t === e.t) return;
+    const n = { e, key: e.id }; this.notes.unshift(n); if (this.notes.length > 3) this.notes.length = 3;
+    if (e.k === 'toast' && typeof setTimeout !== 'undefined') setTimeout(() => { this.dropNote(e.id); }, 8000);
   }
+  dropNote(id) { const n0 = (this.notes || []).length; this.notes = (this.notes || []).filter((n) => n.e.id !== id); if (this.notes.length !== n0) this.setState({ v: Date.now() + Math.random() }); }
   role(p) { return ROLES.find((r) => r.id === p.roleId); }
   txOpen() { this.txn = []; this.txnNo = []; }
   txClose(who, head, extra) { const t = this.txn || [], no = this.txnNo || []; this.txn = null; this.txnNo = null; const net = {}; t.forEach((x) => { net[x.from] = (net[x.from] || 0) - x.amt; if (x.to !== null && x.to !== undefined) net[x.to] = (net[x.to] || 0) + x.amt; }); const ks = []; t.forEach((x) => { [x.from, x.to].forEach((k) => { if (k !== null && k !== undefined && k !== who && !ks.includes(k)) ks.push(k); }); }); no.forEach((k) => { if (k !== who && !ks.includes(k)) ks.push(k); }); const rows = ks.map((k) => ({ pi: k, net: net[k] || 0, no: no.includes(k) })); this.emit({ k: 'res', who, rows, gain: net[who] || 0, ...head, ...(extra || {}) }); }
@@ -906,7 +933,7 @@ class Component extends DCLogic {
   trimHand(pi) { const p = this.g.players[pi]; const out = []; if (p.hand.length <= RULES.handMax) return out; p.hand.sort((a, b) => (b.cost || 0) - (a.cost || 0)); while (p.hand.length > RULES.handMax) { const c = p.hand.pop(); this.toDiscard(c); out.push(c.name); } return out; }
   owned(pi) { return Object.keys(this.g.owners).filter((k) => this.g.owners[k] === pi).map(Number); }
   countIn(pi, grp) { return this.owned(pi).filter((i) => TILES[i].g === grp).length; }
-  addCharge(pi, n) { const p = this.g.players[pi]; p.charge = Math.min(100, p.charge + n); }
+  addCharge(pi, n) { const p = this.g.players[pi]; if (!p) return; const before = p.charge; p.charge = Math.min(100, p.charge + Math.round(n * 1.5)); const d = p.charge - before; if (d > 0) this.emit({ k: 'chg', pi, n: d, full: p.charge >= 100 && before < 100 }); }
   complete(pi, grp) { const idx = groupIdx(grp); return idx.length > 0 && idx.every((k) => this.g.owners[k] === pi); }
   loose(pi) { return this.owned(pi).filter((i) => !this.complete(pi, TILES[i].g)); }
   give(pi, n) { const p = this.g.players[pi]; for (let k = 0; k < n; k++) p.hand.push(this.drawDeal()); return n; }
@@ -949,8 +976,8 @@ class Component extends DCLogic {
   rollDice(pi, cb) {
     const g = this.g; g.diceBag = g.diceBag || {}; let bag = g.diceBag[pi]; if (!bag || !bag.length) { bag = []; for (let x = 1; x <= 6; x++) { bag.push(x); bag.push(x); } bag = spread(shuf(bag), (d) => d); g.diceBag[pi] = bag; } const a = bag.pop(); const b = 0;
     g.dice = [a]; g.rolls += 1; g.phase = 'rolling'; g.diceShow = true; this.followOn(); this.refresh();
-    this.later(() => { this.log(`${this.nm(pi)} sacó ${a}`); cb(a); }, 1150);
-    this.later(() => { g.diceShow = false; this.refresh(); }, 2600);
+    this.later(() => { this.log(`${this.nm(pi)} sacó ${a}`); cb(a); }, 1500);
+    this.later(() => { g.diceShow = false; this.refresh(); }, 3000);
   }
   move(pi, n, done) {
     const g = this.g; g.phase = 'moving'; let left = n;
@@ -959,7 +986,7 @@ class Component extends DCLogic {
       p.pos = (p.pos + 1) % 24; g.focus = p.pos;
       if (p.pos === 0) { p.money += 2; this.addCharge(pi, 10); this.log(`${p.name} pasó por la Puerta: +$2M`); }
       left -= 1; this.refresh();
-      if (left > 0) this.later(step, 380); else this.later(done, 520);
+      if (left > 0) this.later(step, 470); else this.later(done, 900);
     };
     this.later(step, 150);
   }
@@ -1006,7 +1033,7 @@ class Component extends DCLogic {
   }
   afterLand(pi) {
     const g = this.g; if (g.screen !== 'game') return;
-    if (g.players[pi].bot) { this.botCards(pi); this.botMarket(pi); this.botBuild(pi); this.later(() => this.next(), 1200); }
+    if (g.players[pi].bot) { this.botSeq(pi); }
     else { g.phase = 'action'; this.refresh(); }
   }
   chargeRent(payer, owner, i, cont) {
@@ -1048,7 +1075,10 @@ class Component extends DCLogic {
   }
   broke() { if (this.g.players.some((p) => p.money < 0)) { this.end(true); return true; } return false; }
   next() {
-    const g = this.g; if (g.screen !== 'game') return;
+    const g = this.g; if (g.screen !== 'game' || this.inNext) return; this.inNext = true; try { this.nextIn(); } finally { this.inNext = false; }
+  }
+  nextIn() {
+    const g = this.g; g.tid = (g.tid || 0) + 1; g.diceShow = false; g.fly = []; g.look = null; g.catching = false;
     if (g.commission) { g.commission.turns -= 1; if (g.commission.turns <= 0) g.commission = null; }
     const cut = this.trimHand(g.turn); if (cut.length) { const m = `${this.nm(g.turn)} descartó ${cut.length} (máx. ${RULES.handMax} en mano): ${cut.join(' · ')}`; this.log(m); if (!g.players[g.turn].bot) this.toast(m); }
     if (g.aura) { g.aura.turns -= 1; if (g.aura.turns <= 0) g.aura = null; }
@@ -1061,17 +1091,17 @@ class Component extends DCLogic {
     this.beginTurn();
   }
   beginTurn() {
-    const g = this.g; const p = g.players[g.turn];
+    const g = this.g; const p = g.players[g.turn]; this.emit({ k: 'turn', pi: g.turn }); this.addCharge(g.turn, 4);
     g.focus = p.pos; g.plays = 0; const n = p.hand.length ? RULES.draw : RULES.drawEmpty;
     if (!p.bot) { g.phase = 'draw'; g.drawN = n; this.lookPile(); this.toast(`Tu turno: tocá el mazo de Tratos y robá ${n} cartas`, g.turn); this.refresh(); }
-    else { g.phase = 'bot'; this.flyDraw(g.turn, n, () => { this.followOn(); this.refresh(); this.later(() => this.botTurn(), 500); }); }
+    else { g.phase = 'bot'; this.refresh(); const t = g.turn; this.later(() => { if (g.turn !== t) return; this.flyDraw(t, n, () => { this.followOn(); this.refresh(); this.later(() => this.botTurn(), 1100); }); }, 1500); }
   }
   lookPile() { this.g.look = PILE; if (this.cam.free) return; this.cam.follow = false; this.cam.px = 0; this.cam.py = 0; if (!this.cam.zoomed) this.cam.s = this.mob() ? 0.62 : 1; }
   flyDraw(pi, n, after) {
     const g = this.g; this.lookPile(); this.give(pi, n); const p = g.players[pi];
         g.fly = p.hand.slice(-n).map((c, k) => ({ k: c.uid, name: c.name, ic: c.ic || '', color: c.color || '#C99022', fg: c.fg || '#14110F', d: (k * 0.28).toFixed(2), pi }));
     g.catching = false; this.refresh();
-    const T = 1250 + n * 280;
+    const T = 1500 + n * 340;
     this.later(() => { g.catching = true; this.refresh(); }, T - 250);
     this.later(() => { g.fly = []; g.look = null; g.catching = false; this.refresh(); if (after) after(); }, T + 250);
   }
@@ -1081,6 +1111,19 @@ class Component extends DCLogic {
     this.flyDraw(pi, n, () => { const p = g.players[pi]; this.toast(`Robaste: ${p.hand.slice(-n).map((c) => c.name).join(' · ')}`, pi); g.phase = 'roll'; this.followOn(); this.refresh(); });
   }
   botTurn() { const g = this.g; const pi = g.turn; const p = g.players[pi]; const go = () => this.rollDice(pi, (s) => this.move(pi, s, () => this.land(pi))); if (p.charge >= 100) this.domain(pi, () => this.later(go, 400)); else go(); }
+  botSeq(pi) {
+    const g = this.g; let played = true;
+    const money = () => g.players[pi].money; const snap = () => money();
+    const steps = [
+      (go) => { if (g.players[pi].charge >= 100 && !g.dom) { this.domain(pi, () => this.later(go, 900)); return null; } return 0; },
+      () => { played = Math.random() < 0.7 && this.botCard(pi); return played ? 2600 : 0; },
+      () => { played = played && Math.random() < 0.6 && this.botCard(pi); return played ? 2600 : 0; },
+      () => { const a = snap(); this.botMarket(pi); return snap() !== a ? 1800 : 0; },
+      () => { const a = snap(); this.botBuild(pi); return snap() !== a ? 1800 : 0; },
+    ];
+    const run = (k) => { if (this.g !== g || g.screen !== 'game' || g.turn !== pi) return; if (k >= steps.length) { this.later(() => this.next(), 1400); return; } const go = () => run(k + 1); const w = steps[k](go); if (w !== null) this.later(go, w + 250); };
+    this.later(() => run(0), 700);
+  }
   botCards(pi) { for (let t = 0; t < RULES.plays; t++) if (Math.random() < 0.6 && !this.botCard(pi)) break; }
   botCard(pi) { const p = this.g.players[pi]; if (this.playsLeft(pi) <= 0 || Math.random() > 0.75) return false; const opts = p.hand.map((c, k) => k).filter((k) => { const c = p.hand[k]; return !c.passive && this.canPlay(pi, c) && (c.type !== 'money' || p.money < 6); }); const idx = opts.length ? opts[rnd(opts.length)] : -1; if (idx >= 0) { const c = p.hand[idx]; const msg = this.playCard(pi, idx); if (msg) return true; } return false; }
   botMarket(pi) { const g = this.g; const p = g.players[pi]; if (Math.random() > 0.4 || p.hand.length >= RULES.handMax) return; const k = g.market.findIndex((c) => p.money - c.cost > 5); if (k >= 0) this.buyMarket(pi, k); }
@@ -1299,23 +1342,24 @@ class Component extends DCLogic {
     const liftBar = () => { this.lift = (this.lift + 1) % 3; try { localStorage.setItem('yj-lift', String(this.lift)); } catch (e) {} this.toast && this.toast(['Barra abajo', 'Barra un poco más arriba', 'Barra bien arriba'][this.lift]); this.refresh(); };
     const evs = g.ev || []; const lastId = evs.length ? evs[evs.length - 1].id : 0;
     if (this.evSeen == null || lastId < this.evSeen) this.evSeen = this.evSeen == null ? lastId : 0;
-    this.nq = this.nq || []; this.unread = this.unread || 0; const fresh = [];
+    this.notes = this.notes || []; this.unread = this.unread || 0; const fresh = [];
     evs.forEach((e) => { if (e.id <= this.evSeen) return; this.evSeen = e.id; if (e.to !== null && e.to !== undefined && e.to !== S) return; fresh.push(e); });
     fresh.forEach((e) => {
       if (e.k === 'pay') { if (typeof setTimeout !== 'undefined') setTimeout(() => this.coinFx(e), 60); return; }
-      if (e.k === 'res' || e.k === 'toast') { const prev = this.nq[this.nq.length - 1]; if (!(prev && prev.k === 'toast' && e.k === 'toast' && prev.t === e.t)) this.nq.push(e); if (this.nq.length > 6) { const k = this.nq.findIndex((x) => x.k === 'toast'); this.nq.splice(k >= 0 ? k : 0, 1); } }
+      if (e.k === 'chg') { if (typeof setTimeout !== 'undefined') setTimeout(() => this.chgFx(e), 1100); return; }
+      if (e.k === 'turn') { this.banner = e; if (typeof setTimeout !== 'undefined') { clearTimeout(this.bannerT); this.bannerT = setTimeout(() => { this.banner = null; this.setState({ v: Date.now() }); }, 2200); } return; }
+      if (e.k === 'res' || e.k === 'toast') this.addNote(e);
       if ((e.k === 'res' || e.k === 'log' || (e.k === 'toast' && (e.to === null || e.to === undefined))) && !this.ui.hist) this.unread += 1;
     });
-    if (fresh.length && typeof setTimeout !== 'undefined') setTimeout(() => this.pumpNote(), 0);
     const who = (k) => (k === S && !g.mp ? 'Vos' : k === S ? `${g.players[k].name} (vos)` : g.players[k] ? g.players[k].name : '');
     const pInfo = (k) => { const p = g.players[k]; const r = p ? this.role(p) : null; return { name: k === S ? 'Vos' : p ? p.name : '', img: r ? IMG[r.id] : '', color: r ? r.color : '#E0A33A' }; };
     const resRows = (e) => e.rows.map((x) => { const pi = pInfo(x.pi); const t = x.no ? '✋ Se negó' : x.net < 0 ? `pagó ${M(-x.net)}` : x.net > 0 ? `recibió ${M(x.net)}` : 'sin cambios'; return { ...pi, tag: t, cls: x.no ? 'no' : x.net < 0 ? 'paid' : x.net > 0 ? 'got' : 'zero' }; });
-    let note = null;
-    if (this.cur) {
-      const e = this.cur.e; const mine = e.k === 'res' && (e.who === S || e.rows.some((x) => x.pi === S));
-      if (e.k === 'res') { const gain = e.gain || 0; const rows = resRows(e); note = { isRes: true, isToast: false, ic: e.ic || '★', kicker: e.land ? `${who(e.rows[0] ? e.rows[0].pi : e.who)} cayó en un lugar de ${who(e.who)}` : `${who(e.who)} jugó`, card: e.card, rows, hasRows: rows.length > 0, text: e.text, hasText: !!e.text && (!rows.length || e.rows.every((x) => !x.net)), hasGain: gain !== 0, gainTxt: (gain > 0 ? '+' : '−') + M(Math.abs(gain)).replace(/^[-−]/, '') + (e.who === S ? '' : ` · ${who(e.who)}`), gainCls: gain > 0 ? 'pos' : 'neg', dur: this.cur.dur, cls: (mine ? 'mine ' : '') + (g.diceShow || this.ui.hud || this.ui.hist ? 'hush' : '') }; }
-      else note = { isRes: false, isToast: true, t: e.t, dur: this.cur.dur, cls: (e.to === S ? 'mine ' : '') + (g.diceShow || this.ui.hud || this.ui.hist ? 'hush' : '') };
-    }
+    const mkNote = (e, k) => {
+      const close = () => this.dropNote(e.id);
+      if (e.k === 'res') { const mine = e.who === S || e.rows.some((x) => x.pi === S); const gain = e.gain || 0; const rows = resRows(e); return { isRes: true, isToast: false, ic: e.ic || '★', kicker: e.land ? `${who(e.rows[0] ? e.rows[0].pi : e.who)} cayó en un lugar de ${who(e.who)}` : `${who(e.who)} jugó`, card: e.card, rows, hasRows: rows.length > 0, text: e.text, hasText: !!e.text && (!rows.length || e.rows.every((x) => !x.net)), hasGain: gain !== 0, gainTxt: (gain > 0 ? '+' : '−') + M(Math.abs(gain)).replace(/^[-−]/, '') + (e.who === S ? '' : ` · ${who(e.who)}`), gainCls: gain > 0 ? 'pos' : 'neg', cls: (mine ? 'mine ' : '') + (k ? 'old' : ''), close }; }
+      return { isRes: false, isToast: true, t: e.t, cls: (e.to === S ? 'mine ' : '') + (k ? 'old' : ''), close };
+    };
+    const notes = this.notes.map((n, k) => mkNote(n.e, k));
     const order = [S, ...g.players.map((p, k) => k).filter((k) => k !== S)].filter((k) => g.players[k]);
     const strip = order.map((k) => { const p = g.players[k]; const r = this.role(p); return { pi: k, img: IMG[r.id], role: r.name, color: r.color, money: M(p.money), ring: Math.round(119 * (1 - Math.min(100, p.charge) / 100)), cls: (k === S ? 'me ' : '') + (k === g.turn ? 'turn ' : '') + (p.away ? 'away' : '') }; });
     const panel = order.map((k) => { const p = g.players[k]; const r = this.role(p); return { name: (k === S && p.name !== 'Vos' ? 'Vos · ' : '') + p.name + (p.away ? ' · fuera' : ''), role: r.name, img: IMG[r.id], color: r.color, money: M(p.money), props: this.owned(k).length, cards: p.hand.length, charge: Math.min(100, Math.round(p.charge)), cls: k === g.turn ? 'turn' : '' }; });
@@ -1329,8 +1373,9 @@ class Component extends DCLogic {
       hudToggle: () => { this.ui.hud = !this.ui.hud; this.refresh(); }, cleanToggle: () => { this.ui.clean = !this.ui.clean; this.ui.hud = false; this.refresh(); },
       histOpen: !!this.ui.hist, hist, histEmpty: !hist.length, hasUnread: this.unread > 0 && !this.ui.hist, unread: this.unread > 9 ? '9+' : String(this.unread),
       histToggle: () => { this.ui.hist = !this.ui.hist; this.unread = 0; this.refresh(); },
-      hasNote: !!note, note: note || { cls: '', rows: [], dur: 0 }, noteClose: () => { clearTimeout(this.noteT); this.noteT = null; this.cur = null; this.refresh(); setTimeout(() => this.pumpNote(), 200); },
-      gCls: this.ui.clean ? 'clean' : '', liftPx: LIFTS[this.lift] + 'px', liftBar, liftCls: this.lift ? 'on' : '', liftTip: 'Subir o bajar la barra',
+      hasBanner: !!this.banner && !!g.players[this.banner.pi], banner: this.banner && g.players[this.banner.pi] ? (() => { const k = this.banner.pi; const p = g.players[k]; const r = this.role(p); return { name: k === S ? '¡Te toca!' : p.name, kick: k === S ? 'Tu turno' : `Turno de ${r.name}`, img: IMG[r.id], color: r.color, cls: k === S ? 'me' : '' }; })() : { name: '', kick: '', img: '', color: '', cls: '' },
+      hasNotes: notes.length > 0, notes, manyNotes: notes.length > 1, nstackCls: g.diceShow || g.dom || this.ui.hud || this.ui.hist ? 'hush' : '', closeNotes: () => { this.notes = []; this.refresh(); },
+      gCls: (this.ui.clean ? 'clean ' : '') + (this.net && this.net.pend ? 'pend' : ''), liftPx: LIFTS[this.lift] + 'px', liftBar, liftCls: this.lift ? 'on' : '', liftTip: 'Subir o bajar la barra',
       isPick: g.screen === 'pick', isGame: g.screen === 'game', isEnd: g.screen === 'end',
       roles, me: meV, rivals, tiles, toks, cars: CARS, overtime: g.overtime, feed: g.log,
       roundTxt: `Ronda ${Math.min(g.round, this.maxRounds())} de ${this.maxRounds()}`,
