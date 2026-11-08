@@ -88,6 +88,16 @@ body{margin:0;background:#14110F}
 .onrow{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
 .code{font:800 clamp(56px,10vw,104px)/1 'Bricolage Grotesque';letter-spacing:.14em;color:#E0A33A;text-align:center;margin:12px 0 18px}
 .lob{max-width:820px;margin:40px auto 0;text-align:center}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:680px;margin:30px auto 0}
+.mode{padding:18px 16px;border-radius:22px;border:2px solid rgba(239,230,210,.18);background:#1E1915;color:#EFE6D2;cursor:pointer;text-align:left;font:inherit;min-height:84px}
+.mode b{display:block;font:800 20px "Bricolage Grotesque",sans-serif}.mode span{display:block;font-size:13px;opacity:.7;margin-top:4px;line-height:1.35}
+.mode.on{background:#E0A33A;color:#14110F;border-color:#E0A33A}.mode.on span{opacity:.8}
+.cfgx{max-width:640px;margin:22px auto 0;padding:16px;border-radius:22px;background:#1E1915;border:1px solid rgba(239,230,210,.14);text-align:left}
+.cfgx-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:6px 0}.cfgx-row>span{font-weight:700;font-size:15px}
+.seg{display:flex;gap:6px;flex-wrap:wrap}.seg button{min-height:44px;padding:0 16px;border-radius:999px;border:1px solid rgba(239,230,210,.22);background:transparent;color:#EFE6D2;font:700 14px "DM Sans",sans-serif;cursor:pointer}.seg button.on{background:#E0A33A;color:#14110F;border-color:#E0A33A}
+.cfgx-help{margin:10px 0 0;font-size:13px;line-height:1.5;opacity:.72}
+.offer{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:22px}
+@media (max-width:560px){.modes{grid-template-columns:1fr}}
 .plist{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:22px 0}
 .plist span{padding:10px 16px;border-radius:999px;background:#1E1915;border:1px solid rgba(239,230,210,.16);font:700 15px 'DM Sans'}
 .plist span.me{border-color:#E0A33A;color:#E0A33A}
@@ -127,17 +137,23 @@ body{margin:0;background:#14110F}
 <div class="fade">
 <div class="eyebrow" style="text-align: center; color: #E0A33A; margin-top: 48px">10 rondas · 4 pistas · 6 opciones</div>
 <h1 class="hd title">¿Quién <span class="serif" style="color: #E0A33A">soy?</span></h1>
-<p class="sub">Las pistas aparecen de la más difícil a la más fácil. Cuanto antes adivines, más puntos. Elegí una categoría.</p>
+<p class="sub">Las pistas aparecen de la más difícil a la más fácil. Cuanto antes adivines, más puntos.</p>
+<div class="modes" role="tablist"><button class="mode {{tabSolo}}" type="button" role="tab" onClick="{{goSolo}}"><b>Jugar solo</b><span>Elegí una categoría y arrancá</span></button><button class="mode {{tabFriends}}" type="button" role="tab" onClick="{{goFriends}}"><b>Con amigos</b><span>De 2 a 8 jugadores, cada uno en su celular</span></button></div>
+<sc-if value="{{showSolo}}" hint-placeholder-val="{{ true }}">
 <div class="cats">
 <sc-for list="{{cats}}" as="c" hint-placeholder-count="7">
 <button class="cat" type="button" onClick="{{c.go}}" style="--c: {{c.color}}; --fg: {{c.fg}}"><span class="ic"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{c.icon}}"></path></svg></span><b>{{c.name}}</b><span>{{c.desc}}</span><i class="big" aria-hidden="true">?</i></button>
 </sc-for>
 </div>
+</sc-if>
+<sc-if value="{{showFriends}}" hint-placeholder-val="{{ false }}">
+<sc-if value="{{noNet}}" hint-placeholder-val="{{ false }}"><p class="sub">No se pudo cargar el modo online. Revisá tu conexión y recargá la página.</p></sc-if>
 <sc-if value="{{netOk}}" hint-placeholder-val="{{ false }}">
 <div class="online">
 <div><div class="eyebrow" style="color: #E0A33A">Con amigos · 2 a 8 jugadores</div><div class="hd" style="font-size: 30px; margin-top: 8px">Todos ven la misma pista</div><p style="margin: 8px 0 0; color: rgba(239,230,210,.75); line-height: 1.55">El más rápido en acertar suma más. Cada uno juega desde su celular.</p><label class="fld" style="margin-top: 16px"><span>Tu nombre</span><input type="text" maxlength="16" placeholder="Ej: Axel" value="{{fName}}" onInput="{{onName}}"></label></div>
 <div style="display: flex; flex-direction: column; gap: 14px"><button class="btn rust" type="button" onClick="{{mkRoom}}">Crear sala</button><div class="onrow"><label class="fld" style="flex: 1"><span>Código</span><input type="text" maxlength="5" placeholder="ABCDE" value="{{fCode}}" onInput="{{onCode}}" style="text-transform: uppercase; letter-spacing: .2em"></label><button class="btn" type="button" onClick="{{joinRoom}}">Unirme</button></div><div style="color: #E8705A; font-weight: 700">{{mErr}}</div></div>
 </div>
+</sc-if>
 </sc-if>
 <div class="how">
 <div><b>1. Leé la pista</b>Arrancás con la más difícil. Si la sabés, arriesgá enseguida: vale 100 puntos.</div>
@@ -212,9 +228,27 @@ body{margin:0;background:#14110F}
 <div class="code">{{mCode}}</div>
 <button class="btn" type="button" onClick="{{copyLink}}">{{copyTxt}}</button>
 <div class="plist"><sc-for list="{{mPlayers}}" as="p" hint-placeholder-count="3"><span class="{{p.cls}}">{{p.name}}</span></sc-for></div>
-<sc-if value="{{mHost}}" hint-placeholder-val="{{ true }}"><div class="eyebrow" style="opacity: .7; margin-top: 10px">{{lobbyHint}}</div><div class="cats" style="margin-top: 18px"><sc-for list="{{mCats}}" as="c" hint-placeholder-count="7"><button class="cat" type="button" onClick="{{c.go}}" style="--c: {{c.color}}; --fg: {{c.fg}}; min-height: 120px"><b>{{c.name}}</b><span>{{c.desc}}</span><i class="big" aria-hidden="true">?</i></button></sc-for></div></sc-if>
-<sc-if value="{{mGuest}}" hint-placeholder-val="{{ false }}"><p class="sub">Esperando a que el anfitrión elija la categoría y empiece…</p></sc-if>
+<sc-if value="{{mHost}}" hint-placeholder-val="{{ true }}"><div class="cfgx"><div class="cfgx-row"><span>¿Quién elige qué hay que adivinar?</span><div class="seg"><sc-for list="{{pickOpts}}" as="o" hint-placeholder-count="2"><button class="{{o.cls}}" type="button" onClick="{{o.go}}">{{o.label}}</button></sc-for></div></div><div class="cfgx-row"><span>Rondas</span><div class="seg"><sc-for list="{{roundOpts}}" as="o" hint-placeholder-count="3"><button class="{{o.cls}}" type="button" onClick="{{o.go}}">{{o.label}}</button></sc-for></div></div><p class="cfgx-help">{{pickHelp}}</p></div><div class="eyebrow" style="opacity: .7; margin-top: 10px">{{lobbyHint}}</div><div class="cats" style="margin-top: 18px"><sc-for list="{{mCats}}" as="c" hint-placeholder-count="7"><button class="cat" type="button" onClick="{{c.go}}" style="--c: {{c.color}}; --fg: {{c.fg}}; min-height: 120px"><b>{{c.name}}</b><span>{{c.desc}}</span><i class="big" aria-hidden="true">?</i></button></sc-for></div></sc-if>
+<sc-if value="{{mGuest}}" hint-placeholder-val="{{ false }}"><p class="sub">Esperando a que el anfitrión elija la categoría y empiece…</p><p class="cfgx-help">{{pickHelp}}</p></sc-if>
 <button class="btn" type="button" onClick="{{leave}}" style="margin-top: 26px">Salir de la sala</button>
+</div>
+</sc-if>
+
+<!-- MP CHOOSE -->
+<sc-if value="{{isChoose}}" hint-placeholder-val="{{ false }}">
+<div class="lob fade">
+<div class="eyebrow" style="color: #E0A33A">Ronda {{mRound}}/{{mTotal}} · {{mCatName}}</div>
+<sc-if value="{{iChoose}}" hint-placeholder-val="{{ false }}">
+<div class="hd" style="font-size: clamp(32px, 6vw, 56px); margin-top: 10px">Te toca elegir</div>
+<p class="sub">Elegí qué tienen que adivinar los demás. No lo digas en voz alta: ganás 10 puntos por cada uno que acierte.</p>
+<div class="offer"><sc-for list="{{offer}}" as="o" hint-placeholder-count="4"><button class="cat" type="button" onClick="{{o.go}}" style="--c: {{o.color}}; --fg: {{o.fg}}; min-height: 110px"><b>{{o.a}}</b><span>{{o.cat}}</span></button></sc-for></div>
+<button class="btn" type="button" onClick="{{chooseRandom}}" style="margin-top: 18px">Que elija el juego</button>
+</sc-if>
+<sc-if value="{{othersChoose}}" hint-placeholder-val="{{ false }}">
+<div class="hd" style="font-size: clamp(32px, 6vw, 56px); margin-top: 10px">{{chooserName}} está eligiendo…</div>
+<p class="sub">En unos segundos empiezan las pistas. Preparate.</p>
+</sc-if>
+<div class="hd" style="font-size: 40px; margin-top: 14px">{{mLeft}}s</div>
 </div>
 </sc-if>
 
@@ -224,7 +258,7 @@ body{margin:0;background:#14110F}
 <div class="stage">
 <div class="who" style="--c: {{mCur.color}}; --fg: {{mCur.fg}}">
 <div class="qm" aria-hidden="true">?</div>
-<div class="eyebrow" style="opacity: .8">{{mCur.cat}} · Ronda {{mRound}}/10</div>
+<div class="eyebrow" style="opacity: .8">{{mCur.cat}} · Ronda {{mRound}}/{{mTotal}}{{mByTxt}}</div>
 <h2 class="hd">{{mCur.prompt}}</h2>
 <div class="clues"><sc-for list="{{mClues}}" as="k" hint-placeholder-count="4"><div class="clue {{k.cls}}"><em>{{k.n}}</em><span>{{k.t}}</span></div></sc-for></div>
 <div class="pts"><div><div class="eyebrow" style="opacity: .75">{{mPotLbl}}</div><strong>{{mPot}}</strong></div><div class="hd" style="font-size: 32px">{{mLeft}}s</div></div>
@@ -339,14 +373,16 @@ function shuf(a) { a = a.slice(); for (let k = a.length - 1; k > 0; k--) { const
 const SB_URL = 'https://zvmydfzirtvfhbxvhryi.supabase.co', SB_KEY = 'sb_publishable_s0aBPe2GodEt9j3oeSp3jg_iUL9MZBw';
 const CLUE_S = 10;
 function mkCode() { const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let s = ''; for (let i = 0; i < 5; i++) s += A[Math.floor(Math.random() * A.length)]; return s; }
-function buildDeck(cid) {
+function mkItem(e, k) { return { a: e[0], k, clues: e.slice(1), opts: shuf([e[0], ...shuf(Q[k].filter((x) => x[0] !== e[0]).map((x) => x[0])).slice(0, 5)]) }; }
+function poolOf(cid) { return cid === 'mix' ? Object.keys(Q).flatMap((k) => Q[k].map((e) => ({ e, k }))) : Q[cid].map((e) => ({ e, k: cid })); }
+function buildDeck(cid, n) {
   const pool = cid === 'mix' ? Object.keys(Q).flatMap((k) => Q[k].map((e) => ({ e, k }))) : Q[cid].map((e) => ({ e, k: cid }));
-  return shuf(pool).slice(0, 10).map(({ e, k }) => ({ a: e[0], k, clues: e.slice(1), opts: shuf([e[0], ...shuf(Q[k].filter((x) => x[0] !== e[0]).map((x) => x[0])).slice(0, 5)]) }));
+  return shuf(pool).slice(0, n || 10).map(({ e, k }) => ({ a: e[0], k, clues: e.slice(1), opts: shuf([e[0], ...shuf(Q[k].filter((x) => x[0] !== e[0]).map((x) => x[0])).slice(0, 5)]) }));
 }
 class Component extends DCLogic {
   constructor(props) { super(props); this.g = { screen: 'home' }; this.state = { v: 0 }; this.m = null; this.form = { name: '', code: '' }; this.mErr = '';
     try { const q = new URLSearchParams(location.search).get('sala'); if (q) this.form.code = q.toUpperCase().slice(0, 5); } catch (e) {}
-    this.myId = (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : String(Math.random()).slice(2); }
+    this.myId = (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : String(Math.random()).slice(2); this.tab = this.form.code ? 'friends' : 'solo'; this.cfg = { pick: 'random', rounds: 10 }; }
   componentWillUnmount() { clearInterval(this.tickT); }
   sb() { if (!this._sb) this._sb = window.supabase.createClient(SB_URL, SB_KEY, { auth: { persistSession: false } }); return this._sb; }
   openRoom(code, host) {
@@ -363,6 +399,7 @@ class Component extends DCLogic {
     ch.on('broadcast', { event: 'rs' }, ({ payload }) => { if (!host) { this.m.rs = payload; this.refresh(); } });
     ch.on('broadcast', { event: 'ans' }, ({ payload }) => { if (host) this.answer(payload.id, payload.t); });
     ch.on('broadcast', { event: 'hello' }, () => { if (host) this.push(); });
+    ch.on('broadcast', { event: 'choose' }, ({ payload }) => { if (host) this.chosen(payload.id, payload.k); });
     ch.subscribe((status) => {
       if (status === 'SUBSCRIBED') ch.track({ name, t: Date.now() }).then(() => { if (!host) ch.send({ type: 'broadcast', event: 'hello', payload: {} }); this.refresh(); });
       else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') { this.mErr = 'No se pudo conectar. Probá de nuevo.'; this.refresh(); }
@@ -375,27 +412,41 @@ class Component extends DCLogic {
   hostStart(cid) {
     const m = this.m; if (!m || !m.host) return; if (m.players.length < 2) { this.mErr = 'Esperá a que se sume al menos otra persona.'; this.refresh(); return; }
     this.mErr = ''; const scores = {}; m.players.forEach((p) => { scores[p.id] = 0; });
-    m.rs = { phase: 'clue', hostId: this.myId, cid, deck: buildDeck(cid), i: 0, shown: 1, left: CLUE_S, answers: {}, scores, names: Object.fromEntries(m.players.map((p) => [p.id, p.name])) };
+    const N = this.cfg.rounds || 10; const order = m.players.map((p) => p.id);
+    m.rs = { phase: 'clue', hostId: this.myId, cid, total: N, pick: this.cfg.pick, order, used: [], deck: this.cfg.pick === 'turns' ? [] : buildDeck(cid, N), i: 0, shown: 1, left: CLUE_S, answers: {}, scores, names: Object.fromEntries(m.players.map((p) => [p.id, p.name])) };
+    if (this.cfg.pick === 'turns') this.offerRound();
     clearInterval(this.tickT); this.tickT = setInterval(() => this.tick(), 1000); this.push(); this.refresh();
   }
   tick() {
     const m = this.m; if (!m || !m.host) return; const rs = m.rs;
     m.players.forEach((p) => { if (!rs.names[p.id]) { rs.names[p.id] = p.name; rs.scores[p.id] = rs.scores[p.id] || 0; } });
     rs.left -= 1;
+    if (rs.phase === 'choose' && rs.left <= 0) { this.chosen(rs.chooser, -1); return; }
     if (rs.phase === 'clue' && rs.left <= 0) { if (rs.shown < 4) { rs.shown += 1; rs.left = CLUE_S; } else this.reveal(); }
-    else if (rs.phase === 'reveal' && rs.left <= 0) { if (rs.i >= rs.deck.length - 1) { rs.phase = 'end'; clearInterval(this.tickT); } else { rs.i += 1; rs.shown = 1; rs.left = CLUE_S; rs.answers = {}; rs.phase = 'clue'; } }
+    else if (rs.phase === 'reveal' && rs.left <= 0) { if (rs.i >= (rs.total || rs.deck.length) - 1) { rs.phase = 'end'; clearInterval(this.tickT); } else { rs.i += 1; rs.shown = 1; rs.left = CLUE_S; rs.answers = {}; rs.chPts = 0; if (rs.pick === 'turns') this.offerRound(); else rs.phase = 'clue'; } }
     this.push(); this.refresh();
   }
-  reveal() { const rs = this.m.rs; rs.phase = 'reveal'; rs.left = 6; }
+  offerRound() {
+    const m = this.m; const rs = m.rs; const live = rs.order.filter((id) => m.players.some((p) => p.id === id)); const list = live.length ? live : rs.order;
+    rs.chooser = list[rs.i % list.length]; const pool = shuf(poolOf(rs.cid).filter((x) => !rs.used.includes(x.e[0])));
+    rs.offer = pool.slice(0, 4).map((x) => ({ a: x.e[0], k: x.k })); rs.phase = 'choose'; rs.left = 25; rs.answers = {}; rs.shown = 1;
+  }
+  chosen(id, k) {
+    const m = this.m; const rs = m.rs; if (rs.phase !== 'choose' || id !== rs.chooser) return;
+    const o = rs.offer[k] || rs.offer[Math.floor(Math.random() * rs.offer.length)]; if (!o) return; const e = Q[o.k].find((x) => x[0] === o.a);
+    rs.deck[rs.i] = mkItem(e, o.k); rs.used.push(o.a); rs.phase = 'clue'; rs.left = CLUE_S; rs.shown = 1; rs.answers = {}; this.push(); this.refresh();
+  }
+  reveal() { const rs = this.m.rs; rs.phase = 'reveal'; rs.left = 7; if (rs.pick === 'turns' && rs.chooser) { const n = Object.values(rs.answers).filter((a) => a.ok).length; rs.chPts = n * 10; rs.scores[rs.chooser] = (rs.scores[rs.chooser] || 0) + rs.chPts; } }
   answer(id, t) {
-    const m = this.m; const rs = m.rs; if (rs.phase !== 'clue' || rs.answers[id]) return;
+    const m = this.m; const rs = m.rs; if (rs.phase !== 'clue' || rs.answers[id] || (rs.pick === 'turns' && id === rs.chooser)) return;
     const d = rs.deck[rs.i]; const ok = t === d.a; const first = ok && !Object.values(rs.answers).some((a) => a.ok);
     const pts = ok ? PTS[rs.shown - 1] + (first ? 20 : 0) : 0;
     rs.answers[id] = { t, ok, pts }; rs.scores[id] = (rs.scores[id] || 0) + pts;
-    const active = m.players.map((p) => p.id); if (active.every((pid) => rs.answers[pid])) this.reveal();
+    const active = m.players.map((p) => p.id).filter((pid) => !(rs.pick === 'turns' && pid === rs.chooser)); if (active.every((pid) => rs.answers[pid])) this.reveal();
     this.push(); this.refresh();
   }
-  myPick(t) { const m = this.m; if (!m || m.rs.phase !== 'clue' || m.rs.answers[this.myId]) return; if (m.host) this.answer(this.myId, t); else { m.rs.answers[this.myId] = { t, pending: true }; m.ch.send({ type: 'broadcast', event: 'ans', payload: { id: this.myId, t } }); this.refresh(); } }
+  myChoose(k) { const m = this.m; if (!m || m.rs.phase !== 'choose' || m.rs.chooser !== this.myId) return; if (m.host) this.chosen(this.myId, k); else m.ch.send({ type: 'broadcast', event: 'choose', payload: { id: this.myId, k } }); }
+  myPick(t) { const m = this.m; if (!m || m.rs.phase !== 'clue' || m.rs.answers[this.myId] || (m.rs.pick === 'turns' && m.rs.chooser === this.myId)) return; if (m.host) this.answer(this.myId, t); else { m.rs.answers[this.myId] = { t, pending: true }; m.ch.send({ type: 'broadcast', event: 'ans', payload: { id: this.myId, t } }); this.refresh(); } }
   mpVals() {
     const m = this.m; const rs = m.rs; const me = this.myId;
     const names = rs.names || Object.fromEntries(m.players.map((p) => [p.id, p.name]));
@@ -409,14 +460,23 @@ class Component extends DCLogic {
       mCats: CATS.map((c) => ({ ...c, go: () => this.hostStart(c.id) })),
       copyTxt: m.copied ? '¡Link copiado!' : 'Copiar link de invitación',
       copyLink: () => { try { navigator.clipboard.writeText(location.origin + '/adivina?sala=' + m.code); } catch (e) {} m.copied = true; this.refresh(); },
-      leave: () => this.leave(), again: () => this.hostStart(rs.cid) };
+      leave: () => this.leave(), again: () => this.hostStart(rs.cid),
+      pickOpts: [['random', 'Al azar'], ['turns', 'Por turnos']].map(([v, l]) => ({ label: l, cls: this.cfg.pick === v ? 'on' : '', go: () => { this.cfg.pick = v; this.m.rs.cfg = { ...this.cfg }; this.push(); this.refresh(); } })),
+      roundOpts: [5, 10, 15].map((n) => ({ label: String(n), cls: this.cfg.rounds === n ? 'on' : '', go: () => { this.cfg.rounds = n; this.m.rs.cfg = { ...this.cfg }; this.push(); this.refresh(); } })),
+      pickHelp: ((m.host ? this.cfg : rs.cfg || { pick: 'random', rounds: 10 }).pick === 'turns') ? `Por turnos: en cada ronda un jugador elige en secreto el personaje, animal o lugar entre 4 opciones; los demás adivinan con las pistas y el que eligió gana 10 puntos por cada acierto. ${(m.host ? this.cfg : rs.cfg || {}).rounds || 10} rondas.` : `Al azar: el juego elige qué hay que adivinar y todos juegan cada ronda. ${(m.host ? this.cfg : rs.cfg || {}).rounds || 10} rondas.`,
+      mTotal: rs.total || 10, mByTxt: rs.pick === 'turns' && rs.chooser ? ` · eligió ${rs.chooser === me ? 'vos' : (names[rs.chooser] || 'alguien')}` : '' };
+    if (rs.phase === 'choose') {
+      const iCh = rs.chooser === me;
+      Object.assign(v, { mRound: rs.i + 1, iChoose: iCh, othersChoose: !iCh, chooserName: names[rs.chooser] || 'Alguien', mLeft: Math.max(0, rs.left),
+        offer: (rs.offer || []).map((o, k) => { const c = CATS.find((x) => x.id === o.k) || cat; return { a: o.a, cat: c.name, color: c.color, fg: c.fg, go: () => this.myChoose(k) }; }), chooseRandom: () => this.myChoose(-1) });
+    }
     if (rs.phase === 'clue' || rs.phase === 'reveal') {
       const d = rs.deck[rs.i]; const kc = CATS.find((c) => c.id === d.k) || cat; const mine = rs.answers[me]; const rev = rs.phase === 'reveal';
-      Object.assign(v, { mRound: rs.i + 1, mProgress: (rs.i / 10) * 100 + '%', mCur: { color: kc.color, fg: kc.fg, cat: kc.name, prompt: PROMPT[d.k] },
+      Object.assign(v, { mRound: rs.i + 1, mProgress: (rs.i / (rs.total || 10)) * 100 + '%', mCur: { color: kc.color, fg: kc.fg, cat: kc.name, prompt: PROMPT[d.k] },
         mClues: d.clues.map((t, k) => ({ n: k + 1, t: k < rs.shown || rev ? t : 'Pista bloqueada', cls: k < rs.shown || rev ? '' : 'locked' })),
         mPotLbl: rev ? 'Resultado' : 'Vale ahora', mPot: rev ? (mine && mine.ok ? '+' + mine.pts : '0') : `${PTS[rs.shown - 1]} pts`,
         mLeft: Math.max(0, rs.left), mTimer: (Math.max(0, rs.left) / (rev ? 6 : CLUE_S)) * 100 + '%',
-        mAsk: rev ? 'La respuesta era' : mine ? 'Ya respondiste: esperá al resto' : 'Elegí tu respuesta',
+        mAsk: rev ? (rs.pick === 'turns' && rs.chPts ? `La respuesta era · ${names[rs.chooser] || ''} suma ${rs.chPts}` : 'La respuesta era') : rs.pick === 'turns' && rs.chooser === me ? `Elegiste «${d.a}»: mirá cómo adivinan` : mine ? 'Ya respondiste: esperá al resto' : 'Elegí tu respuesta',
         mOpts: d.opts.map((t) => ({ t, cls: rev ? (t === d.a ? 'good' : mine && mine.t === t ? 'bad' : 'off') : mine ? (mine.t === t ? 'good' : 'off') : '', pick: () => this.myPick(t) })),
         mReveal: rev, mAnswer: d.a });
     }
@@ -459,11 +519,13 @@ class Component extends DCLogic {
     const M_ = this.m; const ph = M_ ? M_.rs.phase : null;
     if (M_) {
       return { isHome: false, isPlay: false, isEnd: false, notPlay: true, topTxt: 'Sala ' + M_.code, cats: [], score: 0, streak: 0, hasStreak: false, netOk: false,
-        isLobby: ph === 'lobby', isMp: ph === 'clue' || ph === 'reveal', isMpEnd: ph === 'end', mErr: this.mErr, ...this.mpVals() };
+        isLobby: ph === 'lobby', isChoose: ph === 'choose', isMp: ph === 'clue' || ph === 'reveal', isMpEnd: ph === 'end', mErr: this.mErr, ...this.mpVals() };
     }
     const netOk = typeof window !== 'undefined' && !!window.supabase;
     const base = {
-      isLobby: false, isMp: false, isMpEnd: false, topTxt: 'YAJUGÁ · Juego 03', netOk, mErr: this.mErr, fName: this.form.name, fCode: this.form.code,
+      isLobby: false, isChoose: false, isMp: false, isMpEnd: false, topTxt: 'YAJUGÁ · Juego 03', netOk, noNet: !netOk,
+      tabSolo: this.tab === 'solo' ? 'on' : '', tabFriends: this.tab === 'friends' ? 'on' : '', showSolo: this.tab === 'solo', showFriends: this.tab === 'friends',
+      goSolo: () => { this.tab = 'solo'; this.refresh(); }, goFriends: () => { this.tab = 'friends'; this.refresh(); }, mErr: this.mErr, fName: this.form.name, fCode: this.form.code,
       onName: (e) => { this.form.name = e.target.value.slice(0, 16); },
       onCode: (e) => { this.form.code = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 5); this.refresh(); },
       mkRoom: () => { this.mErr = ''; this.openRoom(mkCode(), true); },
