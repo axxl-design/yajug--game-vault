@@ -8,18 +8,28 @@
     if (S.ctx || !AC) return S.ctx;
     var c = new AC(); S.ctx = c;
     S.master = c.createGain(); S.master.gain.value = S.on ? 1 : 0; S.master.connect(c.destination);
-    var comp = c.createDynamicsCompressor(); comp.threshold.value = -18; comp.ratio.value = 3; comp.connect(S.master);
-    S.mus = c.createGain(); S.mus.gain.value = 0.16; S.mus.connect(comp);
-    S.fx = c.createGain(); S.fx.gain.value = 0.55; S.fx.connect(comp);
+    var comp = c.createDynamicsCompressor(); comp.threshold.value = -20; comp.ratio.value = 4; comp.knee.value = 10; var mk = c.createGain(); mk.gain.value = 2.6; comp.connect(mk); mk.connect(S.master);
+    S.mus = c.createGain(); S.mus.gain.value = 0.5; S.mus.connect(comp);
+    S.fx = c.createGain(); S.fx.gain.value = 1; S.fx.connect(comp);
     // reverb suave para la música
     var len = c.sampleRate * 1.8, buf = c.createBuffer(2, len, c.sampleRate);
     for (var ch = 0; ch < 2; ch++) { var d = buf.getChannelData(ch); for (var i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.6); }
     S.verb = c.createConvolver(); S.verb.buffer = buf; var vg = c.createGain(); vg.gain.value = 0.28; S.verb.connect(vg); vg.connect(S.mus);
     return c;
   }
-  function unlock() { var c = init(); if (c && c.state === 'suspended') c.resume(); if (S.theme && !S.timer && S.on) startLoop(); }
-  ['pointerdown', 'keydown', 'touchend'].forEach(function (t) { window.addEventListener(t, unlock, { passive: true }); });
-  document.addEventListener('visibilitychange', function () { if (!S.ctx) return; if (document.hidden) S.ctx.suspend(); else if (S.on) S.ctx.resume(); });
+  var SILENT = 'data:audio/wav;base64,UklGRqQMAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YYAMAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgA==';
+  function unlock() {
+    // iPhone: pasar la sesión de audio a "reproducción" para que suene aunque esté en modo silencio
+    try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
+    if (!S.tag) { try { var a = document.createElement('audio'); a.setAttribute('playsinline', ''); a.setAttribute('x-webkit-airplay', 'deny'); a.preload = 'auto'; a.loop = true; a.src = SILENT; S.tag = a; } catch (e) {} }
+    if (S.on && S.tag && S.tag.paused) { try { var pr = S.tag.play(); if (pr && pr.catch) pr.catch(function () {}); } catch (e) {} }
+    var c = init(); if (!c) return;
+    if (c.state !== 'running') { try { c.resume(); } catch (e) {} }
+    try { var b = c.createBuffer(1, 1, 22050), src = c.createBufferSource(); src.buffer = b; src.connect(c.destination); src.start(0); } catch (e) {}
+    if (S.theme && !S.timer && S.on) startLoop();
+  }
+  ['touchend', 'click', 'pointerup', 'keydown'].forEach(function (t) { window.addEventListener(t, unlock, { passive: true, capture: true }); document.addEventListener(t, unlock, { passive: true, capture: true }); });
+  document.addEventListener('visibilitychange', function () { if (!S.ctx) return; if (document.hidden) { S.ctx.suspend(); if (S.tag) try { S.tag.pause(); } catch (e) {} } else if (S.on) { S.ctx.resume(); } });
 
   var mtof = function (m) { return 440 * Math.pow(2, (m - 69) / 12); };
   function env(g, t, a, peak, dec, sus) { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(Math.max(0.0001, sus || 0.0001), t + a + dec); }
@@ -115,7 +125,7 @@
   function startLoop() {
     var c = S.ctx; if (!c || !S.theme || S.timer) return;
     var th = THEMES[S.theme]; var spb = 60 / th.bpm / 4; S.nextT = c.currentTime + 0.1; S.step = 0;
-    S.mus.gain.cancelScheduledValues(c.currentTime); S.mus.gain.setValueAtTime(0.0001, c.currentTime); S.mus.gain.exponentialRampToValueAtTime(0.16, c.currentTime + 2.5);
+    S.mus.gain.cancelScheduledValues(c.currentTime); S.mus.gain.setValueAtTime(0.0001, c.currentTime); S.mus.gain.exponentialRampToValueAtTime(0.5, c.currentTime + 1.5);
     S.timer = setInterval(function () {
       if (!S.ctx || S.ctx.state !== 'running') return;
       while (S.nextT < S.ctx.currentTime + 0.25) {
@@ -128,11 +138,11 @@
   }
   function stopLoop() { clearInterval(S.timer); S.timer = null; }
 
-  window.YJS = {
-    play: function (n) { if (!S.on) return; var c = init(); if (!c || c.state !== 'running' || !FX[n]) return; try { FX[n](); } catch (e) {} },
+  window.YJS = { _s: S,
+    play: function (n) { if (!S.on) return; var c = init(); if (!c || !FX[n]) return; if (c.state !== 'running') { try { c.resume(); } catch (e) {} return; } try { FX[n](); } catch (e) {} },
     music: function (theme) { if (S.theme === theme) return; stopLoop(); S.theme = theme; if (S.on && S.ctx && S.ctx.state === 'running') startLoop(); },
     stopMusic: function () { stopLoop(); S.theme = null; },
     isOn: function () { return S.on; },
-    toggle: function () { S.on = !S.on; try { localStorage.setItem('yj-sound', S.on ? 'on' : 'off'); } catch (e) {} var c = init(); if (c) { S.master.gain.setTargetAtTime(S.on ? 1 : 0, c.currentTime, 0.05); if (S.on) { c.resume(); if (S.theme && !S.timer) startLoop(); } } return S.on; }
+    toggle: function () { S.on = !S.on; try { localStorage.setItem('yj-sound', S.on ? 'on' : 'off'); } catch (e) {} var c = init(); if (c) { S.master.gain.setTargetAtTime(S.on ? 1 : 0, c.currentTime, 0.05); if (S.on) { c.resume(); if (S.theme && !S.timer) startLoop(); } } if (S.tag) { try { if (S.on) S.tag.play().catch(function () {}); else S.tag.pause(); } catch (e) {} } if (S.on) { var me = this; setTimeout(function () { me.play('ok'); }, 120); } return S.on; }
   };
 })();
