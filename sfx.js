@@ -94,8 +94,8 @@
   };
 
   // ---------- música: temas CC0 de OpenGameArt, en bucle ----------
-  var MUSIC = { dominio: '/audio/music/jazz.mp3', leyendas: '/audio/music/bard.mp3', quien: '/audio/music/cozy.mp3', queharias: '/audio/music/suspense.mp3' };
-  var MVOL = { dominio: 1.4, leyendas: 0.95, quien: 0.9, queharias: 0.9 };
+  var MUSIC = { dominio: '/audio/music/jazz.mp3', leyendas: '/audio/music/bard.mp3', quien: '/audio/music/cozy.mp3', queharias: '/audio/music/suspense.mp3', portal: '/audio/music/suspense.mp3' };
+  var MVOL = { dominio: 1.4, leyendas: 0.95, quien: 0.9, queharias: 0.9, portal: 0.9 };
   function startLoop() {
     var c = S.ctx; if (!c || !S.theme || S.src || S.loading === S.theme) return;
     var th = S.theme; if (!MUSIC[th]) return; S.loading = th;
