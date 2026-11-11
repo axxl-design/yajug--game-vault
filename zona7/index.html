@@ -1,0 +1,1127 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Zona 7 · YAJUGÁ</title>
+<meta name="description" content="YAJUGÁ Games Vault: juegos de mesa online. Jugá YAJUGÁ Dominio con tus amigos.">
+<meta name="theme-color" content="#14110F">
+<link rel="icon" href="/assets/fav.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/icons/apple-180.png">
+<script src="/pwa.js" defer></script>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="YAJUGÁ">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&amp;family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&amp;family=Silkscreen:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0d0f10}
+.z{--ink:#0a0b0c;--bg:#0d0f10;--pan:#171b1c;--pan2:#1f2526;--line:#2f3a3a;--tx:#dfe6dc;--mut:#8fa09a;--am:#e0a33a;--red:#c13b1f;--grn:#4f9a5a;--cy:#63b8b0;--paper:#e9e2cc;
+ position:relative;min-height:100%;height:100%;overflow:auto;background:var(--bg);color:var(--tx);font-family:'DM Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;
+ background-image:linear-gradient(rgba(140,180,160,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(140,180,160,.035) 1px,transparent 1px);background-size:24px 24px}
+.z *{box-sizing:border-box}
+.z img{image-rendering:pixelated;display:block}
+.hd{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;letter-spacing:-.03em;line-height:1.02;margin:0}
+.px{font-family:'Silkscreen',monospace;letter-spacing:.05em}
+.pb{box-shadow:0 -4px 0 0 var(--ink),0 4px 0 0 var(--ink),-4px 0 0 0 var(--ink),4px 0 0 0 var(--ink)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:6px 16px;border:0;cursor:pointer;font-family:'Silkscreen',monospace;font-weight:700;font-size:13px;line-height:1.25;letter-spacing:.03em;color:var(--tx);background:var(--pan2);text-decoration:none;text-align:center;
+ box-shadow:0 -3px 0 0 var(--ink),0 3px 0 0 var(--ink),-3px 0 0 0 var(--ink),3px 0 0 0 var(--ink),inset 0 -4px 0 0 rgba(0,0,0,.3),inset 0 3px 0 0 rgba(255,255,255,.08);transition:transform .1s steps(2),filter .15s}
+.btn:hover{filter:brightness(1.18)}.btn:active{transform:translateY(3px)}
+.btn:disabled{opacity:.32;cursor:not-allowed;filter:none;transform:none}
+.btn small{font-family:'DM Sans',sans-serif;font-weight:500;font-size:11px;letter-spacing:0;opacity:.75;display:block}
+.btn.red{background:var(--red);color:#fff}.btn.grn{background:#3d7a47;color:#fff}.btn.am{background:var(--am);color:var(--ink)}.btn.cy{background:#2b5f5c;color:#fff}
+.btn:focus-visible,.chip:focus-visible,.qb:focus-visible,.tab:focus-visible{outline:3px dashed var(--am);outline-offset:5px}
+.center{min-height:100%;display:flex;align-items:center;justify-content:center;padding:calc(36px + env(safe-area-inset-top,0px)) 20px 48px}
+.box{width:100%;max-width:760px}
+.eyebrow{font-family:'Silkscreen',monospace;font-size:13px;letter-spacing:.12em;color:var(--am)}
+.lead{font-size:clamp(16px,1.9vw,19px);line-height:1.6;color:#c3cdc4;margin:18px 0 0}
+/* título */
+.tit{font-size:clamp(72px,15vw,170px);color:var(--tx);text-shadow:6px 6px 0 var(--red)}
+.tit em{font-style:normal;color:var(--am)}
+.gate{position:relative;height:150px;margin-bottom:28px;background:repeating-linear-gradient(90deg,#1c2223 0 22px,#141819 22px 26px);overflow:hidden}
+.gate::before{content:'';position:absolute;left:50%;top:24px;width:120px;height:92px;margin-left:-60px;background:#05070a;box-shadow:0 0 0 4px #3a4444,0 0 0 8px var(--ink)}
+.gate .eyes{position:absolute;left:50%;top:58px;width:60px;margin-left:-30px;display:flex;justify-content:space-between}
+.gate .eyes i{width:10px;height:10px;background:#d8ffe0;box-shadow:0 0 0 4px rgba(200,255,214,.25);animation:blk 4.6s steps(1) infinite}
+@keyframes blk{0%,91%{opacity:1}92%,96%{opacity:0}97%,100%{opacity:1}}
+.gate .lamp{position:absolute;right:12%;top:0;width:8px;height:40px;background:#3a4444}
+.gate .lamp::after{content:'';position:absolute;left:-10px;top:40px;width:28px;height:12px;background:var(--am);animation:flk 3.1s steps(1) infinite}
+@keyframes flk{0%,60%{opacity:1}61%,63%{opacity:.3}64%,80%{opacity:1}81%{opacity:.4}82%,100%{opacity:1}}
+.trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:30px}
+.trio div{background:var(--pan);padding:16px;font-size:14px;line-height:1.5;color:#b9c4bb}
+.trio b{display:block;font-family:'Silkscreen',monospace;font-size:12px;color:var(--am);margin-bottom:6px}
+.row{display:flex;gap:16px;flex-wrap:wrap;margin-top:34px}
+/* informe */
+.sheet{background:var(--paper);color:#15181a;padding:22px 24px;margin-top:22px}
+.sheet h3{margin:0 0 4px;font-family:'Silkscreen',monospace;font-size:13px;color:var(--red);letter-spacing:.06em}
+.sheet p,.sheet li{font-size:16px;line-height:1.5;margin:10px 0 0}
+.sheet ul{margin:0;padding-left:20px}
+.bol{border-top:2px dotted rgba(0,0,0,.3);padding-top:10px;margin-top:12px}
+.bol small{display:block;font-family:'Silkscreen',monospace;font-size:11px;color:#5a5346;margin-top:4px}
+.clave{display:inline-block;background:#15181a;color:var(--am);font-family:'Silkscreen',monospace;font-size:15px;padding:6px 10px;margin-top:8px}
+.note{background:var(--pan);padding:14px 16px;margin-top:16px;font-size:15px;line-height:1.5;box-shadow:inset 4px 0 0 0 var(--cy)}
+.note.red{box-shadow:inset 4px 0 0 0 var(--red)}.note.grn{box-shadow:inset 4px 0 0 0 var(--grn)}.note.am{box-shadow:inset 4px 0 0 0 var(--am)}
+.note b{font-family:'Silkscreen',monospace;font-size:11px;color:var(--am);display:block;margin-bottom:4px;letter-spacing:.06em}
+/* barra superior */
+.top{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:10px;padding:calc(8px + env(safe-area-inset-top,0px)) clamp(10px,2vw,20px) 8px;background:rgba(13,15,16,.96);border-bottom:4px solid var(--ink);box-shadow:0 4px 0 0 #232b2b;flex-wrap:wrap}
+.home{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--tx);font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:19px;min-height:40px}
+.home i{font-style:normal;color:var(--am)}
+.mets{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap;justify-content:flex-end;align-items:center}
+.met{min-height:38px;padding:4px 10px;background:var(--pan);font-family:'Silkscreen',monospace;font-size:12px;display:flex;flex-direction:column;justify-content:center;box-shadow:0 0 0 3px var(--ink);min-width:62px}
+.met span{font-size:9px;color:var(--mut)}.met b{font-weight:700;color:var(--am)}
+.met.late b{color:#ff6a4d}
+.bar{height:5px;background:#0a0b0c;margin-top:3px}.bar i{display:block;height:100%;background:var(--grn)}.bar.par i{background:var(--red)}
+.ib{width:38px;height:38px;border:0;background:var(--pan);color:var(--tx);cursor:pointer;box-shadow:0 0 0 3px var(--ink);font-size:15px}
+/* mesa */
+.work{display:grid;grid-template-columns:minmax(300px,360px) minmax(0,1fr) minmax(300px,380px);gap:22px;padding:18px clamp(10px,2vw,20px) 240px;max-width:1560px;margin:0 auto;align-items:start}
+.col{display:flex;flex-direction:column;gap:14px;min-width:0}
+.win{position:relative;aspect-ratio:96/104;background:#27303a;overflow:hidden}
+.win.calma{background:linear-gradient(#56606e,#7b7a78 70%,#3b3f44 70%)}.win.frio{background:linear-gradient(#8fa3b3,#c9d3d8 70%,#dfe6ea 70%)}.win.ola{background:linear-gradient(#6b4a3d,#a8683f 70%,#3a2c26 70%)}.win.apagon{background:linear-gradient(#07090d,#10151c 70%,#06080a 70%)}.win.lluvia{background:linear-gradient(#3b4650,#55626b 70%,#2a3238 70%)}.win.exodo{background:linear-gradient(#5a2f2a,#8d4a33 70%,#2c1c1a 70%)}.win.final{background:linear-gradient(#2a2440,#6d4a5a 60%,#c98a52 70%,#2a2230 70%)}
+.win .rain{position:absolute;inset:-20% 0;background:repeating-linear-gradient(100deg,transparent 0 9px,rgba(200,220,235,.28) 9px 10px);animation:rain .5s steps(4) infinite;pointer-events:none;z-index:3}
+@keyframes rain{to{transform:translate(-12px,40px)}}
+.win .snow{position:absolute;inset:0;background-image:radial-gradient(#fff 1px,transparent 1.6px);background-size:26px 30px;animation:snow 5s steps(20) infinite;opacity:.7;z-index:3;pointer-events:none}
+@keyframes snow{to{background-position:13px 60px}}
+.win .face{position:absolute;left:0;right:0;bottom:0;width:100%;z-index:2;animation:arr .6s steps(6) both}
+@keyframes arr{from{transform:translateY(40%);opacity:0}}
+.win.apagon .face{filter:brightness(.62) contrast(1.1)}
+.win .fog{position:absolute;left:50%;bottom:16%;width:38%;height:17%;margin-left:-19%;z-index:4;background:radial-gradient(ellipse,rgba(235,245,250,.85),rgba(235,245,250,0) 70%);animation:fog 3.2s ease-in-out infinite}
+@keyframes fog{0%,100%{opacity:.08;transform:scale(.7)}50%{opacity:1;transform:scale(1.15)}}
+.win .frame{position:absolute;inset:0;box-shadow:inset 0 0 0 6px #2a3232,inset 0 0 0 10px var(--ink);z-index:5;pointer-events:none}
+.win .glass{position:absolute;inset:0;background:linear-gradient(115deg,transparent 0 38%,rgba(255,255,255,.07) 38% 44%,transparent 44% 100%);z-index:4;pointer-events:none}
+.win .empty{position:absolute;inset:0;z-index:6;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:22px;text-align:center;background:rgba(8,10,12,.55)}
+.win .empty p{margin:0;font-family:'Silkscreen',monospace;font-size:13px;line-height:1.5}
+.stamp{position:absolute;left:50%;top:44%;z-index:8;transform:translate(-50%,-50%) rotate(-9deg);padding:10px 18px;font-family:'Silkscreen',monospace;font-weight:700;font-size:26px;border:5px solid currentColor;background:rgba(233,226,204,.92);animation:slam .4s steps(4) both;white-space:nowrap}
+.stamp.pasa{color:#2c6b36}.stamp.rechaza{color:var(--red)}.stamp.cuarentena{color:#8a6410}
+@keyframes slam{from{transform:translate(-50%,-50%) rotate(-9deg) scale(2.2);opacity:0}}
+.who{display:flex;justify-content:space-between;gap:8px;font-family:'Silkscreen',monospace;font-size:11px;color:var(--mut)}
+.pips{display:flex;gap:3px}.pips i{width:8px;height:8px;background:var(--am);box-shadow:0 0 0 2px var(--ink)}.pips i.off{background:#2a3030}
+.dlg{display:flex;flex-direction:column;gap:8px;max-height:260px;overflow:auto;padding:4px}
+.say{padding:10px 12px;font-size:15px;line-height:1.45;background:var(--paper);color:#15181a;box-shadow:0 0 0 3px var(--ink);animation:in .3s steps(3) both}
+.say.me{background:#232c2c;color:#b9c8c0;font-size:13px;align-self:flex-end;max-width:92%}
+@keyframes in{from{opacity:0;transform:translateY(6px)}}
+.qs{display:flex;flex-direction:column;gap:9px}
+.qb{display:flex;gap:10px;align-items:center;width:100%;min-height:44px;padding:8px 12px;border:0;cursor:pointer;text-align:left;background:var(--pan);color:var(--tx);font:inherit;font-size:14.5px;line-height:1.35;box-shadow:0 0 0 3px var(--ink)}
+.qb:hover{background:#243030}.qb:disabled{opacity:.35;cursor:not-allowed}
+.qb em{font-style:normal;font-family:'Silkscreen',monospace;font-size:9px;color:var(--ink);background:var(--cy);padding:3px 5px;flex:none;min-width:58px;text-align:center}
+.qb em.Trampa{background:var(--red);color:#fff}.qb em.Memoria{background:#b58ad0}.qb em.Familia{background:#e0a33a}.qb em.Cuerpo{background:#d98a7a}.qb em.Infancia{background:#f2d27a}.qb em.Presión{background:#9aa}
+.sub{font-family:'Silkscreen',monospace;font-size:11px;color:var(--mut);letter-spacing:.08em;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.lk{border:0;background:none;color:var(--cy);font-family:'Silkscreen',monospace;font-size:11px;cursor:pointer;padding:8px 4px}
+/* escritorio */
+.desk{background:#2b2620;background-image:repeating-linear-gradient(90deg,rgba(0,0,0,.1) 0 3px,transparent 3px 52px);padding:18px;display:flex;flex-direction:column;gap:18px;min-height:420px}
+.docs{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px;align-items:start}
+.doc{background:var(--paper);color:#15181a;box-shadow:0 0 0 3px var(--ink),5px 7px 0 0 rgba(0,0,0,.4);animation:in .35s steps(4) both;min-width:0}
+.doc h4{margin:0;padding:8px 12px;font-family:'Silkscreen',monospace;font-size:11px;letter-spacing:.06em;background:#33403f;color:#e9e2cc;display:flex;justify-content:space-between;gap:8px}
+.doc.salvo h4{background:#5a3f24}.doc.tool h4{background:#1d3d3b}.doc.say2 h4{background:#3b2f4a}
+.doc .in{padding:10px;display:flex;gap:10px}
+.doc .ph{width:88px;flex:none;background:#8f9a94;box-shadow:0 0 0 3px var(--ink);align-self:flex-start}
+.doc .ph img{width:100%}
+.chips{display:flex;flex-direction:column;gap:5px;min-width:0;flex:1}
+.chip{display:block;width:100%;border:0;background:rgba(0,0,0,.06);color:inherit;text-align:left;padding:7px 8px;cursor:pointer;font:inherit;font-size:13.5px;line-height:1.3;font-weight:600;overflow-wrap:anywhere;border-left:3px solid rgba(0,0,0,.25)}
+.chip:hover{background:rgba(224,163,58,.3)}
+.chip.sel{background:var(--am);color:var(--ink);box-shadow:0 0 0 3px var(--ink)}
+.dark .chip{background:#111516;color:var(--tx);border-left-color:var(--line);font-weight:500}
+.dark .chip:hover{background:#243030}.dark .chip.sel{background:var(--am);color:var(--ink)}
+.doc p.t{margin:0;padding:10px 12px;font-size:14px;line-height:1.45}
+.doc p.t+p.t{padding-top:0}
+.big{font-family:'Silkscreen',monospace;font-size:34px;padding:8px 12px 0}
+.big.cold{color:#1f5f8a}.big.hot{color:var(--red)}
+.cap{display:flex;justify-content:space-between;font-family:'Silkscreen',monospace;font-size:10px;padding:6px 10px;color:#3d463f}
+.beam{position:relative;background:#000}
+.beam::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(255,250,210,.22),rgba(0,0,0,.55) 75%);pointer-events:none}
+.nodoc{font-family:'Silkscreen',monospace;font-size:12px;line-height:1.6;color:#d9cdb0;opacity:.8;text-align:center;padding:40px 14px}
+.cr{background:var(--pan);padding:10px 12px;font-size:14px;line-height:1.4;box-shadow:inset 5px 0 0 0 var(--mut);animation:in .3s steps(3) both}
+.cr.grave{box-shadow:inset 5px 0 0 0 var(--red);background:#2a1512}.cr.menor{box-shadow:inset 5px 0 0 0 var(--am)}.cr.ok{box-shadow:inset 5px 0 0 0 var(--grn)}.cr.info{box-shadow:inset 5px 0 0 0 var(--cy)}
+.cr b{display:block;font-family:'Silkscreen',monospace;font-size:10px;letter-spacing:.06em;margin-bottom:3px}
+.cr.grave b{color:#ff7a5c}.cr.menor b{color:var(--am)}.cr.ok b{color:#7fd08a}.cr.info b{color:var(--cy)}
+.cr small{display:block;color:var(--mut);font-size:12px;margin-top:4px}
+.cr .btn{min-height:36px;font-size:11px;margin-top:8px;padding:4px 10px}
+.cr q{display:block;margin-top:8px;font-style:italic;color:#e9e2cc;quotes:'«' '»'}
+/* carpeta */
+.side{background:var(--pan);padding:14px;position:sticky;top:76px;max-height:calc(100vh - 96px);overflow:auto}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.tab{border:0;cursor:pointer;font-family:'Silkscreen',monospace;font-size:10.5px;padding:9px 8px;background:#0d1011;color:#aab8b0;box-shadow:0 0 0 2px var(--ink);min-height:36px}
+.tab.on{background:var(--am);color:var(--ink)}
+.side h5{margin:14px 0 8px;font-family:'Silkscreen',monospace;font-size:11px;color:var(--am);letter-spacing:.08em;font-weight:400}
+.side h5:first-child{margin-top:0}
+.side p{font-size:14px;line-height:1.5;margin:0 0 10px;color:#b9c4bb}
+.tw{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.resl{display:flex;flex-direction:column;gap:6px}
+.resb{display:grid;grid-template-columns:44px minmax(0,1fr);gap:10px;align-items:center;width:100%;border:0;background:#0d1011;color:var(--tx);padding:6px;cursor:pointer;text-align:left;font:inherit;font-size:14px}
+.resb img{width:44px;background:#5a6660}
+.resb small{display:block;font-family:'Silkscreen',monospace;font-size:9.5px;color:var(--mut)}
+.resb.on{box-shadow:0 0 0 3px var(--am)}
+.file{background:#0d1011;padding:10px;display:grid;grid-template-columns:96px minmax(0,1fr);gap:10px;margin:-2px 0 6px}
+.file img{width:96px;background:#5a6660;box-shadow:0 0 0 3px var(--ink)}
+.man li{font-size:14px;line-height:1.5;margin:0 0 8px;color:#c3cdc4}.man ul{padding-left:18px;margin:0 0 6px}
+.hands{background:#3d4a4a;box-shadow:0 0 0 3px var(--ink);width:100%}
+/* bandeja y acciones */
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:40;background:rgba(13,15,16,.97);border-top:4px solid var(--ink);box-shadow:0 -4px 0 0 #232b2b;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px))}
+.tray{display:flex;gap:8px;align-items:stretch;max-width:1100px;margin:0 auto 10px}
+.slot{flex:1;min-width:0;min-height:40px;padding:6px 10px;background:#0a0b0c;font-size:12.5px;line-height:1.3;display:flex;align-items:center;color:var(--mut);box-shadow:inset 0 0 0 2px var(--line);overflow:hidden}
+.slot.on{color:var(--ink);background:var(--am);font-weight:700;box-shadow:none}
+.tray .btn{min-height:40px;flex:none}
+.acts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;max-width:1300px;margin:0 auto}
+.acts .btn{min-height:46px;font-size:11.5px;padding:4px 12px}
+.tl{display:flex;gap:10px;justify-content:center;max-width:1300px;margin:0 auto 10px;overflow-x:auto;padding:4px;scrollbar-width:none}
+.tl .btn{min-height:42px;font-size:11px;padding:4px 10px;flex:none;white-space:nowrap}
+.tl .btn small{display:inline;margin-left:4px}
+.acts .btn{min-width:170px}
+.only-m{display:none}
+.toast{position:fixed;left:50%;bottom:190px;z-index:60;transform:translateX(-50%);max-width:min(560px,92vw);padding:12px 16px;font-size:14.5px;line-height:1.4;background:var(--pan2);box-shadow:0 0 0 3px var(--ink),5px 7px 0 0 rgba(0,0,0,.5);animation:in .25s steps(3) both;text-align:left}
+.toast b{display:block;font-family:'Silkscreen',monospace;font-size:10.5px;letter-spacing:.06em;margin-bottom:3px}
+.toast.grave{background:#3a1611}.toast.grave b{color:#ff7a5c}.toast.ok b{color:#7fd08a}.toast.menor b{color:var(--am)}.toast.info b,.toast.nada b{color:var(--cy)}
+/* noche */
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:20px}
+.stat{background:var(--pan);padding:14px;text-align:center}.stat b{display:block;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:30px}.stat span{font-family:'Silkscreen',monospace;font-size:10px;color:var(--mut)}
+.opts{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.opt{display:flex;justify-content:space-between;gap:12px;align-items:center;width:100%;min-height:46px;padding:8px 14px;border:0;background:var(--pan);color:var(--tx);font:inherit;font-size:15px;cursor:pointer;text-align:left;box-shadow:0 0 0 3px var(--ink)}
+.opt small{font-family:'Silkscreen',monospace;font-size:10px;color:var(--mut)}
+.opt.on{background:var(--am);color:var(--ink)}.opt.on small{color:#4a3a10}
+.h2{font-size:clamp(40px,7vw,72px);margin:12px 0 0}
+.rev{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.rv{display:grid;grid-template-columns:52px minmax(0,1fr);gap:12px;background:var(--pan);padding:8px;align-items:center;font-size:14px;line-height:1.4}
+.rv img{width:52px;background:#5a6660}
+.rv b{font-family:'Silkscreen',monospace;font-size:10px;letter-spacing:.05em}.rv .okk{color:#7fd08a}.rv .bad{color:#ff7a5c}
+.rv small{display:block;color:var(--mut);font-size:12.5px}
+@media (max-width:1180px){
+ .work{grid-template-columns:minmax(280px,340px) minmax(0,1fr)}
+ .side{position:fixed;right:0;top:0;bottom:0;z-index:50;width:min(400px,94vw);max-height:none;transform:translateX(105%);transition:transform .25s steps(5);padding-top:calc(14px + env(safe-area-inset-top,0px));box-shadow:-6px 0 0 0 var(--ink)}
+ .side.open{transform:none}
+ .only-m{display:inline-flex}
+}
+@media (max-width:760px){
+ .work{grid-template-columns:1fr;gap:16px;padding-bottom:260px}
+ .booth{display:grid;grid-template-columns:128px minmax(0,1fr);gap:10px 12px;align-items:start}
+ .booth .win{grid-row:1/span 2}
+ .booth .who{grid-column:2;flex-direction:column;gap:4px}
+ .booth .dlg{grid-column:2;max-height:150px}
+ .booth .qs,.booth .sub{grid-column:1/-1}
+ .win .empty p{font-size:10px}.win .empty .btn{font-size:10px;min-height:40px;padding:4px 6px}
+ .stamp{font-size:14px;padding:6px 8px;border-width:3px}
+ .trio{grid-template-columns:1fr}
+ .mets .met.x{display:none}
+ .desk{padding:12px}
+ .acts .btn{flex:1 1 30%;padding:4px 6px;font-size:10.5px;min-width:0}
+ .tl{justify-content:flex-start}
+ .slot{font-size:11px}
+ .toast{bottom:250px}
+}
+@media (prefers-reduced-motion:reduce){.z *{animation:none !important}}
+
+</style>
+
+<style>html,body{margin:0;padding:0}html,body{height:100%;background:#0d0f10;overscroll-behavior:none}#root{min-height:100%}</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/x-tpl" id="tpl">
+<div class="z">
+
+<sc-if value="{{isTitle}}" hint-placeholder-val="{{ true }}">
+<div class="center"><div class="box">
+ <div class="gate pb"><div class="eyes"><i></i><i></i></div><div class="lamp"></div></div>
+ <div class="eyebrow">YAJUGÁ · JUEGO 03 · BETA</div>
+ <h1 class="hd tit">ZONA <em>7</em></h1>
+ <p class="lead">Algo está copiando a la gente. Vos sos el portero del último refugio de la ciudad: revisás papeles, hacés preguntas y decidís quién entra. Las copias traen los documentos correctos, saben los nombres correctos… y aprenden de vos.</p>
+ <div class="trio">
+  <div class="pb"><b>INTERROGÁ</b>Cada persona responde distinto. Cruzá lo que dice con sus papeles, el mapa, el teléfono y el archivo.</div>
+  <div class="pb"><b>OBSERVÁ</b>Compará la cara con la foto. Medí la temperatura. Mirá los ojos y las manos.</div>
+  <div class="pb"><b>DECIDÍ</b>7 días. Si entra una copia, alguien desaparece de noche. Si rechazás a un humano, lo ves por la cámara.</div>
+ </div>
+ <div class="row">
+  <button class="btn red" type="button" onClick="{{nueva}}">▶ Nueva partida</button>
+  <sc-if value="{{hasSave}}"><button class="btn am" type="button" onClick="{{continuar}}">Continuar · día {{saveDia}}</button></sc-if>
+  <button class="btn" type="button" onClick="{{diaria}}">Semilla del día<small>la misma para todos</small></button>
+  <a class="btn" href="Main.dc.html">Volver</a>
+ </div>
+ <p class="lead" style="font-size:13px;color:#8fa09a">Cada partida genera otra ciudad, otras personas y otras copias. Finales encontrados: {{finCount}} de 9.</p>
+</div></div>
+</sc-if>
+
+<sc-if value="{{isBrief}}" hint-placeholder-val="{{ false }}">
+<div class="center"><div class="box">
+ <div class="eyebrow">DÍA {{invDia}} DE LA INVASIÓN · PARTIDA {{seedTxt}}</div>
+ <h1 class="hd h2">Día {{dia}} · {{diaNom}}</h1>
+ <p class="lead">{{diaInfo}}</p>
+ <sc-if value="{{hasTest}}"><div class="note {{testCls}}"><b>ANÁLISIS DE SANGRE</b>{{testTxt}}</div></sc-if>
+ <sc-if value="{{hasNuevas}}"><div class="note am"><b>HERRAMIENTAS NUEVAS</b>{{nuevasTxt}}</div></sc-if>
+ <div class="sheet pb">
+  <h3>RADIO · BOLETÍN DE LA RED DE ZONAS</h3>
+  <sc-for list="{{bolItems}}" as="b" hint-placeholder-count="2"><div class="bol"><p style="margin:0">{{b.t}}</p><small>VERIFICACIÓN (CLAVE DE AYER): {{b.v}}</small></div></sc-for>
+  <div class="bol"><p style="margin:0">Clave de hoy para operadores y boletines de mañana:</p><span class="clave">{{claveHoy}}</span></div>
+ </div>
+ <div class="note"><b>RECORDÁ</b>La clave de ayer fue {{claveAyer}}. Un aviso que se verifica con otra palabra no viene de la Red: es una interferencia.</div>
+ <div class="row"><button class="btn red" type="button" onClick="{{abrir}}">▶ Abrir la ventanilla</button></div>
+</div></div>
+</sc-if>
+
+<sc-if value="{{isWork}}" hint-placeholder-val="{{ false }}">
+<header class="top">
+ <a class="home" href="Main.dc.html" aria-label="Salir a YAJUGÁ">ZONA <i>7</i></a>
+ <div class="mets">
+  <div class="met"><span>DÍA</span><b>{{dia}}/7</b></div>
+  <div class="met {{lateCls}}"><span>HORA</span><b>{{hora}}</b></div>
+  <div class="met"><span>FILA</span><b>{{fila}}</b></div>
+  <div class="met x"><span>COMIDA</span><b>{{comida}}</b></div>
+  <div class="met x"><span>MORAL</span><div class="bar"><i style="width: {{moral}}%"></i></div></div>
+  <div class="met x"><span>PARANOIA</span><div class="bar par"><i style="width: {{paranoia}}%"></i></div></div>
+  <button class="ib" type="button" onClick="{{sonido}}" aria-label="Sonido">{{sonIcon}}</button>
+ </div>
+</header>
+
+<div class="work">
+ <section class="col booth">
+  <div class="win pb {{winCls}}">
+   <sc-if value="{{snow}}"><div class="snow"></div></sc-if>
+   <sc-if value="{{rain}}"><div class="rain"></div></sc-if>
+   <sc-if value="{{hasV}}"><img class="face" src="{{faceUrl}}" alt="Persona en la ventanilla"></sc-if>
+   <sc-if value="{{fog}}"><div class="fog"></div></sc-if>
+   <div class="glass"></div><div class="frame"></div>
+   <sc-if value="{{hasStamp}}"><div class="stamp {{stampCls}}">{{stampTxt}}</div></sc-if>
+   <sc-if value="{{noV}}"><div class="empty"><p>{{emptyMsg}}</p>
+    <sc-if value="{{canCall}}"><button class="btn am" type="button" onClick="{{llamar}}">Llamar al siguiente</button></sc-if>
+    <sc-if value="{{canClose}}"><button class="btn red" type="button" onClick="{{cerrar}}">Bajar la persiana</button></sc-if>
+   </div></sc-if>
+  </div>
+  <sc-if value="{{hasV}}"><div class="who"><span>PERSONA #{{num}} · PACIENCIA</span><span class="pips"><sc-for list="{{pips}}" as="p" hint-placeholder-count="6"><i class="{{p}}"></i></sc-for></span></div></sc-if>
+  <div class="dlg" id="z7dlg"><sc-for list="{{dialogo}}" as="d" hint-placeholder-count="2"><div class="say {{d.cls}}">{{d.t}}</div></sc-for></div>
+  <sc-if value="{{hasQs}}">
+   <div class="sub"><span>PREGUNTAR · 8 MIN</span><button class="lk" type="button" onClick="{{rotar}}">↻ otras preguntas</button></div>
+   <div class="qs"><sc-for list="{{qs}}" as="q" hint-placeholder-count="6"><button class="qb" type="button" onClick="{{q.go}}"><em class="{{q.cat}}">{{q.cat}}</em><span>{{q.t}}</span></button></sc-for></div>
+  </sc-if>
+ </section>
+
+ <section class="col">
+  <div class="desk pb">
+   <sc-if value="{{showNoDoc}}"><div class="nodoc">{{noDocMsg}}</div></sc-if>
+   <div class="docs">
+    <sc-if value="{{hasFicha}}"><article class="doc"><h4><span>FICHA DE SOBREVIVIENTE</span><span>GOB.</span></h4><div class="in"><div class="ph"><img src="{{fotoUrl}}" alt="Foto de la ficha"></div><div class="chips"><sc-for list="{{fichaChips}}" as="c" hint-placeholder-count="6"><button class="chip {{c.cls}}" type="button" onClick="{{c.go}}">{{c.t}}</button></sc-for></div></div></article></sc-if>
+    <sc-if value="{{hasSalvo}}"><article class="doc salvo"><h4><span>SALVOCONDUCTO</span><span>ZONA {{zonaN}}</span></h4><div class="in"><div class="chips"><sc-for list="{{salvoChips}}" as="c" hint-placeholder-count="5"><button class="chip {{c.cls}}" type="button" onClick="{{c.go}}">{{c.t}}</button></sc-for></div></div></article></sc-if>
+    <sc-if value="{{hasDichos}}"><article class="doc say2"><h4><span>LO QUE DIJO</span><span>ANOTADO</span></h4><div class="in"><div class="chips"><sc-for list="{{dichoChips}}" as="c" hint-placeholder-count="3"><button class="chip {{c.cls}}" type="button" onClick="{{c.go}}">{{c.t}}</button></sc-for></div></div></article></sc-if>
+    <sc-if value="{{hasTermo}}"><article class="doc tool"><h4><span>TERMÓMETRO</span><span>°C</span></h4><div class="big {{termoCls}}">{{termoTxt}}</div><p class="t">{{termoNota}}</p></article></sc-if>
+    <sc-if value="{{hasOjos}}"><article class="doc tool"><h4><span>LINTERNA · OJOS</span><span>PILAS {{pilas}}</span></h4><div class="beam"><img src="{{ojosUrl}}" alt="Ojos bajo la linterna" style="width:100%"></div></article></sc-if>
+    <sc-if value="{{hasManos}}"><article class="doc tool"><h4><span>MANOS</span><span>DORSO</span></h4><img src="{{manosUrl}}" alt="Manos" style="width:100%;background:#3d4a4a"><div class="cap"><span>SU MANO DERECHA</span><span>SU MANO IZQUIERDA</span></div><div class="in" style="padding-top:0"><div class="chips"><sc-for list="{{obsChips}}" as="c" hint-placeholder-count="1"><button class="chip {{c.cls}}" type="button" onClick="{{c.go}}">{{c.t}}</button></sc-for></div></div></article></sc-if>
+    <sc-if value="{{hasBolso}}"><article class="doc tool"><h4><span>PERTENENCIAS</span><span>BOLSO</span></h4><sc-for list="{{itemsTxt}}" as="t" hint-placeholder-count="3"><p class="t">· {{t}}</p></sc-for><div class="in"><div class="chips"><sc-for list="{{itemChips}}" as="c" hint-placeholder-count="2"><button class="chip {{c.cls}}" type="button" onClick="{{c.go}}">{{c.t}}</button></sc-for></div></div></article></sc-if>
+    <sc-if value="{{hasTel}}"><article class="doc tool"><h4><span>TELÉFONO</span><span>CLAVE DE HOY: {{claveHoy}}</span></h4><sc-for list="{{tels}}" as="t" hint-placeholder-count="1"><p class="t">— {{t}}</p></sc-for><div class="in"><div class="chips"><sc-for list="{{telChips}}" as="c" hint-placeholder-count="2"><button class="chip {{c.cls}}" type="button" onClick="{{c.go}}">{{c.t}}</button></sc-for></div></div></article></sc-if>
+    <sc-if value="{{hasRes}}"><article class="doc tool"><h4><span>RESIDENTE CONSULTADO</span><span>ADENTRO</span></h4><p class="t">{{resTxt}}</p><div class="in"><div class="chips"><sc-for list="{{resChips}}" as="c" hint-placeholder-count="2"><button class="chip {{c.cls}}" type="button" onClick="{{c.go}}">{{c.t}}</button></sc-for></div></div></article></sc-if>
+   </div>
+  </div>
+  <sc-if value="{{hasCruces}}"><div class="sub"><span>CRUCES HECHOS</span></div></sc-if>
+  <sc-for list="{{cruces}}" as="c" hint-placeholder-count="1"><div class="cr {{c.res}}"><b>{{c.tit}}</b>{{c.txt}}<small>{{c.a}} ✕ {{c.b}}</small><sc-if value="{{c.conf}}"><q>{{c.conf}}</q><small>{{c.confTipo}}</small></sc-if><sc-if value="{{c.canConf}}"><button class="btn" type="button" onClick="{{c.go}}">Pedirle que lo explique · 5 min</button></sc-if></div></sc-for>
+ </section>
+
+ <aside class="side pb {{sideCls}}">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><b class="px" style="font-size:13px">CARPETA DEL PUESTO</b><button class="ib only-m" type="button" onClick="{{toggleSide}}" aria-label="Cerrar carpeta">✕</button></div>
+  <div class="tabs"><sc-for list="{{tabs}}" as="t" hint-placeholder-count="6"><button class="tab {{t.cls}}" type="button" onClick="{{t.go}}">{{t.n}}</button></sc-for></div>
+
+  <sc-if value="{{tRadio}}">
+   <h5>BOLETÍN DE HOY</h5>
+   <sc-for list="{{bolItems}}" as="b" hint-placeholder-count="2"><p>{{b.t}}<br><span class="px" style="font-size:10px;color:#8fa09a">VERIF.: {{b.v}}</span></p></sc-for>
+   <h5>CLAVES</h5>
+   <p>Hoy: <b style="color:#e0a33a">{{claveHoy}}</b> · Ayer: <b>{{claveAyer}}</b></p>
+   <p style="font-size:13px">Un operador o un boletín de verdad usa la clave correcta. Si la palabra es otra, es una interferencia.</p>
+   <sc-if value="{{hasRadioH}}"><h5>TU HERMANA, POR RADIO</h5><sc-for list="{{radioH}}" as="r" hint-placeholder-count="1"><p>{{r}}</p></sc-for></sc-if>
+  </sc-if>
+
+  <sc-if value="{{tMapa}}">
+   <p style="font-size:13px">Hoy es el día {{invDia}} de la invasión. Tocá un dato para cruzarlo con lo que te digan.</p>
+   <h5>BARRIOS · CAÍDA Y RUTA DE EVACUACIÓN</h5>
+   <div class="chips dark"><sc-for list="{{mapaB}}" as="c" hint-placeholder-count="8"><button class="chip {{c.cls}}" type="button" onClick="{{c.go}}">{{c.t}}</button></sc-for></div>
+   <h5>RED DE ZONAS</h5>
+   <div class="chips dark"><sc-for list="{{mapaZ}}" as="c" hint-placeholder-count="8"><button class="chip {{c.cls}}" type="button" onClick="{{c.go}}">{{c.t}}</button></sc-for></div>
+  </sc-if>
+
+  <sc-if value="{{tListas}}">
+   <h5>FALLECIDOS CONFIRMADOS</h5>
+   <div class="chips dark"><sc-for list="{{listaF}}" as="c" hint-placeholder-count="6"><button class="chip {{c.cls}}" type="button" onClick="{{c.go}}">{{c.t}}</button></sc-for></div>
+   <h5>DESAPARECIDOS</h5>
+   <div class="chips dark"><sc-for list="{{listaD}}" as="c" hint-placeholder-count="6"><button class="chip {{c.cls}}" type="button" onClick="{{c.go}}">{{c.t}}</button></sc-for></div>
+  </sc-if>
+
+  <sc-if value="{{tArchivo}}">
+   <p style="font-size:13px">{{pobTxt}}</p>
+   <div class="resl"><sc-for list="{{resList}}" as="r" hint-placeholder-count="6">
+    <button class="resb {{r.cls}}" type="button" onClick="{{r.go}}"><img src="{{r.img}}" alt=""><span>{{r.nom}}<small>{{r.sub}}</small></span></button>
+    <sc-if value="{{r.open}}"><div class="file"><img src="{{r.img}}" alt="Foto de archivo"><div class="chips dark"><sc-for list="{{r.chips}}" as="c" hint-placeholder-count="5"><button class="chip {{c.cls}}" type="button" onClick="{{c.go}}">{{c.t}}</button></sc-for></div></div></sc-if>
+   </sc-for></div>
+   <h5>PERSONAL DEL PUESTO</h5>
+   <div class="chips dark"><button class="chip {{yoA.cls}}" type="button" onClick="{{yoA.go}}">Portero (vos): cicatriz en el dorso de la mano IZQUIERDA</button></div>
+  </sc-if>
+
+  <sc-if value="{{tCuaderno}}">
+   <h5>TU HERMANA, {{hNom}}</h5>
+   <div class="file" style="margin:0 0 6px"><img src="{{hImg}}" alt="Foto de tu hermana"><div class="chips dark"><sc-for list="{{hChips}}" as="c" hint-placeholder-count="3"><button class="chip {{c.cls}}" type="button" onClick="{{c.go}}">{{c.t}}</button></sc-for></div></div>
+   <p style="font-size:13px">La foto es de antes de la invasión. La cicatriz de la ceja se la hizo de chica, cuando se cayeron juntos de la bici.</p>
+   <h5>TUS MANOS</h5>
+   <img class="hands" src="{{misManos}}" alt="Tus manos">
+   <div class="cap" style="color:#8fa09a"><span>TU DERECHA</span><span>TU IZQUIERDA</span></div>
+   <div class="chips dark"><button class="chip {{yoM.cls}}" type="button" onClick="{{yoM.go}}">Tus manos, ahora</button></div>
+  </sc-if>
+
+  <sc-if value="{{tManual}}"><div class="man">
+   <h5>PRUEBAN QUE ES UNA COPIA</h5>
+   <ul><li>Una marca de la cara distinta a la foto: cambió de lado, falta o sobra. También otro color de ojos.</li><li>Temperatura por debajo de 35°.</li><li>Reflejo blanco en los ojos bajo la linterna.</li><li>Seis dedos, falta de uñas, o el anillo en la otra mano.</li><li>Figurar como FALLECIDO CONFIRMADO.</li><li>Una contradicción GRAVE que no puede explicar.</li><li>Un operador telefónico que da otra clave, o un registro que la desmiente.</li><li>En helada: que su aliento no empañe el vidrio.</li></ul>
+   <h5>NO PRUEBAN NADA</h5>
+   <ul><li>Fiebre, vendas, barba crecida, suciedad, ojeras, ojos rojos.</li><li>Errores MENORES de tipeo: una letra o un año.</li><li>Figurar como desaparecido, no traer documentos o estar en shock.</li><li>Una contradicción grave que termina en una confesión humana. La gente miente por vergüenza.</li></ul>
+   <h5>CÓMO HABLAN</h5>
+   <ul><li>Las copias responden con datos cuando preguntás por sentimientos, olores o recuerdos. Las mejores ya aprendieron a disimularlo.</li></ul>
+   <h5>CRUZAR DATOS</h5>
+   <ul><li>Tocá dos datos (papeles, lo que dijo, mapa, listas, archivo) y apretá CRUZAR. Si no coinciden, podés pedirle que lo explique.</li></ul>
+   <h5>DE NOCHE</h5>
+   <ul><li>Una copia adentro hace desaparecer a alguien de su mismo pabellón. El análisis de sangre (uno por noche) nunca falla.</li></ul>
+   <p style="font-size:13px">Clave inicial de la Red: <b>{{clave0}}</b></p>
+  </div></sc-if>
+ </aside>
+</div>
+
+<div class="dock">
+ <div class="tray"><div class="slot {{slotA.cls}}">{{slotA.t}}</div><div class="slot {{slotB.cls}}">{{slotB.t}}</div><button class="btn am" type="button" onClick="{{cruzar}}" disabled="{{noCruzar}}">Cruzar</button><button class="btn" type="button" onClick="{{limpiar}}" disabled="{{noSel}}" aria-label="Soltar datos">✕</button></div>
+ <div class="tl">
+  <button class="btn only-m" type="button" onClick="{{toggleSide}}">📁 Carpeta</button>
+  <sc-for list="{{tools}}" as="t" hint-placeholder-count="4"><button class="btn cy" type="button" onClick="{{t.go}}" disabled="{{t.off}}">{{t.n}}<small>{{t.s}}</small></button></sc-for>
+ </div>
+ <div class="acts">
+  <button class="btn red" type="button" onClick="{{rechazar}}" disabled="{{noDec}}">✕ Rechazar</button>
+  <sc-if value="{{tCuar}}"><button class="btn am" type="button" onClick="{{cuarentena}}" disabled="{{noCuar}}">Cuarentena<small>{{cuarTxt}}</small></button></sc-if>
+  <button class="btn grn" type="button" onClick="{{pasar}}" disabled="{{noDec}}">✓ Dejar pasar</button>
+ </div>
+</div>
+<sc-if value="{{hasToast}}"><div class="toast {{toastCls}}" role="status"><b>{{toastTit}}</b>{{toastTxt}}</div></sc-if>
+</sc-if>
+
+<sc-if value="{{isCierre}}" hint-placeholder-val="{{ false }}">
+<div class="center"><div class="box">
+ <div class="eyebrow">FIN DEL DÍA {{dia}}</div>
+ <h1 class="hd h2">Persiana baja</h1>
+ <div class="grid3"><div class="stat pb"><b>{{cEntran}}</b><span>ENTRARON</span></div><div class="stat pb"><b>{{cRech}}</b><span>RECHAZADOS</span></div><div class="stat pb"><b>{{cCuar}}</b><span>EN CUARENTENA</span></div></div>
+ <div class="note"><b>EL REFUGIO</b>{{refTxt}}</div>
+ <h3 class="px" style="font-size:12px;color:#e0a33a;margin:26px 0 0;font-weight:400">LA OLLA DE ESTA NOCHE</h3>
+ <div class="opts"><sc-for list="{{raciones}}" as="o" hint-placeholder-count="2"><button class="opt {{o.cls}}" type="button" onClick="{{o.go}}"><span>{{o.t}}</span><small>{{o.s}}</small></button></sc-for></div>
+ <sc-if value="{{hasCand}}">
+  <h3 class="px" style="font-size:12px;color:#e0a33a;margin:26px 0 0;font-weight:400">ANÁLISIS DE SANGRE · UNO POR NOCHE</h3>
+  <p class="lead" style="font-size:14px;margin-top:6px">La doctora analiza a una sola persona. El resultado llega a la mañana y nunca falla.</p>
+  <div class="opts"><sc-for list="{{cands}}" as="o" hint-placeholder-count="3"><button class="opt {{o.cls}}" type="button" onClick="{{o.go}}"><span>{{o.t}}</span><small>{{o.s}}</small></button></sc-for></div>
+ </sc-if>
+ <div class="row"><button class="btn red" type="button" onClick="{{dormir}}">Apagar la luz</button></div>
+</div></div>
+</sc-if>
+
+<sc-if value="{{isParte}}" hint-placeholder-val="{{ false }}">
+<div class="center"><div class="box">
+ <div class="eyebrow">NOCHE DEL DÍA {{dia}}</div>
+ <h1 class="hd h2">Parte de la noche</h1>
+ <sc-for list="{{eventos}}" as="e" hint-placeholder-count="3"><div class="note {{e.cls}}"><b>{{e.tit}}</b>{{e.txt}}</div></sc-for>
+ <sc-if value="{{sinEventos}}"><div class="note grn"><b>SIN NOVEDAD</b>Nadie golpeó el portón. Nadie falta en los pabellones.</div></sc-if>
+ <sc-if value="{{joel}}">
+  <div class="sheet pb"><h3>LA DOCTORA TE DESPIERTA</h3><p>«El análisis de tu hermana dio positivo. No es ella. Lo que hay en esa cama aprendió su voz, su cicatriz y tu nombre. El ejército viene a buscarla al amanecer.»</p><p>Desde la cuarentena, alguien canta bajito la canción de tu madre.</p></div>
+  <div class="row"><button class="btn" type="button" onClick="{{entregar}}">Entregarla</button><button class="btn red" type="button" onClick="{{huir}}">Abrir la reja e irte con ella</button></div>
+ </sc-if>
+ <sc-if value="{{noJoel}}"><div class="row"><button class="btn red" type="button" onClick="{{seguir}}">{{seguirTxt}}</button></div></sc-if>
+</div></div>
+</sc-if>
+
+<sc-if value="{{isEnd}}" hint-placeholder-val="{{ false }}">
+<div class="center"><div class="box">
+ <div class="eyebrow">{{finTag}}</div>
+ <h1 class="hd h2">{{finTit}}</h1>
+ <div class="sheet pb"><sc-for list="{{finTxt}}" as="p" hint-placeholder-count="2"><p>{{p}}</p></sc-for></div>
+ <div class="grid3"><div class="stat pb"><b>{{fOk}}</b><span>DECISIONES CORRECTAS</span></div><div class="stat pb"><b>{{fMal}}</b><span>ERRORES</span></div><div class="stat pb"><b>{{fPob}}</b><span>HUMANOS A SALVO</span></div></div>
+ <h3 class="px" style="font-size:12px;color:#e0a33a;margin:30px 0 0;font-weight:400">LA VERDAD, PERSONA POR PERSONA</h3>
+ <div class="rev"><sc-for list="{{reveal}}" as="r" hint-placeholder-count="4"><div class="rv"><img src="{{r.img}}" alt=""><div><b class="{{r.cls}}">DÍA {{r.dia}} · {{r.era}} · {{r.dec}}</b><br>{{r.nom}}<small>{{r.pistas}}</small></div></div></sc-for></div>
+ <p class="lead" style="font-size:13px;color:#8fa09a">Partida {{seedTxt}} · Finales encontrados: {{finCount}} de 9</p>
+ <div class="row"><button class="btn red" type="button" onClick="{{nueva}}">↻ Otra partida</button><a class="btn" href="Main.dc.html">Volver a YAJUGÁ</a></div>
+</div></div>
+</sc-if>
+
+</div>
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/morphdom@2.7.4/dist/morphdom-umd.min.js"></script>
+<script src="/dc.js"></script>
+<script>(function(){var v=window.visualViewport;function f(){var h=v?v.height:innerHeight;document.documentElement.style.setProperty('--vvh',h+'px')}f();(v||window).addEventListener('resize',f);addEventListener('orientationchange',function(){setTimeout(f,300)})})()</script>
+<script>(function(){var m=document.querySelector('meta[name=viewport]');if(m)m.setAttribute('content','width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover');['gesturestart','gesturechange','gestureend'].forEach(function(t){document.addEventListener(t,function(e){e.preventDefault()},{passive:false})});document.addEventListener('dblclick',function(e){e.preventDefault()},{passive:false});document.addEventListener('touchmove',function(e){if(e.touches&&e.touches.length>1)e.preventDefault()},{passive:false})})()</script>
+<script src="/sfx.js"></script>
+<script>
+
+/* ZONA 7 — motor generativo. Todo sale de una semilla. Estado 100% serializable. */
+const Z7 = (() => {
+  const NOM_M = ['Tomás', 'Raúl', 'Iván', 'Marcos', 'Elías', 'Bruno', 'Dante', 'Hugo', 'León', 'Félix', 'Simón', 'Óscar', 'Mateo', 'Julián', 'Andrés', 'Pablo', 'Víctor', 'Rubén', 'Samuel', 'Emilio', 'Darío', 'Ismael', 'Gael', 'Lucas', 'Ramiro', 'Esteban', 'Joel', 'Adrián', 'César', 'Nicolás'];
+  const NOM_F = ['Marta', 'Elena', 'Laura', 'Irene', 'Sofía', 'Clara', 'Nora', 'Alba', 'Lucía', 'Vera', 'Inés', 'Julia', 'Sara', 'Paula', 'Emma', 'Olga', 'Rita', 'Noemí', 'Celia', 'Diana', 'Eva', 'Carla', 'Mónica', 'Teresa', 'Abril', 'Miriam', 'Lidia', 'Ana', 'Rosa', 'Valeria'];
+  const APE = ['Ríos', 'Vega', 'Molina', 'Ortega', 'Salas', 'Navarro', 'Campos', 'Ibáñez', 'Paredes', 'Luna', 'Aguirre', 'Cabrera', 'Fuentes', 'Herrera', 'Medina', 'Rojas', 'Soto', 'Vargas', 'Bravo', 'Cortés', 'Duarte', 'Espinoza', 'Ferrer', 'Gallardo', 'Lozano', 'Marín', 'Núñez', 'Pardo', 'Quiroga', 'Serrano', 'Tapia', 'Urbina', 'Valdés', 'Zamora', 'Acosta', 'Benítez', 'Carmona', 'Delgado', 'Escobar', 'Figueroa', 'Guerrero', 'Lara', 'Mena', 'Olmos', 'Peña', 'Reyes', 'Sandoval', 'Toledo', 'Villar', 'Yáñez', 'Arce', 'Bustos', 'Cano', 'Durán', 'Miranda', 'Leiva', 'Robles', 'Sáez', 'Trejo', 'Vidal'];
+  const BARRIOS = ['Barrio Norte', 'La Estación', 'Los Álamos', 'Villa Clara', 'El Mercado', 'Puerto Viejo', 'Las Acacias', 'San Gabriel', 'La Fábrica', 'Monte Alto', 'Los Olivos', 'El Molino'];
+  const RUTAS = ['el Puente Sur', 'el Túnel de la Estación', 'la Ruta 9'];
+  const CALLES = ['Los Tilos', 'Almendros', 'del Faro', 'Independencia', 'Las Heras', 'del Río', 'Mirador', 'Los Cedros', 'Colón', 'Santa Fe', 'del Parque', 'Olmos', 'Central', 'Las Rosas', 'del Carmen', 'Libertad'];
+  const SANGRE = ['0+', '0-', 'A+', 'A-', 'B+', 'AB+'];
+  const CLAVES = ['FAROL', 'ÁMBAR', 'NOGAL', 'TIZA', 'COBRE', 'BRUMA', 'ANCLA', 'CEDRO', 'LINO', 'GRANITO', 'TRIGO', 'VIDRIO'];
+  const OFICIOS = [['panadero', 'panadera', 'a pan recién hecho y a harina tostada'], ['enfermero', 'enfermera', 'a alcohol y a guantes de látex'], ['mecánico', 'mecánica', 'a grasa y a nafta'], ['maestro', 'maestra', 'a tiza y a mandarina del recreo'], ['carpintero', 'carpintera', 'a aserrín y a cola'], ['cocinero', 'cocinera', 'a cebolla frita, siempre'], ['electricista', 'electricista', 'a cable quemado'], ['chofer', 'chofer', 'a tapizado viejo y a gasoil'], ['peluquero', 'peluquera', 'a tintura y a laca'], ['albañil', 'albañil', 'a cemento mojado'], ['librero', 'librera', 'a papel viejo y a polvo'], ['pescador', 'pescadora', 'a sal y a escamas'], ['farmacéutico', 'farmacéutica', 'a jarabe y a cartón'], ['jardinero', 'jardinera', 'a pasto cortado y a tierra'], ['veterinario', 'veterinaria', 'a desinfectante y a perro mojado'], ['costurero', 'costurera', 'a tela nueva y a aceite de máquina'], ['cartero', 'cartera', 'a cuero de bolso y a lluvia'], ['contador', 'contadora', 'a café recalentado'], ['soldador', 'soldadora', 'a metal caliente'], ['florista', 'florista', 'a agua de florero y a jazmín']];
+  const HABITOS = ['Se metía debajo de la cama y no salía hasta el otro día', 'Se me subía encima y temblaba entero', 'Ladraba a la ventana como si pudiera echar a los truenos', 'Se escondía en el ropero, entre los zapatos', 'Nada. Dormía panza arriba. Era el único tranquilo de la casa', 'Arañaba la puerta del baño hasta que le abría'];
+  const NOCHES = ['Debajo de un colectivo volcado. Olía a goma quemada', 'En el baño de una estación de servicio. No dormí: escuché', 'En un auto abandonado. Tenía una sillita de bebé atrás', 'Arriba de un árbol. Me até con el cinturón', 'En una iglesia. Había velas todavía tibias', 'En una zanja, tapándome con cartones mojados'];
+  const MASC_N = ['Toby', 'Luna', 'Coco', 'Nina', 'Rocco', 'Mora', 'Pipo', 'Kira', 'Bruno', 'Mili', 'Simba', 'Frida', 'Olivo', 'Tango'];
+  const TEMPS = ['calmo', 'nervioso', 'hosco', 'charlatan', 'cortes'];
+  const COSTO = { pregunta: 8, termo: 4, linterna: 4, manos: 5, bolso: 6, tel: 15, res: 10, cruzar: 2, confrontar: 5, decidir: 3 };
+  const DIAS = [null,
+    { tipo: 'calma', nom: 'Calma', n: 4, copias: 2, nuevas: ['termo'] },
+    { tipo: 'frio', nom: 'Helada', n: 5, copias: 2, nuevas: ['bolso', 'tel', 'lista', 'cuarentena'] },
+    { tipo: 'ola', nom: 'Oleada', n: 7, copias: 3, nuevas: ['linterna', 'manos', 'res'], retorno: true, pareja: 1 },
+    { tipo: 'apagon', nom: 'Apagón', n: 6, copias: 3, nuevas: [], pareja: 1 },
+    { tipo: 'lluvia', nom: 'Lluvia', n: 5, copias: 2, nuevas: [], hermana: true },
+    { tipo: 'exodo', nom: 'Éxodo', n: 8, copias: 4, nuevas: [], retorno: true, pareja: 2 },
+    { tipo: 'final', nom: 'Último día', n: 6, copias: 3, nuevas: [], pareja: 1 }];
+  const DIA_INFO = {
+    calma: 'Poca gente en la fila. Tomate tu tiempo: hoy se aprende.',
+    frio: 'Helada. El aliento de una persona empaña el vidrio de la ventanilla.',
+    ola: 'Cayó un barrio entero durante la noche. La fila da vuelta la esquina y el día no alcanza para todos.',
+    apagon: 'Apagón general. El teléfono no funciona hasta mañana.',
+    lluvia: 'Llueve desde la madrugada. Mucha gente llega con fiebre. Tu hermana debería llegar hoy.',
+    exodo: 'Una zona vecina dejó de transmitir. Vienen todos juntos, y vienen asustados.',
+    final: 'El convoy de evacuación llega al anochecer. Lo que entre hoy, se sube al convoy.'
+  };
+
+  function mkR(G) {
+    const R = {
+      f() { G.rs = (G.rs + 0x6D2B79F5) | 0; let t = G.rs; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; },
+      int(a, b) { return a + Math.floor(R.f() * (b - a + 1)); },
+      pick(a) { return a[Math.floor(R.f() * a.length)]; },
+      chance(p) { return R.f() < p; },
+      shuf(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(R.f() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+    };
+    return R;
+  }
+  const hoyInv = (G) => 17 + G.dia;
+  const nomC = (p) => p.nom + ' ' + p.ape;
+  const g = (p, m, f) => (p.sex === 'm' ? m : f);
+  const ofi = (p) => OFICIOS[p.of][p.sex === 'm' ? 0 : 1];
+  function lev(a, b) { const m = a.length, n = b.length; const d = []; for (let i = 0; i <= m; i++) d[i] = [i]; for (let j = 0; j <= n; j++) d[0][j] = j; for (let i = 1; i <= m; i++) for (let j = 1; j <= n; j++) d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); return d[m][n]; }
+
+  // ---------- mundo ----------
+  function genMundo(G, R) {
+    const bs = R.shuf(BARRIOS).slice(0, 8).map((n) => ({ n, cae: R.int(4, 15), ruta: R.int(0, 2) }));
+    const est = R.shuf(['activa', 'activa', 'activa', 'activa', 'activa', 'caida', 'caida', 'caida', 'silencio', 'silencio', 'silencio']);
+    const zs = {}; let k = 0;
+    for (let z = 1; z <= 12; z++) { if (z === 7) continue; const sex = R.chance(0.5) ? 'm' : 'f'; zs[z] = { z, estado: est[k++], cae: 0, dir: (sex === 'm' ? 'Dr. ' : 'Dra. ') + R.pick(APE) }; if (zs[z].estado === 'caida') zs[z].cae = R.int(9, 16); }
+    const dirs = {}; Object.values(zs).forEach((x) => { while (dirs[x.dir]) x.dir = x.dir.split(' ')[0] + ' ' + R.pick(APE); dirs[x.dir] = 1; });
+    G.mundo = { barrios: bs, zonas: zs, claves: R.shuf(CLAVES).slice(0, 8) };
+  }
+  function nombreUnico(G, R, sex) {
+    for (let i = 0; i < 200; i++) { const nom = R.pick(sex === 'm' ? NOM_M : NOM_F), ape = R.pick(APE); const k = nom + ' ' + ape; if (!G.usados[k]) { G.usados[k] = 1; return [nom, ape]; } }
+    const nom = R.pick(NOM_M), ape = R.pick(APE) + ' ' + R.pick(APE); G.usados[nom + ' ' + ape] = 1; return [nom, ape];
+  }
+  function genCara(R, sex, edad) {
+    const lat = ['mejilla', 'ceja', 'sien', 'boca'];
+    return { sex, skin: R.int(0, 5), hair: edad > 58 && R.chance(0.7) ? 6 : R.int(0, 5), hs: sex === 'm' ? R.pick([0, 1, 2, 3, 4, 8]) : R.pick([4, 5, 6, 7, 8, 9]), fs: R.int(0, 3), eyes: R.int(0, 3), brow: R.int(0, 2), nose: R.int(0, 3), mouth: R.int(0, 3), beard: sex === 'm' ? R.pick([0, 0, 0, 2, 3]) : 0, glasses: R.chance(0.18), old: edad > 50 ? (edad > 62 ? 2 : 1) : 0, cloth: R.int(0, 7), cs: R.int(0, 2), mark: R.chance(0.7) ? { t: R.pick(['lunar', 'lunar', 'cicatriz', 'mancha']), pos: R.pick(lat), side: R.chance(0.5) ? -1 : 1 } : null, acc: R.pick([null, null, null, 'gorro', 'bufanda', 'aro']) };
+  }
+  function genPersona(G, R, o) {
+    o = o || {}; const M = G.mundo; const hoy = hoyInv(G);
+    const sex = o.sex || (R.chance(0.5) ? 'm' : 'f'); let [nom, ape] = nombreUnico(G, R, sex); if (o.ape) { let t = 0; while (G.usados[nom + ' ' + o.ape] && t++ < 99) nom = R.pick(sex === 'm' ? NOM_M : NOM_F); }
+    const edad = R.int(19, 70); const b = o.barrio !== undefined ? o.barrio : R.int(0, M.barrios.length - 1); const B = M.barrios[b];
+    const p = { sex, nom, ape: o.ape || ape, edad, of: R.int(0, OFICIOS.length - 1), b, calle: R.pick(CALLES) + ' ' + R.int(100, 990), sangre: R.pick(SANGRE), salida: Math.max(2, B.cae - R.int(0, 3)), zona: 0, zsal: 0, fam: [], mascota: null, acomp: [], temp: R.pick(TEMPS), anillo: R.chance(0.4) ? R.pick(['izq', 'der']) : null };
+    if (o.ape) G.usados[nom + ' ' + o.ape] = 1;
+    let zona = o.zona !== undefined ? o.zona : (R.chance(0.6) ? -1 : 0);
+    if (zona === -1) { const ok = Object.values(M.zonas).filter((z) => z.estado !== 'caida' || z.cae > p.salida + 1); zona = ok.length ? R.pick(ok).z : 0; }
+    if (zona) { const Z = M.zonas[zona]; if (Z.estado === 'caida' && Z.cae <= p.salida + 1) p.salida = Math.max(2, Z.cae - 2); p.zona = zona; p.zsal = Z.estado === 'caida' ? R.int(Math.max(p.salida + 1, Z.cae - 2), Z.cae) : R.int(p.salida + 1, hoy - 1); }
+    const rels = R.shuf([g(p, 'esposa', 'esposo'), 'hija', 'hijo', 'madre', 'hermano', 'hermana', 'padre']); const nf = R.pick([0, 1, 1, 2, 2, 3]);
+    for (let i = 0; i < nf; i++) { const rel = rels[i]; const fs = /a$/.test(rel) && rel !== 'esposo' ? 'f' : (rel === 'madre' ? 'f' : 'm'); let n; do { n = R.pick(fs === 'm' ? NOM_M : NOM_F); } while (n === nom || p.fam.some((x) => x.nom === n)); p.fam.push({ rel, nom: n }); }
+    if (R.chance(0.5)) { let n; do { n = R.pick(MASC_N); } while (p.fam.some((x) => x.nom === n)); p.mascota = { tipo: R.pick(['perro', 'perro', 'gato']), nom: n, hab: R.pick(HABITOS) }; }
+    if (p.fam.length && R.chance(0.5)) p.perdida = p.fam[R.int(0, p.fam.length - 1)].nom;
+    if (p.zona && R.chance(0.45)) { const n = R.int(1, 2); for (let i = 0; i < n; i++) { let x; do { x = R.pick(R.chance(0.5) ? NOM_M : NOM_F); } while (x === nom || p.acomp.indexOf(x) >= 0); p.acomp.push(x); } }
+    p.noche = R.pick(NOCHES); p.cara = genCara(R, sex, edad);
+    return p;
+  }
+
+  // ---------- visitantes ----------
+  const chip = (src, key, val, txt, ex) => Object.assign({ src, key, val, txt }, ex || {});
+  function herramientas(G) { const t = { termo: 1, mapa: 1 }; for (let d = 1; d <= G.dia; d++) DIAS[d].nuevas.forEach((x) => { t[x] = 1; }); if (DIAS[G.dia].tipo === 'apagon') delete t.tel; return t; }
+  function genVisitante(G, R, o) {
+    o = o || {}; const T = herramientas(G); const dia = G.dia; const M = G.mundo;
+    const p = o.p || genPersona(G, R, o.po);
+    const v = { id: 'v' + (G.nid++), p, copia: !!o.copia, nivel: 0, tells: [], trucos: [], ruido: [], esp: o.esp || null, ficha: true, salvo: !!p.zona, items: [], look: JSON.parse(JSON.stringify(p.cara)), st: {}, tC: 36.1 + R.int(0, 11) / 10, ojos: 'normal', manos: { izq: 5, der: 5, unas: true, anillo: p.anillo, venda: null }, aliento: true, mal: {}, sec: null, shock: false, link: null, fichaTypo: null, pac: p.temp === 'hosco' ? 5 : p.temp === 'charlatan' ? 8 : R.int(6, 7), asked: [], chips: [], cruces: [], pool: [], of: [], rev: {}, plano: false, dec: null };
+    // pertenencias
+    const its = [];
+    if (p.fam.length || p.mascota) its.push('foto'); its.push('carta'); if (R.chance(0.5)) its.push('placa'); its.push(R.pick(['llaves', 'comida', 'remedio', 'radio', 'manta']));
+    v.items = R.shuf(its).slice(0, 3); if ((p.fam.length || p.mascota) && v.items.indexOf('foto') < 0 && R.chance(0.6)) v.items[0] = 'foto';
+    if (T.res && !v.esp && R.chance(0.3)) { const rs = G.res.filter((x) => x.viva && !x.fuera); if (rs.length) { const r = R.pick(rs); v.link = { id: r.id, rel: R.pick(['vecino', 'vecina', 'compañero de trabajo', 'amigo de la familia']).replace(/o$|a$/, (m) => (r.p.sex === 'm' ? 'o' : 'a')) }; } }
+    if (v.esp === 'retorno' || v.esp === 'hermana') { v.ficha = false; v.salvo = false; }
+    // estados cosméticos (humanos y copias)
+    if (R.chance(0.3)) v.st.sucio = 1; if (p.sex === 'm' && !p.cara.beard && R.chance(0.3)) v.st.barba = 1; if (R.chance(0.2)) v.st.ojeras = 1;
+    if (!v.copia) {
+      const lluvia = DIAS[dia].tipo === 'lluvia';
+      if (R.chance(lluvia ? 0.5 : 0.22)) { v.ruido.push('fiebre'); v.tC = 37.8 + R.int(0, 14) / 10; }
+      if (T.manos && R.chance(0.2)) { v.ruido.push('venda'); v.manos.venda = v.manos.anillo === 'izq' ? 'der' : 'izq'; }
+      if (T.linterna && R.chance(0.2)) { v.ruido.push('ojosrojos'); v.ojos = 'rojos'; }
+      if (v.ficha && dia >= 2 && R.chance(0.2)) { v.ruido.push('typo'); v.fichaTypo = R.chance(0.5) ? 'edad' : 'nombre'; }
+      if (T.lista && R.chance(0.2)) { v.ruido.push('desap'); G.desap.push({ nom: nomC(p), edad: p.edad, b: p.b }); }
+      if (T.lista && R.chance(0.15)) { v.ruido.push('homonimo'); const sx = R.chance(0.5) ? 'm' : 'f'; let n; do { n = R.pick(sx === 'm' ? NOM_M : NOM_F); } while (n === p.nom || G.usados[n + ' ' + p.ape]); G.usados[n + ' ' + p.ape] = 1; G.fallecidos.push({ nom: n + ' ' + p.ape, edad: R.int(20, 70), b: p.b }); }
+      if (dia >= 2 && !v.esp && v.ficha && R.chance(0.12) && (T.tel || v.link || v.salvo)) { v.ruido.push('sindoc'); v.ficha = false; }
+      if (dia >= 3 && R.chance(0.12)) { v.ruido.push('shock'); v.shock = true; }
+      if (dia >= 2 && !v.esp && R.chance(0.2)) {
+        const ops = []; if (v.salvo && p.acomp.length) ops.push('acomp'); if (v.ficha) ops.push('oficio'); if (v.items.indexOf('foto') >= 0 && p.fam.length) ops.push('fam');
+        if (ops.length) { v.sec = { k: R.pick(ops) }; v.ruido.push('secreto'); if (v.sec.k === 'oficio') { let x; do { x = R.pick([1, 12, 14, 2, 6]); } while (x === p.of); v.sec.of = x; } }
+      }
+    } else aplicarCopia(G, R, v, T, o);
+    armarPreguntas(G, R, v, T);
+    return v;
+  }
+  function aplicarCopia(G, R, v, T, o) {
+    const p = v.p, dia = G.dia, M = G.mundo;
+    v.nivel = Math.max(1, Math.min(5, R.int(1, 2) + Math.floor(dia / 2) + (R.chance(0.3) ? 1 : 0)));
+    v.plano = v.nivel <= 3;
+    const fotoSrc = v.ficha || v.esp; const sup = G.sup || [];
+    const cat = [];
+    if (fotoSrc) cat.push('marca');
+    cat.push('temp');
+    if (DIAS[dia].tipo === 'frio') cat.push('aliento');
+    if (T.linterna) cat.push('ojos');
+    if (T.manos) cat.push('manos');
+    if (T.lista && !v.esp) cat.push('muerto');
+    if (!v.esp) cat.push('salida');
+    if (v.salvo) cat.push('zona');
+    if (v.ficha) cat.push('edad');
+    if (v.nivel <= 3 && !v.esp) cat.push('trampa');
+    if (T.tel && v.salvo && M.zonas[p.zona].estado === 'activa') cat.push(R.chance(0.5) ? 'registro' : 'clave');
+    if (T.bolso && v.items.indexOf('foto') >= 0 && (p.fam.length || p.mascota)) cat.push('dato');
+    if (v.ficha) cat.push('calle');
+    if (v.salvo && p.acomp.length) cat.push('acompD');
+    if (v.esp === 'hermana') cat.push('h1', 'h2');
+    if (v.esp === 'retorno') cat.push('r1', 'r2');
+    const GRUPO = { temp: 'termo', ojos: 'linterna', manos: 'manos', registro: 'tel', clave: 'tel', salida: 'mapa', zona: 'mapa', muerto: 'lista', trampa: 'trampa', dato: 'bolso' };
+    let libres = cat.filter((t) => sup.indexOf(GRUPO[t]) < 0);
+    if (libres.length < 2) libres = cat;
+    const baratas = ['marca', 'temp', 'aliento', 'edad', 'zona', 'ojos', 'manos'];
+    let n = v.nivel <= 2 ? 3 : (v.nivel === 3 ? R.int(2, 3) : 2); if (v.esp) n = 3;
+    let el = R.shuf(libres);
+    if (dia <= 2) { const b = el.filter((t) => baratas.indexOf(t) >= 0); const r = el.filter((t) => baratas.indexOf(t) < 0); el = b.slice(0, 1).concat(R.shuf(b.slice(1).concat(r))); }
+    if (v.esp === 'hermana') el = ['h1'].concat(el.filter((t) => t !== 'h1'));
+    if (v.esp === 'retorno') el = ['r1'].concat(el.filter((t) => t !== 'r1'));
+    v.tells = el.slice(0, Math.min(n, el.length));
+    // todo lo que NO es tell queda limpio
+    v.tells.forEach((t) => {
+      if (t === 'marca') { const m = v.look.mark; const op = m ? R.pick(['espejo', 'espejo', 'falta']) : R.pick(['ojo', 'extra']); v.marcaVar = op; if (op === 'espejo') m.side = -m.side; else if (op === 'falta') v.look.mark = null; else if (op === 'ojo') v.look.eyes = (v.look.eyes + 2) % 4; else v.look.mark2 = { t: 'lunar', pos: 'mejilla', side: R.chance(0.5) ? -1 : 1 }; }
+      if (t === 'temp') v.tC = 33.2 + R.int(0, 16) / 10;
+      if (t === 'aliento') v.aliento = false;
+      if (t === 'ojos') v.ojos = 'reflejo';
+      if (t === 'manos') { const op = v.manos.anillo && v.ficha ? R.pick(['seis', 'unas', 'anillo']) : R.pick(['seis', 'unas']); v.manosVar = op; if (op === 'seis') v.manos[R.chance(0.5) ? 'izq' : 'der'] = 6; else if (op === 'unas') v.manos.unas = false; else v.manos.anillo = v.manos.anillo === 'izq' ? 'der' : 'izq'; }
+      if (t === 'muerto') G.fallecidos.push({ nom: nomC(p), edad: p.edad, b: p.b });
+      if (t === 'salida') v.mal.salida = Math.min(hoyInv(G) - 1, M.barrios[p.b].cae + R.int(1, 3));
+      if (t === 'zona') { const Z = M.zonas[p.zona]; if (Z.estado === 'caida' && R.chance(0.6)) v.salvoFecha = Math.min(hoyInv(G) - 1, Z.cae + R.int(1, 2)); else { let d; do { d = (R.chance(0.5) ? 'Dr. ' : 'Dra. ') + R.pick(APE); } while (d === Z.dir || d.split(' ')[1] === Z.dir.split(' ')[1]); v.salvoFirma = d; } if (v.salvoFecha && v.salvoFecha <= Z.cae) { delete v.salvoFecha; v.salvoFirma = 'Dr. ' + (Z.dir.split(' ')[1] === 'Mora' ? 'Pinto' : 'Mora'); } }
+      if (t === 'edad') v.mal.edad = p.edad + (R.chance(0.5) ? 1 : -1) * R.int(5, 11);
+      if (t === 'trampa') v.cae = true;
+      if (t === 'registro') v.reg = R.pick(['nofigura', 'fallecio']);
+      if (t === 'clave') v.telFalso = true;
+      if (t === 'dato') { if (p.mascota && (R.chance(0.5) || !p.fam.length)) { let n; do { n = R.pick(MASC_N); } while (n === p.mascota.nom); v.mal.mascota = n; } else { const f = p.fam[0]; let n; do { n = R.pick(/a$/.test(f.rel) || f.rel === 'madre' ? NOM_F : NOM_M); } while (p.fam.some((x) => x.nom === n) || n === p.nom); v.mal.fam = n; } }
+      if (t === 'calle') { let c; do { c = R.pick(CALLES) + ' ' + R.int(100, 990); } while (c.split(' ').slice(0, -1).join(' ') === p.calle.split(' ').slice(0, -1).join(' ')); v.mal.calle = c; }
+      if (t === 'acompD') v.mal.acomp = 0;
+    });
+    if (v.tells.indexOf('dato') >= 0 && v.items.indexOf('foto') < 0) v.items[0] = 'foto';
+    if (v.tells.indexOf('temp') < 0 && R.chance(0.3)) v.trucos.push('fiebre');
+    if (v.nivel >= 3 && !v.esp && R.chance(0.3) && v.tells.indexOf('dato') < 0 && v.tells.indexOf('calle') < 0) { v.trucos.push('amnesia'); v.shock = true; }
+    if (R.chance(0.25)) v.trucos.push('contraacusa');
+    if (R.chance(0.3)) v.trucos.push('emocional');
+  }
+  const QTXT = {
+    origen: ['¿De dónde venís?', '¿Dónde vivías antes de todo esto?'], salida: ['¿Qué día dejaste tu barrio?', '¿Cuándo saliste de tu casa?'], ruta: ['¿Por dónde saliste de la ciudad?', '¿Qué camino tomaste para salir?'],
+    oficio: ['¿A qué te dedicabas?', '¿De qué trabajabas?'], olor: ['¿A qué olía tu trabajo?'], fam: ['¿Con quién vivías?', '¿Quién es tu familia?'], mascota: ['¿Tenías algún animal?'], habito: ['¿Qué hacía cuando había tormenta?'],
+    acomp: ['¿Viajaste con alguien?', '¿Venías con alguien más?'], calle: ['¿En qué calle vivías?'], director: ['¿Quién dirige la zona de la que venís?'], zsal: ['¿Qué día saliste de esa zona?'], sentir: ['¿Qué sentiste la noche que cayó tu barrio?'],
+    perdida: ['¿Perdiste a alguien?'], salud: ['¿Estás enfermo o herido?'], conoce: ['¿Conocés a alguien acá adentro?'], edad: ['¿Cuántos años tenés?'], sangre: ['¿Cuál es tu grupo sanguíneo?'], porque: ['¿Por qué tendría que dejarte pasar?'], noche: ['¿Dónde dormiste anoche?'],
+    trampa: [''], h_perro: ['¿Cómo se llamaba nuestro perro?'], h_cancion: ['¿Qué nos cantaba mamá para dormir?'], h_calle: ['¿En qué calle crecimos?'], r_pab: ['¿En qué pabellón dormís?'], r_vecino: ['¿Quién duerme en la cama de al lado?']
+  };
+  const QCAT = { origen: 'Origen', salida: 'Origen', ruta: 'Origen', oficio: 'Vida', olor: 'Memoria', fam: 'Familia', mascota: 'Familia', habito: 'Memoria', acomp: 'Viaje', calle: 'Vida', director: 'Viaje', zsal: 'Viaje', sentir: 'Memoria', perdida: 'Familia', salud: 'Cuerpo', conoce: 'Refugio', edad: 'Vida', sangre: 'Cuerpo', porque: 'Presión', noche: 'Memoria', trampa: 'Trampa', h_perro: 'Infancia', h_cancion: 'Infancia', h_calle: 'Infancia', r_pab: 'Refugio', r_vecino: 'Refugio' };
+  function armarPreguntas(G, R, v, T) {
+    const p = v.p; let q = ['origen', 'salida', 'ruta', 'oficio', 'fam', 'mascota', 'calle', 'sentir', 'perdida', 'salud', 'edad', 'sangre', 'porque', 'noche', 'acomp'];
+    if (p.zona) q.push('director', 'zsal'); if (T.res) q.push('conoce');
+    if (v.esp === 'hermana') q = ['h_perro', 'h_cancion', 'h_calle', 'sentir', 'salud', 'noche', 'ruta', 'porque', 'acomp'];
+    if (v.esp === 'retorno') q = ['r_pab', 'r_vecino', 'oficio', 'salud', 'noche', 'fam', 'mascota', 'sentir', 'edad', 'sangre'];
+    q = R.shuf(q);
+    if (!v.esp) {
+      const M = G.mundo; let tr;
+      if (p.zona) { let d; do { d = (R.chance(0.5) ? 'Dr. ' : 'Dra. ') + R.pick(APE); } while (d.split(' ')[1] === M.zonas[p.zona].dir.split(' ')[1]); tr = { k: 'director', falso: d, txt: 'A vos te firmó el salvoconducto ' + (d[2] === '.' ? 'el ' : 'la ') + d + ', ¿no?' }; }
+      else { const f = (M.barrios[p.b].ruta + 1 + R.int(0, 1)) % 3; tr = { k: 'ruta', falso: f, txt: 'Tu barrio evacuó por ' + RUTAS[f] + ', ¿verdad?' }; }
+      v.tr = tr; q.splice(R.int(1, 4), 0, 'trampa');
+    }
+    v.qv = {}; q.concat(['olor', 'habito']).forEach((k) => { v.qv[k] = R.int(0, QTXT[k].length - 1); });
+    v.pool = q; v.of = v.pool.splice(0, 6);
+  }
+  function qTexto(v, k) { return k === 'trampa' ? v.tr.txt : QTXT[k][v.qv[k] || 0]; }
+
+  // ---------- respuestas ----------
+  function deco(v, R, s, alt) {
+    const t = v.p.temp;
+    if (v.copia && v.plano) return alt || s;
+    if (t === 'nervioso') return R.pick(['Eh… ', 'Yo… ', 'Perdón, estoy temblando. ', '']) + s.replace(/\. /, '… ');
+    if (t === 'hosco') return s + R.pick(['', '', ' ¿Algo más?', ' Ya está en los papeles.']);
+    if (t === 'charlatan') return s + R.pick([' Uno nunca piensa que le va a tocar, ¿no?', ' Disculpe, hablo mucho cuando tengo miedo.', ' Mi madre decía que hablando se espanta el frío.', '']);
+    if (t === 'cortes') return R.pick(['Sí, cómo no. ', 'Con gusto. ', '']) + s;
+    return s;
+  }
+  function responder(G, v, k) {
+    const R = mkR(G), p = v.p, M = G.mundo, B = M.barrios[p.b]; const out = { txt: '', chips: [], abre: [] };
+    const C = (key, val, txt, ex) => out.chips.push(chip('dicho', key, val, 'Dijo: ' + txt, ex));
+    const evade = v.shock && ['fam', 'mascota', 'perdida', 'sentir', 'habito', 'olor'].indexOf(k) >= 0;
+    if (evade) { out.txt = v.copia ? 'No recuerdo. Hay partes que no recuerdo.' : R.pick(['No… no puedo hablar de eso. Todavía no.', 'No me haga volver ahí. Por favor.', '(Mira al piso. No contesta.)']); return out; }
+    if (k === 'origen') { out.txt = deco(v, R, 'De ' + B.n + '. Calle ' + p.calle.split(' ').slice(0, -1).join(' ') + '.' + (p.zona ? ' Después estuve en la Zona ' + p.zona + '.' : ' Vine directo, caminando.'), 'Vengo de ' + B.n + '.' + (p.zona ? ' Estuve en la Zona ' + p.zona + '.' : '')); C('barrio', p.b, B.n); if (p.zona) C('zona', p.zona, 'estuvo en la Zona ' + p.zona); }
+    else if (k === 'salida') { const d = v.mal.salida || p.salida; out.txt = deco(v, R, 'El día ' + d + ' de la invasión. ' + R.pick(['De madrugada.', 'Con lo puesto.', 'Cuando empezaron los gritos en la esquina.']), 'Dejé mi barrio el día ' + d + ' de la invasión.'); C('salida', d, 'dejó ' + B.n + ' el día ' + d, { b: p.b }); }
+    else if (k === 'ruta') { out.txt = deco(v, R, 'Por ' + RUTAS[B.ruta] + '. ' + R.pick(['Había autos abandonados por todos lados.', 'No miré atrás.', 'Éramos cientos.']), 'Salí por ' + RUTAS[B.ruta] + '.'); C('ruta', B.ruta, 'salió por ' + RUTAS[B.ruta], { b: p.b }); }
+    else if (k === 'oficio') { const of = v.sec && v.sec.k === 'oficio' ? v.sec.of : p.of; const o = OFICIOS[of][p.sex === 'm' ? 0 : 1]; out.txt = deco(v, R, 'Era ' + o + '. ' + R.pick(['Veintitantos años en lo mismo.', 'No sé hacer otra cosa.', 'Puedo ser útil acá.']), 'Mi ocupación era ' + o + '.'); C('oficio', of, 'era ' + o); out.abre.push('olor'); }
+    else if (k === 'olor') { out.txt = v.copia ? (v.nivel >= 4 ? 'A lo de siempre. No sé cómo explicarlo.' : 'Mi trabajo no tenía un olor en particular.') : deco(v, R, 'Olía ' + OFICIOS[p.of][2] + '. Todavía lo tengo en la ropa, creo.'); }
+    else if (k === 'fam') {
+      if (v.sec && v.sec.k === 'fam') { out.txt = deco(v, R, 'Con nadie. Vivía ' + g(p, 'solo', 'sola') + '.'); C('fam', '', 'vivía ' + g(p, 'solo', 'sola')); }
+      else if (!p.fam.length) { out.txt = deco(v, R, g(p, 'Solo', 'Sola') + '. Hace años.', 'Vivía sin compañía.'); C('fam', '', 'vivía ' + g(p, 'solo', 'sola')); }
+      else if (v.copia && v.nivel <= 2 && !v.mal.fam) { out.txt = 'Con mi familia. ' + p.fam.map((f) => 'Mi ' + f.rel).join('. ') + '.'; }
+      else { const fs = p.fam.map((f, i) => ({ rel: f.rel, nom: i === 0 && v.mal.fam ? v.mal.fam : f.nom })); out.txt = deco(v, R, 'Con ' + fs.map((f) => 'mi ' + f.rel + ' ' + f.nom).join(' y ') + '.', 'Vivía con ' + fs.map((f) => 'mi ' + f.rel + ', ' + f.nom).join('; ') + '.'); C('fam', fs.map((f) => f.nom).join('|'), 'vivía con ' + fs.map((f) => f.nom).join(', ')); }
+    }
+    else if (k === 'mascota') { if (!p.mascota) { out.txt = deco(v, R, 'No. Nunca tuve.', 'No tenía animales.'); C('mascota', '', 'no tenía animales'); } else { const n = v.mal.mascota || p.mascota.nom; out.txt = deco(v, R, 'Un ' + p.mascota.tipo. replace('perro', 'perro').replace('gato', 'gato') + '. ' + n + '. ' + R.pick(['No pude traerlo.', 'Se quedó en la casa.', 'Lo solté para que corriera.']), 'Tenía un ' + p.mascota.tipo + ' llamado ' + n + '.'); C('mascota', n, 'su ' + p.mascota.tipo + ' se llamaba ' + n); out.abre.push('habito'); } }
+    else if (k === 'habito') { out.txt = v.copia ? (v.nivel >= 4 ? 'Se asustaba. Como todos los animales.' : 'Lo normal. Lo que hacen los animales.') : deco(v, R, p.mascota.hab + '.'); }
+    else if (k === 'acomp') { const lie = v.sec && v.sec.k === 'acomp'; const n = lie || v.mal.acomp === 0 ? 0 : p.acomp.length; if (!n) { out.txt = deco(v, R, g(p, 'Solo', 'Sola') + '. Todo el camino.', 'Viajé sin compañía.'); C('acomp', 0, 'viajó ' + g(p, 'solo', 'sola')); } else { out.txt = deco(v, R, 'Con ' + p.acomp.join(' y ') + '. ' + R.pick(['Nos separamos en un control.', 'No llegaron.', 'Los perdí de vista una noche.']), 'Viajé con ' + n + (n > 1 ? ' personas' : ' persona') + ': ' + p.acomp.join(', ') + '.'); C('acomp', n, 'viajó con ' + n + (n > 1 ? ' personas' : ' persona')); } }
+    else if (k === 'calle') { const c = v.mal.calle || p.calle; out.txt = deco(v, R, c + '. ' + R.pick(['La casa de rejas verdes.', 'Frente a la plaza.', 'Arriba de un kiosco.']), 'Vivía en ' + c + '.'); C('calle', c, 'vivía en ' + c); }
+    else if (k === 'director') { const Z = M.zonas[p.zona]; out.txt = deco(v, R, (Z.dir[2] === '.' ? 'El ' : 'La ') + Z.dir + '. ' + R.pick(['Casi no se lo veía.', 'Firmaba todo sin mirar.', 'Buena persona, creo.']), 'La Zona ' + p.zona + ' la dirige ' + Z.dir + '.'); C('director', Z.dir, 'la Zona ' + p.zona + ' la dirige ' + Z.dir, { z: p.zona }); }
+    else if (k === 'zsal') { const d = v.salvoFecha || p.zsal; out.txt = deco(v, R, 'El día ' + d + '. ' + R.pick(['Ya no había lugar.', 'Nos dijeron que acá había camas.', 'Salimos de noche.']), 'Salí de la Zona ' + p.zona + ' el día ' + d + '.'); C('zsal', d, 'salió de la Zona ' + p.zona + ' el día ' + d, { z: p.zona }); }
+    else if (k === 'sentir') { out.txt = v.copia ? (v.nivel >= 5 ? 'Miedo. Tuve miedo.' : B.n + ' cayó el día ' + B.cae + ' de la invasión. Evacuó por ' + RUTAS[B.ruta] + '.') : deco(v, R, R.pick(['Vergüenza. Corrí y no golpeé ninguna puerta.', 'Nada. Eso es lo peor: no sentí nada hasta dos días después.', 'Bronca. Dejé la comida servida en la mesa.', 'Frío. Un frío acá, en el pecho, que no se me fue más.', 'Pensé en mi madre. No sé por qué. Murió hace años.'])); }
+    else if (k === 'perdida') { if (p.perdida) { const f = p.fam.find((x) => x.nom === p.perdida); out.txt = v.copia && v.nivel <= 3 ? 'Sí. Perdí a mi ' + f.rel + '.' : deco(v, R, 'A ' + (v.mal.fam && p.fam[0].nom === p.perdida ? v.mal.fam : p.perdida) + ', mi ' + f.rel + '. ' + R.pick(['Le solté la mano en el puente.', 'Volvió a buscar los documentos. No salió.', 'No quiero decir más.'])); } else out.txt = deco(v, R, R.pick(['A todos y a nadie. No sé dónde está nadie.', 'Todavía no lo sé. Eso es lo que no me deja dormir.']), 'No tengo constancia de pérdidas.'); }
+    else if (k === 'salud') { const fie = v.ruido.indexOf('fiebre') >= 0, fing = v.trucos.indexOf('fiebre') >= 0; if (fie) out.txt = deco(v, R, R.pick(['Tengo fiebre desde ayer. Es por la lluvia, nada más.', 'Un poco de fiebre. Dormí mojado dos noches.'])); else if (fing) out.txt = 'Tengo fiebre. Por eso mi temperatura puede dar distinta.'; else if (v.manos.venda) out.txt = deco(v, R, 'La mano. Me corté con una chapa saltando un alambrado.'); else out.txt = deco(v, R, R.pick(['Cansancio. Nada más.', 'Hambre. ¿Cuenta?', 'Estoy bien.']), 'Mi estado de salud es normal.'); if (fie || fing) C('fiebre', 1, 'tiene fiebre'); }
+    else if (k === 'conoce') { if (v.link) { const r = G.res.find((x) => x.id === v.link.id); out.txt = deco(v, R, 'A ' + nomC(r.p) + '. ' + (r.p.sex === 'm' ? 'Era' : 'Era') + ' mi ' + v.link.rel + '. Pregúntele.', 'Conozco a ' + nomC(r.p) + '.'); v.rev.link = 1; } else out.txt = deco(v, R, 'No. A nadie.', 'No conozco a nadie adentro.'); }
+    else if (k === 'edad') { const e = v.mal.edad || p.edad; out.txt = deco(v, R, e + '. ' + R.pick(['Aunque parezco más.', 'Cumplí hace poco. No hubo torta.', '']), 'Tengo ' + e + ' años.'); C('edad', e, 'tiene ' + e + ' años'); }
+    else if (k === 'sangre') { out.txt = deco(v, R, p.sangre + '. ' + R.pick(['Doné muchas veces.', 'Lo tengo anotado en la ficha.', '']), 'Mi grupo sanguíneo es ' + p.sangre + '.'); C('sangre', p.sangre, 'su sangre es ' + p.sangre); }
+    else if (k === 'porque') { out.txt = v.copia ? (v.trucos.indexOf('emocional') >= 0 ? 'Por favor. Hay algo ahí afuera. Por favor. Abra.' : 'Porque cumplo los requisitos de ingreso.') : deco(v, R, R.pick(['Porque no tengo adónde volver.', 'Porque sé trabajar. Puedo ser útil.', 'No tiene por qué. Pero se lo pido igual.', 'Porque si me quedo afuera esta noche, mañana no estoy.'])); }
+    else if (k === 'noche') { out.txt = v.copia ? (v.nivel >= 4 ? 'En un auto. Hacía frío.' : 'Afuera. En el camino.') : deco(v, R, p.noche + '.'); }
+    else if (k === 'trampa') { const tr = v.tr; const real = tr.k === 'director' ? M.zonas[p.zona].dir : RUTAS[B.ruta];
+      if (v.cae) { out.txt = tr.k === 'director' ? 'Sí. ' + tr.falso + '.' : 'Sí. Por ' + RUTAS[tr.falso] + '.'; if (tr.k === 'director') C('director', tr.falso, 'le firmó ' + tr.falso, { z: p.zona }); else C('ruta', tr.falso, 'su barrio evacuó por ' + RUTAS[tr.falso], { b: p.b }); }
+      else { out.txt = deco(v, R, tr.k === 'director' ? '¿' + tr.falso.split(' ')[1] + '? No. Firmó ' + real + '.' : 'No. Salimos por ' + real + '.', 'No. ' + (tr.k === 'director' ? 'Firmó ' + real : 'Fue por ' + real) + '.'); if (tr.k === 'director') C('director', real, 'le firmó ' + real, { z: p.zona }); else C('ruta', B.ruta, 'su barrio evacuó por ' + real, { b: p.b }); } }
+    else if (k[0] === 'h') { const H = G.hermana, key = k.slice(2); const bad = v.copia && (v.tells.indexOf('h1') >= 0 && key === v.hk1 || v.tells.indexOf('h2') >= 0 && key === v.hk2); const val = bad ? H.falso[key] : H.inf[key]; out.txt = bad ? val + '.' : R.pick({ perro: [val + '. Se comió tus zapatillas nuevas, ¿te acordás?', val + '. Dormía en tu cama, no en la mía.'], cancion: ['«' + val + '». Desafinaba horrible.', '«' + val + '». Vos te dormías antes del final.'], calle: [val + '. La casa del portón azul.', val + '. La del árbol que tiraste con la bici.'] }[key]); C('h_' + key, val, key === 'perro' ? 'el perro se llamaba ' + val : key === 'cancion' ? 'mamá cantaba «' + val + '»' : 'crecieron en ' + val); }
+    else if (k === 'r_pab' || k === 'r_vecino') { const r = G.res.find((x) => x.id === v.rid); const key = k.slice(2); const bad = v.copia && (v.tells.indexOf('r1') >= 0 && key === v.rk1 || v.tells.indexOf('r2') >= 0 && key === v.rk2); let val = key === 'pab' ? r.pab : r.vecino; if (bad) val = key === 'pab' ? (r.pab === 'A' ? 'B' : 'A') : v.rfalso; out.txt = v.copia ? (key === 'pab' ? 'En el pabellón ' + val + '.' : 'Al lado duerme ' + val + '.') : deco(v, R, key === 'pab' ? 'En el ' + val + '. Vos me anotaste.' : val + '. Ronca como una moto.'); C(key === 'pab' ? 'pab' : 'vecino', val, key === 'pab' ? 'duerme en el pabellón ' + val : 'al lado duerme ' + val); }
+    return out;
+  }
+
+  // ---------- chips de fuentes ----------
+  function fichaChips(G, v) { const p = v.p; let nom = nomC(p), edad = p.edad; if (v.fichaTypo === 'nombre') { const a = p.ape; const i = Math.min(a.length - 2, 2); nom = p.nom + ' ' + a.slice(0, i) + (a[i] === 'e' ? 'a' : 'e') + a.slice(i + 1); } if (v.fichaTypo === 'edad') edad = p.edad + 1;
+    return [chip('ficha', 'nombre', nom, 'Nombre: ' + nom), chip('ficha', 'edad', edad, 'Edad: ' + edad), chip('ficha', 'oficio', p.of, 'Ocupación: ' + ofi(p)), chip('ficha', 'barrio', p.b, 'Barrio: ' + G.mundo.barrios[p.b].n), chip('ficha', 'calle', p.calle, 'Domicilio: ' + p.calle), chip('ficha', 'sangre', p.sangre, 'Sangre: ' + p.sangre), chip('ficha', 'anillo', p.anillo || '', 'Señas: ' + (p.anillo ? 'anillo en mano ' + (p.anillo === 'izq' ? 'izquierda' : 'derecha') : 'sin anillos'))]; }
+  function salvoChips(G, v) { const p = v.p, Z = G.mundo.zonas[p.zona]; const f = v.salvoFecha || p.zsal, d = v.salvoFirma || Z.dir;
+    return [chip('salvo', 'nombre', nomC(p), 'Titular: ' + nomC(p)), chip('salvo', 'zona', p.zona, 'Emitido en: Zona ' + p.zona), chip('salvo', 'zsal', f, 'Salida: día ' + f, { z: p.zona }), chip('salvo', 'director', d, 'Firma: ' + d, { z: p.zona }), chip('salvo', 'acomp', p.acomp.length, 'Acompañantes: ' + p.acomp.length)]; }
+  function itemChips(G, v, it) { const p = v.p;
+    if (it === 'foto') { const ns = p.fam.map((f) => f.nom); const c = []; let t = 'Foto familiar. Al dorso: «' + ns.concat(p.mascota ? [p.mascota.nom] : []).join(', ') + '».'; if (ns.length) c.push(chip('item', 'fam', ns.join('|'), 'Foto: familia ' + ns.join(', '))); if (p.mascota) c.push(chip('item', 'mascota', p.mascota.nom, 'Foto: ' + p.mascota.tipo + ' «' + p.mascota.nom + '»')); return { t, c }; }
+    if (it === 'carta') return { t: 'Carta sin abrir, dirigida a ' + nomC(p) + ', ' + p.calle + '.', c: [chip('item', 'calle', p.calle, 'Carta: ' + p.calle), chip('item', 'nombre', nomC(p), 'Carta: a ' + nomC(p))] };
+    if (it === 'placa') return { t: 'Credencial de trabajo: ' + ofi(p) + '.', c: [chip('item', 'oficio', p.of, 'Credencial: ' + ofi(p))] };
+    return { t: { llaves: 'Un manojo de llaves. Una tiene una cinta roja.', comida: 'Media lata de duraznos, envuelta en un trapo.', remedio: 'Una tira de antitérmicos, casi vacía.', radio: 'Una radio a pilas. Sin pilas.', manta: 'Una manta de bebé. No viene ningún bebé.', bufanda: 'Una bufanda roja, tejida a mano. La reconocés.' }[it], c: [] }; }
+  function archivoChips(G, r) { const p = r.p; return [chip('archivo', 'nombre', nomC(p), 'Archivo: ' + nomC(p)), chip('archivo', 'edad', p.edad, 'Archivo: ' + p.edad + ' años'), chip('archivo', 'oficio', p.of, 'Archivo: ' + ofi(p)), chip('archivo', 'pab', r.pab, 'Archivo: pabellón ' + r.pab), chip('archivo', 'vecino', r.vecino, 'Archivo: cama de al lado, ' + r.vecino), chip('archivo', 'anillo', p.anillo || '', 'Archivo: ' + (p.anillo ? 'anillo en mano ' + (p.anillo === 'izq' ? 'izquierda' : 'derecha') : 'sin anillos')), chip('archivo', 'sangre', p.sangre, 'Archivo: sangre ' + p.sangre)].map((c, i) => Object.assign(c, { id: r.id + 'a' + i })); }
+  function cuadernoChips(G) { const H = G.hermana; return [chip('cuaderno', 'h_perro', H.inf.perro, 'Cuaderno: nuestro perro, ' + H.inf.perro), chip('cuaderno', 'h_cancion', H.inf.cancion, 'Cuaderno: mamá cantaba «' + H.inf.cancion + '»'), chip('cuaderno', 'h_calle', H.inf.calle, 'Cuaderno: crecimos en ' + H.inf.calle)].map((c, i) => Object.assign(c, { id: 'cu' + i })); }
+  function listaChips(G) { return G.fallecidos.map((x, i) => chip('lista', 'fallecido', x, 'Fallecido: ' + x.nom, { id: 'lf' + i })).concat(G.desap.map((x, i) => chip('lista', 'desap', x, 'Desaparecido: ' + x.nom, { id: 'ld' + i }))); }
+  function mapaChips(G) { const M = G.mundo, c = []; M.barrios.forEach((b, i) => { c.push(chip('mapa', 'caida', b.cae, b.n + ': cayó el día ' + b.cae, { b: i })); c.push(chip('mapa', 'rutaB', b.ruta, b.n + ': evacuó por ' + RUTAS[b.ruta], { b: i })); }); Object.values(M.zonas).forEach((z) => { c.push(chip('mapa', 'zest', z.estado === 'caida' ? z.cae : 0, 'Zona ' + z.z + ': ' + (z.estado === 'caida' ? 'cayó el día ' + z.cae : z.estado === 'activa' ? 'activa' : 'sin señal'), { z: z.z })); c.push(chip('mapa', 'zdir', z.dir, 'Zona ' + z.z + ': dirige ' + z.dir, { z: z.z })); }); c.forEach((x, i) => { x.id = 'm' + i; }); return c; }
+
+  // ---------- cruce ----------
+  function cruzar(G, a, b) {
+    const ord = (x) => (x.src === 'mapa' || x.src === 'lista' ? 1 : 0); if (ord(a) > ord(b)) { const t = a; a = b; b = t; }
+    const R_ = (res, txt) => ({ res, txt });
+    if (a.src === b.src && a.src !== 'dicho' && a.key === b.key && a.val === b.val && a.src !== 'item') return R_('nada', 'Es el mismo dato.');
+    if (b.src === 'mapa') {
+      if (a.key === 'salida' && b.key === 'caida') return a.b !== b.b ? R_('nada', 'Ese no es su barrio.') : a.val > b.val ? R_('grave', 'Dice que salió el día ' + a.val + ', pero ese barrio ya había caído el día ' + b.val + '.') : R_('ok', 'Salió antes de que cayera el barrio. Coincide.');
+      if (a.key === 'ruta' && b.key === 'rutaB') return a.b !== b.b ? R_('nada', 'Ese no es su barrio.') : a.val !== b.val ? R_('grave', 'Ese barrio no evacuó por ahí.') : R_('ok', 'La ruta coincide con la evacuación del barrio.');
+      if (a.key === 'zsal' && b.key === 'zest') return a.z !== b.z ? R_('nada', 'No es la misma zona.') : b.val && a.val > b.val ? R_('grave', 'Salida fechada el día ' + a.val + ': esa zona ya había caído el día ' + b.val + '.') : R_('ok', 'La fecha es posible.');
+      if (a.key === 'director' && b.key === 'zdir') return a.z !== b.z ? R_('nada', 'No es la misma zona.') : a.val !== b.val ? R_('grave', 'Esa zona no la dirige ' + a.val + '.') : R_('ok', 'El nombre del director coincide.');
+      return R_('nada', 'Esos dos datos no se relacionan.');
+    }
+    if (b.src === 'lista') { if (a.key !== 'nombre') return R_('nada', 'Esos dos datos no se relacionan.'); if (a.val !== b.val.nom) return R_('nada', 'No es la misma persona.'); return b.key === 'fallecido' ? R_('grave', 'Figura como FALLECIDO CONFIRMADO. Esa persona está muerta.') : R_('info', 'Figura como desaparecido. No prueba nada: mucha gente aparece.'); }
+    if (a.key !== b.key) return R_('nada', 'Esos dos datos no se relacionan.');
+    const k = a.key;
+    if (k === 'nombre') { if (a.val === b.val) return R_('ok', 'El nombre coincide.'); return lev(a.val, b.val) <= 1 ? R_('menor', 'Una letra distinta. Error menor de tipeo.') : R_('grave', 'Son nombres distintos.'); }
+    if (k === 'edad') { const d = Math.abs(a.val - b.val); return d === 0 ? R_('ok', 'La edad coincide.') : d === 1 ? R_('menor', 'Un año de diferencia. Error menor.') : R_('grave', 'Las edades no coinciden: ' + a.val + ' y ' + b.val + '.'); }
+    if (k === 'fam') { const A = a.val ? a.val.split('|') : [], B = b.val ? b.val.split('|') : []; if (!A.length && !B.length) return R_('ok', 'Coincide: sin familia.'); if (!A.length || !B.length) return R_('grave', 'Una fuente dice que no tenía familia; la otra nombra a ' + (A.length ? A : B).join(', ') + '.'); const S = A.length <= B.length ? A : B, L = A.length <= B.length ? B : A; return S.every((x) => L.indexOf(x) >= 0) ? R_('ok', 'Los nombres de la familia coinciden.') : R_('grave', 'Los nombres de la familia no coinciden.'); }
+    if (a.val === b.val) return R_('ok', 'Coincide.');
+    const T = { oficio: 'La ocupación no coincide.', calle: 'El domicilio no coincide.', sangre: 'El grupo sanguíneo no coincide.', mascota: 'El nombre del animal no coincide.', acomp: 'La cantidad de acompañantes no coincide.', zsal: 'La fecha de salida de la zona no coincide.', director: 'El nombre del director no coincide.', barrio: 'El barrio no coincide.', zona: 'La zona no coincide.', ruta: 'La ruta no coincide.', salida: 'La fecha de salida no coincide.', h_perro: 'Así no se llamaba el perro.', h_cancion: 'Esa no era la canción.', h_calle: 'No crecieron en esa calle.', pab: 'No es su pabellón.', vecino: 'Esa no es la persona de la cama de al lado.', anillo: 'El anillo no está en esa mano.' };
+    return T[k] ? R_('grave', T[k]) : R_('nada', 'Esos dos datos no se relacionan.');
+  }
+
+  // ---------- partida ----------
+  function nuevaPartida(seed) {
+    const G = { v: 1, seed, rs: seed | 0, dia: 0, reloj: 480, nid: 1, usados: {}, res: [], fallecidos: [], desap: [], cola: [], cur: null, cuarentena: [], comida: 46, moral: 70, paranoia: 10, uso: {}, sup: [], log: [], hist: [], flags: {}, tel: 3, pilas: 4, consultas: 3, test: null, racion: 1, fin: null, stats: { ok: 0, mal: 0, copiasIn: 0, humOut: 0 } };
+    const R = mkR(G); G.dia = 1; genMundo(G, R);
+    const pabs = ['A', 'B', 'C'];
+    for (let i = 0; i < 12; i++) { const p = genPersona(G, R); G.res.push({ id: 'i' + i, p, pab: pabs[i % 3], dia: 0, copia: false, viva: true }); }
+    asignarVecinos(G);
+    for (let i = 0; i < 6; i++) { const sx = R.chance(0.5) ? 'm' : 'f'; const [n, a] = nombreUnico(G, R, sx); G.fallecidos.push({ nom: n + ' ' + a, edad: R.int(20, 75), b: R.int(0, 7) }); const [n2, a2] = nombreUnico(G, R, sx); G.desap.push({ nom: n2 + ' ' + a2, edad: R.int(20, 75), b: R.int(0, 7) }); }
+    // hermana
+    const hp = genPersona(G, R, { sex: 'f', zona: -1 }); hp.cara.mark = { t: 'cicatriz', pos: 'ceja', side: R.chance(0.5) ? -1 : 1 }; hp.cara.acc = 'bufanda'; hp.edad = R.int(24, 38); hp.cara.old = 0; if (hp.cara.hair === 6) hp.cara.hair = 1;
+    const cs = R.shuf(CALLES), ms = R.shuf(MASC_N), can = R.shuf(['Duerme, negrito', 'La luna en el aljibe', 'Arrorró', 'Los pollitos', 'Manuelita']);
+    G.hermana = { p: hp, copia: R.chance(0.5), inf: { perro: ms[0], cancion: can[0], calle: cs[0] }, falso: { perro: ms[1], cancion: can[1], calle: cs[1] }, estado: 'afuera' };
+    G.yo = { cicatriz: 'izquierda' };
+    G.dia = 0; return G;
+  }
+  function asignarVecinos(G) { ['A', 'B', 'C'].forEach((pb) => { const l = G.res.filter((r) => r.viva && r.pab === pb); l.forEach((r, i) => { r.vecino = l.length > 1 ? l[(i + 1) % l.length].p.nom : 'nadie'; }); }); }
+  function boletin(G, R) {
+    const M = G.mundo, d = G.dia; const ayer = M.claves[d - 1], hoy = M.claves[d];
+    const REAL = { 1: ['Las copias traen documentos originales. Compare siempre la foto de la ficha con la cara: si una marca cambió de lado o desapareció, no es la persona.', 'Temperatura por debajo de 35°: no es humana. La fiebre, en cambio, es cosa de personas.'], 2: ['Con helada, el aliento humano empaña el vidrio. Lo que no empaña, no respira.', 'Figurar como DESAPARECIDO no prueba nada. Figurar como FALLECIDO CONFIRMADO, sí.', 'Todo operador telefónico debe darle la clave del día. Si la clave es otra, corte.'], 3: ['Ojos enrojecidos: cansancio. Reflejo blanco bajo la linterna: no es humano.', 'Barba crecida, suciedad y vendas no prueban nada. Seis dedos o falta de uñas, sí.', 'Un error de tipeo en un documento es humano. Las copias no se equivocan al copiar.'], 4: ['Sin teléfono, apóyese en pertenencias, residentes y el mapa de caídas.'], 5: ['Las copias aprenden de cada portero. Si una prueba deja de fallar, cambie de prueba.'], 6: ['Los que llegan juntos se respaldan entre sí. Verifique a cada uno por separado.'], 7: ['El convoy sale al anochecer. Lo que entre hoy, viaja con nosotros.'] };
+    const FALSO = ['Nueva directiva: toda persona con fiebre es una copia. Rechácela sin más pruebas.', 'Atención: los errores de tipeo en documentos delatan a las copias. Rechace cualquier ficha con errores.', 'Las copias no pueden imitar cicatrices. Quien tenga una cicatriz es humano: déjelo pasar.', 'Los desaparecidos de la lista oficial están todos muertos. Quien figure ahí es una copia.'];
+    const its = REAL[d].map((t) => ({ t, v: ayer, falso: false }));
+    if (d >= 4) { let w; do { w = R.pick(CLAVES); } while (w === ayer || w === hoy); its.splice(R.int(0, its.length), 0, { t: FALSO[(d + (G.seed & 3)) % 4], v: w, falso: true }); }
+    return { clave: hoy, items: its };
+  }
+  function empezarDia(G) {
+    G.dia++; const R = mkR(G), D = DIAS[G.dia]; G.reloj = 480; G.tel = 3; G.pilas = 4 + (G.dia >= 5 ? 1 : 0); G.consultas = 3; G.cur = null; G.eventosDia = [];
+    // adaptación
+    G.sup = []; if (G.dia >= 3) { const us = Object.keys(G.uso).filter((k) => ['termo', 'linterna', 'manos', 'tel', 'mapa', 'lista', 'trampa', 'bolso'].indexOf(k) >= 0).sort((a, b) => G.uso[b] - G.uso[a]); G.sup = us.filter((k) => G.uso[k] >= 2).slice(0, G.dia >= 5 ? 2 : 1); }
+    G.bol = boletin(G, R); G.bols = (G.bols || []).concat([{ dia: G.dia, clave: G.bol.clave, items: G.bol.items }]);
+    const tipos = []; for (let i = 0; i < D.n; i++) tipos.push(i < D.copias);
+    let orden = R.shuf(tipos); if (G.dia === 1) orden = [false, true, false, true];
+    const cola = orden.map((c) => genVisitante(G, R, { copia: c }));
+    // parejas: dos personas que viajan juntas y se nombran
+    for (let k = 0; k < (D.pareja || 0); k++) { const i = R.int(0, cola.length - 2), a = cola[i], b = cola[i + 1]; if (a.esp || b.esp || a.par || b.par || !a.p.zona) continue; const pb = genPersona(G, R, { zona: a.p.zona, barrio: a.p.b, ape: a.p.ape }); pb.zsal = a.p.zsal; pb.salida = a.p.salida; a.p.acomp = [pb.nom]; pb.acomp = [a.p.nom]; a.p.fam = a.p.fam.filter((f) => f.rel !== 'hermano' && f.rel !== 'hermana' && f.nom !== pb.nom); a.p.fam.unshift({ rel: pb.sex === 'm' ? 'hermano' : 'hermana', nom: pb.nom }); pb.fam = pb.fam.filter((f) => f.rel !== 'hermano' && f.rel !== 'hermana' && f.nom !== a.p.nom); pb.fam.unshift({ rel: a.p.sex === 'm' ? 'hermano' : 'hermana', nom: a.p.nom }); if (a.p.perdida && !a.p.fam.some((f) => f.nom === a.p.perdida)) a.p.perdida = null; if (pb.perdida && !pb.fam.some((f) => f.nom === pb.perdida)) pb.perdida = null;
+      const na = genVisitante(G, R, { copia: a.copia, p: a.p }), nb = genVisitante(G, R, { copia: b.copia, p: pb }); na.par = nomC(pb); nb.par = nomC(a.p); cola[i] = na; cola[i + 1] = nb; }
+    if (D.retorno && G.salio) { const r = G.res.find((x) => x.id === G.salio.id); if (r && r.viva) { const v = genVisitante(G, R, { copia: G.salio.copia, p: r.p, esp: 'retorno' }); v.rid = r.id; if (v.copia) { const ks = R.shuf(['pab', 'vecino']); v.rk1 = ks[0]; v.rk2 = ks[1]; const o = G.res.filter((x) => x.viva && x.p.nom !== r.vecino && x.id !== r.id); v.rfalso = o.length ? R.pick(o).p.nom : 'Nadie'; } cola.splice(R.int(1, cola.length - 1), 0, v); } }
+    if (D.hermana) { const H = G.hermana; const v = genVisitante(G, R, { copia: H.copia, p: H.p, esp: 'hermana' }); if (v.copia) { const ks = R.shuf(['perro', 'cancion', 'calle']); v.hk1 = ks[0]; v.hk2 = ks[1]; } v.items = v.copia && R.chance(0.6) ? ['llaves', 'comida'] : ['bufanda', 'llaves']; if (v.items.indexOf('bufanda') < 0) delete v.look.acc; cola.push(v); }
+    G.cola = cola; G.atendidos = 0; G.resumen = { entran: [], rechazo: [], cuar: [], sinAtender: 0 };
+    return G;
+  }
+  function gastar(G, m) { G.reloj += m; }
+  const cerrado = (G) => G.reloj >= 1080;
+  function llamar(G) { if (G.cur || !G.cola.length || cerrado(G)) return null; const v = G.cola.shift(); G.cur = v; G.atendidos++; const p = v.p; const R = mkR(G);
+    v.chips = [];
+    const saludo = v.esp === 'hermana' ? 'Soy yo. Abrí. Por favor, abrí.' : v.esp === 'retorno' ? 'Soy ' + p.nom + '. Salí anoche a buscar medicinas, ¿te acordás? Abrime.' : deco(v, R, R.pick(['Soy ' + nomC(p) + '. Tengo ' + (v.mal.edad || p.edad) + ' años.', 'Me llamo ' + nomC(p) + '. ' + (v.mal.edad || p.edad) + ' años.']) + (v.par ? ' Vengo con ' + v.par.split(' ')[0] + '.' : ''), 'Mi nombre es ' + nomC(p) + '. Tengo ' + (v.mal.edad || p.edad) + ' años.');
+    v.dialogo = [{ q: null, a: saludo }];
+    if (!v.esp) { v.chips.push(chip('dicho', 'nombre', nomC(p), 'Dijo: se llama ' + nomC(p))); v.chips.push(chip('dicho', 'edad', v.mal.edad || p.edad, 'Dijo: tiene ' + (v.mal.edad || p.edad) + ' años')); }
+    else v.chips.push(chip('dicho', 'nombre', nomC(p), 'Dice ser ' + nomC(p)));
+    if (v.ficha) v.chips = v.chips.concat(fichaChips(G, v)); if (v.salvo) v.chips = v.chips.concat(salvoChips(G, v));
+    v.chips.forEach((c, i) => { c.id = v.id + 'c' + i; });
+    return v; }
+  function addChips(v, cs) { cs.forEach((c) => { c.id = v.id + 'c' + v.chips.length; v.chips.push(c); }); }
+  function usar(G, k) { G.uso[k] = (G.uso[k] || 0) + 1; }
+  function preguntar(G, k) { const v = G.cur; if (!v || v.pac <= 0 || v.asked.indexOf(k) >= 0) return null; const r = responder(G, v, k); v.asked.push(k); v.pac--; gastar(G, COSTO.pregunta); addChips(v, r.chips); v.dialogo.push({ q: qTexto(v, k), a: r.txt }); if (k === 'trampa') usar(G, 'trampa');
+    v.of = v.of.filter((x) => x !== k); r.abre.forEach((x) => { if (v.asked.indexOf(x) < 0 && v.of.indexOf(x) < 0) v.of.unshift(x); }); while (v.of.length < 6 && v.pool.length) v.of.push(v.pool.shift()); if (v.of.length > 7) v.pool = v.of.splice(7).concat(v.pool);
+    if (v.pac <= 0) v.dialogo.push({ q: null, a: v.copia && v.plano ? 'No voy a responder más preguntas.' : 'Basta de preguntas. ¿Me va a abrir o no?' }); return r; }
+  function rotar(G) { const v = G.cur; if (!v || !v.pool.length) return; const k = v.of.pop(); v.pool.push(k); v.of.unshift(v.pool.shift()); }
+  function termometro(G) { const v = G.cur; if (!v || v.rev.termo) return; v.rev.termo = 1; gastar(G, COSTO.termo); usar(G, 'termo'); }
+  function linterna(G) { const v = G.cur; if (!v || v.rev.linterna || G.pilas <= 0) return; G.pilas--; v.rev.linterna = 1; gastar(G, COSTO.linterna); usar(G, 'linterna'); }
+  function verManos(G) { const v = G.cur; if (!v || v.rev.manos) return; v.rev.manos = 1; gastar(G, COSTO.manos); usar(G, 'manos'); const m = v.manos; if (m.anillo && m.venda !== m.anillo) addChips(v, [chip('obs', 'anillo', m.anillo, 'Visto: anillo en mano ' + (m.anillo === 'izq' ? 'izquierda' : 'derecha'))]); else if (!m.anillo) addChips(v, [chip('obs', 'anillo', '', 'Visto: sin anillos')]); }
+  function bolso(G) { const v = G.cur; if (!v || v.rev.bolso) return; v.rev.bolso = 1; gastar(G, COSTO.bolso); usar(G, 'bolso'); v.itemsTxt = []; v.items.forEach((it) => { const x = itemChips(G, v, it); v.itemsTxt.push(x.t); addChips(v, x.c); }); }
+  function telefono(G, destino) { const v = G.cur; if (!v || G.tel <= 0) return null; const p = v.p, M = G.mundo; if (destino === 'zona' && !p.zona) return null; G.tel--; gastar(G, COSTO.tel); usar(G, 'tel'); const R = mkR(G); let r;
+    if (destino === 'zona') { const Z = M.zonas[p.zona]; if (Z.estado !== 'activa') r = { ok: false, txt: Z.estado === 'caida' ? 'Tono muerto. La Zona ' + p.zona + ' ya no existe.' : 'Estática. Nadie atiende en la Zona ' + p.zona + '.' };
+      else if (v.telFalso) { let w; do { w = R.pick(CLAVES); } while (w === G.bol.clave); r = { ok: true, clave: w, txt: 'Zona ' + p.zona + '. Clave del día: ' + w + '. Sí. ' + nomC(p) + ' estuvo acá. Todo en orden. Puede dejar pasar.', c: [] }; v.rev.claveMal = 1; }
+      else if (v.reg === 'nofigura') { r = { ok: true, clave: G.bol.clave, txt: 'Zona ' + p.zona + ', clave ' + G.bol.clave + '. Reviso… No. No tengo a nadie con ese nombre en el registro. Ese salvoconducto no salió de acá.', c: [] }; v.rev.regMal = 1; }
+      else if (v.reg === 'fallecio') { r = { ok: true, clave: G.bol.clave, txt: 'Zona ' + p.zona + ', clave ' + G.bol.clave + '. ' + nomC(p) + '… sí. Falleció acá, en la enfermería. Yo mismo firmé el acta. ¿Quién dice que está en su puerta?', c: [] }; v.rev.regMal = 1; }
+      else r = { ok: true, clave: G.bol.clave, txt: 'Zona ' + p.zona + ', clave ' + G.bol.clave + '. ' + nomC(p) + ': salió el día ' + p.zsal + ', con ' + (p.acomp.length ? p.acomp.length + (p.acomp.length > 1 ? ' acompañantes' : ' acompañante') : 'nadie') + '. Sangre ' + p.sangre + '.', c: [chip('tel', 'zsal', p.zsal, 'Zona ' + p.zona + ': salió el día ' + p.zsal, { z: p.zona }), chip('tel', 'acomp', p.acomp.length, 'Zona ' + p.zona + ': ' + p.acomp.length + ' acompañantes'), chip('tel', 'sangre', p.sangre, 'Zona ' + p.zona + ': sangre ' + p.sangre)] }; }
+    else { if (R.chance(0.15)) r = { ok: false, txt: 'La línea con el Registro Central se corta antes de que atiendan.' }; else { const ns = p.fam.map((f) => f.nom); r = { ok: true, clave: G.bol.clave, txt: 'Registro Central, clave ' + G.bol.clave + '. ' + nomC(p) + ', ' + p.edad + ' años, ' + ofi(p) + '. Grupo familiar: ' + (ns.length ? ns.join(', ') : 'ninguno') + '.', c: [chip('tel', 'edad', p.edad, 'Registro: ' + p.edad + ' años'), chip('tel', 'oficio', p.of, 'Registro: ' + ofi(p)), chip('tel', 'fam', ns.join('|'), 'Registro: familia ' + (ns.length ? ns.join(', ') : 'ninguna')), chip('tel', 'nombre', nomC(p), 'Registro: ' + nomC(p))] }; } }
+    if (r.c) addChips(v, r.c); v.tels = (v.tels || []).concat([r.txt]); return r; }
+  function consultar(G) { const v = G.cur; if (!v || !v.link || !v.rev.link || v.rev.res || G.consultas <= 0) return null; const r = G.res.find((x) => x.id === v.link.id); if (!r || !r.viva) return null; G.consultas--; v.rev.res = 1; gastar(G, COSTO.res); usar(G, 'res'); const p = v.p; let txt, c = [];
+    if (r.copia) txt = nomC(r.p) + ': «Sí. Es de confianza. Puede pasar.»';
+    else { const ns = p.fam.map((f) => f.nom); txt = nomC(r.p) + ': «¿' + p.nom + '? Sí, ' + ofi(p) + ', de ' + G.mundo.barrios[p.b].n + '. ' + (ns.length ? 'Vivía con ' + ns.join(' y ') + '. ' : 'Vivía sin nadie. ') + (p.mascota ? 'Tenían un ' + p.mascota.tipo + ', ' + p.mascota.nom + '. ' : '') + 'Ojalá sea ' + g(p, 'él', 'ella') + '.»'; c = [chip('res', 'oficio', p.of, r.p.nom + ': era ' + ofi(p)), chip('res', 'fam', ns.join('|'), r.p.nom + ': familia ' + (ns.length ? ns.join(', ') : 'ninguna'))]; if (p.mascota) c.push(chip('res', 'mascota', p.mascota.nom, r.p.nom + ': ' + p.mascota.tipo + ' «' + p.mascota.nom + '»')); }
+    addChips(v, c); v.resTxt = txt; return txt; }
+  function hacerCruce(G, a, b) { const v = G.cur; if (!v) return null; const key = [a.id, b.id].sort().join('~'); const ya = v.cruces.find((x) => x.key === key); if (ya) return ya; gastar(G, COSTO.cruzar); const r = cruzar(G, a, b); if (a.src === 'mapa' || b.src === 'mapa') usar(G, 'mapa'); if (a.src === 'lista' || b.src === 'lista') usar(G, 'lista'); const c = { key, a: a.txt, b: b.txt, ka: a.key, res: r.res, txt: r.txt, conf: null }; if (r.res !== 'nada') v.cruces.push(c); return c; }
+  function confrontar(G, i) { const v = G.cur; if (!v) return null; const c = v.cruces[i]; if (!c || c.conf || (c.res !== 'grave' && c.res !== 'menor')) return null; gastar(G, COSTO.confrontar); const p = v.p; let t, tipo;
+    if (v.copia) { tipo = 'evasiva'; t = v.trucos.indexOf('contraacusa') >= 0 ? 'Usted busca copias en el lugar equivocado. Mire adentro. Mire quién duerme en sus pabellones.' : mkR(G).pick(['Me confundí. Estoy cansado.', 'No sé de qué me habla. Está todo en orden.', 'Eso es un error suyo, no mío.'].map((s) => (p.sex === 'f' ? s.replace('cansado', 'cansada') : s))); if (v.trucos.indexOf('contraacusa') >= 0 && !v.acuso) { v.acuso = 1; G.paranoia += 6; } }
+    else if (c.res === 'menor') { tipo = 'explica'; t = 'Me anotaron mal en el puesto de control. Había cien personas detrás mío; no me dejaron corregirlo.'; }
+    else if (v.sec) { tipo = 'confiesa'; t = v.sec.k === 'acomp' ? 'Está bien. No viajé ' + g(p, 'solo', 'sola') + '. Venía con ' + p.acomp[0] + '. Se lastimó la pierna y… seguí. Lo dejé. No quería que nadie lo supiera.' : v.sec.k === 'oficio' ? 'Mentí. Soy ' + ofi(p) + '. Dije otra cosa porque pensé que así me iban a dejar entrar. Nadie le abre la puerta a alguien como yo.' : 'Sí tenía familia. ' + p.fam.map((f) => f.nom).join(', ') + '. Corrí sin esperarlos. Es más fácil decir que no tenía a nadie.'; }
+    else { tipo = 'evasiva'; t = 'No sé qué decirle.'; }
+    c.conf = { tipo, t }; v.dialogo.push({ q: 'Explicame esto: ' + c.txt, a: t }); return c.conf; }
+  function decidir(G, d) { const v = G.cur; if (!v || v.dec) return null; if (d === 'cuarentena' && G.cuarentena.length >= 2) return null; v.dec = d; gastar(G, COSTO.decidir); const R = mkR(G);
+    const reg = { nom: nomC(v.p), copia: v.copia, dec: d, esp: v.esp, tells: v.tells, ruido: v.ruido, nivel: v.nivel, look: v.look, var: [v.marcaVar, v.manosVar] }; G.hist.push(Object.assign({ dia: G.dia }, reg));
+    if (d === 'pasa') { if (v.esp === 'retorno') { const r = G.res.find((x) => x.id === v.rid); r.fuera = false; r.copia = v.copia; r.dia = G.dia; } else { const cnt = { A: 0, B: 0, C: 0 }; G.res.forEach((r) => { if (r.viva) cnt[r.pab]++; }); const pab = ['A', 'B', 'C'].sort((x, y) => cnt[x] - cnt[y])[0]; G.res.push({ id: 'r' + G.nid++, p: v.p, pab, dia: G.dia, copia: v.copia, viva: true, hermana: v.esp === 'hermana' }); }
+      if (v.copia) { G.stats.mal++; G.stats.copiasIn++; } else { G.stats.ok++; G.moral = Math.min(100, G.moral + 2); } G.resumen.entran.push(reg); if (v.esp === 'hermana') G.hermana.estado = v.copia ? 'adentroCopia' : 'adentro'; }
+    else if (d === 'rechaza') { if (v.copia) G.stats.ok++; else { G.stats.mal++; G.stats.humOut++; G.moral -= v.esp === 'retorno' ? 10 : 4; } G.resumen.rechazo.push(reg); if (v.esp === 'retorno') { const r = G.res.find((x) => x.id === v.rid); r.viva = false; r.fuera = false; } if (v.esp === 'hermana') G.hermana.estado = v.copia ? 'rechazadaCopia' : 'rechazadaHumana'; }
+    else { G.cuarentena.push({ p: v.p, copia: v.copia, esp: v.esp, rid: v.rid, dia: G.dia, nom: nomC(v.p) }); G.resumen.cuar.push(reg); if (v.esp === 'hermana') G.hermana.estado = 'cuarentena'; }
+    asignarVecinos(G); G.cur = null; return reg; }
+  function cerrarDia(G) { G.resumen.sinAtender = G.cola.length + (G.cur ? 1 : 0); G.cola.forEach((v) => { if (v.esp === 'hermana') G.hermana.estado = v.copia ? 'rechazadaCopia' : 'rechazadaHumana'; if (v.esp === 'retorno') { const r = G.res.find((x) => x.id === v.rid); r.viva = false; r.fuera = false; } }); if (G.cur) { if (G.cur.esp === 'hermana') G.hermana.estado = G.cur.copia ? 'rechazadaCopia' : 'rechazadaHumana'; if (G.cur.esp === 'retorno') { const r = G.res.find((x) => x.id === G.cur.rid); r.viva = false; r.fuera = false; } }
+    G.moral -= 2 * G.resumen.sinAtender; G.cola = []; G.cur = null; G.test = null; G.racion = 1; }
+  const vivos = (G) => G.res.filter((r) => r.viva && !r.fuera);
+  function candidatosTest(G) { return G.cuarentena.map((q, i) => ({ id: 'q' + i, nom: q.nom, donde: 'Cuarentena' })).concat(vivos(G).filter((r) => r.dia > 0).map((r) => ({ id: r.id, nom: nomC(r.p), donde: 'Pabellón ' + r.pab + ' · entró el día ' + r.dia }))); }
+  function noche(G) {
+    const R = mkR(G); const ev = []; const D = DIAS[G.dia];
+    // comida
+    const pop = vivos(G).length + G.cuarentena.length; const need = Math.ceil(pop * (G.racion === 1 ? 1 : 0.5));
+    if (G.racion !== 1) { G.moral -= 6; ev.push({ t: 'comida', txt: 'Media ración para todos. Nadie protesta en voz alta.' }); }
+    if (G.comida >= need) G.comida -= need; else { G.comida = 0; G.moral -= 14; ev.push({ t: 'hambre', txt: 'La comida no alcanzó. Hubo empujones en la fila de la olla.' }); }
+    if (G.dia === 2 || G.dia === 4 || G.dia === 6) { G.comida += 22; ev.push({ t: 'sumin', txt: 'Un camión militar dejó 22 raciones en el portón.' }); }
+    // análisis de sangre
+    let res = null;
+    if (G.test) { if (G.test[0] === 'q') { const i = +G.test.slice(1); const q = G.cuarentena[i]; if (q) { G.cuarentena.splice(i, 1); res = { nom: q.nom, copia: q.copia, esp: q.esp, cuar: true };
+          if (q.copia) { G.stats.ok++; if (q.esp === 'retorno') { const r = G.res.find((x) => x.id === q.rid); r.viva = false; r.fuera = false; } if (q.esp === 'hermana') G.hermana.estado = 'testCopia'; }
+          else { G.stats.ok++; if (q.esp === 'retorno') { const r = G.res.find((x) => x.id === q.rid); r.fuera = false; } else { const cnt = { A: 0, B: 0, C: 0 }; G.res.forEach((r) => { if (r.viva) cnt[r.pab]++; }); G.res.push({ id: 'r' + G.nid++, p: q.p, pab: ['A', 'B', 'C'].sort((x, y) => cnt[x] - cnt[y])[0], dia: G.dia, copia: false, viva: true, hermana: q.esp === 'hermana' }); } if (q.esp === 'hermana') G.hermana.estado = 'adentro'; } } }
+      else { const r = G.res.find((x) => x.id === G.test); if (r && r.viva) { res = { nom: nomC(r.p), copia: r.copia, cuar: false, hermana: r.hermana }; if (r.copia) { r.viva = false; G.paranoia = Math.max(0, G.paranoia - 12); G.stats.cazadas = (G.stats.cazadas || 0) + 1; if (r.hermana) G.hermana.estado = 'testCopia'; } else G.paranoia += 4; } } }
+    G.resTest = res;
+    // copias adentro: desapariciones
+    const dentro = vivos(G).filter((r) => r.copia); let des = 0;
+    R.shuf(dentro).forEach((c) => { if (des >= 1 || !R.chance(0.85)) return; const vict = vivos(G).filter((r) => !r.copia && r.pab === c.pab && !r.hermana); const pool = vict.length ? vict : vivos(G).filter((r) => !r.copia && !r.hermana); if (!pool.length) return; const x = R.pick(pool); x.viva = false; des++; G.ultPab = x.pab; G.moral -= 6; G.paranoia += 10; ev.push({ t: 'desap', txt: nomC(x.p) + ' no está en su cama. Pabellón ' + x.pab + '. La manta sigue tibia.' }); });
+    if (!des) { G.paranoia = Math.max(0, G.paranoia - 10); if (!dentro.length && G.resumen.rechazo.every((x) => x.copia) && !G.resumen.sinAtender) G.moral = Math.min(100, G.moral + 4); }
+    // cámaras
+    G.resumen.rechazo.forEach((x) => { ev.push({ t: x.copia ? 'camC' : 'camH', txt: x.copia ? 'Cámara 2: ' + x.nom + ' se quedó de pie frente al portón, sin moverse, hasta que se cortó la luz. Después ya no estaba.' : 'Cámara 2: ' + x.nom + ' sigue sentad' + (/a$/.test(x.nom.split(' ')[0]) ? 'a' : 'o') + ' contra el muro, tapándose con un cartón.' }); });
+    if (G.resumen.sinAtender) ev.push({ t: 'fila', txt: G.resumen.sinAtender + (G.resumen.sinAtender > 1 ? ' personas quedaron' : ' persona quedó') + ' en la fila cuando bajaste la persiana.' });
+    if (G.sup.length && !G.flags.avisoAdapt) { G.flags.avisoAdapt = 1; ev.push({ t: 'doc', txt: 'La doctora: «Lo que analicé hoy ya no falla en la prueba que más usás. Aprenden de vos. Cambiá de método.»' }); }
+    // alguien sale a buscar medicinas (vuelve mañana)
+    G.salio = null; const man = DIAS[G.dia + 1]; if (man && man.retorno) { const c = vivos(G).filter((r) => !r.copia && !r.hermana); if (c.length > 4) { const r = R.pick(c); r.fuera = true; G.salio = { id: r.id, copia: R.chance(0.5) }; ev.push({ t: 'sale', txt: nomC(r.p) + ' (Pabellón ' + r.pab + ') salió a buscar medicinas. Dijo que vuelve mañana.' }); } }
+    // hermana por radio
+    const H = G.hermana;
+    if (G.dia === 2) ev.push({ t: 'radio', txt: 'Radio, 02:14 — «¿Me escuchás? Soy yo. Estoy viva. Estoy en la Zona ' + H.p.zona + '. Voy para allá.»' });
+    if (G.dia === 4) ev.push({ t: 'radio', txt: 'Radio, 03:40 — «Llego mañana. Llevo puesta la bufanda roja de mamá, así me reconocés de lejos. No le abras a nadie que no la tenga.»' });
+    G.radioH = (G.radioH || []).concat(ev.filter((x) => x.t === 'radio').map((x) => x.txt)); asignarVecinos(G); G.eventos = ev; G.moral = Math.max(0, Math.min(100, G.moral)); G.paranoia = Math.max(0, Math.min(100, G.paranoia));
+    // finales inmediatos
+    const hum = vivos(G).filter((r) => !r.copia).length, cop = vivos(G).filter((r) => r.copia).length;
+    if (G.paranoia >= 100) G.fin = 'maple'; else if (G.moral <= 0) G.fin = 'cae'; else if (hum <= 3 || cop >= hum) G.fin = 'reemplazo'; else if (H.estado === 'testCopia' && !G.flags.joel) G.pend = 'joel';
+    else if (G.dia >= 7) G.fin = finalDe(G);
+    return ev; }
+  function elegirJoel(G, huir) { G.flags.joel = 1; G.pend = null; if (huir) G.fin = 'joel'; else { G.hermana.estado = 'entregada'; if (G.dia >= 7) G.fin = finalDe(G); } }
+  function finalDe(G) { const cop = vivos(G).filter((r) => r.copia); const H = G.hermana; if (G.flags.yo) return 'copia'; if (cop.some((r) => r.hermana)) return 'noera'; if (cop.length) return 'cosa'; if (H.estado === 'rechazadaHumana') return 'niebla'; return 'resiste'; }
+  function cruceYo(G) { G.flags.yo = 1; }
+
+  return { nuevaPartida, empezarDia, llamar, preguntar, rotar, termometro, linterna, verManos, bolso, telefono, consultar, hacerCruce, confrontar, decidir, cerrarDia, noche, elegirJoel, cruzar, mapaChips, archivoChips, cuadernoChips, listaChips, responder, herramientas, candidatosTest, qTexto, vivos, cerrado, hoyInv, nomC, ofi, cruceYo, finalDe, itemChips, QCAT, DIAS, DIA_INFO, COSTO, RUTAS, OFICIOS, chip };
+})();
+if (typeof module !== 'undefined' && module.exports) module.exports = Z7;
+
+/* ZONA 7 — retratos pixel art por capas (96×112), ojos y manos en primer plano. */
+const Z7ART = (() => {
+  const SKIN = [['#f3cfb0', '#d9a586', '#fbe3cc'], ['#e6b48c', '#c48d66', '#f3cda9'], ['#d09a6c', '#a97448', '#e2b58a'], ['#b0774a', '#8a5732', '#c79062'], ['#8a5a3a', '#663f26', '#a4724e'], ['#63412c', '#48301f', '#7d573d']];
+  const HAIR = [['#1d1a20', '#0f0d12', '#3a3540'], ['#3b2617', '#24160c', '#5a3d27'], ['#6b4423', '#4a2d15', '#8d6238'], ['#8c3b1c', '#63260f', '#b25a30'], ['#c9a24e', '#9a7730', '#e6c676'], ['#54301f', '#371d11', '#754a33'], ['#a9a7a3', '#7c7a78', '#d2d0cb']];
+  const EYES = ['#5a3418', '#4d6b2e', '#3f6fa0', '#22201c'];
+  const CLOTH = [['#5d6b4e', '#434f38'], ['#6e3b33', '#4f2822'], ['#3f4f6e', '#2c3950'], ['#7a6a52', '#5a4d3a'], ['#3d3a44', '#28262e'], ['#8a7340', '#665428'], ['#4f6a6a', '#374c4c'], ['#75526b', '#553a4d']];
+  const INK = [22, 16, 26];
+  const hx = (h) => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
+  const mix = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
+  function B(w, h) { return { w, h, d: new Uint8ClampedArray(w * h * 4), p: new Uint8Array(w * h) }; }
+  function set(b, x, y, c, part, only) { x = Math.round(x); y = Math.round(y); if (x < 0 || y < 0 || x >= b.w || y >= b.h) return; const k = y * b.w + x; if (only !== undefined && b.p[k] !== only) return; const i = k * 4; b.d[i] = c[0]; b.d[i + 1] = c[1]; b.d[i + 2] = c[2]; b.d[i + 3] = 255; if (part !== undefined) b.p[k] = part; }
+  function ell(b, cx, cy, rx, ry, c, part, only, y0, y1) { for (let y = Math.floor(cy - ry); y <= cy + ry; y++) { if (y0 !== undefined && y < y0) continue; if (y1 !== undefined && y > y1) continue; for (let x = Math.floor(cx - rx); x <= cx + rx; x++) { const dx = (x + 0.5 - cx) / rx, dy = (y + 0.5 - cy) / ry; if (dx * dx + dy * dy <= 1) set(b, x, y, c, part, only); } } }
+  function rect(b, x, y, w, h, c, part, only) { for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) set(b, x + i, y + j, c, part, only); }
+  function line(b, x0, y0, x1, y1, c, part, only) { const n = Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0)) || 1; for (let i = 0; i <= n; i++) set(b, x0 + (x1 - x0) * i / n, y0 + (y1 - y0) * i / n, c, part, only); }
+  function outline(b) { const o = []; for (let y = 0; y < b.h; y++) for (let x = 0; x < b.w; x++) { if (b.d[(y * b.w + x) * 4 + 3]) continue; const n = (xx, yy) => xx >= 0 && yy >= 0 && xx < b.w && yy < b.h && b.d[(yy * b.w + xx) * 4 + 3]; if (n(x - 1, y) || n(x + 1, y) || n(x, y - 1) || n(x, y + 1)) o.push([x, y]); } o.forEach(([x, y]) => set(b, x, y, INK, 9)); }
+  function url(b, key) { if (typeof document === 'undefined') return ''; const c = document.createElement('canvas'); c.width = b.w; c.height = b.h; const g = c.getContext('2d'); g.putImageData(new ImageData(b.d, b.w, b.h), 0, 0); return c.toDataURL(); }
+  const cache = {};
+  const RX = [21, 22, 20, 23], EXP = [2.3, 4, 1.7, 3];
+  function markAt(b, m, sk, hairD) { if (!m) return; const s = m.side; const sh = hx(sk[1]);
+    const P = { mejilla: [48 + s * 13, 65], ceja: [48 + s * 9, 46], sien: [48 + s * 17, 51], boca: [48 + s * 8, 70] }[m.pos]; const x = P[0], y = P[1];
+    if (m.t === 'lunar') { const c = [50, 30, 22]; rect(b, x - 1, y - 1, 3, 3, c, 4); set(b, x - 1, y - 1, mix(c, sh, 0.6), 4); set(b, x + 1, y + 1, mix(c, sh, 0.6), 4); }
+    else if (m.t === 'mancha') { const c = mix(hx(sk[0]), [140, 50, 40], 0.55); ell(b, x, y, 3.4, 2.6, c, 4); set(b, x + 2, y - 2, c, 4); set(b, x - 3, y + 1, c, 4); }
+    else { const c = mix(hx(sk[2]), [255, 190, 190], 0.5), d = mix(sh, [90, 30, 30], 0.4); if (m.pos === 'ceja') { line(b, x - s * 1, y - 4, x + s * 2, y + 5, c, 4); line(b, x - s * 1 + 1, y - 4, x + s * 2 + 1, y + 5, d, 4); } else if (m.pos === 'mejilla') { line(b, x - 3, y - 3, x + 3, y + 3, c, 4); line(b, x - 3, y - 2, x + 2, y + 3, d, 4); set(b, x - 1, y + 1, c, 4); set(b, x + 1, y - 1, c, 4); } else if (m.pos === 'sien') { line(b, x, y - 4, x, y + 3, c, 4); line(b, x + 1, y - 4, x + 1, y + 3, d, 4); } else { line(b, x - 2, y - 2, x + 2, y + 3, c, 4); line(b, x - 1, y - 2, x + 3, y + 3, d, 4); } } }
+  function cara(f, st) {
+    st = st || {}; const key = JSON.stringify([f, st]); if (cache[key]) return cache[key];
+    const b = B(96, 112), sk = SKIN[f.skin], S = hx(sk[0]), SD = hx(sk[1]), SL = hx(sk[2]); const hr = HAIR[f.hair], HC = hx(hr[0]), HD = hx(hr[1]), HL = hx(hr[2]); const rx = RX[f.fs], ex = EXP[f.fs]; const cl = CLOTH[f.cloth], CC = hx(cl[0]), CD = hx(cl[1]);
+    const hw = (y) => (y <= 50 ? rx * Math.sqrt(Math.max(0, 1 - Math.pow((50 - y) / 28, 2))) : rx * Math.sqrt(Math.max(0, 1 - Math.pow((y - 50) / 32, ex))));
+    const hs = f.hs, gor = f.acc === 'gorro';
+    // pelo de atrás
+    if (!gor || hs >= 4) {
+      if (hs === 4) rect(b, 48 - rx - 3, 36, rx * 2 + 6, 30, HD, 2);
+      if (hs === 5) ell(b, 48, 62, rx + 7, 42, HD, 2, undefined, 28, 104);
+      if (hs === 7) { for (let a = 0; a < 40; a++) { const an = a / 40 * Math.PI * 2; ell(b, 48 + Math.cos(an) * (rx + 5), 46 + Math.sin(an) * 26, 6, 6, a % 2 ? HD : HC, 2); } ell(b, 48, 46, rx + 6, 28, HD, 2); }
+      if (hs === 8) { ell(b, 48 + rx + 3, 72, 6, 20, HD, 2); ell(b, 48 + rx + 4, 74, 3, 16, HC, 2); }
+      if (hs === 9) ell(b, 48, 56, rx + 6, 27, HD, 2, undefined, 30, 78);
+      if (hs === 6) { ell(b, 48, 17, 9, 8, HC, 2); ell(b, 50, 18, 5, 4, HD, 2); }
+    }
+    // hombros y ropa
+    for (let y = 90; y < 112; y++) { const w = Math.min(45, 19 + (y - 90) * 2.1); for (let x = Math.round(48 - w); x < 48 + w; x++) set(b, x, y, (x > 64 || (x > 60 && (x + y) % 2)) ? CD : CC, 3); }
+    // cuello
+    rect(b, 40, 74, 16, 22, SD, 1); rect(b, 40, 80, 9, 16, mix(S, SD, 0.5), 1);
+    if (f.cs === 0) ell(b, 48, 93, 11, 6, mix(S, SD, 0.5), 1); else if (f.cs === 1) { for (let i = 0; i < 12; i++) rect(b, 48 - (12 - i) * 0.9, 90 + i, (12 - i) * 1.8, 1, mix(S, SD, 0.5), 1); } else { for (let i = 0; i < 9; i++) { rect(b, 48 - (9 - i), 90 + i, (9 - i) * 2, 1, mix(S, SD, 0.5), 1); } for (let i = 0; i < 10; i++) { rect(b, 36 + i * 0.6, 88 + i, 6, 1, mix(CC, [255, 255, 255], 0.25), 3); rect(b, 54 - i * 0.6, 88 + i, 6, 1, mix(CC, [255, 255, 255], 0.12), 3); } rect(b, 47, 102, 2, 2, CD, 3); rect(b, 47, 108, 2, 2, CD, 3); }
+    // orejas
+    ell(b, 48 - rx - 1, 55, 3.5, 5.5, SD, 1); ell(b, 48 + rx + 1, 55, 3.5, 5.5, SD, 1); set(b, 48 - rx - 1, 55, mix(SD, INK, 0.3), 1); set(b, 48 + rx + 1, 55, mix(SD, INK, 0.3), 1);
+    // cabeza
+    for (let y = 22; y <= 82; y++) { const w = hw(y); for (let x = Math.round(48 - w); x < Math.round(48 + w); x++) set(b, x, y, S, 1); }
+    // sombreado de piel
+    for (let y = 22; y <= 96; y++) for (let x = 20; x < 76; x++) { const k = y * 96 + x; if (b.p[k] !== 1 || y > 82) continue; const w = hw(y) || 1, nx = (x - 48) / w; if (nx > 0.62 || (nx > 0.46 && (x + y) % 2)) set(b, x, y, SD, 1); if (y > 78 && (x + y) % 2 && nx > -0.5) set(b, x, y, SD, 1); }
+    rect(b, 41, 83, 15, 3, mix(SD, INK, 0.25), 1, 1);
+    // vejez
+    if (f.old) { line(b, 34, 61, 41, 62, SD, 4, 1); line(b, 55, 62, 62, 61, SD, 4, 1); line(b, 40, 67, 38, 73, SD, 4, 1); line(b, 56, 67, 58, 73, SD, 4, 1); if (f.old > 1) { for (let x = 41; x < 56; x++) { if (x % 4) set(b, x, 42, SD, 4, 1); } } }
+    if (st.ojeras) { rect(b, 35, 59, 8, 2, mix(SD, [80, 50, 90], 0.3), 4, 1); rect(b, 53, 59, 8, 2, mix(SD, [80, 50, 90], 0.3), 4, 1); }
+    // nariz
+    const ny = f.nose === 2 ? 64 : 66; line(b, 50, 57, 51, ny, SD, 4); if (f.nose === 3) line(b, 47, 57, 47, ny - 2, SL, 4); const nw = f.nose === 1 ? 5 : 4; rect(b, 48 - nw + 1, ny + 2, nw * 2 - 1, 1, SD, 4); set(b, 48 - nw, ny + 1, mix(SD, INK, 0.45), 4); set(b, 48 + nw, ny + 1, mix(SD, INK, 0.45), 4); set(b, 48 - nw, ny, SD, 4); set(b, 48 + nw, ny, SD, 4);
+    // boca
+    const lip = mix(S, [170, 60, 60], f.sex === 'f' ? 0.5 : 0.28), ld = mix(SD, [70, 20, 25], 0.6), my = 74;
+    if (f.mouth === 0) { rect(b, 43, my, 11, 1, ld, 4); rect(b, 45, my + 1, 7, 2, lip, 4); }
+    else if (f.mouth === 1) { rect(b, 44, my - 1, 9, 1, lip, 4); rect(b, 43, my, 11, 1, ld, 4); rect(b, 44, my + 1, 9, 2, lip, 4); set(b, 48, my - 1, S, 4); }
+    else if (f.mouth === 2) { rect(b, 44, my, 9, 1, ld, 4); set(b, 43, my + 1, ld, 4); set(b, 53, my + 1, ld, 4); rect(b, 46, my + 1, 5, 1, lip, 4); }
+    else { rect(b, 44, my, 9, 1, ld, 4); set(b, 43, my - 1, ld, 4); set(b, 53, my - 1, ld, 4); rect(b, 45, my + 1, 7, 2, lip, 4); }
+    // ojos
+    const ec = hx(EYES[f.eyes]);
+    [39, 57].forEach((cx, i) => { ell(b, cx, 55.5, 5, 3, [236, 231, 220], 4); ell(b, cx + (i ? -0.5 : 0.5), 55.5, 2.6, 2.6, ec, 4); rect(b, cx - 1 + (i ? 0 : 0), 55, 2, 2, [14, 12, 14], 4); set(b, cx - 1, 54, [255, 255, 255], 4); line(b, cx - 5, 53, cx + 4, 53, mix(SD, INK, 0.75), 4); set(b, cx - 5, 54, mix(SD, INK, 0.6), 4); set(b, cx + 5, 54, mix(SD, INK, 0.6), 4); if (f.sex === 'f') { set(b, cx + (i ? 6 : -6), 53, mix(SD, INK, 0.75), 4); set(b, cx + (i ? 7 : -7), 52, mix(SD, INK, 0.75), 4); } line(b, cx - 3, 59, cx + 3, 59, SD, 4, 1); });
+    // cejas
+    const bc = f.hair === 6 ? hx('#8b8986') : mix(HD, HC, 0.4);
+    [39, 57].forEach((cx, i) => { const sg = i ? 1 : -1; for (let t = -6; t <= 5; t++) { const xx = cx + t; const inner = sg * t < 0 ? 1 : 0; let yy = 48; if (f.brow === 1) yy = 47 + Math.round((sg * t + 6) / -5) + 2; if (f.brow === 2) yy = 48 - (Math.abs(t) < 3 ? 1 : 0); set(b, xx, yy, bc, 4); if (f.brow === 2 || f.sex === 'm') set(b, xx, yy + 1, bc, 4); } });
+    // barba
+    const beard = f.beard || (st.barba ? 1 : 0);
+    if (beard === 1) { for (let y = 64; y <= 82; y++) for (let x = 26; x < 70; x++) { if (b.p[y * 96 + x] === 1 && (x + y) % 2 === 0 && !(y < 70 && Math.abs(x - 48) < 5)) set(b, x, y, mix(hx(sk[1]), HD, 0.45), 1); } }
+    if (beard === 2) { for (let y = 62; y <= 84; y++) for (let x = 24; x < 72; x++) { const k = y * 96 + x; if (b.p[k] !== 1 && b.p[k] !== 4) continue; const w = hw(Math.min(y, 82)) || 1; const edge = Math.abs(x - 48) / w; if (y < 70 && edge < 0.72 && !(y >= 69 && Math.abs(x - 48) < 8)) continue; if (y >= 72 && y <= 77 && Math.abs(x - 48) < 6) continue; if (y > 82 && Math.abs(x - 48) > 9) continue; set(b, x, y, (x > 58 || (x + y) % 3 === 0) ? HD : HC, 2); } rect(b, 41, 70, 15, 2, HC, 2); }
+    if (beard === 3) { rect(b, 41, 70, 15, 2, HC, 2); rect(b, 40, 71, 2, 2, HD, 2); rect(b, 55, 71, 2, 2, HD, 2); }
+    // marcas
+    markAt(b, f.mark, sk); markAt(b, f.mark2, sk);
+    if (st.sucio) { const c = mix(SD, [40, 34, 30], 0.5); [[60, 68], [61, 70], [36, 69], [52, 44]].forEach(([x, y]) => { set(b, x, y, c, 4, 1); set(b, x + 1, y + 1, c, 4, 1); set(b, x + 2, y, c, 4, 1); }); }
+    // pelo de adelante
+    if (!gor) {
+      const cap = (yMax, fn) => { for (let y = 18; y <= yMax; y++) for (let x = 20; x < 76; x++) { const dx = (x + 0.5 - 48) / (rx + 2), dy = (y + 0.5 - 38) / 19; if (dx * dx + dy * dy <= 1 && fn(x, y)) set(b, x, y, (x < 44 && y < 30 && (x + y) % 3 === 0) ? HL : (x > 58 || (y > 36 && (x + y) % 2)) ? HD : HC, 2); } };
+      if (hs === 0) { cap(41, (x, y) => y < 37 + Math.abs(x - 48) / 5); rect(b, 48 - rx, 40, 2, 9, HD, 2); rect(b, 48 + rx - 2, 40, 2, 9, HD, 2); }
+      if (hs === 1) { cap(46, (x, y) => y < 36 + (x < 52 ? (52 - x) / 3.2 : (x - 52) / 6)); rect(b, 48 - rx, 40, 2, 10, HD, 2); rect(b, 48 + rx - 2, 40, 2, 8, HD, 2); }
+      if (hs === 2) { rect(b, 48 - rx, 38, 3, 14, HC, 2); rect(b, 48 + rx - 3, 38, 3, 14, HD, 2); for (let x = 36; x < 60; x++) if (x % 2) set(b, x, 24 + Math.round(Math.abs(x - 48) / 6), HD, 2); }
+      if (hs === 3) { cap(38, (x, y) => (x + y) % 2 === 0 || y < 30); }
+      if (hs === 4) { cap(44, (x, y) => y < 34 + Math.abs(x - 46) / 2.2); rect(b, 48 - rx - 2, 40, 4, 26, HC, 2); rect(b, 48 + rx - 2, 40, 4, 26, HD, 2); }
+      if (hs === 5) { cap(46, (x, y) => y < 43 - (Math.abs(x - 48) < 3 ? 6 - Math.abs(x - 48) * 2 : 0) + Math.abs(x - 48) / 3); rect(b, 48 - rx - 3, 40, 5, 52, HC, 2); rect(b, 48 + rx - 2, 40, 5, 52, HD, 2); for (let y = 50; y < 92; y += 2) { set(b, 48 - rx - 1, y, HD, 2); set(b, 48 + rx + 1, y, HC, 2); } }
+      if (hs === 6) { cap(40, (x, y) => y < 35 + Math.abs(x - 48) / 3.5); rect(b, 48 - rx, 40, 2, 8, HD, 2); rect(b, 48 + rx - 2, 40, 2, 8, HD, 2); }
+      if (hs === 7) { cap(44, (x, y) => y < 38 + 3 * Math.sin(x * 0.9) + Math.abs(x - 48) / 4); for (let y = 40; y < 70; y += 3) { ell(b, 48 - rx - 2, y, 4, 3, y % 2 ? HC : HD, 2); ell(b, 48 + rx + 2, y, 4, 3, y % 2 ? HD : HC, 2); } }
+      if (hs === 8) { cap(41, (x, y) => y < 36 + Math.abs(x - 48) / 4); rect(b, 48 - rx, 40, 2, 8, HD, 2); rect(b, 48 + rx - 2, 40, 3, 12, HD, 2); }
+      if (hs === 9) { cap(44, (x, y) => y < 43); rect(b, 48 - rx - 3, 40, 5, 36, HC, 2); rect(b, 48 + rx - 2, 40, 5, 36, HD, 2); for (let x = 30; x < 66; x += 3) set(b, x, 43, HD, 2); }
+    } else { const g1 = hx(CLOTH[(f.cloth + 3) % 8][0]), g2 = hx(CLOTH[(f.cloth + 3) % 8][1]); for (let y = 16; y <= 43; y++) for (let x = 18; x < 78; x++) { const dx = (x + 0.5 - 48) / (rx + 4), dy = (y + 0.5 - 38) / 21; if (dx * dx + dy * dy <= 1) set(b, x, y, y > 37 ? (x % 3 ? g2 : g1) : (x > 58 ? g2 : g1), 2); } if (hs >= 4) { rect(b, 48 - rx - 2, 44, 3, 14, HC, 2); rect(b, 48 + rx - 1, 44, 3, 14, HD, 2); } }
+    // anteojos
+    if (f.glasses) { const gc = [30, 26, 34]; [39, 57].forEach((cx) => { for (let x = cx - 7; x <= cx + 6; x++) { set(b, x, 50, gc, 4); set(b, x, 60, gc, 4); } for (let y = 50; y <= 60; y++) { set(b, cx - 7, y, gc, 4); set(b, cx + 6, y, gc, 4); } set(b, cx - 5, 52, [255, 255, 255], 4); set(b, cx - 4, 51, [255, 255, 255], 4); }); rect(b, 46, 54, 4, 1, gc, 4); line(b, 32, 53, 48 - rx - 1, 52, gc, 4); line(b, 63, 53, 48 + rx + 1, 52, gc, 4); }
+    if (f.acc === 'aro') { rect(b, 48 - rx - 2, 60, 2, 3, [226, 184, 60], 4); }
+    if (f.acc === 'bufanda') { const r1 = [176, 44, 40], r2 = [128, 28, 30]; for (let y = 82; y < 97; y++) for (let x = 28; x < 68; x++) { const w = 15 + (y - 82) * 0.7; if (Math.abs(x - 48) < w) set(b, x, y, (y % 4 === 0 || x > 60) ? r2 : r1, 3); } rect(b, 52, 94, 9, 16, r1, 3); rect(b, 58, 94, 3, 16, r2, 3); for (let x = 52; x < 61; x += 2) set(b, x, 110, r2, 3); }
+    outline(b); const u = url(b); cache[key] = u; return u;
+  }
+  function ojos(f, tipo) {
+    const key = 'o' + JSON.stringify([f.skin, f.eyes, f.sex, tipo]); if (cache[key]) return cache[key];
+    const b = B(96, 44), sk = SKIN[f.skin], S = hx(sk[0]), SD = hx(sk[1]); rect(b, 0, 0, 96, 44, S, 1); for (let y = 0; y < 44; y++) for (let x = 0; x < 96; x++) if ((y < 6 || y > 36) && (x + y) % 2) set(b, x, y, SD, 1); rect(b, 44, 8, 8, 30, mix(S, SD, 0.5), 1);
+    const ec = hx(EYES[f.eyes]);
+    [24, 72].forEach((cx) => { const wh = tipo === 'rojos' ? [240, 214, 208] : [238, 234, 224]; ell(b, cx, 22, 16, 9, wh, 4); if (tipo === 'rojos') { [[-13, -1, -7, 1], [-12, 3, -6, 2], [12, -2, 7, 0], [13, 3, 8, 2], [-9, -5, -5, -2]].forEach(([x0, y0, x1, y1]) => line(b, cx + x0, 22 + y0, cx + x1, 22 + y1, [196, 70, 70], 4, 4)); }
+      ell(b, cx, 22, 7.5, 7.5, tipo === 'reflejo' ? mix(ec, [150, 160, 150], 0.5) : ec, 4); ell(b, cx, 22, 5, 5, mix(ec, [0, 0, 0], 0.25), 4);
+      if (tipo === 'reflejo') { ell(b, cx, 22, 4.5, 4.5, [200, 255, 214], 4); ell(b, cx, 22, 3, 3, [246, 255, 240], 4); for (let a = 0; a < 8; a++) set(b, cx + Math.cos(a * 0.785) * 6.5, 22 + Math.sin(a * 0.785) * 6.5, [200, 255, 214], 4); }
+      else { ell(b, cx, 22, 3.2, 3.2, [12, 10, 12], 4); rect(b, cx - 3, 18, 2, 2, [255, 255, 255], 4); }
+      for (let x = cx - 16; x <= cx + 16; x++) { const yy = 22 - Math.sqrt(Math.max(0, 1 - Math.pow((x - cx) / 16.5, 2))) * 9.5; set(b, x, yy, mix(SD, INK, 0.8), 4); set(b, x, yy - 1, mix(SD, INK, 0.5), 4); const y2 = 22 + Math.sqrt(Math.max(0, 1 - Math.pow((x - cx) / 16.5, 2))) * 9.5; set(b, x, y2, SD, 4); } });
+    const u = url(b); cache[key] = u; return u;
+  }
+  function manos(skin, m, cicatriz) {
+    const key = 'm' + JSON.stringify([skin, m, cicatriz]); if (cache[key]) return cache[key];
+    const b = B(96, 64), sk = SKIN[skin], S = hx(sk[0]), SD = hx(sk[1]), SL = hx(sk[2]);
+    const mano = (ox, lado, n, venda, anillo) => { const mir = lado === 'der' ? 1 : -1; // pulgar hacia el centro
+      rect(b, ox - 12, 34, 24, 22, S, 1); ell(b, ox, 56, 12, 5, S, 1); rect(b, ox - 9, 58, 18, 6, SD, 1);
+      const hs = n === 6 ? [15, 20, 22, 21, 18, 12] : [15, 21, 23, 20, 14]; const fw = n === 6 ? 3 : 4; const gap = n === 6 ? 4 : 5; const x0 = ox - (n * gap) / 2 + 0.5;
+      // dedos (sin pulgar: n-1), el pulgar va al costado
+      const dn = n - 1; for (let i = 0; i < dn; i++) { const fx = Math.round(ox - mir * (dn * gap) / 2 + mir * (i * gap) + (mir < 0 ? -fw + gap : 0)); const h = hs[i + 1] || 16; const xx = mir > 0 ? fx : fx; rect(b, xx, 36 - h, fw, h + 2, S, 1); rect(b, xx + fw - 1, 36 - h, 1, h, SD, 1); set(b, xx, 36 - h, SD, 1); if (m.unas && !venda) { rect(b, xx + 1, 37 - h, fw - 2, 3, SL, 4); set(b, xx + 1, 37 - h, [255, 255, 255], 4); } rect(b, xx, 36 - Math.round(h * 0.45), fw, 1, SD, 1); if (anillo && i === (n === 6 ? 2 : 2)) rect(b, xx - 1, 36 - 7, fw + 2, 3, [240, 196, 50], 4); }
+      // pulgar
+      const tx = ox + mir * 12; for (let i = 0; i < 12; i++) rect(b, tx + mir * Math.round(i * 0.45) - (mir < 0 ? 4 : 0), 46 - i, 5, 1, S, 1); if (m.unas && !venda) rect(b, tx + mir * 5 - (mir < 0 ? 3 : -1), 35, 3, 3, SL, 4);
+      for (let y = 34; y < 58; y++) for (let x = ox - 12; x < ox + 12; x++) if ((x - ox) * 1 > 7 && (x + y) % 2) set(b, x, y, SD, 1, 1);
+      rect(b, ox - 6, 40, 1, 1, SD, 1); rect(b, ox - 1, 39, 1, 1, SD, 1); rect(b, ox + 4, 40, 1, 1, SD, 1);
+      if (venda) { for (let y = 20; y < 60; y++) for (let x = ox - 15; x < ox + 16; x++) { const k = y * 96 + x; if (b.p[k]) set(b, x, y, ((x + y * 2) % 7 < 1) ? [176, 170, 158] : [226, 221, 208], 5); } rect(b, ox - 4, 44, 5, 4, [150, 50, 44], 5); set(b, ox - 5, 46, [150, 50, 44], 5); }
+    };
+    mano(26, 'der', m.der, m.venda === 'der', m.anillo === 'der'); mano(70, 'izq', m.izq, m.venda === 'izq', m.anillo === 'izq');
+    if (cicatriz) { const ox = cicatriz === 'der' ? 26 : 70; line(b, ox - 6, 44, ox + 5, 52, [250, 200, 196], 4); line(b, ox - 6, 45, ox + 4, 52, mix(SD, [90, 30, 30], 0.4), 4); }
+    outline(b); const u = url(b); cache[key] = u; return u;
+  }
+  return { cara, ojos, manos };
+})();
+if (typeof module !== 'undefined' && module.exports) module.exports = Z7ART;
+
+/* ZONA 7 — interfaz */
+const FINALES = {
+  resiste: ['FINAL · LA ZONA RESISTE', 'Suben todos', ['El convoy llega con las últimas luces. Contás a la gente mientras sube: no falta nadie y no sobra nadie.', 'Nadie te da las gracias. Están vivos, y eso es mejor. Cuando arranca el último camión, apagás la lámpara de la ventanilla por primera vez en siete días.']],
+  cosa: ['FINAL · LA COSA', 'Uno de ellos', ['El convoy sale lleno. Vos vas en el último camión, mirando caras. Todas te devuelven la mirada. Todas parpadean.', 'En algún banco, entre toda esa gente que salvaste, hay algo que aprendió a parpadear. Dejaste entrar a una copia y nunca la encontraste. Ahora viaja con ustedes hacia la próxima ciudad.']],
+  noera: ['FINAL · NO ERA ELLA', 'La bufanda roja', ['En el camión, tu hermana se duerme contra tu hombro. Respira despacio. Demasiado despacio.', 'Quisiste tanto que fuera ella que no miraste bien. Cuando el convoy entra al túnel y se apaga la luz, sentís que su mano, la que te agarra el brazo, tiene un dedo de más.']],
+  niebla: ['FINAL · LA NIEBLA', 'Una noche más', ['El convoy llega al anochecer, puntual. Suben todos. La zona se salvó, y fue por vos.', 'Al salir, los faros alumbran el muro del portón. Hay una bufanda roja en el suelo. Era ella. Era de verdad ella, y la dejaste afuera la última noche antes del rescate.']],
+  joel: ['FINAL · A CUALQUIER PRECIO', 'Elegiste', ['Abrís la reja de la cuarentena. Lo que tiene la cara de tu hermana te sonríe con su sonrisa. Caminan juntos hacia el portón.', 'Dejaste la puerta abierta. Sabés perfectamente lo que va a entrar por ahí esta noche. Lo sabías cuando giraste la llave. Hay cosas que uno elige igual.']],
+  maple: ['FINAL · LOS MONSTRUOS', 'Se abrieron solos', ['No hizo falta que entrara nadie más. Alguien acusó a alguien en el pabellón B. Después hubo un grito, después un cuchillo de cocina.', 'A la mañana el portón está abierto de par en par, desde adentro. Las copias esperaron sentadas en la vereda de enfrente. No tuvieron que hacer nada.']],
+  cae: ['FINAL · LA ZONA CAE', 'El hambre', ['Primero fue la olla vacía. Después las miradas. Después dejaron de hacer fila y empezaron a empujar.', 'Un refugio no se cae cuando entra el enemigo: se cae cuando la gente de adentro deja de creer que vale la pena cuidar la puerta.']],
+  reemplazo: ['FINAL · EL GRITO', 'Ya no queda nadie', ['Bajás a los pabellones a contar camas. Están todas ocupadas. Todos duermen boca arriba, con los ojos abiertos.', 'Se dan vuelta al mismo tiempo cuando entrás. Uno levanta el brazo, te señala y abre la boca.']],
+  copia: ['FINAL SECRETO · EL PORTERO', 'La cicatriz equivocada', ['El convoy se va. Vos te quedás un rato en la cabina vacía, mirándote la mano. La cicatriz está en la derecha. El archivo dice izquierda. El archivo no se equivoca.', 'No recordás cómo olía la casa donde creciste. Recordás la dirección, el número, el color del portón. Datos. Durante siete días decidiste quién era humano. Nadie te revisó a vos.']]
+};
+const TELLS = { marca: 'la cara no coincidía con la foto', temp: 'temperatura por debajo de 35°', aliento: 'su aliento no empañaba el vidrio', ojos: 'reflejo blanco en los ojos', manos: 'algo raro en las manos', muerto: 'figuraba como fallecida', salida: 'dijo salir de su barrio después de la caída', zona: 'salvoconducto imposible', edad: 'dijo otra edad que la de su ficha', trampa: 'cayó en la pregunta trampa', registro: 'el registro de su zona la desmentía', clave: 'el operador dio una clave falsa', dato: 'un nombre que no coincidía con su foto familiar', calle: 'dijo otro domicilio que el de su ficha', acompD: 'dijo viajar sola y el salvoconducto decía otra cosa', h1: 'falló un recuerdo de la infancia', h2: 'falló otro recuerdo de la infancia', r1: 'no sabía cuál era su cama', r2: 'no sabía quién dormía al lado' };
+const RUIDO = { fiebre: 'tenía fiebre', venda: 'mano vendada', ojosrojos: 'ojos irritados', typo: 'error de tipeo en la ficha', desap: 'figuraba como desaparecida', homonimo: 'un fallecido con su mismo apellido', sindoc: 'sin ficha', shock: 'en shock', secreto: 'mentía por vergüenza' };
+const NUEVAS = { termo: 'Termómetro', bolso: 'Revisar pertenencias', tel: 'Teléfono (3 llamadas por día)', lista: 'Listas de fallecidos y desaparecidos', cuarentena: 'Cuarentena (2 camas) y análisis de sangre', linterna: 'Linterna para los ojos (pilas limitadas)', manos: 'Pedir que muestre las manos', res: 'Consultar a un residente que lo conozca' };
+class Component extends DCLogic {
+  constructor(props) {
+    super(props); let save = null, fins = [];
+    try { save = JSON.parse(localStorage.getItem('yj-z7') || 'null'); fins = JSON.parse(localStorage.getItem('yj-z7-fin') || '[]'); } catch (e) {}
+    if (save && (save.v !== 1 || save.fin || !save.cola)) save = null;
+    this.G = null; this.save = save; this.state = { screen: 'title', tab: 'radio', sel: [], n: 0, fins, open: null, side: false };
+  }
+  bump(o) { this.setState(Object.assign({ n: (this.state.n || 0) + 1 }, o || {})); }
+  snd(n) { try { if (window.YJS) window.YJS.play(n); } catch (e) {} }
+  persist() { try { localStorage.setItem('yj-z7', JSON.stringify(this.G)); } catch (e) {} }
+  nueva(daily) { const d = new Date(); const seed = daily ? d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate() : Math.floor(Math.random() * 899999) + 100000; this.G = Z7.nuevaPartida(seed); Z7.empezarDia(this.G); this.persist(); try { if (window.YJS) window.YJS.music('portal'); } catch (e) {} this.snd('shuffle'); this.bump({ screen: 'brief', sel: [], tab: 'radio', toast: null, open: null }); }
+  continuar() { this.G = this.save; try { if (window.YJS) window.YJS.music('portal'); } catch (e) {} this.bump({ screen: 'brief', sel: [] }); }
+  toast(tit, txt, cls, ms) { clearTimeout(this.tt); this.bump({ toast: { tit, txt, cls } }); this.tt = setTimeout(() => this.bump({ toast: null }), ms || 4200); }
+  scrollDlg() { setTimeout(() => { try { const e = document.getElementById('z7dlg'); if (e) e.scrollTop = 99999; } catch (e) {} }, 60); }
+  llamar() { const v = Z7.llamar(this.G); if (v) { this.snd('turn'); this.bump({ sel: [], open: v.esp === 'retorno' ? v.rid : null, tab: v.esp === 'hermana' ? 'cuaderno' : v.esp === 'retorno' ? 'archivo' : this.state.tab }); this.scrollDlg(); } }
+  preguntar(k) { if (Z7.preguntar(this.G, k)) { this.snd('tap'); this.bump(); this.scrollDlg(); } }
+  tool(k, arg) { const G = this.G; if (!G.cur) return; if (k === 'termo') Z7.termometro(G); if (k === 'linterna') Z7.linterna(G); if (k === 'manos') Z7.verManos(G); if (k === 'bolso') Z7.bolso(G); if (k === 'tel') { const r = Z7.telefono(G, arg); if (r && !r.ok) this.toast('TELÉFONO', r.txt, 'info'); } if (k === 'res') Z7.consultar(G); this.snd(k === 'tel' ? 'tick' : k === 'bolso' ? 'card' : 'charge'); this.bump(); }
+  pick(c) { let sel = this.state.sel.filter((x) => x.id !== c.id); if (sel.length === this.state.sel.length) sel = sel.concat([c]); if (sel.length > 2) sel = [sel[1], sel[2]]; this.snd('tap'); this.bump({ sel }); }
+  cruzar() { const [a, b] = this.state.sel; const G = this.G; if (!a || !b) return; const yo = [a.id, b.id].sort().join() === 'yoA,yoM';
+    if (yo) { Z7.cruceYo(G); this.snd('domain'); this.bump({ sel: [] }); return this.toast('NO COINCIDE', 'Mirás el archivo. Mirás tu mano. El archivo dice izquierda. La cicatriz está en la derecha. Cerrás la carpeta despacio. Hay gente esperando.', 'grave', 9000); }
+    if (a.id[0] === 'y' || b.id[0] === 'y') { this.bump({ sel: [] }); return this.toast('SIN RELACIÓN', 'Esos dos datos no se relacionan.', 'nada'); }
+    if (!G.cur) return this.toast('SIN PERSONA', 'No hay nadie en la ventanilla para cruzar datos.', 'nada');
+    const r = Z7.hacerCruce(G, a, b); const T = { grave: 'CONTRADICCIÓN GRAVE', menor: 'ERROR MENOR', ok: 'COINCIDE', info: 'DATO', nada: 'SIN RELACIÓN' }; this.snd(r.res === 'grave' ? 'clue' : r.res === 'ok' ? 'ok' : 'tap'); this.bump({ sel: [] }); this.toast(T[r.res], r.txt, r.res); }
+  confrontar(i) { const r = Z7.confrontar(this.G, i); if (r) { this.snd('no'); this.bump(); this.scrollDlg(); } }
+  decidir(d) { const G = this.G; if (!G.cur) return; const r = Z7.decidir(G, d); if (!r) return; this.snd('play'); clearTimeout(this.st); this.bump({ sel: [], stamp: { d, look: r.look }, open: null }); this.st = setTimeout(() => this.bump({ stamp: null }), 1100); }
+  cerrar() { Z7.cerrarDia(this.G); this.snd('bad'); this.bump({ screen: 'cierre', side: false, toast: null }); }
+  dormir() { Z7.noche(this.G); this.snd('turn'); this.bump({ screen: 'parte' }); try { window.scrollTo(0, 0); } catch (e) {} }
+  fin() { const G = this.G; const fins = this.state.fins.indexOf(G.fin) >= 0 ? this.state.fins : this.state.fins.concat([G.fin]); try { localStorage.removeItem('yj-z7'); localStorage.setItem('yj-z7-fin', JSON.stringify(fins)); } catch (e) {} this.save = null; this.snd(G.fin === 'resiste' ? 'win' : 'out'); this.bump({ screen: 'end', fins }); }
+  seguir() { const G = this.G; if (G.fin) return this.fin(); Z7.empezarDia(G); this.persist(); this.snd('shuffle'); this.bump({ screen: 'brief', sel: [], tab: 'radio' }); }
+  joel(huir) { Z7.elegirJoel(this.G, huir); if (this.G.fin) return this.fin(); this.bump(); }
+  renderVals() {
+    const s = this.state, G = this.G, scr = s.screen; const sel = s.sel || [];
+    const base = { isTitle: scr === 'title', isBrief: scr === 'brief', isWork: scr === 'work', isCierre: scr === 'cierre', isParte: scr === 'parte', isEnd: scr === 'end', nueva: () => this.nueva(false), diaria: () => this.nueva(true), continuar: () => this.continuar(), hasSave: !!this.save, saveDia: this.save ? this.save.dia : 0, finCount: s.fins.length };
+    if (!G) return base;
+    const chipV = (c) => ({ t: c.txt, cls: sel.some((x) => x.id === c.id) ? 'sel' : '', go: () => this.pick(c) });
+    const M = G.mundo, D = Z7.DIAS[G.dia] || Z7.DIAS[7], T = Z7.herramientas(G), v = G.cur;
+    Object.assign(base, { dia: G.dia, invDia: Z7.hoyInv(G), seedTxt: '#' + G.seed, diaNom: D.nom, diaInfo: Z7.DIA_INFO[D.tipo], claveHoy: G.bol ? G.bol.clave : '', claveAyer: M.claves[G.dia - 1], clave0: M.claves[0], bolItems: G.bol ? G.bol.items : [] });
+    if (scr === 'brief') {
+      const rt = G.resTest; const nv = D.nuevas.map((k) => NUEVAS[k]);
+      Object.assign(base, { hasTest: !!rt, testCls: rt ? (rt.copia ? 'red' : 'grn') : '', testTxt: rt ? (rt.copia ? rt.nom + ': POSITIVO. No era una persona. ' + (rt.cuar ? 'Nunca salió de la cuarentena.' : 'Estaba durmiendo entre los demás. El ejército se la llevó antes del amanecer.') : rt.nom + ': negativo. Es una persona.' + (rt.cuar ? ' Ya está en un pabellón.' : ' La despertaste a las cuatro de la mañana para pincharla; los demás lo vieron.')) : '', hasNuevas: nv.length > 0, nuevasTxt: nv.join(' · '), abrir: () => { this.snd('card'); this.bump({ screen: 'work' }); } });
+    }
+    if (scr === 'work') {
+      const hh = Math.floor(Math.min(G.reloj, 1439) / 60), mm = G.reloj % 60; const cerr = Z7.cerrado(G);
+      const by = (src) => (v ? v.chips.filter((c) => c.src === src).map(chipV) : []);
+      const mapa = Z7.mapaChips(G); const listas = T.lista ? Z7.listaChips(G) : [];
+      const tabsDef = [['radio', 'RADIO'], ['mapa', 'MAPA']].concat(T.lista ? [['listas', 'LISTAS']] : []).concat([['archivo', 'ARCHIVO'], ['cuaderno', 'CUADERNO'], ['manual', 'MANUAL']]);
+      const tools = [];
+      if (v) {
+        tools.push({ n: 'Termómetro', s: '4 min', off: !!v.rev.termo, go: () => this.tool('termo') });
+        if (T.bolso) tools.push({ n: 'Pertenencias', s: '6 min', off: !!v.rev.bolso, go: () => this.tool('bolso') });
+        if (T.linterna) tools.push({ n: 'Linterna', s: 'pilas: ' + G.pilas, off: !!v.rev.linterna || G.pilas <= 0, go: () => this.tool('linterna') });
+        if (T.manos) tools.push({ n: 'Manos', s: '5 min', off: !!v.rev.manos, go: () => this.tool('manos') });
+        if (T.tel) { if (v.p.zona && (v.salvo || v.asked.indexOf('origen') >= 0)) tools.push({ n: '☎ Zona ' + v.p.zona, s: 'quedan ' + G.tel, off: G.tel <= 0, go: () => this.tool('tel', 'zona') }); tools.push({ n: '☎ Registro', s: 'quedan ' + G.tel, off: G.tel <= 0, go: () => this.tool('tel', 'central') }); }
+        if (T.res && v.link && v.rev.link) tools.push({ n: 'Consultar residente', s: 'quedan ' + G.consultas, off: !!v.rev.res || G.consultas <= 0, go: () => this.tool('res') });
+      }
+      const TIT = { grave: 'CONTRADICCIÓN GRAVE', menor: 'ERROR MENOR', ok: 'COINCIDE', info: 'DATO' }, CT = { confiesa: 'CONFESIÓN: una mentira humana.', explica: 'EXPLICACIÓN razonable.', evasiva: 'EVASIVA: no lo explica.' };
+      const vivos = Z7.vivos(G);
+      const resAll = G.res.filter((r) => r.viva);
+      const st = s.stamp; const TEMPN = v && v.rev.termo ? v.tC : 0;
+      Object.assign(base, {
+        hora: String(hh).padStart(2, '0') + ':' + String(mm).padStart(2, '0'), lateCls: cerr ? 'late' : '', fila: G.cola.length, comida: G.comida, moral: G.moral, paranoia: G.paranoia,
+        sonIcon: (window.YJS && window.YJS.isOn && !window.YJS.isOn()) ? '🔇' : '🔊', sonido: () => { if (window.YJS) window.YJS.toggle(); this.bump(); },
+        winCls: D.tipo, snow: D.tipo === 'frio', rain: D.tipo === 'lluvia', hasV: !!v || !!st, noV: !v && !st, faceUrl: v ? Z7ART.cara(v.look, v.st) : st ? Z7ART.cara(st.look, {}) : '', fog: !!v && D.tipo === 'frio' && v.aliento,
+        hasStamp: !!st, stampCls: st ? st.d : '', stampTxt: st ? { pasa: 'ADENTRO', rechaza: 'RECHAZADO', cuarentena: 'CUARENTENA' }[st.d] : '',
+        emptyMsg: cerr ? 'Son las 18:00. Hora de cierre.' + (G.cola.length ? ' Quedan ' + G.cola.length + ' en la fila.' : '') : G.cola.length ? (G.atendidos ? 'Ventanilla libre. Quedan ' + G.cola.length + ' en la fila.' : 'Hay ' + G.cola.length + ' personas esperando afuera.') : 'No queda nadie en la fila.',
+        canCall: !cerr && G.cola.length > 0, canClose: cerr || !G.cola.length, llamar: () => this.llamar(), cerrar: () => this.cerrar(),
+        num: G.atendidos, pips: v ? Array.from({ length: Math.min(8, v.pac + v.asked.length) }, (_, i) => (i < v.pac ? '' : 'off')) : [],
+        dialogo: v ? v.dialogo.reduce((a, d) => { if (d.q) a.push({ t: d.q, cls: 'me' }); a.push({ t: d.a, cls: '' }); return a; }, []) : [],
+        hasQs: !!v && v.pac > 0 && v.of.length > 0, qs: v ? v.of.map((k) => ({ t: Z7.qTexto(v, k), cat: Z7.QCAT[k], go: () => this.preguntar(k) })) : [], rotar: () => { Z7.rotar(G); this.bump(); },
+        showNoDoc: !v || (!v.ficha && !v.salvo), noDocMsg: !v ? 'El escritorio está vacío.' : v.esp === 'hermana' ? 'No trae papeles. Dice que es tu hermana. Abrí tu CUADERNO: ahí está su foto y lo que solo ustedes dos saben.' : v.esp === 'retorno' ? 'No trae papeles: dice que vive acá. Buscá su ficha en el ARCHIVO y comparala.' : 'No trae ningún documento. Dice que los perdió en el camino.',
+        hasFicha: !!v && v.ficha, fotoUrl: v && v.ficha ? Z7ART.cara(v.p.cara, {}) : '', fichaChips: by('ficha'), hasSalvo: !!v && v.salvo, salvoChips: by('salvo'), zonaN: v ? v.p.zona : '',
+        hasDichos: by('dicho').length > 0, dichoChips: by('dicho'),
+        hasTermo: !!v && !!v.rev.termo, termoTxt: TEMPN ? TEMPN.toFixed(1).replace('.', ',') + '°' : '', termoCls: TEMPN && TEMPN < 35 ? 'cold' : TEMPN >= 37.5 ? 'hot' : '', termoNota: !TEMPN ? '' : TEMPN < 35 ? 'Por debajo de 35°. Un cuerpo vivo no marca esto.' : TEMPN >= 37.5 ? 'Fiebre. La fiebre es cosa de personas.' : 'Temperatura normal. No prueba nada.',
+        hasOjos: !!v && !!v.rev.linterna, ojosUrl: v && v.rev.linterna ? Z7ART.ojos(v.look, v.ojos) : '', pilas: G.pilas,
+        hasManos: !!v && !!v.rev.manos, manosUrl: v && v.rev.manos ? Z7ART.manos(v.look.skin, v.manos) : '', obsChips: by('obs'),
+        hasBolso: !!v && !!v.rev.bolso, itemsTxt: v && v.itemsTxt ? v.itemsTxt : [], itemChips: by('item'),
+        hasTel: !!v && !!(v.tels && v.tels.length), tels: v && v.tels ? v.tels : [], telChips: by('tel'),
+        hasRes: !!v && !!v.rev.res, resTxt: v ? v.resTxt : '', resChips: by('res'),
+        hasCruces: !!v && v.cruces.length > 0, cruces: v ? v.cruces.map((c, i) => ({ res: c.res, tit: TIT[c.res], txt: c.txt, a: c.a, b: c.b, conf: c.conf ? c.conf.t : '', confTipo: c.conf ? CT[c.conf.tipo] : '', canConf: !c.conf && (c.res === 'grave' || c.res === 'menor'), go: () => this.confrontar(i) })).reverse() : [],
+        sideCls: s.side ? 'open' : '', toggleSide: () => this.bump({ side: !s.side }),
+        tabs: tabsDef.map(([id, n]) => ({ n, cls: s.tab === id ? 'on' : '', go: () => this.bump({ tab: id }) })),
+        tRadio: s.tab === 'radio', tMapa: s.tab === 'mapa', tListas: s.tab === 'listas' && !!T.lista, tArchivo: s.tab === 'archivo', tCuaderno: s.tab === 'cuaderno', tManual: s.tab === 'manual',
+        radioH: G.radioH || [], hasRadioH: !!(G.radioH && G.radioH.length),
+        mapaB: s.tab === 'mapa' ? mapa.filter((c) => c.b !== undefined).map(chipV) : [], mapaZ: s.tab === 'mapa' ? mapa.filter((c) => c.z !== undefined).map(chipV) : [],
+        listaF: s.tab === 'listas' ? listas.filter((c) => c.key === 'fallecido').map((c) => Object.assign(chipV(c), { t: c.val.nom + ', ' + c.val.edad + ' años · ' + M.barrios[c.val.b].n })) : [], listaD: s.tab === 'listas' ? listas.filter((c) => c.key === 'desap').map((c) => Object.assign(chipV(c), { t: c.val.nom + ', ' + c.val.edad + ' años · ' + M.barrios[c.val.b].n })) : [],
+        pobTxt: vivos.length + ' residentes en tres pabellones. Los doce del inicio son de confianza. Tocá uno para abrir su ficha.',
+        resList: s.tab === 'archivo' ? resAll.map((r) => ({ nom: Z7.nomC(r.p), sub: 'PAB. ' + r.pab + (r.dia ? ' · ENTRÓ DÍA ' + r.dia : ' · FUNDADOR') + (r.fuera ? ' · SALIÓ ANOCHE' : ''), img: Z7ART.cara(r.p.cara, {}), cls: s.open === r.id ? 'on' : '', open: s.open === r.id, go: () => this.bump({ open: s.open === r.id ? null : r.id }), chips: s.open === r.id ? Z7.archivoChips(G, r).map(chipV) : [] })) : [],
+        yoA: chipV({ id: 'yoA', txt: 'Archivo: portero, cicatriz en la mano izquierda' }), yoM: chipV({ id: 'yoM', txt: 'Tus manos, ahora' }),
+        hNom: G.hermana.p.nom, hImg: s.tab === 'cuaderno' ? Z7ART.cara(G.hermana.p.cara, {}) : '', hChips: s.tab === 'cuaderno' ? Z7.cuadernoChips(G).map(chipV) : [], misManos: s.tab === 'cuaderno' ? Z7ART.manos(1, { izq: 5, der: 5, unas: true, anillo: null, venda: null }, 'der') : '',
+        slotA: sel[0] ? { t: sel[0].txt, cls: 'on' } : { t: 'Tocá un dato…', cls: '' }, slotB: sel[1] ? { t: sel[1].txt, cls: 'on' } : { t: '…y otro para cruzarlos', cls: '' }, noCruzar: sel.length < 2, noSel: !sel.length, cruzar: () => this.cruzar(), limpiar: () => this.bump({ sel: [] }),
+        tools, noDec: !v, rechazar: () => this.decidir('rechaza'), pasar: () => this.decidir('pasa'), cuarentena: () => this.decidir('cuarentena'), tCuar: !!T.cuarentena, noCuar: !v || G.cuarentena.length >= 2, cuarTxt: 'camas: ' + (2 - G.cuarentena.length),
+        hasToast: !!s.toast, toastTit: s.toast ? s.toast.tit : '', toastTxt: s.toast ? s.toast.txt : '', toastCls: s.toast ? s.toast.cls : ''
+      });
+    }
+    if (scr === 'cierre') {
+      const R = G.resumen, pop = Z7.vivos(G).length + G.cuarentena.length; const cands = Z7.candidatosTest(G);
+      Object.assign(base, { cEntran: R.entran.length, cRech: R.rechazo.length, cCuar: G.cuarentena.length,
+        refTxt: pop + ' bocas para alimentar. Quedan ' + G.comida + ' raciones.' + (R.sinAtender ? ' ' + R.sinAtender + ' quedaron en la fila sin atender.' : '') + (G.dia % 2 === 0 ? ' Esta noche llega un camión con provisiones.' : ''),
+        raciones: [{ t: 'Ración completa', s: '−' + pop + ' RACIONES', v: 1 }, { t: 'Media ración', s: '−' + Math.ceil(pop / 2) + ' RACIONES · BAJA LA MORAL', v: 0.5 }].map((o) => Object.assign(o, { cls: G.racion === o.v ? 'on' : '', go: () => { G.racion = o.v; this.snd('tap'); this.bump(); } })),
+        hasCand: cands.length > 0 && !!T.cuarentena, cands: [{ id: null, nom: 'A nadie', donde: '' }].concat(cands).map((c) => ({ t: c.nom, s: c.donde.toUpperCase(), cls: G.test === c.id ? 'on' : '', go: () => { G.test = c.id; this.snd('tap'); this.bump(); } })), dormir: () => this.dormir() });
+    }
+    if (scr === 'parte') {
+      const TT = { comida: ['LA OLLA', 'am'], hambre: ['HAMBRE', 'red'], sumin: ['PROVISIONES', 'grn'], desap: ['FALTA ALGUIEN', 'red'], camC: ['CÁMARA DEL PORTÓN', 'grn'], camH: ['CÁMARA DEL PORTÓN', 'red'], fila: ['LA FILA', 'am'], doc: ['ENFERMERÍA', 'am'], sale: ['SALIDA NOCTURNA', ''], radio: ['RADIO', 'am'] };
+      Object.assign(base, { eventos: (G.eventos || []).map((e) => ({ tit: TT[e.t][0], cls: TT[e.t][1], txt: e.txt })), sinEventos: !(G.eventos || []).length, joel: G.pend === 'joel', noJoel: G.pend !== 'joel', entregar: () => this.joel(false), huir: () => this.joel(true), seguir: () => this.seguir(), seguirTxt: G.fin ? 'Ver el final' : 'Amanece · Día ' + (G.dia + 1) });
+    }
+    if (scr === 'end') {
+      const F = FINALES[G.fin] || FINALES.cosa; const DEC = { pasa: 'ENTRÓ', rechaza: 'RECHAZADA', cuarentena: 'CUARENTENA' };
+      Object.assign(base, { finTag: F[0], finTit: F[1], finTxt: F[2], fOk: G.stats.ok, fMal: G.stats.mal, fPob: Z7.vivos(G).filter((r) => !r.copia).length,
+        reveal: G.hist.map((h) => { const bien = h.dec === 'cuarentena' || (h.copia ? h.dec === 'rechaza' : h.dec === 'pasa'); return { dia: h.dia, nom: h.nom + (h.esp === 'hermana' ? ' (tu hermana)' : h.esp === 'retorno' ? ' (residente que volvía)' : ''), era: h.copia ? 'COPIA' : 'HUMANA', dec: DEC[h.dec], cls: bien ? 'okk' : 'bad', img: Z7ART.cara(h.look, {}), pistas: h.copia ? 'Se delataba por: ' + h.tells.map((t) => TELLS[t]).join('; ') + '.' : (h.ruido.length ? 'Parecía sospechosa: ' + h.ruido.map((t) => RUIDO[t]).join('; ') + '.' : 'Sin nada raro.') }; }) });
+    }
+    return base;
+  }
+}
+
+
+DCBoot(Component,'tpl');
+</script>
+</body>
+</html>

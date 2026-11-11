@@ -1,5 +1,5 @@
 /* YAJUGÁ · service worker: primero la red (siempre lo último), si no hay red usa lo guardado */
-const C = 'yajuga-v3';
+const C = 'yajuga-v4';
 self.addEventListener('install', (e) => { self.skipWaiting(); e.waitUntil(caches.open(C).then((c) => c.addAll(['/', '/jugar', '/leyendas', '/dc.js', '/net.js', '/sfx.js', '/pwa.js', '/manifest.json']).catch(() => {}))); });
 self.addEventListener('activate', (e) => { e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== C).map((k) => caches.delete(k)))).then(() => self.clients.claim())); });
 self.addEventListener('fetch', (e) => {

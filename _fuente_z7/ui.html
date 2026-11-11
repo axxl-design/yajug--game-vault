@@ -1,0 +1,219 @@
+<div class="z">
+
+<sc-if value="{{isTitle}}" hint-placeholder-val="{{ true }}">
+<div class="center"><div class="box">
+ <div class="gate pb"><div class="eyes"><i></i><i></i></div><div class="lamp"></div></div>
+ <div class="eyebrow">YAJUGÁ · JUEGO 03 · BETA</div>
+ <h1 class="hd tit">ZONA <em>7</em></h1>
+ <p class="lead">Algo está copiando a la gente. Vos sos el portero del último refugio de la ciudad: revisás papeles, hacés preguntas y decidís quién entra. Las copias traen los documentos correctos, saben los nombres correctos… y aprenden de vos.</p>
+ <div class="trio">
+  <div class="pb"><b>INTERROGÁ</b>Cada persona responde distinto. Cruzá lo que dice con sus papeles, el mapa, el teléfono y el archivo.</div>
+  <div class="pb"><b>OBSERVÁ</b>Compará la cara con la foto. Medí la temperatura. Mirá los ojos y las manos.</div>
+  <div class="pb"><b>DECIDÍ</b>7 días. Si entra una copia, alguien desaparece de noche. Si rechazás a un humano, lo ves por la cámara.</div>
+ </div>
+ <div class="row">
+  <button class="btn red" type="button" onClick="{{nueva}}">▶ Nueva partida</button>
+  <sc-if value="{{hasSave}}"><button class="btn am" type="button" onClick="{{continuar}}">Continuar · día {{saveDia}}</button></sc-if>
+  <button class="btn" type="button" onClick="{{diaria}}">Semilla del día<small>la misma para todos</small></button>
+  <a class="btn" href="Main.dc.html">Volver</a>
+ </div>
+ <p class="lead" style="font-size:13px;color:#8fa09a">Cada partida genera otra ciudad, otras personas y otras copias. Finales encontrados: {{finCount}} de 9.</p>
+</div></div>
+</sc-if>
+
+<sc-if value="{{isBrief}}" hint-placeholder-val="{{ false }}">
+<div class="center"><div class="box">
+ <div class="eyebrow">DÍA {{invDia}} DE LA INVASIÓN · PARTIDA {{seedTxt}}</div>
+ <h1 class="hd h2">Día {{dia}} · {{diaNom}}</h1>
+ <p class="lead">{{diaInfo}}</p>
+ <sc-if value="{{hasTest}}"><div class="note {{testCls}}"><b>ANÁLISIS DE SANGRE</b>{{testTxt}}</div></sc-if>
+ <sc-if value="{{hasNuevas}}"><div class="note am"><b>HERRAMIENTAS NUEVAS</b>{{nuevasTxt}}</div></sc-if>
+ <div class="sheet pb">
+  <h3>RADIO · BOLETÍN DE LA RED DE ZONAS</h3>
+  <sc-for list="{{bolItems}}" as="b" hint-placeholder-count="2"><div class="bol"><p style="margin:0">{{b.t}}</p><small>VERIFICACIÓN (CLAVE DE AYER): {{b.v}}</small></div></sc-for>
+  <div class="bol"><p style="margin:0">Clave de hoy para operadores y boletines de mañana:</p><span class="clave">{{claveHoy}}</span></div>
+ </div>
+ <div class="note"><b>RECORDÁ</b>La clave de ayer fue {{claveAyer}}. Un aviso que se verifica con otra palabra no viene de la Red: es una interferencia.</div>
+ <div class="row"><button class="btn red" type="button" onClick="{{abrir}}">▶ Abrir la ventanilla</button></div>
+</div></div>
+</sc-if>
+
+<sc-if value="{{isWork}}" hint-placeholder-val="{{ false }}">
+<header class="top">
+ <a class="home" href="Main.dc.html" aria-label="Salir a YAJUGÁ">ZONA <i>7</i></a>
+ <div class="mets">
+  <div class="met"><span>DÍA</span><b>{{dia}}/7</b></div>
+  <div class="met {{lateCls}}"><span>HORA</span><b>{{hora}}</b></div>
+  <div class="met"><span>FILA</span><b>{{fila}}</b></div>
+  <div class="met x"><span>COMIDA</span><b>{{comida}}</b></div>
+  <div class="met x"><span>MORAL</span><div class="bar"><i style="width: {{moral}}%"></i></div></div>
+  <div class="met x"><span>PARANOIA</span><div class="bar par"><i style="width: {{paranoia}}%"></i></div></div>
+  <button class="ib" type="button" onClick="{{sonido}}" aria-label="Sonido">{{sonIcon}}</button>
+ </div>
+</header>
+
+<div class="work">
+ <section class="col booth">
+  <div class="win pb {{winCls}}">
+   <sc-if value="{{snow}}"><div class="snow"></div></sc-if>
+   <sc-if value="{{rain}}"><div class="rain"></div></sc-if>
+   <sc-if value="{{hasV}}"><img class="face" src="{{faceUrl}}" alt="Persona en la ventanilla"></sc-if>
+   <sc-if value="{{fog}}"><div class="fog"></div></sc-if>
+   <div class="glass"></div><div class="frame"></div>
+   <sc-if value="{{hasStamp}}"><div class="stamp {{stampCls}}">{{stampTxt}}</div></sc-if>
+   <sc-if value="{{noV}}"><div class="empty"><p>{{emptyMsg}}</p>
+    <sc-if value="{{canCall}}"><button class="btn am" type="button" onClick="{{llamar}}">Llamar al siguiente</button></sc-if>
+    <sc-if value="{{canClose}}"><button class="btn red" type="button" onClick="{{cerrar}}">Bajar la persiana</button></sc-if>
+   </div></sc-if>
+  </div>
+  <sc-if value="{{hasV}}"><div class="who"><span>PERSONA #{{num}} · PACIENCIA</span><span class="pips"><sc-for list="{{pips}}" as="p" hint-placeholder-count="6"><i class="{{p}}"></i></sc-for></span></div></sc-if>
+  <div class="dlg" id="z7dlg"><sc-for list="{{dialogo}}" as="d" hint-placeholder-count="2"><div class="say {{d.cls}}">{{d.t}}</div></sc-for></div>
+  <sc-if value="{{hasQs}}">
+   <div class="sub"><span>PREGUNTAR · 8 MIN</span><button class="lk" type="button" onClick="{{rotar}}">↻ otras preguntas</button></div>
+   <div class="qs"><sc-for list="{{qs}}" as="q" hint-placeholder-count="6"><button class="qb" type="button" onClick="{{q.go}}"><em class="{{q.cat}}">{{q.cat}}</em><span>{{q.t}}</span></button></sc-for></div>
+  </sc-if>
+ </section>
+
+ <section class="col">
+  <div class="desk pb">
+   <sc-if value="{{showNoDoc}}"><div class="nodoc">{{noDocMsg}}</div></sc-if>
+   <div class="docs">
+    <sc-if value="{{hasFicha}}"><article class="doc"><h4><span>FICHA DE SOBREVIVIENTE</span><span>GOB.</span></h4><div class="in"><div class="ph"><img src="{{fotoUrl}}" alt="Foto de la ficha"></div><div class="chips"><sc-for list="{{fichaChips}}" as="c" hint-placeholder-count="6"><button class="chip {{c.cls}}" type="button" onClick="{{c.go}}">{{c.t}}</button></sc-for></div></div></article></sc-if>
+    <sc-if value="{{hasSalvo}}"><article class="doc salvo"><h4><span>SALVOCONDUCTO</span><span>ZONA {{zonaN}}</span></h4><div class="in"><div class="chips"><sc-for list="{{salvoChips}}" as="c" hint-placeholder-count="5"><button class="chip {{c.cls}}" type="button" onClick="{{c.go}}">{{c.t}}</button></sc-for></div></div></article></sc-if>
+    <sc-if value="{{hasDichos}}"><article class="doc say2"><h4><span>LO QUE DIJO</span><span>ANOTADO</span></h4><div class="in"><div class="chips"><sc-for list="{{dichoChips}}" as="c" hint-placeholder-count="3"><button class="chip {{c.cls}}" type="button" onClick="{{c.go}}">{{c.t}}</button></sc-for></div></div></article></sc-if>
+    <sc-if value="{{hasTermo}}"><article class="doc tool"><h4><span>TERMÓMETRO</span><span>°C</span></h4><div class="big {{termoCls}}">{{termoTxt}}</div><p class="t">{{termoNota}}</p></article></sc-if>
+    <sc-if value="{{hasOjos}}"><article class="doc tool"><h4><span>LINTERNA · OJOS</span><span>PILAS {{pilas}}</span></h4><div class="beam"><img src="{{ojosUrl}}" alt="Ojos bajo la linterna" style="width:100%"></div></article></sc-if>
+    <sc-if value="{{hasManos}}"><article class="doc tool"><h4><span>MANOS</span><span>DORSO</span></h4><img src="{{manosUrl}}" alt="Manos" style="width:100%;background:#3d4a4a"><div class="cap"><span>SU MANO DERECHA</span><span>SU MANO IZQUIERDA</span></div><div class="in" style="padding-top:0"><div class="chips"><sc-for list="{{obsChips}}" as="c" hint-placeholder-count="1"><button class="chip {{c.cls}}" type="button" onClick="{{c.go}}">{{c.t}}</button></sc-for></div></div></article></sc-if>
+    <sc-if value="{{hasBolso}}"><article class="doc tool"><h4><span>PERTENENCIAS</span><span>BOLSO</span></h4><sc-for list="{{itemsTxt}}" as="t" hint-placeholder-count="3"><p class="t">· {{t}}</p></sc-for><div class="in"><div class="chips"><sc-for list="{{itemChips}}" as="c" hint-placeholder-count="2"><button class="chip {{c.cls}}" type="button" onClick="{{c.go}}">{{c.t}}</button></sc-for></div></div></article></sc-if>
+    <sc-if value="{{hasTel}}"><article class="doc tool"><h4><span>TELÉFONO</span><span>CLAVE DE HOY: {{claveHoy}}</span></h4><sc-for list="{{tels}}" as="t" hint-placeholder-count="1"><p class="t">— {{t}}</p></sc-for><div class="in"><div class="chips"><sc-for list="{{telChips}}" as="c" hint-placeholder-count="2"><button class="chip {{c.cls}}" type="button" onClick="{{c.go}}">{{c.t}}</button></sc-for></div></div></article></sc-if>
+    <sc-if value="{{hasRes}}"><article class="doc tool"><h4><span>RESIDENTE CONSULTADO</span><span>ADENTRO</span></h4><p class="t">{{resTxt}}</p><div class="in"><div class="chips"><sc-for list="{{resChips}}" as="c" hint-placeholder-count="2"><button class="chip {{c.cls}}" type="button" onClick="{{c.go}}">{{c.t}}</button></sc-for></div></div></article></sc-if>
+   </div>
+  </div>
+  <sc-if value="{{hasCruces}}"><div class="sub"><span>CRUCES HECHOS</span></div></sc-if>
+  <sc-for list="{{cruces}}" as="c" hint-placeholder-count="1"><div class="cr {{c.res}}"><b>{{c.tit}}</b>{{c.txt}}<small>{{c.a}} ✕ {{c.b}}</small><sc-if value="{{c.conf}}"><q>{{c.conf}}</q><small>{{c.confTipo}}</small></sc-if><sc-if value="{{c.canConf}}"><button class="btn" type="button" onClick="{{c.go}}">Pedirle que lo explique · 5 min</button></sc-if></div></sc-for>
+ </section>
+
+ <aside class="side pb {{sideCls}}">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><b class="px" style="font-size:13px">CARPETA DEL PUESTO</b><button class="ib only-m" type="button" onClick="{{toggleSide}}" aria-label="Cerrar carpeta">✕</button></div>
+  <div class="tabs"><sc-for list="{{tabs}}" as="t" hint-placeholder-count="6"><button class="tab {{t.cls}}" type="button" onClick="{{t.go}}">{{t.n}}</button></sc-for></div>
+
+  <sc-if value="{{tRadio}}">
+   <h5>BOLETÍN DE HOY</h5>
+   <sc-for list="{{bolItems}}" as="b" hint-placeholder-count="2"><p>{{b.t}}<br><span class="px" style="font-size:10px;color:#8fa09a">VERIF.: {{b.v}}</span></p></sc-for>
+   <h5>CLAVES</h5>
+   <p>Hoy: <b style="color:#e0a33a">{{claveHoy}}</b> · Ayer: <b>{{claveAyer}}</b></p>
+   <p style="font-size:13px">Un operador o un boletín de verdad usa la clave correcta. Si la palabra es otra, es una interferencia.</p>
+   <sc-if value="{{hasRadioH}}"><h5>TU HERMANA, POR RADIO</h5><sc-for list="{{radioH}}" as="r" hint-placeholder-count="1"><p>{{r}}</p></sc-for></sc-if>
+  </sc-if>
+
+  <sc-if value="{{tMapa}}">
+   <p style="font-size:13px">Hoy es el día {{invDia}} de la invasión. Tocá un dato para cruzarlo con lo que te digan.</p>
+   <h5>BARRIOS · CAÍDA Y RUTA DE EVACUACIÓN</h5>
+   <div class="chips dark"><sc-for list="{{mapaB}}" as="c" hint-placeholder-count="8"><button class="chip {{c.cls}}" type="button" onClick="{{c.go}}">{{c.t}}</button></sc-for></div>
+   <h5>RED DE ZONAS</h5>
+   <div class="chips dark"><sc-for list="{{mapaZ}}" as="c" hint-placeholder-count="8"><button class="chip {{c.cls}}" type="button" onClick="{{c.go}}">{{c.t}}</button></sc-for></div>
+  </sc-if>
+
+  <sc-if value="{{tListas}}">
+   <h5>FALLECIDOS CONFIRMADOS</h5>
+   <div class="chips dark"><sc-for list="{{listaF}}" as="c" hint-placeholder-count="6"><button class="chip {{c.cls}}" type="button" onClick="{{c.go}}">{{c.t}}</button></sc-for></div>
+   <h5>DESAPARECIDOS</h5>
+   <div class="chips dark"><sc-for list="{{listaD}}" as="c" hint-placeholder-count="6"><button class="chip {{c.cls}}" type="button" onClick="{{c.go}}">{{c.t}}</button></sc-for></div>
+  </sc-if>
+
+  <sc-if value="{{tArchivo}}">
+   <p style="font-size:13px">{{pobTxt}}</p>
+   <div class="resl"><sc-for list="{{resList}}" as="r" hint-placeholder-count="6">
+    <button class="resb {{r.cls}}" type="button" onClick="{{r.go}}"><img src="{{r.img}}" alt=""><span>{{r.nom}}<small>{{r.sub}}</small></span></button>
+    <sc-if value="{{r.open}}"><div class="file"><img src="{{r.img}}" alt="Foto de archivo"><div class="chips dark"><sc-for list="{{r.chips}}" as="c" hint-placeholder-count="5"><button class="chip {{c.cls}}" type="button" onClick="{{c.go}}">{{c.t}}</button></sc-for></div></div></sc-if>
+   </sc-for></div>
+   <h5>PERSONAL DEL PUESTO</h5>
+   <div class="chips dark"><button class="chip {{yoA.cls}}" type="button" onClick="{{yoA.go}}">Portero (vos): cicatriz en el dorso de la mano IZQUIERDA</button></div>
+  </sc-if>
+
+  <sc-if value="{{tCuaderno}}">
+   <h5>TU HERMANA, {{hNom}}</h5>
+   <div class="file" style="margin:0 0 6px"><img src="{{hImg}}" alt="Foto de tu hermana"><div class="chips dark"><sc-for list="{{hChips}}" as="c" hint-placeholder-count="3"><button class="chip {{c.cls}}" type="button" onClick="{{c.go}}">{{c.t}}</button></sc-for></div></div>
+   <p style="font-size:13px">La foto es de antes de la invasión. La cicatriz de la ceja se la hizo de chica, cuando se cayeron juntos de la bici.</p>
+   <h5>TUS MANOS</h5>
+   <img class="hands" src="{{misManos}}" alt="Tus manos">
+   <div class="cap" style="color:#8fa09a"><span>TU DERECHA</span><span>TU IZQUIERDA</span></div>
+   <div class="chips dark"><button class="chip {{yoM.cls}}" type="button" onClick="{{yoM.go}}">Tus manos, ahora</button></div>
+  </sc-if>
+
+  <sc-if value="{{tManual}}"><div class="man">
+   <h5>PRUEBAN QUE ES UNA COPIA</h5>
+   <ul><li>Una marca de la cara distinta a la foto: cambió de lado, falta o sobra. También otro color de ojos.</li><li>Temperatura por debajo de 35°.</li><li>Reflejo blanco en los ojos bajo la linterna.</li><li>Seis dedos, falta de uñas, o el anillo en la otra mano.</li><li>Figurar como FALLECIDO CONFIRMADO.</li><li>Una contradicción GRAVE que no puede explicar.</li><li>Un operador telefónico que da otra clave, o un registro que la desmiente.</li><li>En helada: que su aliento no empañe el vidrio.</li></ul>
+   <h5>NO PRUEBAN NADA</h5>
+   <ul><li>Fiebre, vendas, barba crecida, suciedad, ojeras, ojos rojos.</li><li>Errores MENORES de tipeo: una letra o un año.</li><li>Figurar como desaparecido, no traer documentos o estar en shock.</li><li>Una contradicción grave que termina en una confesión humana. La gente miente por vergüenza.</li></ul>
+   <h5>CÓMO HABLAN</h5>
+   <ul><li>Las copias responden con datos cuando preguntás por sentimientos, olores o recuerdos. Las mejores ya aprendieron a disimularlo.</li></ul>
+   <h5>CRUZAR DATOS</h5>
+   <ul><li>Tocá dos datos (papeles, lo que dijo, mapa, listas, archivo) y apretá CRUZAR. Si no coinciden, podés pedirle que lo explique.</li></ul>
+   <h5>DE NOCHE</h5>
+   <ul><li>Una copia adentro hace desaparecer a alguien de su mismo pabellón. El análisis de sangre (uno por noche) nunca falla.</li></ul>
+   <p style="font-size:13px">Clave inicial de la Red: <b>{{clave0}}</b></p>
+  </div></sc-if>
+ </aside>
+</div>
+
+<div class="dock">
+ <div class="tray"><div class="slot {{slotA.cls}}">{{slotA.t}}</div><div class="slot {{slotB.cls}}">{{slotB.t}}</div><button class="btn am" type="button" onClick="{{cruzar}}" disabled="{{noCruzar}}">Cruzar</button><button class="btn" type="button" onClick="{{limpiar}}" disabled="{{noSel}}" aria-label="Soltar datos">✕</button></div>
+ <div class="tl">
+  <button class="btn only-m" type="button" onClick="{{toggleSide}}">📁 Carpeta</button>
+  <sc-for list="{{tools}}" as="t" hint-placeholder-count="4"><button class="btn cy" type="button" onClick="{{t.go}}" disabled="{{t.off}}">{{t.n}}<small>{{t.s}}</small></button></sc-for>
+ </div>
+ <div class="acts">
+  <button class="btn red" type="button" onClick="{{rechazar}}" disabled="{{noDec}}">✕ Rechazar</button>
+  <sc-if value="{{tCuar}}"><button class="btn am" type="button" onClick="{{cuarentena}}" disabled="{{noCuar}}">Cuarentena<small>{{cuarTxt}}</small></button></sc-if>
+  <button class="btn grn" type="button" onClick="{{pasar}}" disabled="{{noDec}}">✓ Dejar pasar</button>
+ </div>
+</div>
+<sc-if value="{{hasToast}}"><div class="toast {{toastCls}}" role="status"><b>{{toastTit}}</b>{{toastTxt}}</div></sc-if>
+</sc-if>
+
+<sc-if value="{{isCierre}}" hint-placeholder-val="{{ false }}">
+<div class="center"><div class="box">
+ <div class="eyebrow">FIN DEL DÍA {{dia}}</div>
+ <h1 class="hd h2">Persiana baja</h1>
+ <div class="grid3"><div class="stat pb"><b>{{cEntran}}</b><span>ENTRARON</span></div><div class="stat pb"><b>{{cRech}}</b><span>RECHAZADOS</span></div><div class="stat pb"><b>{{cCuar}}</b><span>EN CUARENTENA</span></div></div>
+ <div class="note"><b>EL REFUGIO</b>{{refTxt}}</div>
+ <h3 class="px" style="font-size:12px;color:#e0a33a;margin:26px 0 0;font-weight:400">LA OLLA DE ESTA NOCHE</h3>
+ <div class="opts"><sc-for list="{{raciones}}" as="o" hint-placeholder-count="2"><button class="opt {{o.cls}}" type="button" onClick="{{o.go}}"><span>{{o.t}}</span><small>{{o.s}}</small></button></sc-for></div>
+ <sc-if value="{{hasCand}}">
+  <h3 class="px" style="font-size:12px;color:#e0a33a;margin:26px 0 0;font-weight:400">ANÁLISIS DE SANGRE · UNO POR NOCHE</h3>
+  <p class="lead" style="font-size:14px;margin-top:6px">La doctora analiza a una sola persona. El resultado llega a la mañana y nunca falla.</p>
+  <div class="opts"><sc-for list="{{cands}}" as="o" hint-placeholder-count="3"><button class="opt {{o.cls}}" type="button" onClick="{{o.go}}"><span>{{o.t}}</span><small>{{o.s}}</small></button></sc-for></div>
+ </sc-if>
+ <div class="row"><button class="btn red" type="button" onClick="{{dormir}}">Apagar la luz</button></div>
+</div></div>
+</sc-if>
+
+<sc-if value="{{isParte}}" hint-placeholder-val="{{ false }}">
+<div class="center"><div class="box">
+ <div class="eyebrow">NOCHE DEL DÍA {{dia}}</div>
+ <h1 class="hd h2">Parte de la noche</h1>
+ <sc-for list="{{eventos}}" as="e" hint-placeholder-count="3"><div class="note {{e.cls}}"><b>{{e.tit}}</b>{{e.txt}}</div></sc-for>
+ <sc-if value="{{sinEventos}}"><div class="note grn"><b>SIN NOVEDAD</b>Nadie golpeó el portón. Nadie falta en los pabellones.</div></sc-if>
+ <sc-if value="{{joel}}">
+  <div class="sheet pb"><h3>LA DOCTORA TE DESPIERTA</h3><p>«El análisis de tu hermana dio positivo. No es ella. Lo que hay en esa cama aprendió su voz, su cicatriz y tu nombre. El ejército viene a buscarla al amanecer.»</p><p>Desde la cuarentena, alguien canta bajito la canción de tu madre.</p></div>
+  <div class="row"><button class="btn" type="button" onClick="{{entregar}}">Entregarla</button><button class="btn red" type="button" onClick="{{huir}}">Abrir la reja e irte con ella</button></div>
+ </sc-if>
+ <sc-if value="{{noJoel}}"><div class="row"><button class="btn red" type="button" onClick="{{seguir}}">{{seguirTxt}}</button></div></sc-if>
+</div></div>
+</sc-if>
+
+<sc-if value="{{isEnd}}" hint-placeholder-val="{{ false }}">
+<div class="center"><div class="box">
+ <div class="eyebrow">{{finTag}}</div>
+ <h1 class="hd h2">{{finTit}}</h1>
+ <div class="sheet pb"><sc-for list="{{finTxt}}" as="p" hint-placeholder-count="2"><p>{{p}}</p></sc-for></div>
+ <div class="grid3"><div class="stat pb"><b>{{fOk}}</b><span>DECISIONES CORRECTAS</span></div><div class="stat pb"><b>{{fMal}}</b><span>ERRORES</span></div><div class="stat pb"><b>{{fPob}}</b><span>HUMANOS A SALVO</span></div></div>
+ <h3 class="px" style="font-size:12px;color:#e0a33a;margin:30px 0 0;font-weight:400">LA VERDAD, PERSONA POR PERSONA</h3>
+ <div class="rev"><sc-for list="{{reveal}}" as="r" hint-placeholder-count="4"><div class="rv"><img src="{{r.img}}" alt=""><div><b class="{{r.cls}}">DÍA {{r.dia}} · {{r.era}} · {{r.dec}}</b><br>{{r.nom}}<small>{{r.pistas}}</small></div></div></sc-for></div>
+ <p class="lead" style="font-size:13px;color:#8fa09a">Partida {{seedTxt}} · Finales encontrados: {{finCount}} de 9</p>
+ <div class="row"><button class="btn red" type="button" onClick="{{nueva}}">↻ Otra partida</button><a class="btn" href="Main.dc.html">Volver a YAJUGÁ</a></div>
+</div></div>
+</sc-if>
+
+</div>
