@@ -469,7 +469,6 @@ a{color:#E0A33A}
 
 /* KZ-MENU */
 .menu{font-family:'Atkinson Hyperlegible','DM Sans',sans-serif;background:linear-gradient(180deg,#0B0F1A 0,#141322 360px,#14110F 620px)}
-.menu img{image-rendering:pixelated}
 .menu .mcity{position:relative;height:150px;margin:-24px calc(50% - 50vw) 44px;opacity:.7;pointer-events:none}
 .menu .mcity svg{width:100%;height:100%;display:block}
 .menu .mmoon{position:absolute;right:12%;top:-52px;width:36px;height:36px;background:#E9E2CC;box-shadow:inset -9px -4px 0 #C9C1A8}
@@ -535,7 +534,7 @@ a{color:#E0A33A}
 <div class="pxchk" aria-hidden="true"></div><div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 28px">
 <sc-for list="{{roles}}" as="r" hint-placeholder-count="6">
 <button class="pick {{r.pcls}}" type="button" onClick="{{r.pick}}" style="--c: {{r.color}}">
-<div class="ph"><img src="{{r.pimg}}" alt="{{r.name}}"></div>
+<div class="ph"><img src="{{r.img}}" alt="{{r.name}}"></div>
 <div style="padding: 22px 24px 26px"><div class="hd" style="font-size: 26px">{{r.name}}</div><div class="eyebrow" style="opacity: .65; margin-top: 6px">{{r.yrs}}</div><div style="font-size: 14px; line-height: 1.55; margin-top: 10px; color: rgba(239,230,210,.85)">{{r.bio}}</div><div class="eyebrow" style="color: #E0A33A; margin-top: 14px">Dominio · {{r.dom}}</div><div class="muted" style="font-size: 14px; line-height: 1.6; margin-top: 8px">{{r.domDesc}}</div></div>
 </button>
 </sc-for>
